@@ -3,9 +3,16 @@
 Documentul de lucru al proiectului. Sursa viziunii: [`Plan.md`](./Plan.md).
 Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 
+> **Sursa de adevăr pentru conținut: [`cursuri_MN/`](./cursuri_MN)** — 12 fișiere de curs
+> (`.md`) plus 21 de capturi în `cursuri_MN/poze/`. Formulele, definițiile, notațiile și
+> exemplele de pe site vin **exclusiv** de acolo; aceea e materia predată. Inspirația pentru
+> animații și interfețe poate veni de oriunde, dar **formulele nu se schimbă**.
+> Maparea curs → pagină e în [`Plan.md`](./Plan.md#material-sursa-folderul-cursuri_mn).
+
 **Decizii deschise:**
 
-- [ ] **Lista celor ~15 metode numerice** — de completat în `Plan.md` și în tabelul din Faza 7
+- [x] ~~**Lista celor ~15 metode numerice**~~ → **14 pagini tematice**, stabilite în
+      [`Plan.md`](./Plan.md), secțiunea „Lista Algoritmi"; detaliate în tabelul din Faza 7
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
 - [ ] Font monospace pentru formule și tabele numerice (cifre tabulare)
 - [ ] Domeniu: `github.io` sau domeniu propriu
@@ -358,31 +365,36 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ## Faza 7 — Implementarea metodelor numerice
 
-**Obiectiv:** ~15 metode, fiecare la calitatea paginii-pilot.
+**Obiectiv:** 14 pagini tematice, fiecare la calitatea paginii-pilot.
 
-### Lista metodelor _(de completat — vezi `Plan.md`, secțiunea „Lista Algoritmi")_
+### Lista paginilor _(sursa: `Plan.md`, secțiunea „Lista Algoritmi")_
 
-| Nr. | Metodă | Capitol | Implementare | Manim | Text | Interactiv | Mobil | Gata |
-| --- | ------ | ------- | ------------ | ----- | ---- | ---------- | ----- | ---- |
-| 1   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 2   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 3   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 4   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 6   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 7   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 8   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 9   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 10  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 11  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 12  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 15  |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+Fiecare pagină grupează metodele înrudite, ca să se poată face paralele între ele —
+împărțirea vine din `Plan.md`, nu una metodă = una pagină. Coloana „Curs" spune din ce
+fișier din `cursuri_MN/` se ia conținutul.
 
-- [ ] Completează tabelul cu cele ~15 metode alese
-- [ ] Grupează-le pe capitole și stabilește ordinea de implementare
-- [ ] Deschide câte un issue GitHub pentru fiecare metodă, cu checklist-ul de mai jos
+| Nr. | Pagină (metode)                                            | Curs sursă      | Vizual     | Implem. | Manim | Text | Interactiv | Mobil | Gata |
+| --- | ---------------------------------------------------------- | --------------- | ---------- | ------- | ----- | ---- | ---------- | ----- | ---- |
+| 1   | Cramer, LU, Doolittle, Crout, Cholesky                     | curs2, curs4    | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 2   | Norme, Householder, Givens, Gram-Schmidt                   | curs3, curs2    | axă + joc  | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 3   | Eliminare Gaussiană (pivotări), algoritmul Thomas          | curs4           | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 4   | Jacobi, Gauss-Seidel, SOR                                  | curs5           | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Puncte fixe, bisecție, Newton, secantă                     | curs6, curs5    | interval   | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 6   | Gradient descendent, gradient conjugat                     | curs6, curs5    | vale 2D    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 7   | Metodele puterii, puterea inversă, Rayleigh, deflație, PageRank | curs7      | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 8   | QR și DVS                                                  | curs8, curs3    | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 9   | Lagrange, Neville, funcția Runge, spline                   | curs09          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 10  | Curbe Bézier, algoritmul de Casteljau (2D/3D)              | curs09          | canvas     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 11  | Aproximare CMMP, FFT                                       | curs10          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 12  | Derivare numerică, Newton-Cotes (trapeze, Simpson)         | curs11          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Romberg, cuadraturi adaptive, cuadraturi Gaussiene         | curs12          | matrice+gr | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | ODE: problema Cauchy, Euler, Runge-Kutta                   | curs13          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+
+- [x] ~~Completează tabelul~~ — cele 14 pagini sunt fixate din `Plan.md`
+- [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)
+- [ ] Deschide câte un issue GitHub pentru fiecare pagină, cu checklist-ul de mai jos
+- [ ] Pentru fiecare pagină: citește **întâi** cursul sursă din `cursuri_MN/`, apoi scrie
+      textul și formulele — nimic din memorie, nimic din alte surse
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 

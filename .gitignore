@@ -29,6 +29,7 @@ __pycache__/
 *.py[cod]
 
 # Editor / sistem
+.claude/settings.local.json*
 .vscode/*
 !.vscode/extensions.json
 .idea

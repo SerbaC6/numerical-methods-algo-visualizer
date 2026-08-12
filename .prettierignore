@@ -5,3 +5,6 @@ public/media
 public/fonts
 manim/media
 package-lock.json
+
+# Material sursă — transcrieri de curs, se păstrează exact cum sunt
+cursuri_MN
