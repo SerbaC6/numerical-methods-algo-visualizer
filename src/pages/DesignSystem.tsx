@@ -29,6 +29,7 @@ import { ControlPanel } from "@/components/viz/ControlPanel";
 import { ExpressionInput } from "@/components/viz/ExpressionInput";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { IterationTable } from "@/components/viz/IterationTable";
+import { Legend } from "@/components/viz/Legend";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
 import { type Viteza } from "@/lib/playback";
@@ -375,6 +376,31 @@ export default function DesignSystem() {
         descriere="Panoul de parametri, bara de derulare, tabelul de iterații și formula — legate între ele. Formula se aprinde acolo unde e animația: apasă play și urmărește a, b și mijlocul."
       >
         <div className="space-y-4">
+          <Legend
+            elemente={[
+              { rol: "functie", explicatie: "curba pe care căutăm rădăcina" },
+              {
+                rol: "interval",
+                eticheta: "intervalul [aₖ, bₖ]",
+                explicatie: "unde știm că e rădăcina",
+              },
+              {
+                rol: "curent",
+                eticheta: "mijlocul xₖ",
+                explicatie: "punctul calculat la pasul curent",
+              },
+              { rol: "anterior", explicatie: "capetele de la pașii dinainte" },
+              { rol: "solutie", explicatie: "unde ajunge metoda" },
+              { rol: "grila", explicatie: "reperele de pe axe" },
+            ]}
+            pasi={[
+              "Scrie funcția sau alege un exemplu.",
+              "Apasă play sau mergi pas cu pas.",
+              "Urmărește în formulă ce parte se aprinde la fiecare pas.",
+              "Dă clic pe un rând din tabel ca să sari direct la acea iterație.",
+            ]}
+          />
+
           <FormulaBlock
             eticheta="Metoda bisecției — pasul k"
             latex={String.raw`x_k = \frac{\htmlId{f-a}{a_k} + \htmlId{f-b}{b_k}}{2}, \qquad \htmlId{f-cond}{f(a_k)\cdot f(x_k) < 0}`}

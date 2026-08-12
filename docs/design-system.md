@@ -148,6 +148,33 @@ Popover.
 | `FormulaBlock`    | formulă KaTeX, cu evidențierea părților sincron cu animația                |
 | `NumberInput`     | câmp numeric cu validare și mesaj de eroare legat prin `aria-describedby`  |
 | `ExpressionInput` | câmp pentru `f(x)`, font mono, validare la tastare, exemple cu un clic     |
+| `Legend`          | legenda de culori + „cum se folosește" în 3–5 pași                         |
+
+### Legenda — obligatorie la fiecare interfață interactivă
+
+Cerință din `Plan.md`: orice figură sau interfață cu care se joacă utilizatorul trebuie să aibă
+legendă **și** explicația modului de funcționare. Stau în aceeași componentă tocmai ca să nu se
+uite una din ele:
+
+```tsx
+<Legend
+  elemente={[
+    { rol: "functie", explicatie: "curba pe care căutăm rădăcina" },
+    { rol: "interval", eticheta: "intervalul [aₖ, bₖ]" },
+    { rol: "curent", eticheta: "mijlocul xₖ" },
+  ]}
+  pasi={["Scrie funcția sau alege un exemplu.", "Apasă play sau mergi pas cu pas."]}
+/>
+```
+
+Culorile **nu se scriu de mână** în legendă: `rol` le ia din `src/lib/viz-roles.ts`, care e sursa
+unică pentru rolurile `--viz-*`. Dacă schimbi un token, legenda se schimbă cu el și nu poate ajunge
+să contrazică desenul. `eticheta` se rescrie când pagina are un nume mai bun pentru același rol.
+Pentru ceva ce încă n-are rol definit, dai `culoare` + `eticheta` explicit.
+
+Culoarea nu e niciodată singurul semnal: fiecare element are și **formă** (linie, linie punctată,
+punct, zonă, celulă) și text, ca legenda să funcționeze și pentru cine nu distinge culorile.
+Forma din legendă trebuie să fie cea din figură — un interval e zonă, nu bulină.
 
 `src/components/content/` — blocuri de text și navigare: `Callout` (de știut / de reținut /
 atenție / capcană), `AlgorithmCard` (cardul din cuprins, cu starea „în curând").

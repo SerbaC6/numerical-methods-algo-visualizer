@@ -232,9 +232,11 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 > dintre piesele din care se desenează efectiv o metodă. Din cauza asta nu se poate începe nicio
 > pagină de conținut: nu e o scăpare de stil, e blocajul principal al proiectului.
 
-- [ ] `Legend` — legenda de culori. **Cerință explicită din `Plan.md`**: fiecare interfață
-      interactivă trebuie să aibă una. Citește rolurile din tokens (`--viz-*`), ca legenda să nu
-      poată ajunge să mintă față de desen
+- [x] `Legend` — legenda de culori **plus** modul de folosire în 3–5 pași, în aceeași componentă
+      (`Plan.md` le cere pe amândouă, deci nu se poate uita una). Culorile vin din
+      `src/lib/viz-roles.ts` — sursa unică pentru rolurile `--viz-*`, aceleași și în Manim — deci
+      legenda nu poate ajunge să contrazică desenul. Fiecare element are formă (linie, linie
+      punctată, punct, zonă, celulă) și text, nu doar culoare. Verificat în ambele teme
 - [ ] `StepExplanation` — propoziția care spune ce se întâmplă la pasul curent, lângă animație.
       Notat în `docs/referinte.md` ca „împrumutăm de la visualgo", dar nefăcut
 - [ ] `MatrixGrid` — matricea desenată, cu stări per celulă (normală, evidențiată, deja calculată,
@@ -252,7 +254,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [ ] 3–5 site-uri suplimentare de referință pentru estetică și animații
 - [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
-- [ ] cele patru piese de mai sus (`Legend`, `StepExplanation`, `MatrixGrid`, `Plot`)
+- [ ] piesele rămase: `StepExplanation`, `MatrixGrid`, `Plot` (`Legend` — gata)
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
 **Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —
