@@ -32,6 +32,7 @@ import { IterationTable } from "@/components/viz/IterationTable";
 import { Legend } from "@/components/viz/Legend";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
+import { StepExplanation } from "@/components/viz/StepExplanation";
 import { type Viteza } from "@/lib/playback";
 
 const PALETA = [
@@ -115,6 +116,31 @@ export default function DesignSystem() {
     }, 900 / viteza);
     return () => clearInterval(id);
   }, [ruleaza, viteza, randuri.length]);
+
+  // Propoziția pasului curent. Pe o pagină reală vine din `steps[]`, calculată
+  // în `src/algorithms`; aici o compunem din aceleași rânduri ca tabelul, ca
+  // demonstrația să nu poată ajunge să spună altceva decât arată cifrele.
+  const explicatiePas = useMemo(() => {
+    const rand = randuri[pas];
+    if (!rand) return undefined;
+
+    const nr = (x: number) => x.toFixed(4);
+    // Direcția o citim din rândul următor: dacă s-a mutat capătul din stânga,
+    // rădăcina era în dreapta. Așa nu putem greși semnul.
+    const urmator = randuri[pas + 1];
+    const partea = urmator ? (urmator.a !== rand.a ? "dreapta" : "stânga") : undefined;
+
+    return (
+      <>
+        Mijlocul intervalului [{nr(rand.a)}, {nr(rand.b)}] este{" "}
+        <span className="font-mono font-semibold">xₖ = {nr(rand.c)}</span>, unde f(xₖ) ={" "}
+        <span className="font-mono">{nr(rand.fc)}</span>.{" "}
+        {partea
+          ? `Semnul lui f se schimbă în jumătatea din ${partea}, deci acolo se strânge intervalul.`
+          : "E ultimul pas al demonstrației."}
+      </>
+    );
+  }, [randuri, pas]);
 
   const eroareIteratii =
     iteratiiMax === "" ? "Pune un număr." : iteratiiMax < 1 ? "Cel puțin o iterație." : undefined;
@@ -393,6 +419,16 @@ export default function DesignSystem() {
             latex={String.raw`x_k = \frac{\htmlId{f-a}{a_k} + \htmlId{f-b}{b_k}}{2}, \qquad \htmlId{f-cond}{f(a_k)\cdot f(x_k) < 0}`}
             evidentiaza={pas % 3 === 0 ? ["f-a"] : pas % 3 === 1 ? ["f-b"] : ["f-cond"]}
           />
+
+          <StepExplanation
+            explicatie={explicatiePas}
+            pas={pas}
+            totalPasi={randuri.length}
+            ruleaza={ruleaza}
+          />
+
+          {/* Aceeași componentă fără pași: ce se vede înainte să ruleze ceva. */}
+          <StepExplanation pas={0} totalPasi={0} />
 
           <PlaybackBar
             pas={pas}

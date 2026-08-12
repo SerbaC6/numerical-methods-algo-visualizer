@@ -12,6 +12,7 @@ iterație, plus controalele care le însoțesc.
 | `NumberInput`     | câmp numeric cu validare și mesaj de eroare                      |
 | `ExpressionInput` | câmp pentru `f(x)`, cu validare la tastare și exemple            |
 | `Legend`          | legenda de culori + modul de folosire în 3–5 pași                |
+| `StepExplanation` | propoziția care descrie pasul curent, lângă desen                |
 
 Nu conțin matematică — primesc `steps[]` gata calculați din `src/algorithms`.
 Convențiile de folosire sunt în [`docs/design-system.md`](../../../docs/design-system.md).

@@ -158,7 +158,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Analiză [csvistool.com](https://csvistool.com/) — layout și claritate
   - [x] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
   - [x] Analiză [Numerical Methods Visualizer (engineersuniverse.com)](https://engineersuniverse.com/webapps/numerical-methods-visualizer) — **cel mai apropiat de noi ca subiect**: acoperă doar bisecție, Newton-Raphson, sume Riemann și trapeze; luăm de la el afișarea erorii absolute + relative și presetările, evităm textul lung dinaintea vizualizării
-  - [ ] Caută 3–5 site-uri suplimentare de referință (estetică, animații) — deocamdată doar [PerfectlyNormal](https://math345-games.github.io/PerfectlyNormal/), pentru jocul de Gram-Schmidt de pe pagina 2
+  - [x] ~~Caută 3–5 site-uri suplimentare de referință (estetică, animații)~~ → **adăugate**: [3Blue1Brown](https://www.3blue1brown.com) (mișcare — și motorul e chiar Manim-ul nostru), [Desmos](https://www.desmos.com/calculator) (modelul pentru `Plot`), [Observable](https://observablehq.com) (reactivitate + straturi de desen). Plus [PerfectlyNormal](https://math345-games.github.io/PerfectlyNormal/), pentru jocul de Gram-Schmidt de pe pagina 2. Analiza în `docs/referinte.md`, care are acum 8 site-uri și 11 reguli
   - [x] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
 - [x] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))
   - [x] Nunito Sans pentru titluri și text, grosimile 400 / 600 / 700–800
@@ -237,8 +237,12 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       `src/lib/viz-roles.ts` — sursa unică pentru rolurile `--viz-*`, aceleași și în Manim — deci
       legenda nu poate ajunge să contrazică desenul. Fiecare element are formă (linie, linie
       punctată, punct, zonă, celulă) și text, nu doar culoare. Verificat în ambele teme
-- [ ] `StepExplanation` — propoziția care spune ce se întâmplă la pasul curent, lângă animație.
-      Notat în `docs/referinte.md` ca „împrumutăm de la visualgo", dar nefăcut
+- [x] `StepExplanation` — propoziția care spune ce se întâmplă la pasul curent, lângă animație
+      (împrumutată de la visualgo, dar textul descrie formula, nu pseudocod). Primește propoziția
+      gata compusă, nu `steps[]`. `explicatie` e `ReactNode`, ca să poată purta notație inline.
+      Regiunea `aria-live` e stabilă, iar anunțurile se sting în derulare automată — la 4× ar fi
+      inutilizabile la cititorul de ecran. Bandă de accent în `--viz-curent`, aceeași culoare ca
+      iterația curentă din desen. Demonstrație live în `/design-system`, legată de `PlaybackBar`
 - [ ] `MatrixGrid` — matricea desenată, cu stări per celulă (normală, evidențiată, deja calculată,
       pivot, zero). Necesară pe paginile **1, 3, 4, 7, 8, 13** — jumătate din site
 - [ ] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
@@ -252,9 +256,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 **Rămâne de făcut la o revenire:**
 
-- [ ] 3–5 site-uri suplimentare de referință pentru estetică și animații
+- [x] ~~3–5 site-uri suplimentare de referință pentru estetică și animații~~ → gata (vezi mai sus)
 - [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
-- [ ] piesele rămase: `StepExplanation`, `MatrixGrid`, `Plot` (`Legend` — gata)
+- [ ] piesele rămase: `MatrixGrid`, `Plot` (`Legend` și `StepExplanation` — gata) — ordinea de
+      lucru și dificultatea fiecărei pagini: TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md)
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
 **Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —
