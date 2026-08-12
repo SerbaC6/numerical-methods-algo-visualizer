@@ -14,7 +14,8 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 - [x] ~~**Lista celor ~15 metode numerice**~~ → **14 pagini tematice**, stabilite în
       [`Plan.md`](./Plan.md), secțiunea „Lista Algoritmi"; detaliate în tabelul din Faza 7
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
-- [ ] Font monospace pentru formule și tabele numerice (cifre tabulare)
+- [x] ~~Font monospace pentru formule și tabele numerice~~ → **JetBrains Mono** (cifre tabulare,
+      distinge `0/O` și `1/l/I`), self-hosted lângă Nunito Sans
 - [ ] Domeniu: `github.io` sau domeniu propriu
 - [ ] Unde stau fișierele Manim: în repo sau în GitHub Releases
 - [ ] MDX pentru conținut sau fișiere TypeScript simple
@@ -138,66 +139,76 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ---
 
-## Faza 2 — Design system
+## Faza 2 — Design system ✅
 
 **Obiectiv:** o limbă vizuală coerentă înainte să construim pagini.
 
-- [ ] Cercetare și referințe
-  - [ ] Analiză [visualgo.net](https://visualgo.net/en) — ce funcționează la controale și playback
-  - [ ] Analiză [csvistool.com](https://csvistool.com/) — layout și claritate
-  - [ ] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
-  - [ ] Analiză [Numerical Methods Visualizer (engineersuniverse.com)](https://engineersuniverse.com/webapps/numerical-methods-visualizer) — **cel mai apropiat de noi ca subiect**: ce metode acoperă, cum arată controalele și tabelul de iterații, ce lipsește (de aici putem lua și inspirație pentru lista celor ~15 metode)
-  - [ ] Caută 3–5 site-uri suplimentare de referință (estetică, animații)
-  - [ ] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
-- [ ] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))
-  - [ ] Nunito Sans pentru titluri și text, grosimile 400 / 600 / 700–800
-  - [ ] Alegere font monospace pentru formule/tabele numerice (cifre tabulare)
-  - [ ] Verificare diacritice românești în Nunito Sans: **ș** și **ț** cu virgulă, nu cu sedilă
-  - [ ] Self-hosting fonturi în `public/fonts`, subset latin + latin-ext (fără CDN — evităm cereri externe)
-  - [ ] Tema implicită: întunecată, fundal `#262B40`
-- [ ] Design tokens
-  - [ ] Culorile paletei ca tokens: `#0474C4` accent primar, `#5379AE` accent secundar, `#2C444C` suprafață, `#A8C4EC` text/accent luminos, `#06457F` accent apăsat, `#262B40` fundal închis
-  - [ ] Culori pentru stări (succes/atenție/eroare) — derivate separat, paleta e monocromă și nu poate purta singură sensul de „eroare"
-  - [ ] Culori dedicate vizualizării: `#0474C4` iterația curentă, `#5379AE` iterații anterioare, `#A8C4EC` grilă și adnotări, `#06457F` interval evidențiat
-  - [ ] Temă întunecată + temă luminoasă, ambele definite explicit (paleta e gândită întâi pentru cea închisă)
-  - [ ] Scală tipografică, spațieri, radius, umbre
-  - [ ] Definire ca variabile CSS + mapare în `tailwind.config`
-  - [ ] Verificare contrast WCAG AA pe toate perechile text/fundal
-  - [ ] Regulă de contrast: pe fundal închis, textul-accent e `#A8C4EC` (~8,5:1 față de `#262B40`), **nu** `#0474C4` (~2,9:1 — doar umplere, niciodată text)
-- [ ] Componente de bază (shadcn + adaptare la temă)
-  - [ ] Button (primar, secundar, ghost, iconiță)
-  - [ ] Card
-  - [ ] Slider (cu etichetă de valoare — esențial pentru parametri)
-  - [ ] Input numeric (cu validare și mesaj de eroare)
-  - [ ] Input pentru expresii matematice (font mono, feedback de validare)
-  - [ ] Select / Tabs / Accordion
-  - [ ] Tooltip + Popover (explicații scurte în context)
-  - [ ] Badge (dificultate, capitol)
-  - [ ] Skeleton / stare de încărcare
-- [ ] Componente specifice proiectului (deocamdată doar shell vizual; logica vine în Faza 4)
-  - [ ] `AlgorithmCard` — card pentru pagina de cuprins
-  - [ ] `ControlPanel` — grup de parametri, responsiv
-  - [ ] `PlaybackBar` — play/pauză, pas înainte, pas înapoi, reset, viteză
-  - [ ] `IterationTable` — tabel de iterații, scroll pe mobil, evidențiere rând curent
-  - [ ] `FormulaBlock` — afișare formulă (KaTeX; verifică impactul pe bundle)
-  - [ ] `Callout` — „atenție", „capcană", „de reținut"
-- [ ] Mișcare și micro-interacțiuni („stil Gemini")
-  - [ ] Definire durate și easing standard (ex. 150/250/400ms)
-  - [ ] Reguli: ce se animează și ce nu
-  - [ ] Alegere lib de animație (Framer Motion / CSS pur) + justificare de mărime
-  - [ ] [Magic UI](https://magicui.design) / [Aceternity UI](https://ui.aceternity.com) — alege 2–3 efecte pentru hero și carduri, nu mai mult; se copiază în `src/components/ui`, deci verifică ce dependențe aduce fiecare
-  - [ ] Efectele împrumutate se re-colorează pe paleta proiectului înainte de folosire (multe vin cu gradienturi proprii, violet/roz)
-  - [ ] Regulă: efectele decorative stau pe pagina de cuprins și pe hero; pe paginile de algoritm animația e a graficului, nu a decorului
-  - [ ] Respectare `prefers-reduced-motion` peste tot, testat
-  - [ ] Stări hover/focus/active consistente
-- [ ] Responsivitate
-  - [ ] Breakpoint-uri definite și documentate
-  - [ ] Toate controalele ≥ 44px țintă de atingere
-  - [ ] Regulă: pe mobil graficul deasupra, controalele dedesubt; pe desktop, alături
-  - [ ] Tabelele mari fac scroll orizontal propriu, nu împing pagina
-- [ ] Pagină internă `/design-system` (doar în dev) cu toate componentele la un loc
+> Rezultatul e documentat în [`docs/design-system.md`](./docs/design-system.md) (tokens, mișcare,
+> componente, responsivitate, accesibilitate) și [`docs/referinte.md`](./docs/referinte.md)
+> (ce împrumutăm, ce evităm). Pagina vie: `src/pages/DesignSystem.tsx`.
 
-**Gata când:** pagina `/design-system` arată toate componentele, în ambele teme, corect pe telefon și pe desktop.
+- [x] Cercetare și referințe
+  - [x] Analiză [visualgo.net](https://visualgo.net/en) — ce funcționează la controale și playback
+  - [x] Analiză [csvistool.com](https://csvistool.com/) — layout și claritate
+  - [x] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
+  - [x] Analiză [Numerical Methods Visualizer (engineersuniverse.com)](https://engineersuniverse.com/webapps/numerical-methods-visualizer) — **cel mai apropiat de noi ca subiect**: acoperă doar bisecție, Newton-Raphson, sume Riemann și trapeze; luăm de la el afișarea erorii absolute + relative și presetările, evităm textul lung dinaintea vizualizării
+  - [ ] Caută 3–5 site-uri suplimentare de referință (estetică, animații) — deocamdată doar [PerfectlyNormal](https://math345-games.github.io/PerfectlyNormal/), pentru jocul de Gram-Schmidt de pe pagina 2
+  - [x] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
+- [x] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))
+  - [x] Nunito Sans pentru titluri și text, grosimile 400 / 600 / 700–800
+  - [x] ~~Alegere font monospace~~ → **JetBrains Mono** (cifre tabulare, distinge `0/O` și `1/l/I`)
+  - [x] Verificare diacritice românești: ambele fonturi au Ș/ș/Ț/ț la codepoint-urile **cu virgulă** (U+0218–U+021B), plus Ă/Â/Î — verificat cu fontTools pe fișierele descărcate
+  - [x] Self-hosting fonturi în `public/fonts`, subset latin + latin-ext, variable fonts, ~102 KB total (fără CDN; verificat că build-ul nu referă niciun domeniu extern)
+  - [x] Tema implicită: întunecată, fundal `#262B40`
+- [x] Design tokens
+  - [x] Culorile paletei ca tokens: `#0474C4` accent primar, `#5379AE` accent secundar, `#2C444C` suprafață, `#A8C4EC` text/accent luminos, `#06457F` accent apăsat, `#262B40` fundal închis
+  - [x] Culori pentru stări (succes/atenție/eroare) — derivate separat, plus variantele de fundal
+  - [x] Culori dedicate vizualizării: `--viz-curent`, `--viz-anterior`, `--viz-grila`, `--viz-interval`, `--viz-functie`, `--viz-solutie` — aceleași tokens se folosesc și în scenele Manim
+  - [x] Temă întunecată + temă luminoasă, ambele definite explicit; comutator cu preferința în `localStorage` (cheia `mn-tema` — singurul lucru scris în browser)
+  - [x] Scală tipografică fluidă, spațieri, radius, umbre (`shadow-jos/mediu/sus`)
+  - [x] Definire ca variabile CSS + mapare Tailwind v4 (`@theme` în `src/index.css`, fără `tailwind.config`)
+  - [x] Verificare contrast WCAG AA pe toate perechile text/fundal — `python3 scripts/verifica-contrast.py`, toate trec în ambele teme
+  - [x] Regulă de contrast: pe fundal închis, textul-accent e `#A8C4EC` (**7,84:1** măsurat față de `#262B40`), **nu** `#0474C4` (**2,86:1** — doar umplere, niciodată text). Perechea interzisă a rămas în script, ca test de regresie
+- [x] Componente de bază (shadcn + adaptare la temă)
+  - [x] Button (primar, secundar, contur, ghost, link, iconiță)
+  - [x] Card
+  - [x] Slider (cu etichetă de valoare)
+  - [x] Input numeric — `NumberInput`, cu validare și eroare legată prin `aria-describedby`
+  - [x] Input pentru expresii matematice — `ExpressionInput`, font mono, validare la tastare, exemple cu un clic
+  - [x] Select / Tabs / Accordion
+  - [x] Tooltip + Popover
+  - [x] Badge (dificultate, capitol, stări)
+  - [x] Skeleton / stare de încărcare
+- [x] Componente specifice proiectului (deocamdată doar shell vizual; logica vine în Faza 4)
+  - [x] `AlgorithmCard` — card pentru pagina de cuprins, cu starea „în curând"
+  - [x] `ControlPanel` — grup de parametri, responsiv, cu „Resetează"
+  - [x] `PlaybackBar` — play/pauză, pas înainte, pas înapoi, reset, viteză, poziție
+  - [x] `IterationTable` — antet lipit, scroll pe mobil, rând curent evidențiat, clic = sari la pas
+  - [x] `FormulaBlock` — KaTeX încărcat **la cerere** (~78 KB gzip, chunk separat, nu intră în bundle-ul inițial), cu evidențierea părților din formulă prin `\htmlId`
+  - [x] `Callout` — „de știut", „de reținut", „atenție", „capcană"
+- [x] Mișcare și micro-interacțiuni („stil Gemini")
+  - [x] Definire durate și easing standard: 150 / 250 / 400 ms, `ease-standard` implicit
+  - [x] Reguli: ce se animează și ce nu (vezi `docs/design-system.md`, §4)
+  - [x] ~~Alegere lib de animație~~ → **niciuna deocamdată**: CSS + `tw-animate-css` acoperă tot. Framer Motion (~34 KB gzip) se ia în calcul doar dacă o pagină chiar cere layout animations
+  - [ ] [Magic UI](https://magicui.design) / [Aceternity UI](https://ui.aceternity.com) — alege 2–3 efecte pentru hero și carduri — **amânat în Faza 3**, când există hero-ul și pagina de cuprins
+  - [x] Regulă scrisă: efectele împrumutate se re-colorează pe paleta proiectului înainte de folosire
+  - [x] Regulă: efectele decorative stau pe pagina de cuprins și pe hero; pe paginile de algoritm animația e a graficului, nu a decorului
+  - [x] Respectare `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, plus tăierea globală a duratelor din `index.css`
+  - [x] Stări hover/focus/active consistente; inel de focus `#A8C4EC` peste tot
+- [x] Responsivitate
+  - [x] Breakpoint-uri definite și documentate (cele Tailwind, cu ce se schimbă la fiecare)
+  - [x] Toate controalele ≥ 44px țintă de atingere (utilitarul `.tinta-atingere`)
+  - [x] Regulă: pe mobil graficul deasupra, controalele dedesubt; pe desktop, alături
+  - [x] Tabelele mari fac scroll orizontal propriu (`.scroll-tabel`), nu împing pagina
+- [x] Pagină internă cu toate componentele la un loc — `src/pages/DesignSystem.tsx` (mutată pe ruta `/design-system`, doar în dev, în Faza 3)
+
+**Rămâne de făcut la o revenire:**
+
+- [ ] 3–5 site-uri suplimentare de referință pentru estetică și animații
+- [ ] alegerea efectelor Magic UI / Aceternity (are sens doar cu hero-ul din Faza 3)
+- [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
+
+**Gata când:** pagina de design system arată toate componentele, în ambele teme, corect pe telefon și pe desktop. ✅ _(verificat prin capturi headless la 390 px și 1280 px, ambele teme)_
 
 ---
 
@@ -373,22 +384,22 @@ Fiecare pagină grupează metodele înrudite, ca să se poată face paralele în
 împărțirea vine din `Plan.md`, nu una metodă = una pagină. Coloana „Curs" spune din ce
 fișier din `cursuri_MN/` se ia conținutul.
 
-| Nr. | Pagină (metode)                                            | Curs sursă      | Vizual     | Implem. | Manim | Text | Interactiv | Mobil | Gata |
-| --- | ---------------------------------------------------------- | --------------- | ---------- | ------- | ----- | ---- | ---------- | ----- | ---- |
-| 1   | Cramer, LU, Doolittle, Crout, Cholesky                     | curs2, curs4    | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 2   | Norme, Householder, Givens, Gram-Schmidt                   | curs3, curs2    | axă + joc  | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 3   | Eliminare Gaussiană (pivotări), algoritmul Thomas          | curs4           | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 4   | Jacobi, Gauss-Seidel, SOR                                  | curs5           | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Puncte fixe, bisecție, Newton, secantă                     | curs6, curs5    | interval   | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 6   | Gradient descendent, gradient conjugat                     | curs6, curs5    | vale 2D    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 7   | Metodele puterii, puterea inversă, Rayleigh, deflație, PageRank | curs7      | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 8   | QR și DVS                                                  | curs8, curs3    | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 9   | Lagrange, Neville, funcția Runge, spline                   | curs09          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 10  | Curbe Bézier, algoritmul de Casteljau (2D/3D)              | curs09          | canvas     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 11  | Aproximare CMMP, FFT                                       | curs10          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 12  | Derivare numerică, Newton-Cotes (trapeze, Simpson)         | curs11          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  | Romberg, cuadraturi adaptive, cuadraturi Gaussiene         | curs12          | matrice+gr | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | ODE: problema Cauchy, Euler, Runge-Kutta                   | curs13          | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| Nr. | Pagină (metode)                                                 | Curs sursă   | Vizual     | Implem. | Manim | Text | Interactiv | Mobil | Gata |
+| --- | --------------------------------------------------------------- | ------------ | ---------- | ------- | ----- | ---- | ---------- | ----- | ---- |
+| 1   | Cramer, LU, Doolittle, Crout, Cholesky                          | curs2, curs4 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 2   | Norme, Householder, Givens, Gram-Schmidt                        | curs3, curs2 | axă + joc  | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 3   | Eliminare Gaussiană (pivotări), algoritmul Thomas               | curs4        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 4   | Jacobi, Gauss-Seidel, SOR                                       | curs5        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Puncte fixe, bisecție, Newton, secantă                          | curs6, curs5 | interval   | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 6   | Gradient descendent, gradient conjugat                          | curs6, curs5 | vale 2D    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 7   | Metodele puterii, puterea inversă, Rayleigh, deflație, PageRank | curs7        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 8   | QR și DVS                                                       | curs8, curs3 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 9   | Lagrange, Neville, funcția Runge, spline                        | curs09       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 10  | Curbe Bézier, algoritmul de Casteljau (2D/3D)                   | curs09       | canvas     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 11  | Aproximare CMMP, FFT                                            | curs10       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 12  | Derivare numerică, Newton-Cotes (trapeze, Simpson)              | curs11       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Romberg, cuadraturi adaptive, cuadraturi Gaussiene              | curs12       | matrice+gr | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | ODE: problema Cauchy, Euler, Runge-Kutta                        | curs13       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 
 - [x] ~~Completează tabelul~~ — cele 14 pagini sunt fixate din `Plan.md`
 - [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)

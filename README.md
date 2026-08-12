@@ -46,11 +46,18 @@ să nu se bată cap în cap cu interfața.
 **Nunito Sans** — titluri și text. Sans-serif rotunjit, prietenos, lizibil la dimensiuni mici;
 se potrivește tonului didactic al site-ului.
 
+**JetBrains Mono** — formule, valori de parametri, tabele de iterații. Ales pentru cifrele
+tabulare (coloanele se compară pe verticală) și pentru că distinge clar `0/O` și `1/l/I`.
+
 - Grosimi folosite: 400 (text), 600 (subtitluri/UI), 700–800 (titluri).
-- Fontul se **auto-găzduiește** în `public/fonts` (fără CDN — nu facem cereri către domenii externe).
-- De verificat la instalare: diacriticele românești cu virgulă dedesubt (**ș**, **ț**), nu cu sedilă.
-- Pentru formule și tabele numerice se alege separat un font monospace cu cifre tabulare,
-  ca valorile să se alinieze pe coloane.
+- Ambele se **auto-găzduiesc** în `public/fonts` (fără CDN — nu facem cereri către domenii
+  externe), ca variable fonts, subset latin + latin-ext.
+- Diacriticele românești sunt verificate: Ș/ș/Ț/ț există la codepoint-urile cu **virgulă**
+  (U+0218–U+021B), nu doar cu sedilă.
+
+Detaliile complete (tokens, mișcare, componente, responsivitate, accesibilitate) sunt în
+[`docs/design-system.md`](./docs/design-system.md). Ce am împrumutat de la alte site-uri și ce am
+evitat: [`docs/referinte.md`](./docs/referinte.md).
 
 ---
 
@@ -73,15 +80,23 @@ npm run typecheck  # doar TypeScript
 ### Structura
 
 ```
+cursuri_MN/        materia predată — SINGURA sursă pentru formule și definiții
 src/algorithms/    implementările numerice, fără JSX
-src/components/    ui/ (shadcn), viz/ (grafice), layout/
+src/components/    ui/ (shadcn), viz/ (grafic + controale), content/ (text), layout/
 src/content/       textele în română, separate de cod
+src/hooks/         hook-uri proprii (ex. tema)
 src/lib/           utilitare: formatare, parser de expresii, matematică
 src/pages/         paginile de rutare
+src/styles/        @font-face și stiluri care nu sunt tokens
+public/fonts/      fonturile auto-găzduite
 public/media/      vizualurile Manim randate (mp4 + poster)
 manim/             scenele Python
+scripts/           întreținere: descărcare fonturi, verificare contrast
 docs/              documentație de lucru
 ```
+
+> **Conținutul site-ului vine exclusiv din `cursuri_MN/`.** Formulele, definițiile și notațiile
+> se copiază de acolo, nu din alte surse. Maparea curs → pagină e în [`Plan.md`](./Plan.md).
 
 ### Vizualurile Manim
 

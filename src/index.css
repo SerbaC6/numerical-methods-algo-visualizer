@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./styles/fonts.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -16,14 +17,45 @@
   --color-noapte: #262b40;
 
   --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Menlo", monospace;
+
+  /* Scală tipografică fluidă (raport ~1,25). Titlurile cresc cu ecranul,
+     textul curent rămâne la mărimile Tailwind. */
+  --text-afis: clamp(2.25rem, 1.65rem + 3vw, 3.5rem);
+  --text-afis--line-height: 1.05;
+  --text-afis--letter-spacing: -0.02em;
+  --text-titlu: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
+  --text-titlu--line-height: 1.15;
+  --text-titlu--letter-spacing: -0.015em;
+  --text-sectiune: clamp(1.375rem, 1.25rem + 0.6vw, 1.75rem);
+  --text-sectiune--line-height: 1.25;
+  --text-subsectiune: 1.125rem;
+  --text-subsectiune--line-height: 1.4;
+
+  /* Mișcare — trei trepte, atât. Vezi docs/design-system.md. */
+  --duration-rapid: 150ms; /* hover, focus, apăsare */
+  --duration-mediu: 250ms; /* apariții, schimbări de stare */
+  --duration-lent: 400ms; /* tranziții de layout, panouri */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-iesire: cubic-bezier(0, 0, 0.2, 1);
+  --ease-intrare: cubic-bezier(0.4, 0, 1, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.36, 0.64, 1);
+
+  --shadow-jos: 0 1px 2px 0 rgb(6 12 30 / 0.18);
+  --shadow-mediu: 0 4px 14px -3px rgb(6 12 30 / 0.28);
+  --shadow-sus: 0 18px 40px -12px rgb(6 12 30 / 0.45);
+  --shadow-accent: 0 0 0 1px color-mix(in oklab, #0474c4 45%, transparent);
 }
 
 /* ---------------------------------------------------------------
-   Roluri semantice. Tema implicită e cea întunecată.
+   Roluri semantice. Tema implicită e cea întunecată: valorile din
+   `:root` sunt cele închise, ca pagina să arate corect și înainte
+   ca JS-ul să pună clasa pe <html>.
    --------------------------------------------------------------- */
-:root {
+:root,
+.dark {
   --fundal: var(--color-noapte);
+  --fundal-ridicat: color-mix(in oklab, var(--color-noapte) 82%, #ffffff);
   --suprafata: var(--color-ardezie);
   --text: #eef3fb;
   --text-slab: var(--color-cer);
@@ -44,6 +76,9 @@
   --succes: #4ade80;
   --atentie: #fbbf24;
   --eroare: #f87171;
+  --succes-fundal: color-mix(in oklab, #4ade80 14%, transparent);
+  --atentie-fundal: color-mix(in oklab, #fbbf24 14%, transparent);
+  --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
 
   /* Punte către shadcn/ui: numele lui standard, valorile noastre.
      Componentele copiate din shadcn/Magic UI/Aceternity merg fără modificări. */
@@ -52,7 +87,7 @@
   --foreground: var(--text);
   --card: var(--suprafata);
   --card-foreground: var(--text);
-  --popover: var(--suprafata);
+  --popover: var(--fundal-ridicat);
   --popover-foreground: var(--text);
   --primary: var(--accent);
   --primary-foreground: #ffffff;
@@ -70,21 +105,40 @@
 
 .light {
   --fundal: #f7f9fd;
+  --fundal-ridicat: #ffffff;
   --suprafata: #ffffff;
   --text: var(--color-noapte);
-  --text-slab: var(--color-ardezie);
-  --accent: var(--color-safir);
-  --accent-apasat: var(--color-adanc);
+  --text-slab: #4a5a6b;
+  --accent: var(--color-adanc);
+  --accent-apasat: #033560;
   --accent-slab: var(--color-estompat);
   --bordura: color-mix(in oklab, var(--color-estompat) 35%, transparent);
 
   --viz-functie: var(--color-adanc);
+  --viz-curent: var(--color-safir);
+  --viz-anterior: var(--color-estompat);
   --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
   --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
+  --viz-solutie: #15803d;
+
+  --succes: #15803d;
+  --atentie: #a16207;
+  --eroare: #b91c1c;
+  --succes-fundal: color-mix(in oklab, #15803d 10%, transparent);
+  --atentie-fundal: color-mix(in oklab, #a16207 10%, transparent);
+  --eroare-fundal: color-mix(in oklab, #b91c1c 10%, transparent);
+
+  --secondary: color-mix(in oklab, var(--color-cer) 40%, transparent);
+  --muted: color-mix(in oklab, var(--color-cer) 22%, transparent);
+
+  --shadow-jos: 0 1px 2px 0 rgb(38 43 64 / 0.08);
+  --shadow-mediu: 0 4px 14px -3px rgb(38 43 64 / 0.12);
+  --shadow-sus: 0 18px 40px -12px rgb(38 43 64 / 0.2);
 }
 
 @theme inline {
   --color-fundal: var(--fundal);
+  --color-fundal-ridicat: var(--fundal-ridicat);
   --color-suprafata: var(--suprafata);
   --color-text: var(--text);
   --color-text-slab: var(--text-slab);
@@ -95,6 +149,16 @@
   --color-succes: var(--succes);
   --color-atentie: var(--atentie);
   --color-eroare: var(--eroare);
+  --color-succes-fundal: var(--succes-fundal);
+  --color-atentie-fundal: var(--atentie-fundal);
+  --color-eroare-fundal: var(--eroare-fundal);
+
+  --color-viz-functie: var(--viz-functie);
+  --color-viz-curent: var(--viz-curent);
+  --color-viz-anterior: var(--viz-anterior);
+  --color-viz-grila: var(--viz-grila);
+  --color-viz-interval: var(--viz-interval);
+  --color-viz-solutie: var(--viz-solutie);
 
   /* Aceleași valori, sub numele așteptate de shadcn/ui */
   --color-background: var(--background);
@@ -128,6 +192,11 @@
 
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
   }
 
   body {
@@ -138,9 +207,25 @@
     text-wrap: pretty;
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-cer);
     outline-offset: 2px;
+  }
+
+  /* Cifre tabulare peste tot unde se compară numere pe verticală:
+     tabele de iterații, valori de parametri, formule. */
+  .font-mono,
+  table,
+  input[type="number"] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -155,5 +240,35 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+@layer components {
+  /* Formulele randate de KaTeX. Fragmentele marcate cu `\htmlId{...}` se
+     aprind când animația e la pasul lor — așa se leagă formula de imagine. */
+  .formula .katex {
+    font-size: 1.05em;
+  }
+
+  .formula [data-evid="true"] {
+    background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent);
+    transition: background-color var(--duration-mediu) var(--ease-standard);
+  }
+}
+
+@layer utilities {
+  /* Ținta minimă de atingere pe mobil (44px, ghidul WCAG 2.5.5). */
+  .tinta-atingere {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Tabelele largi fac scroll în containerul lor, nu împing pagina. */
+  .scroll-tabel {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
   }
 }

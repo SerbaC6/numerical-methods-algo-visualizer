@@ -1,5 +1,16 @@
 # `src/components/viz`
 
-Componente de vizualizare: sistemul de axe, curba funcției, markerii de iterație,
-tabelul de iterații, bara de playback. Nu conțin matematică — primesc `steps[]`
-gata calculați din `src/algorithms`.
+Aparatul interactiv al unei pagini de algoritm: sistemul de axe, curba funcției, markerii de
+iterație, plus controalele care le însoțesc.
+
+| Componentă        | Ce face                                                          |
+| ----------------- | ---------------------------------------------------------------- |
+| `ControlPanel`    | grupul de parametri, responsiv, cu „Resetează"                   |
+| `PlaybackBar`     | reset / pas înapoi / play-pauză / pas înainte / viteză / poziție |
+| `IterationTable`  | tabelul de iterații, cu rândul curent sincronizat cu animația    |
+| `FormulaBlock`    | formulă KaTeX, cu evidențierea părților sincron cu animația      |
+| `NumberInput`     | câmp numeric cu validare și mesaj de eroare                      |
+| `ExpressionInput` | câmp pentru `f(x)`, cu validare la tastare și exemple            |
+
+Nu conțin matematică — primesc `steps[]` gata calculați din `src/algorithms`.
+Convențiile de folosire sunt în [`docs/design-system.md`](../../../docs/design-system.md).

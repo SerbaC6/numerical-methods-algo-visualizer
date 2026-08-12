@@ -1,0 +1,176 @@
+# Design system
+
+Limba vizuală a proiectului. Deciziile de aici se aplică la toate cele 14 pagini de metode;
+dacă o pagină are nevoie de altceva, se schimbă întâi documentul ăsta, apoi pagina.
+
+Pagina vie cu toate componentele: `src/pages/DesignSystem.tsx` (până la Faza 3 e ce se vede când
+rulezi `npm run dev`).
+
+---
+
+## 1. Culoare
+
+Paleta „Sapphire nightfall whisper". Tokens brute în `src/index.css`, blocul `@theme`.
+
+| Token              | Hex       | Rol                                        |
+| ------------------ | --------- | ------------------------------------------ |
+| `--color-safir`    | `#0474C4` | accent principal, iterația curentă         |
+| `--color-estompat` | `#5379AE` | accent secundar, iterații anterioare       |
+| `--color-ardezie`  | `#2C444C` | suprafețe                                  |
+| `--color-cer`      | `#A8C4EC` | text secundar, grilă, adnotări, inel focus |
+| `--color-adanc`    | `#06457F` | accent apăsat, interval evidențiat         |
+| `--color-noapte`   | `#262B40` | fundalul temei întunecate                  |
+
+**Regula de contrast.** Pe fundal închis, textul-accent e `#A8C4EC` (7,8:1 față de `#262B40`).
+Safirul `#0474C4` are 2,9:1 pe același fundal — **culoare de umplere, niciodată de text.**
+În tema luminoasă accentul de text devine `#06457F` (9,2:1).
+
+Stările (succes / atenție / eroare) sunt derivate **în afara** paletei: paleta e monocromă pe
+albastru și nu poate purta singură înțelesul de „a divergit".
+
+**Roluri de vizualizare** — aceleași în web și în scenele Manim, ca desenul și animația să
+însemne același lucru:
+
+| Token            | Înțeles                     |
+| ---------------- | --------------------------- |
+| `--viz-functie`  | funcția / datele de intrare |
+| `--viz-curent`   | iterația curentă            |
+| `--viz-anterior` | iterațiile anterioare       |
+| `--viz-interval` | intervalul evidențiat       |
+| `--viz-solutie`  | soluția / convergența       |
+| `--viz-grila`    | grilă și adnotări           |
+
+Verificare automată a contrastului:
+
+```bash
+python3 scripts/verifica-contrast.py
+```
+
+Toate perechile folosite trec AA (≥ 4,5:1). Singura care „pică" e safirul ca text pe fundal
+închis — e în listă intenționat, ca test de regresie pentru regula de mai sus.
+
+## 2. Teme
+
+Tema implicită e cea **întunecată**. Valorile ei stau pe `:root`, ca pagina să arate corect și
+înainte ca JS-ul să apuce să pună clasa pe `<html>`. Comutarea adaugă `.light` sau `.dark`.
+
+Preferința se ține în `localStorage`, cheia `mn-tema`. E **singurul** lucru pe care îl scriem în
+browser: fără cookies, fără analytics, fără date personale.
+
+## 3. Tipografie
+
+- **Nunito Sans** — titluri și text. Grosimi 400 / 600 / 700–800.
+- **JetBrains Mono** — formule, valori de parametri, tabele de iterații. Ales pentru cifre
+  tabulare (coloanele se compară pe verticală) și pentru că distinge clar `0/O` și `1/l/I`.
+
+Ambele sunt **self-hosted** în `public/fonts`, variable fonts, subset latin + latin-ext,
+`font-display: swap`. Preîncărcat: doar subsetul latin al fontului principal.
+
+**Diacritice.** Verificat cu fontTools: ambele fonturi au Ș/ș/Ț/ț la codepoint-urile cu virgulă
+(U+0218–U+021B), nu doar variantele cu sedilă, plus Ă/Â/Î. Scrie mereu cu virgulă.
+
+Descărcarea fonturilor se reface cu:
+
+```bash
+python3 scripts/descarca-fonturi.py
+```
+
+Scala tipografică e fluidă (`clamp`), raport ~1,25: `text-afis`, `text-titlu`, `text-sectiune`,
+`text-subsectiune`. Textul curent rămâne la mărimile Tailwind.
+
+Cifrele tabulare sunt pornite automat pe `.font-mono`, pe `table` și pe `input[type=number]`.
+
+## 4. Mișcare
+
+Trei durate, atât:
+
+| Token            | Valoare | Când                                 |
+| ---------------- | ------- | ------------------------------------ |
+| `duration-rapid` | 150 ms  | hover, focus, apăsare                |
+| `duration-mediu` | 250 ms  | apariții, schimbări de stare         |
+| `duration-lent`  | 400 ms  | layout, panouri, tranziții de pagină |
+
+Easing: `ease-standard` implicit, `ease-iesire` pentru ce intră în ecran, `ease-elastic` doar
+pentru accente rare.
+
+**Ce se animează:** apariția panourilor, evidențierea rândului curent, evidențierea din formulă,
+pașii vizualizării.
+**Ce nu se animează:** textul, tabelele la scroll, culorile de stare (o eroare nu „se strecoară").
+
+**Regula de aur:** pe paginile de algoritm se mișcă **graficul**, nu ambalajul. Efectele
+decorative (Magic UI / Aceternity) stau pe pagina de cuprins și pe hero — maximum 2–3, și
+re-colorate pe paleta noastră înainte de folosire (vin cu gradienturi violet/roz).
+
+Tot ce se mișcă respectă `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, iar
+`index.css` taie duratele global la utilizatorii care au cerut asta.
+
+**Bibliotecă de animație:** deocamdată **niciuna**. CSS + Tailwind (`tw-animate-css`, deja în
+proiect) acoperă tot ce avem. Framer Motion aduce ~34 KB gzip și se ia în calcul abia dacă o
+pagină chiar are nevoie de layout animations — decizia se scrie aici când se ia.
+
+## 5. Componente
+
+`src/components/ui/` — generice, luate din shadcn/ui și re-colorate (cod copiat, nu dependență):
+Button, Card, Slider, Input, Label, Badge, Skeleton, Separator, Tabs, Accordion, Select, Tooltip,
+Popover.
+
+`src/components/viz/` — aparatul interactiv al unei pagini de algoritm:
+
+| Componentă        | Ce face                                                                    |
+| ----------------- | -------------------------------------------------------------------------- |
+| `ControlPanel`    | grupul de parametri, responsiv, cu „Resetează"                             |
+| `PlaybackBar`     | reset / pas înapoi / play-pauză / pas înainte / viteză / poziție           |
+| `IterationTable`  | tabel de iterații, antet lipit, rând curent evidențiat, clic = sari la pas |
+| `FormulaBlock`    | formulă KaTeX, cu evidențierea părților sincron cu animația                |
+| `NumberInput`     | câmp numeric cu validare și mesaj de eroare legat prin `aria-describedby`  |
+| `ExpressionInput` | câmp pentru `f(x)`, font mono, validare la tastare, exemple cu un clic     |
+
+`src/components/content/` — blocuri de text și navigare: `Callout` (de știut / de reținut /
+atenție / capcană), `AlgorithmCard` (cardul din cuprins, cu starea „în curând").
+
+### Legătura formulă ↔ animație
+
+Cerința centrală din `Plan.md`. Mecanismul: în LaTeX marchezi părțile cu `\htmlId{...}{...}`, iar
+`FormulaBlock` primește lista de id-uri active:
+
+```tsx
+<FormulaBlock
+  latex={String.raw`x_k = \frac{\htmlId{f-a}{a_k} + \htmlId{f-b}{b_k}}{2}`}
+  evidentiaza={["f-a"]}
+/>
+```
+
+Aceleași id-uri se folosesc și pentru elementele din desen, deci `l21` se aprinde simultan în
+matrice și în formulă. KaTeX rulează cu `trust` limitat la `\htmlId` și `\htmlClass` — nu se
+poate injecta HTML arbitrar.
+
+KaTeX (JS + CSS + fonturi, ~78 KB gzip) se încarcă **la cerere**, nu în bundle-ul inițial:
+pagina de cuprins nu are formule. Fonturile lui vin din pachet, deci tot fără cereri externe.
+
+## 6. Responsivitate
+
+Breakpoint-urile sunt cele Tailwind, nemodificate:
+
+| Nume | De la   | Ce se schimbă la noi                     |
+| ---- | ------- | ---------------------------------------- |
+| —    | 0       | o coloană; grafic sus, controale jos     |
+| `sm` | 640 px  | parametrii pe două coloane               |
+| `md` | 768 px  | meniul iese din drawer                   |
+| `lg` | 1024 px | grafic și controale alături; TOC lateral |
+| `xl` | 1280 px | container la lățime maximă               |
+
+Reguli:
+
+- **grafic sus, controale jos pe mobil** — vrei să vezi graficul când tragi de un slider;
+- toate controalele au minimum 44×44 px (`.tinta-atingere`);
+- tabelele largi fac scroll în containerul lor (`.scroll-tabel`), nu împing pagina;
+- de testat pe 360 px și pe 1440 px+.
+
+## 7. Accesibilitate
+
+- inel de focus vizibil peste tot (`:focus-visible`, 2 px `#A8C4EC`);
+- fiecare control are etichetă vizibilă; `placeholder` nu ține loc de etichetă;
+- mesajele de eroare sunt legate prin `aria-describedby` și au `role="alert"` unde apar la tastare;
+- pozițiile din playback se anunță cu `aria-live="polite"`;
+- iconițele decorative au `aria-hidden`, butoanele-iconiță au `aria-label`;
+- contrast AA verificat cu scriptul de mai sus, în ambele teme.
