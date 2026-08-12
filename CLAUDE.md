@@ -146,6 +146,90 @@ Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-cure
 Mobilul nu e opțional: fiecare vizualizare și fiecare set de controale trebuie să se comporte
 corect în portret și peisaj.
 
+## TODO — animații și interfețe grafice
+
+Ordinea de lucru pentru partea vizuală, **de la cel mai ușor la cel mai greu**. Dificultatea nu e
+dată de matematică, ci de **primitiva de desen** pe care o cere pagina: cât timp o pagină
+refolosește o primitivă deja construită, e ieftină; când cere una nouă, aceea e munca reală.
+
+Referințele vizuale (ce împrumutăm și ce evităm de la fiecare site analizat) stau în
+[`docs/referinte.md`](./docs/referinte.md) — se citește **înainte** de a începe o etapă, nu după.
+
+Regulile care se aplică la fiecare punct de mai jos, fără excepție:
+
+- culorile vin din `src/lib/viz-roles.ts` (`--viz-*`), niciodată scrise direct în componentă;
+- fiecare interfață primește **legendă** (`Legend`) + **mod de folosire** în 3–5 pași;
+- fiecare interfață face **paralela explicită formulă ↔ desen** (ce parte din formulă e ce
+  element vizual), prin `FormulaBlock` cu `\htmlId`;
+- matematica stă în `src/algorithms/`, desenul primește `steps[]` gata calculați;
+- verificat în ambele teme, în portret și în peisaj, cu `prefers-reduced-motion`.
+
+### Etapa 0 — primitivele de bază (blochează tot restul)
+
+- [x] **`StepExplanation`** — propoziția care spune ce se întâmplă la pasul curent, lângă desen.
+      Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 14 pagini.
+- [ ] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
+      calculată, pivot, zero). Fără sistem de coordonate, doar grilă + tranziții.
+      Necesară pe paginile **1, 3, 4, 7, 8, 13**.
+- [ ] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
+      zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă opt pagini
+      (**5, 6, 9, 10, 11, 12, 13, 14**). **Decizie luată: SVG scris de mână**, nu bibliotecă de
+      charting — Recharts/visx/D3 sunt gândite pentru date de business și încurcă exact ce ne
+      trebuie (o tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB.
+
+### Etapa 1 — pagini ușoare (refolosesc primitivele de mai sus)
+
+- [ ] **Pagina 5 — `ecuatii-neliniare`** (puncte fixe, bisecție, Newton, secantă). `Plot` + marker
+      de punct, dreaptă tangentă/secantă, interval care se strânge. Interfețe interactive, nu
+      animații. E pagina-pilot naturală: cea mai mică distanță între formulă și desen.
+- [ ] **Pagina 12 — `derivare-si-integrare`** (Newton-Cotes, trapeze, Simpson). `Plot` + arii
+      colorate sub curbă. Primitivă nouă: poligon/arie umplută. Fără stare iterativă complicată.
+- [ ] **Pagina 1 — `factorizari-lu`** (Cramer, LU, Doolittle, Crout, Cholesky). `MatrixGrid` +
+      umplere celulă cu celulă, plus spargerea matricei în două. **Fără input manual de valori**
+      (cerință din `Plan.md`).
+- [ ] **Pagina 3 — `eliminare-gaussiana`** (pivotări, Thomas). `MatrixGrid` + operații pe linii.
+      Primitivă nouă: linia care se mută, se schimbă cu alta și se scalează.
+- [ ] **Pagina 9 — `interpolare-polinomiala`** (Lagrange, Neville, Runge, spline). `Plot` + puncte
+      pe care utilizatorul le trage cu mouse-ul. Primitivă nouă: punct interactiv (drag).
+
+### Etapa 2 — pagini medii (cer o primitivă nouă fiecare)
+
+- [ ] **Pagina 4 — `metode-iterative`** (Jacobi, Gauss-Seidel, SOR). `MatrixGrid` + al doilea desen,
+      de convergență (eroarea pe iterații). Două vizualizări sincronizate pe același `steps[]`.
+- [ ] **Pagina 13 — `romberg-si-cuadraturi`**. `MatrixGrid` triunghiular pentru Romberg + `Plot`
+      pentru cuadraturi adaptive și Gaussiene. Dificultatea e că pagina cere ambele primitive.
+- [ ] **Pagina 14 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
+      direcții** — primitivă nouă: multe segmente scurte orientate, desenate eficient.
+- [ ] **Pagina 2 — `norme-si-ortogonalitate`** (norme, Householder, Givens, Gram-Schmidt).
+      Primitive noi: vector cu vârf de săgeată, reflexie și rotație interactivă, plus **jocul**
+      de Gram-Schmidt (inspirație: PerfectlyNormal, dar cu pași mult mai clari).
+
+### Etapa 3 — pagini grele (primitive scumpe, de atacat la final)
+
+- [ ] **Pagina 7 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație, PageRank).
+      `MatrixGrid` + vector care converge la direcția proprie + **graf cu noduri și muchii**
+      pentru PageRank. Trei feluri de desen pe o singură pagină.
+- [ ] **Pagina 8 — `qr-si-dvs`**. `MatrixGrid` pentru iterațiile QR + interpretarea geometrică a
+      DVS: **cerc unitate → elipsă**, primitivă nouă care trebuie legată de valorile singulare.
+- [ ] **Pagina 10 — `curbe-bezier`** (Bézier, de Casteljau, 2D **și 3D**). Interpolarea de Casteljau
+      e ușoară în 2D; comutatorul 2D/3D cerut în `Plan.md` înseamnă **proiecție 3D scrisă de mână**
+      plus rotirea scenei — de departe cea mai mare bucată de cod nou.
+- [ ] **Pagina 6 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
+      nouă: **curbe de nivel** (isolinii) peste o funcție de două variabile, plus traseul care
+      coboară. Întâi animații explicative, apoi interfața de aprofundare.
+- [ ] **Pagina 11 — `cmmp-si-fft`**. CMMP e ușor (`Plot` + dreapta de aproximare, refolosește tot).
+      **FFT e cel mai greu vizual din site**: plan complex, rădăcini ale unității și schema
+      recursivă („fluture"). De lăsat ultimul, indiferent de ordinea din care se lucrează.
+
+### Decizii de luat înainte de Etapa 0
+
+- [ ] `MatrixGrid` cere stări de celulă care **nu există** azi în `viz-roles.ts` (pivot, deja
+      calculat, zero). Dacă se rezolvă prin `color-mix` din cele șase culori — se poate face direct.
+      Dacă pare că cere o culoare nouă — **se oprește lucrul și se întreabă** (vezi regula paletei).
+- [ ] Decizia despre `motion`: e deja în bundle prin `TextFlippingBoard` din hero. Ori se asumă și
+      se folosește și pentru animațiile de pe paginile de metodă, ori se taie din hero și rămânem
+      pe CSS. De hotărât **înainte** de prima pagină, nu după.
+
 ## Convenții
 
 - TypeScript strict, cu `noUncheckedIndexedAccess`, `noUnusedLocals/Parameters`,
