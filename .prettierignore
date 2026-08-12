@@ -1,0 +1,7 @@
+dist
+coverage
+node_modules
+public/media
+public/fonts
+manim/media
+package-lock.json

@@ -1,0 +1,41 @@
+# Dependențe
+node_modules
+
+# Build
+dist
+dist-ssr
+.vite
+coverage
+
+# Loguri
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Mediu
+.env
+.env.*
+!.env.example
+*.local
+
+# Manim / Python
+manim/media/
+manim/.venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Editor / sistem
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

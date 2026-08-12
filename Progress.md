@@ -24,53 +24,57 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ---
 
-## Faza 0 — Fundație și tooling
+## Faza 0 — Fundație și tooling ✅
 
 **Obiectiv:** un proiect React care pornește local, cu lint și formatare puse la punct.
 
-- [ ] Inițializare proiect
-  - [ ] `npm create vite@latest . -- --template react-ts` (TypeScript, pentru siguranță la algoritmi)
-  - [ ] `npm install` și verificare `npm run dev` — pagina default se deschide
-  - [ ] Fixare versiune Node în `.nvmrc` + câmpul `engines` din `package.json`
-  - [ ] Curățare boilerplate Vite (logo-uri, CSS default, `App.css`)
-- [ ] Structura de foldere
-  - [ ] `src/pages/` — pagini de rutare
-  - [ ] `src/components/ui/` — componente generice (shadcn)
-  - [ ] `src/components/viz/` — componente de vizualizare
-  - [ ] `src/algorithms/` — implementările numerice, fără JSX
-  - [ ] `src/content/` — texte în română, separate de cod
-  - [ ] `src/lib/` — utilitare (formatare, parser, matematică)
-  - [ ] `src/hooks/`
-  - [ ] `public/media/` — video/poster Manim
-  - [ ] `manim/` — scene Python (izolat de aplicație)
-  - [ ] Fișier `README` scurt în fiecare folder care nu e evident
-- [ ] `.gitignore`
-  - [ ] `node_modules/`, `dist/`, `.vite/`, `coverage/`
-  - [ ] `.env*`, `*.local`
-  - [ ] `manim/media/` (randări intermediare), `__pycache__/`, `.venv/`
-  - [ ] `.DS_Store`, `Thumbs.db`
-  - [ ] Verificare: `git status` e curat după un build + o randare Manim
-- [ ] Calitatea codului
-  - [ ] ESLint (config recomandat + react-hooks + import order)
-  - [ ] Prettier + `.prettierrc`, integrare cu ESLint (fără reguli în conflict)
-  - [ ] `.editorconfig` (LF, 2 spații, UTF-8, newline la final)
-  - [ ] Scripturi `npm`: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `test`
-  - [ ] Verificare TypeScript strict (`strict: true`, `noUncheckedIndexedAccess`)
-  - [ ] Path aliases (`@/`) în `tsconfig` + `vite.config`
-- [ ] Librăria de componente
-  - [ ] Cercetare opțiuni gratuite (shadcn/ui, [Magic UI](https://magicui.design), [Aceternity UI](https://ui.aceternity.com), Radix, Headless UI, Park UI) — notează alegerea și motivul
-  - [ ] Instalare Tailwind + configurare
-  - [ ] Init shadcn/ui, adăugare 2–3 componente de test (Button, Card, Slider)
-  - [ ] Smoke test: componentele se randează și arată corect în dev
-  - [ ] Verificare licențe (MIT/Apache) pentru tot ce s-a adăugat
-- [ ] `README.md` actualizat
-  - [ ] Ce este proiectul, pentru cine, în română
-  - [ ] Cerințe (Node, Python pentru Manim)
-  - [ ] Cum rulezi local, cum faci build, cum randezi scenele Manim
-  - [ ] Structura folderelor pe scurt
-  - [ ] Cum contribui (link la convenția de commit-uri din Faza 1)
+- [x] Inițializare proiect
+  - [x] Vite + React 19 + TypeScript (scaffold `react-ts`, Vite 8)
+  - [x] `npm install` și verificare `npm run dev` — pagina se deschide pe `/numerical-methods-algo-visualizer/`
+  - [x] Fixare versiune Node în `.nvmrc` (22) + câmpul `engines` din `package.json`
+  - [x] Curățare boilerplate Vite (logo-uri, `App.css`, `src/assets`)
+- [x] Structura de foldere
+  - [x] `src/pages/` — pagini de rutare
+  - [x] `src/components/ui/` — componente generice (shadcn)
+  - [x] `src/components/viz/` — componente de vizualizare
+  - [x] `src/components/layout/`
+  - [x] `src/algorithms/` — implementările numerice, fără JSX
+  - [x] `src/content/` — texte în română, separate de cod
+  - [x] `src/lib/` — utilitare (are deja `cn()` în `utils.ts`)
+  - [x] `src/hooks/`
+  - [x] `public/media/`, `public/fonts/`
+  - [x] `manim/` + `manim/scenes/` — scene Python (izolat de aplicație)
+  - [x] `docs/`
+  - [x] Fișier `README` scurt în fiecare folder care nu e evident
+- [x] `.gitignore`
+  - [x] `node_modules/`, `dist/`, `.vite/`, `coverage/`
+  - [x] `.env*`, `*.local`
+  - [x] `manim/media/`, `__pycache__/`, `.venv/`
+  - [x] `.DS_Store`, `Thumbs.db`
+  - [ ] Verificare: `git status` e curat și după o randare Manim (de reverificat în Faza 5)
+- [x] Calitatea codului
+  - [x] ~~ESLint~~ → **oxlint** (noul default al scaffold-ului Vite, mult mai rapid; `.oxlintrc.json` cu plugin react/typescript, `src/components/ui` exclus fiind cod copiat)
+  - [x] Prettier + `.prettierrc.json` + `prettier-plugin-tailwindcss` (sortează clasele)
+  - [x] `.editorconfig` (LF, 2 spații, UTF-8, newline la final; 4 spații pentru Python)
+  - [x] Scripturi `npm`: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `typecheck` — `test` se adaugă în Faza 4
+  - [x] TypeScript strict (`strict`, `noUncheckedIndexedAccess`, `noImplicitOverride`)
+  - [x] Path alias `@/` în `tsconfig.app.json` + `vite.config.ts`
+- [x] Librăria de componente
+  - [x] Ales: **shadcn/ui** (new-york) — cod copiat în proiect, nu dependență; se poate re-colora liber. Magic UI și Aceternity UI se așază peste el, aceeași abordare.
+  - [x] Tailwind v4 prin `@tailwindcss/vite` (fără `tailwind.config.js` — tokens direct în `src/index.css`)
+  - [x] Paleta „Sapphire nightfall whisper" + rolurile de vizualizare, ca variabile CSS
+  - [x] Punte de tokens către numele standard shadcn (`--background`, `--primary`, …), ca să meargă și componentele împrumutate
+  - [x] Button, Card, Slider adăugate și verificate în pagina de smoke test
+  - [x] Licențe: shadcn/ui, Radix, Tailwind, oxlint, Vite — toate MIT
+- [x] `README.md` actualizat
+  - [x] Ce este proiectul, pentru cine, în română
+  - [x] Cerințe (Node 22+, Python 3.12+ pentru Manim)
+  - [x] Cum rulezi local, cum faci build, cum randezi scenele Manim
+  - [x] Structura folderelor
+  - [x] Secțiunea Design (paletă + tipografie)
+  - [ ] Cum contribui (link la convenția de commit-uri — se scrie în Faza 1)
 
-**Gata când:** `npm run dev`, `npm run build` și `npm run lint` trec fără erori pe o mașină curată, iar `git status` e curat.
+**Gata când:** `npm run dev`, `npm run build` și `npm run lint` trec fără erori pe o mașină curată, iar `git status` e curat. ✅ _(build: 250 KB JS / 79 KB gzip — de urmărit față de bugetul din Faza 9)_
 
 ---
 
@@ -78,21 +82,30 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 **Obiectiv:** orice merge în `main` ajunge automat live, pe HTTPS.
 
+> ### ⚠️ Regim de lucru până la primul deploy reușit
+>
+> **Un singur branch — `main`. Commit-uri directe. Fără PR-uri, fără branch protection.**
+> Până când site-ul nu e efectiv live, ceremonia de PR-uri doar încetinește; iterăm rapid direct pe `main`.
+>
+> **După primul deploy reușit** trecem pe regimul normal: branch protection pe `main`,
+> orice schimbare prin PR, CI verde obligatoriu. Task-urile marcate cu 🔒 mai jos
+> se activează abia atunci.
+
 - [ ] Repo GitHub
   - [ ] Creare repo (public), push `main`
   - [ ] Descriere + topics (`numerical-methods`, `education`, `react`, `manim`, `romanian`)
   - [ ] Licență aleasă și adăugată (`LICENSE`)
-  - [ ] Branch protection pe `main`: PR obligatoriu, CI verde obligatoriu
+  - [ ] 🔒 Branch protection pe `main`: PR obligatoriu, CI verde obligatoriu — **după primul deploy**
 - [ ] Convenții de lucru
-  - [ ] Convenție de branch-uri: `feat/`, `fix/`, `alg/<nume-metoda>`, `docs/`, `design/`
   - [ ] Convenție de commit-uri (Conventional Commits), documentată în README
-  - [ ] Template de issue: „Algoritm nou", „Bug", „Îmbunătățire design", „Conținut/text"
-  - [ ] Template de PR: ce s-a schimbat, screenshot mobil + desktop, checklist
   - [ ] Etichete: `algoritm`, `bug`, `design`, `conținut`, `infra`, `good first issue`
   - [ ] Milestones: `MVP`, `Toate metodele`, `Lansare`
-  - [ ] Acces Claude la repo pentru commit-uri, PR-uri și issues (conform `Plan.md`)
+  - [ ] Acces Claude la repo pentru commit-uri și issues (conform `Plan.md`)
+  - [ ] 🔒 Convenție de branch-uri: `feat/`, `fix/`, `alg/<nume-metoda>`, `docs/`, `design/` — **după primul deploy**
+  - [ ] 🔒 Template de issue: „Algoritm nou", „Bug", „Îmbunătățire design", „Conținut/text"
+  - [ ] 🔒 Template de PR: ce s-a schimbat, screenshot mobil + desktop, checklist
 - [ ] CI (GitHub Actions)
-  - [ ] Workflow `ci.yml`: install → lint → typecheck → test → build, pe PR și pe `main`
+  - [ ] Workflow `ci.yml`: install → lint → typecheck → test → build, pe push în `main` (și pe PR-uri, când vor exista)
   - [ ] Cache pentru npm
   - [ ] CI pică intenționat o dată (test stricat) ca să confirmi că e funcțional
 - [ ] Deployment GitHub Pages
@@ -109,8 +122,12 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [ ] Test end-to-end de livrare
   - [ ] Un commit banal pe `main` → build automat → schimbarea e vizibilă live
   - [ ] Notează în README URL-ul live
+- [ ] 🔒 **După primul deploy reușit** — trecerea pe regimul normal de lucru
+  - [ ] Activare branch protection pe `main`
+  - [ ] Convenție de branch-uri + template-uri de issue și PR
+  - [ ] Actualizare secțiunea „Contribuții" din README
 
-**Gata când:** site-ul „hello world" e live pe HTTPS, iar PR-urile sunt blocate dacă CI pică.
+**Gata când:** site-ul „hello world" e live pe HTTPS. _(Blocarea PR-urilor pe CI roșu vine în pasul 🔒, după deploy.)_
 
 ---
 
@@ -272,7 +289,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ---
 
-## Faza 5 — Pipeline Manim *(poate merge în paralel cu Fazele 3–4)*
+## Faza 5 — Pipeline Manim _(poate merge în paralel cu Fazele 3–4)_
 
 **Obiectiv:** clipuri explicative pre-randate, cu aceeași estetică cu restul site-ului. Manim rulează **offline**, la build local — niciodată în browser.
 
@@ -342,10 +359,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 **Obiectiv:** ~15 metode, fiecare la calitatea paginii-pilot.
 
-### Lista metodelor *(de completat — vezi `Plan.md`, secțiunea „Lista Algoritmi")*
+### Lista metodelor _(de completat — vezi `Plan.md`, secțiunea „Lista Algoritmi")_
 
 | Nr. | Metodă | Capitol | Implementare | Manim | Text | Interactiv | Mobil | Gata |
-|-----|--------|---------|--------------|-------|------|------------|-------|------|
+| --- | ------ | ------- | ------------ | ----- | ---- | ---------- | ----- | ---- |
 | 1   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 2   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   |        |         | [ ]          | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -366,7 +383,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [ ] Grupează-le pe capitole și stabilește ordinea de implementare
 - [ ] Deschide câte un issue GitHub pentru fiecare metodă, cu checklist-ul de mai jos
 
-### Checklist-template per metodă *(copiază-l pentru fiecare)*
+### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
 <details>
 <summary><b>Metoda: ____________</b></summary>
@@ -495,10 +512,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ## Riscuri
 
-| Risc | Impact | Cum îl reducem |
-|------|--------|----------------|
-| Fișierele Manim umflă repo-ul | Clonare lentă, limite Pages | Compresie agresivă, mutare în Releases dacă depășim ~100 MB |
-| Parsarea expresiilor introduse de utilizator | Erori, blocaje, cod nesigur | Librărie testată, fără `eval`, limită de evaluări, validare la tastare |
-| Animațiile lagg-uiesc pe telefon | Site inutilizabil exact pentru publicul-țintă | Buget de performanță, testare pe device real de la Faza 6 |
-| Cele 15 metode devin repetitive și se abandonează | Site incomplet | Template congelat după pilot, un issue per metodă, ordine de la ușor la greu |
-| Manim consumă mult timp per metodă | Întârzieri | Scene scurte (10–20s), șablon comun, fallback imagine statică acceptabil |
+| Risc                                              | Impact                                        | Cum îl reducem                                                               |
+| ------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| Fișierele Manim umflă repo-ul                     | Clonare lentă, limite Pages                   | Compresie agresivă, mutare în Releases dacă depășim ~100 MB                  |
+| Parsarea expresiilor introduse de utilizator      | Erori, blocaje, cod nesigur                   | Librărie testată, fără `eval`, limită de evaluări, validare la tastare       |
+| Animațiile lagg-uiesc pe telefon                  | Site inutilizabil exact pentru publicul-țintă | Buget de performanță, testare pe device real de la Faza 6                    |
+| Cele 15 metode devin repetitive și se abandonează | Site incomplet                                | Template congelat după pilot, un issue per metodă, ordine de la ușor la greu |
+| Manim consumă mult timp per metodă                | Întârzieri                                    | Scene scurte (10–20s), șablon comun, fallback imagine statică acceptabil     |

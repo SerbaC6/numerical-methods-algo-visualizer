@@ -18,14 +18,14 @@ o pagină-cuprins cu toate metodele și, pentru fiecare, o pagină cu explicați
 > Valuri reci de ocean: albastruri de la deschis și aerisit până la adânc și misterios.
 > Gradientul dă dimensiune și profunzime interfeței.
 
-| Culoare | Hex | Rol în interfață |
-|---|---|---|
-| ![#0474C4](https://placehold.co/16/0474C4/0474C4.png) Safir | `#0474C4` | Accent principal — butoane primare, linia funcției, elementul activ |
-| ![#5379AE](https://placehold.co/16/5379AE/5379AE.png) Albastru estompat | `#5379AE` | Accent secundar — iterații anterioare, elemente inactive, borduri |
-| ![#2C444C](https://placehold.co/16/2C444C/2C444C.png) Gri-verzui închis | `#2C444C` | Suprafețe — carduri, panouri de control, fundal tabel |
-| ![#A8C4EC](https://placehold.co/16/A8C4EC/A8C4EC.png) Albastru deschis | `#A8C4EC` | Text pe fundal închis, accent luminos, grilă/etichete de axe |
-| ![#06457F](https://placehold.co/16/06457F/06457F.png) Albastru adânc | `#06457F` | Accent apăsat — hover/active, umbre colorate, fundal de secțiune |
-| ![#262B40](https://placehold.co/16/262B40/262B40.png) Bleumarin închis | `#262B40` | Fundalul temei întunecate (temă implicită) |
+| Culoare                                                                 | Hex       | Rol în interfață                                                    |
+| ----------------------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
+| ![#0474C4](https://placehold.co/16/0474C4/0474C4.png) Safir             | `#0474C4` | Accent principal — butoane primare, linia funcției, elementul activ |
+| ![#5379AE](https://placehold.co/16/5379AE/5379AE.png) Albastru estompat | `#5379AE` | Accent secundar — iterații anterioare, elemente inactive, borduri   |
+| ![#2C444C](https://placehold.co/16/2C444C/2C444C.png) Gri-verzui închis | `#2C444C` | Suprafețe — carduri, panouri de control, fundal tabel               |
+| ![#A8C4EC](https://placehold.co/16/A8C4EC/A8C4EC.png) Albastru deschis  | `#A8C4EC` | Text pe fundal închis, accent luminos, grilă/etichete de axe        |
+| ![#06457F](https://placehold.co/16/06457F/06457F.png) Albastru adânc    | `#06457F` | Accent apăsat — hover/active, umbre colorate, fundal de secțiune    |
+| ![#262B40](https://placehold.co/16/262B40/262B40.png) Bleumarin închis  | `#262B40` | Fundalul temei întunecate (temă implicită)                          |
 
 **Reguli de folosire**
 
@@ -56,15 +56,31 @@ se potrivește tonului didactic al site-ului.
 
 ## Cum rulezi local
 
-> Proiectul e în faza de inițializare — pașii de mai jos devin valabili după Faza 0 din [`Progress.md`](./Progress.md).
+Ai nevoie de **Node 22+** (vezi `.nvmrc`) și, pentru vizualuri, de **Python 3.12+**.
 
 ```bash
 npm install
-npm run dev      # server de dezvoltare
-npm run build    # build de producție
-npm run preview  # verifică build-ul local
-npm run lint     # lint + formatare
-npm run test     # teste unitare pe algoritmi
+npm run dev        # server de dezvoltare → http://localhost:5173/numerical-methods-algo-visualizer/
+npm run build      # build de producție în dist/
+npm run preview    # verifică build-ul local
+npm run lint       # oxlint + verificare formatare
+npm run lint:fix   # repară ce se poate repara automat
+npm run typecheck  # doar TypeScript
+```
+
+> Testele (`npm run test`) se adaugă în Faza 4, odată cu motorul de algoritmi.
+
+### Structura
+
+```
+src/algorithms/    implementările numerice, fără JSX
+src/components/    ui/ (shadcn), viz/ (grafice), layout/
+src/content/       textele în română, separate de cod
+src/lib/           utilitare: formatare, parser de expresii, matematică
+src/pages/         paginile de rutare
+public/media/      vizualurile Manim randate (mp4 + poster)
+manim/             scenele Python
+docs/              documentație de lucru
 ```
 
 ### Vizualurile Manim
@@ -85,12 +101,18 @@ Partea interactivă (slidere, grafic live, tabel de iterații) e făcută în Re
 
 ## Stack
 
-- **React + Vite + TypeScript**
-- **Tailwind + shadcn/ui** pentru componente
+- **React 19 + Vite 8 + TypeScript** (mod strict, alias `@/` → `src/`)
+- **Tailwind v4 + shadcn/ui** — tokens definiți în `src/index.css`, cu punte către numele
+  standard shadcn, ca să meargă și componente din Magic UI / Aceternity UI fără modificări
+- **oxlint + Prettier** pentru lint și formatare
 - **Manim (Python)** pentru vizualurile explicative pre-randate
 - **GitHub Pages** pentru găzduire, cu deploy automat din `main`
 
-## Contribuții
+## Cum lucrăm
 
-Convenția de branch-uri și de commit-uri, template-urile de issue și de PR se stabilesc în
-Faza 1 din [`Progress.md`](./Progress.md).
+**Până la primul deploy reușit: un singur branch, `main`, cu commit-uri directe. Fără PR-uri.**
+Scopul e să iterăm repede până site-ul e efectiv live.
+
+**După primul deploy** trecem pe regimul normal: branch protection pe `main`, orice schimbare
+prin PR, CI verde obligatoriu. Convenția de branch-uri și template-urile de issue/PR se
+stabilesc atunci — vezi pașii marcați cu 🔒 în Faza 1 din [`Progress.md`](./Progress.md).

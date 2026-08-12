@@ -1,0 +1,159 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------
+   Paleta „Sapphire nightfall whisper" — vezi README.md#design
+   Culorile brute; rolurile semantice sunt mai jos.
+   --------------------------------------------------------------- */
+@theme {
+  --color-safir: #0474c4;
+  --color-estompat: #5379ae;
+  --color-ardezie: #2c444c;
+  --color-cer: #a8c4ec;
+  --color-adanc: #06457f;
+  --color-noapte: #262b40;
+
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+}
+
+/* ---------------------------------------------------------------
+   Roluri semantice. Tema implicită e cea întunecată.
+   --------------------------------------------------------------- */
+:root {
+  --fundal: var(--color-noapte);
+  --suprafata: var(--color-ardezie);
+  --text: #eef3fb;
+  --text-slab: var(--color-cer);
+  --accent: var(--color-safir);
+  --accent-apasat: var(--color-adanc);
+  --accent-slab: var(--color-estompat);
+  --bordura: color-mix(in oklab, var(--color-estompat) 40%, transparent);
+
+  /* Roluri de vizualizare — folosite de grafice ȘI de scenele Manim */
+  --viz-functie: var(--color-cer);
+  --viz-curent: var(--color-safir);
+  --viz-anterior: var(--color-estompat);
+  --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
+  --viz-interval: color-mix(in oklab, var(--color-adanc) 55%, transparent);
+  --viz-solutie: #4ade80;
+
+  /* Stări — derivate în afara paletei, care e monocromă pe albastru */
+  --succes: #4ade80;
+  --atentie: #fbbf24;
+  --eroare: #f87171;
+
+  /* Punte către shadcn/ui: numele lui standard, valorile noastre.
+     Componentele copiate din shadcn/Magic UI/Aceternity merg fără modificări. */
+  --radius: 0.75rem;
+  --background: var(--fundal);
+  --foreground: var(--text);
+  --card: var(--suprafata);
+  --card-foreground: var(--text);
+  --popover: var(--suprafata);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: #ffffff;
+  --secondary: color-mix(in oklab, var(--color-estompat) 25%, transparent);
+  --secondary-foreground: var(--text);
+  --muted: color-mix(in oklab, var(--color-ardezie) 70%, transparent);
+  --muted-foreground: var(--text-slab);
+  /* shadcn folosește `accent` ca fundal discret de hover; la noi e safirul */
+  --accent-foreground: #ffffff;
+  --destructive: var(--eroare);
+  --border: var(--bordura);
+  --input: var(--bordura);
+  --ring: var(--color-cer);
+}
+
+.light {
+  --fundal: #f7f9fd;
+  --suprafata: #ffffff;
+  --text: var(--color-noapte);
+  --text-slab: var(--color-ardezie);
+  --accent: var(--color-safir);
+  --accent-apasat: var(--color-adanc);
+  --accent-slab: var(--color-estompat);
+  --bordura: color-mix(in oklab, var(--color-estompat) 35%, transparent);
+
+  --viz-functie: var(--color-adanc);
+  --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
+  --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
+}
+
+@theme inline {
+  --color-fundal: var(--fundal);
+  --color-suprafata: var(--suprafata);
+  --color-text: var(--text);
+  --color-text-slab: var(--text-slab);
+  --color-accent: var(--accent);
+  --color-accent-apasat: var(--accent-apasat);
+  --color-accent-slab: var(--accent-slab);
+  --color-bordura: var(--bordura);
+  --color-succes: var(--succes);
+  --color-atentie: var(--atentie);
+  --color-eroare: var(--eroare);
+
+  /* Aceleași valori, sub numele așteptate de shadcn/ui */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--bordura);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--fundal);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cer);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

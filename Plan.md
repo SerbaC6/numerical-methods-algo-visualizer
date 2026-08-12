@@ -57,13 +57,13 @@ Mod prin care studentii sa vada si sa se joace cu algoritmii, sa-i inteleaga viz
 
 **Paleta: „Sapphire nightfall whisper"**
 
-| Hex | Culoare | Rol |
-|---|---|---|
-| `#0474C4` | safir | accent principal |
-| `#5379AE` | albastru estompat | accent secundar |
-| `#2C444C` | gri-verzui inchis | suprafata / neutru |
-| `#A8C4EC` | albastru deschis | accent pe fundal inchis, text secundar |
-| `#06457F` | albastru adanc | accent apasat, hover |
-| `#262B40` | bleumarin inchis | fundal tema intunecata |
+| Hex       | Culoare           | Rol                                    |
+| --------- | ----------------- | -------------------------------------- |
+| `#0474C4` | safir             | accent principal                       |
+| `#5379AE` | albastru estompat | accent secundar                        |
+| `#2C444C` | gri-verzui inchis | suprafata / neutru                     |
+| `#A8C4EC` | albastru deschis  | accent pe fundal inchis, text secundar |
+| `#06457F` | albastru adanc    | accent apasat, hover                   |
+| `#262B40` | bleumarin inchis  | fundal tema intunecata                 |
 
 - **Font:** Nunito Sans (titluri + text). Mono pentru formule/tabele numerice: de ales separat.
