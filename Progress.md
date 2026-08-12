@@ -139,6 +139,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] Analiză [visualgo.net](https://visualgo.net/en) — ce funcționează la controale și playback
   - [ ] Analiză [csvistool.com](https://csvistool.com/) — layout și claritate
   - [ ] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
+  - [ ] Analiză [Numerical Methods Visualizer (engineersuniverse.com)](https://engineersuniverse.com/webapps/numerical-methods-visualizer) — **cel mai apropiat de noi ca subiect**: ce metode acoperă, cum arată controalele și tabelul de iterații, ce lipsește (de aici putem lua și inspirație pentru lista celor ~15 metode)
   - [ ] Caută 3–5 site-uri suplimentare de referință (estetică, animații)
   - [ ] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
 - [ ] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))

@@ -52,6 +52,7 @@ Mod prin care studentii sa vada si sa se joace cu algoritmii, sa-i inteleaga viz
 - <https://visualgo.net/en>
 - <https://csvistool.com/>
 - <https://www.dsavisualizer.in/visualizer/searching/binarysearch>
+- <https://engineersuniverse.com/webapps/numerical-methods-visualizer> — exact subiectul nostru, de vazut ce metode acopera si cum le prezinta
 
 ## Design (DECIS)
 
