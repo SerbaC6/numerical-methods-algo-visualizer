@@ -41,44 +41,48 @@
   --ease-intrare: cubic-bezier(0.4, 0, 1, 1);
   --ease-elastic: cubic-bezier(0.34, 1.36, 0.64, 1);
 
-  --shadow-jos: 0 1px 2px 0 rgb(6 12 30 / 0.18);
-  --shadow-mediu: 0 4px 14px -3px rgb(6 12 30 / 0.28);
-  --shadow-sus: 0 18px 40px -12px rgb(6 12 30 / 0.45);
+  /* Valorile pentru tema luminoasă (cea implicită); `.dark` le suprascrie. */
+  --shadow-jos: 0 1px 2px 0 rgb(38 43 64 / 0.08);
+  --shadow-mediu: 0 4px 14px -3px rgb(38 43 64 / 0.12);
+  --shadow-sus: 0 18px 40px -12px rgb(38 43 64 / 0.2);
   --shadow-accent: 0 0 0 1px color-mix(in oklab, #0474c4 45%, transparent);
 }
 
 /* ---------------------------------------------------------------
-   Roluri semantice. Tema implicită e cea întunecată: valorile din
-   `:root` sunt cele închise, ca pagina să arate corect și înainte
-   ca JS-ul să pună clasa pe <html>.
+   Roluri semantice. Tema implicită e cea LUMINOASĂ: valorile din
+   `:root` sunt cele deschise, ca pagina să arate corect și înainte
+   ca JS-ul să pună clasa pe <html>. Tema întunecată e în `.dark`.
    --------------------------------------------------------------- */
 :root,
-.dark {
-  --fundal: var(--color-noapte);
-  --fundal-ridicat: color-mix(in oklab, var(--color-noapte) 82%, #ffffff);
-  --suprafata: var(--color-ardezie);
-  --text: #eef3fb;
-  --text-slab: var(--color-cer);
-  --accent: var(--color-safir);
-  --accent-apasat: var(--color-adanc);
-  --accent-slab: var(--color-estompat);
-  --bordura: color-mix(in oklab, var(--color-estompat) 40%, transparent);
+.light {
+  --fundal: #f7f9fd;
+  --fundal-ridicat: #ffffff;
+  --suprafata: #ffffff;
+  --text: var(--color-noapte);
+  --text-slab: #4a5a6b;
+  /* Umpluturi și butoane: albastrul adânc (9,20:1 pe fundal). */
+  --accent: var(--color-adanc);
+  --accent-apasat: #033560;
+  /* Accentul folosit ca TEXT pe fundal deschis: safirul (4,63:1).
+     Albastrul estompat #5379AE ar da doar 4,23:1 — nu trece AA. */
+  --accent-slab: var(--color-safir);
+  --bordura: color-mix(in oklab, var(--color-estompat) 35%, transparent);
 
   /* Roluri de vizualizare — folosite de grafice ȘI de scenele Manim */
-  --viz-functie: var(--color-cer);
+  --viz-functie: var(--color-adanc);
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
-  --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
-  --viz-interval: color-mix(in oklab, var(--color-adanc) 55%, transparent);
-  --viz-solutie: #4ade80;
+  --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
+  --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
+  --viz-solutie: #15803d;
 
   /* Stări — derivate în afara paletei, care e monocromă pe albastru */
-  --succes: #4ade80;
-  --atentie: #fbbf24;
-  --eroare: #f87171;
-  --succes-fundal: color-mix(in oklab, #4ade80 14%, transparent);
-  --atentie-fundal: color-mix(in oklab, #fbbf24 14%, transparent);
-  --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
+  --succes: #15803d;
+  --atentie: #a16207;
+  --eroare: #b91c1c;
+  --succes-fundal: color-mix(in oklab, #15803d 10%, transparent);
+  --atentie-fundal: color-mix(in oklab, #a16207 10%, transparent);
+  --eroare-fundal: color-mix(in oklab, #b91c1c 10%, transparent);
 
   /* Punte către shadcn/ui: numele lui standard, valorile noastre.
      Componentele copiate din shadcn/Magic UI/Aceternity merg fără modificări. */
@@ -91,49 +95,52 @@
   --popover-foreground: var(--text);
   --primary: var(--accent);
   --primary-foreground: #ffffff;
-  --secondary: color-mix(in oklab, var(--color-estompat) 25%, transparent);
+  --secondary: color-mix(in oklab, var(--color-cer) 40%, transparent);
   --secondary-foreground: var(--text);
-  --muted: color-mix(in oklab, var(--color-ardezie) 70%, transparent);
+  --muted: color-mix(in oklab, var(--color-cer) 22%, transparent);
   --muted-foreground: var(--text-slab);
-  /* shadcn folosește `accent` ca fundal discret de hover; la noi e safirul */
+  /* shadcn folosește `accent` ca fundal discret de hover */
   --accent-foreground: #ffffff;
   --destructive: var(--eroare);
   --border: var(--bordura);
   --input: var(--bordura);
-  --ring: var(--color-cer);
+  --ring: var(--color-adanc);
 }
 
-.light {
-  --fundal: #f7f9fd;
-  --fundal-ridicat: #ffffff;
-  --suprafata: #ffffff;
-  --text: var(--color-noapte);
-  --text-slab: #4a5a6b;
-  --accent: var(--color-adanc);
-  --accent-apasat: #033560;
-  --accent-slab: var(--color-estompat);
-  --bordura: color-mix(in oklab, var(--color-estompat) 35%, transparent);
+.dark {
+  --fundal: var(--color-noapte);
+  --fundal-ridicat: color-mix(in oklab, var(--color-noapte) 82%, #ffffff);
+  --suprafata: var(--color-ardezie);
+  --text: #eef3fb;
+  --text-slab: var(--color-cer);
+  --accent: var(--color-safir);
+  --accent-apasat: var(--color-adanc);
+  /* Pe fundal închis accentul-text e albastrul deschis (7,84:1).
+     Safirul ar da 2,86:1 — doar umplere, niciodată text. */
+  --accent-slab: var(--color-cer);
+  --bordura: color-mix(in oklab, var(--color-estompat) 40%, transparent);
 
-  --viz-functie: var(--color-adanc);
+  --viz-functie: var(--color-cer);
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
-  --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
-  --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
-  --viz-solutie: #15803d;
+  --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
+  --viz-interval: color-mix(in oklab, var(--color-adanc) 55%, transparent);
+  --viz-solutie: #4ade80;
 
-  --succes: #15803d;
-  --atentie: #a16207;
-  --eroare: #b91c1c;
-  --succes-fundal: color-mix(in oklab, #15803d 10%, transparent);
-  --atentie-fundal: color-mix(in oklab, #a16207 10%, transparent);
-  --eroare-fundal: color-mix(in oklab, #b91c1c 10%, transparent);
+  --succes: #4ade80;
+  --atentie: #fbbf24;
+  --eroare: #f87171;
+  --succes-fundal: color-mix(in oklab, #4ade80 14%, transparent);
+  --atentie-fundal: color-mix(in oklab, #fbbf24 14%, transparent);
+  --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
 
-  --secondary: color-mix(in oklab, var(--color-cer) 40%, transparent);
-  --muted: color-mix(in oklab, var(--color-cer) 22%, transparent);
+  --secondary: color-mix(in oklab, var(--color-estompat) 25%, transparent);
+  --muted: color-mix(in oklab, var(--color-ardezie) 70%, transparent);
+  --ring: var(--color-cer);
 
-  --shadow-jos: 0 1px 2px 0 rgb(38 43 64 / 0.08);
-  --shadow-mediu: 0 4px 14px -3px rgb(38 43 64 / 0.12);
-  --shadow-sus: 0 18px 40px -12px rgb(38 43 64 / 0.2);
+  --shadow-jos: 0 1px 2px 0 rgb(6 12 30 / 0.18);
+  --shadow-mediu: 0 4px 14px -3px rgb(6 12 30 / 0.28);
+  --shadow-sus: 0 18px 40px -12px rgb(6 12 30 / 0.45);
 }
 
 @theme inline {
@@ -192,11 +199,11 @@
 
   html {
     scroll-behavior: smooth;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
-  html.light {
-    color-scheme: light;
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -215,7 +222,9 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cer);
+    /* `--ring` diferă pe teme: albastru adânc pe fundal deschis,
+       albastru deschis pe fundal închis. */
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
 

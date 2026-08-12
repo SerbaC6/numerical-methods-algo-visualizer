@@ -3,8 +3,9 @@ import { useSyncExternalStore } from "react";
 export type Theme = "dark" | "light";
 
 /**
- * Tema site-ului. Implicit e cea întunecată (fundal #262B40), conform
- * paletei „Sapphire nightfall whisper".
+ * Tema site-ului. Implicit e cea luminoasă (fundal #F7F9FD); cea întunecată
+ * (fundal #262B40) e la un clic distanță. Ambele folosesc paleta
+ * „Sapphire nightfall whisper".
  *
  * Singurul lucru pe care îl scriem în `localStorage` este această preferință —
  * fără cookies, fără date personale, fără tracking (vezi Plan.md).
@@ -12,14 +13,14 @@ export type Theme = "dark" | "light";
 const CHEIE = "mn-tema";
 
 const listeners = new Set<() => void>();
-let theme: Theme = "dark";
+let theme: Theme = "light";
 
 function citesteDinStocare(): Theme {
   try {
-    return localStorage.getItem(CHEIE) === "light" ? "light" : "dark";
+    return localStorage.getItem(CHEIE) === "dark" ? "dark" : "light";
   } catch {
     // modul privat / stocare blocată — rămânem pe tema implicită
-    return "dark";
+    return "light";
   }
 }
 
@@ -62,6 +63,6 @@ export function useTheme(): Theme {
   return useSyncExternalStore(
     subscribe,
     () => theme,
-    () => "dark" as const,
+    () => "light" as const,
   );
 }

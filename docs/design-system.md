@@ -1,10 +1,13 @@
 # Design system
 
+> ⚠️ **Document de lucru, nu rezultat final.** Faza 2 e debifată în `Progress.md`: regulile de
+> mai jos sunt punctul de plecare și se schimbă odată cu paginile reale.
+
 Limba vizuală a proiectului. Deciziile de aici se aplică la toate cele 14 pagini de metode;
 dacă o pagină are nevoie de altceva, se schimbă întâi documentul ăsta, apoi pagina.
 
-Pagina vie cu toate componentele: `src/pages/DesignSystem.tsx` (până la Faza 3 e ce se vede când
-rulezi `npm run dev`).
+Pagina vie cu toate componentele: `src/pages/DesignSystem.tsx`, pe ruta `/design-system` —
+**doar în dev**, nu intră în build-ul de producție.
 
 ---
 
@@ -12,14 +15,14 @@ rulezi `npm run dev`).
 
 Paleta „Sapphire nightfall whisper". Tokens brute în `src/index.css`, blocul `@theme`.
 
-| Token              | Hex       | Rol                                        |
-| ------------------ | --------- | ------------------------------------------ |
-| `--color-safir`    | `#0474C4` | accent principal, iterația curentă         |
-| `--color-estompat` | `#5379AE` | accent secundar, iterații anterioare       |
-| `--color-ardezie`  | `#2C444C` | suprafețe                                  |
-| `--color-cer`      | `#A8C4EC` | text secundar, grilă, adnotări, inel focus |
-| `--color-adanc`    | `#06457F` | accent apăsat, interval evidențiat         |
-| `--color-noapte`   | `#262B40` | fundalul temei întunecate                  |
+| Token              | Hex       | Rol                                                |
+| ------------------ | --------- | -------------------------------------------------- |
+| `--color-safir`    | `#0474C4` | accent principal, iterația curentă                 |
+| `--color-estompat` | `#5379AE` | accent secundar, iterații anterioare               |
+| `--color-ardezie`  | `#2C444C` | suprafețe                                          |
+| `--color-cer`      | `#A8C4EC` | text secundar, grilă, adnotări, inel focus         |
+| `--color-adanc`    | `#06457F` | accent apăsat, interval evidențiat                 |
+| `--color-noapte`   | `#262B40` | fundalul temei întunecate, textul pe temă deschisă |
 
 **Regula de contrast.** Pe fundal închis, textul-accent e `#A8C4EC` (7,8:1 față de `#262B40`).
 Safirul `#0474C4` are 2,9:1 pe același fundal — **culoare de umplere, niciodată de text.**
@@ -51,8 +54,14 @@ Toate perechile folosite trec AA (≥ 4,5:1). Singura care „pică" e safirul c
 
 ## 2. Teme
 
-Tema implicită e cea **întunecată**. Valorile ei stau pe `:root`, ca pagina să arate corect și
-înainte ca JS-ul să apuce să pună clasa pe `<html>`. Comutarea adaugă `.light` sau `.dark`.
+Tema implicită e cea **luminoasă** (fundal `#F7F9FD`). Valorile ei stau pe `:root`, ca pagina să
+arate corect și înainte ca JS-ul să apuce să pună clasa pe `<html>`. Comutarea adaugă `.light` sau
+`.dark`; tema întunecată (`#262B40`) suprascrie tokens-urile în blocul `.dark`.
+
+Accentul folosit **ca text** diferă pe teme, din contrast: `#0474C4` pe fundal deschis (4,63:1),
+`#A8C4EC` pe fundal închis (7,84:1). `#5379AE` nu se folosește ca text pe fundal deschis (4,23:1),
+iar `#0474C4` nu se folosește ca text pe fundal închis (2,86:1). Inelul de focus urmează `--ring`:
+`#06457F` pe deschis, `#A8C4EC` pe închis.
 
 Preferința se ține în `localStorage`, cheia `mn-tema`. E **singurul** lucru pe care îl scriem în
 browser: fără cookies, fără analytics, fără date personale.

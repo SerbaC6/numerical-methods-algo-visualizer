@@ -25,14 +25,16 @@ o pagină-cuprins cu toate metodele și, pentru fiecare, o pagină cu explicați
 | ![#2C444C](https://placehold.co/16/2C444C/2C444C.png) Gri-verzui închis | `#2C444C` | Suprafețe — carduri, panouri de control, fundal tabel               |
 | ![#A8C4EC](https://placehold.co/16/A8C4EC/A8C4EC.png) Albastru deschis  | `#A8C4EC` | Text pe fundal închis, accent luminos, grilă/etichete de axe        |
 | ![#06457F](https://placehold.co/16/06457F/06457F.png) Albastru adânc    | `#06457F` | Accent apăsat — hover/active, umbre colorate, fundal de secțiune    |
-| ![#262B40](https://placehold.co/16/262B40/262B40.png) Bleumarin închis  | `#262B40` | Fundalul temei întunecate (temă implicită)                          |
+| ![#262B40](https://placehold.co/16/262B40/262B40.png) Bleumarin închis  | `#262B40` | Fundalul temei întunecate                                           |
 
 **Reguli de folosire**
 
-- Tema implicită este cea **întunecată**: fundal `#262B40`, suprafețe `#2C444C`, text `#A8C4EC` / alb.
+- Tema implicită este cea **luminoasă**: fundal `#F7F9FD`, suprafețe albe, text `#262B40`.
+  Tema întunecată (fundal `#262B40`, suprafețe `#2C444C`) e la un clic distanță, din comutator.
 - Pe fundal închis, accentul de text este `#A8C4EC` (contrast ~8,5:1 față de `#262B40`), **nu** `#0474C4`
   (doar ~2,9:1 — prea slab pentru text; folosește-l ca umplere, nu ca text).
-- Pe fundal deschis, `#0474C4` merge ca text și link (~4,8:1 față de alb — trece AA).
+- Pe fundal deschis, accentul de text este `#0474C4` (4,63:1 față de `#F7F9FD` — trece AA),
+  **nu** `#5379AE` (doar 4,23:1). `#06457F` e pentru umpluturi, butoane și inelul de focus (9,2:1).
 - În vizualizări, gradientul are un rol semantic: `#0474C4` = iterația curentă, `#5379AE` = iterații anterioare
   (estompate), `#A8C4EC` = grilă și adnotări, `#06457F` = interval/zonă evidențiată.
 - Culorile pentru stări (succes / atenție / eroare) se derivă separat — paleta e monocromă pe albastru

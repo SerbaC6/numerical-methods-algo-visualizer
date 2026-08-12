@@ -348,7 +348,7 @@ export default function DesignSystem() {
             descriere="Vezi cum se sparge o matrice în L și U, element cu element."
             dificultate="mediu"
             metode={["Cramer", "LU", "Doolittle", "Crout", "Cholesky"]}
-            href="#"
+            to="/algoritm/factorizari-lu"
           />
           <AlgorithmCard
             titlu="Puncte fixe și rădăcini"
@@ -356,7 +356,8 @@ export default function DesignSystem() {
             descriere="Alege intervalul și vezi cum îl strânge fiecare metodă."
             dificultate="ușor"
             metode={["bisecție", "Newton", "secantă"]}
-            href="#"
+            to="/algoritm/ecuatii-neliniare"
+            stare="in-lucru"
           />
           <AlgorithmCard
             titlu="Metodele puterii"
@@ -364,7 +365,7 @@ export default function DesignSystem() {
             descriere="De la puterea directă la PageRank."
             dificultate="greu"
             metode={["puterea directă", "puterea inversă", "Rayleigh", "deflație"]}
-            inCurand
+            stare="in-curand"
           />
         </div>
       </Sectiune>

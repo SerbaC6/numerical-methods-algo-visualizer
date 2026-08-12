@@ -139,9 +139,15 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 ---
 
-## Faza 2 — Design system ✅
+## Faza 2 — Design system _(în lucru — nevalidat vizual)_
 
 **Obiectiv:** o limbă vizuală coerentă înainte să construim pagini.
+
+> ⚠️ **Debifată intenționat.** Prima pagină reală (Faza 3) a arătat că design system-ul e doar o
+> bază de lucru, nu un rezultat validat: singurul lucru care exista era galeria de componente,
+> iar aceasta nu ține loc de site. Ce ține de estetică și de rezultatul vizual se re-evaluează pe
+> măsură ce apar paginile. Rămân bifate doar faptele verificabile (fonturi, tokens, contrast
+> măsurat). Tema implicită a devenit cea **luminoasă** (Faza 3).
 
 > Rezultatul e documentat în [`docs/design-system.md`](./docs/design-system.md) (tokens, mișcare,
 > componente, responsivitate, accesibilitate) și [`docs/referinte.md`](./docs/referinte.md)
@@ -159,7 +165,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] ~~Alegere font monospace~~ → **JetBrains Mono** (cifre tabulare, distinge `0/O` și `1/l/I`)
   - [x] Verificare diacritice românești: ambele fonturi au Ș/ș/Ț/ț la codepoint-urile **cu virgulă** (U+0218–U+021B), plus Ă/Â/Î — verificat cu fontTools pe fișierele descărcate
   - [x] Self-hosting fonturi în `public/fonts`, subset latin + latin-ext, variable fonts, ~102 KB total (fără CDN; verificat că build-ul nu referă niciun domeniu extern)
-  - [x] Tema implicită: întunecată, fundal `#262B40`
+  - [x] Tema implicită: **luminoasă**, fundal `#F7F9FD`; cea întunecată (`#262B40`) din comutator
 - [x] Design tokens
   - [x] Culorile paletei ca tokens: `#0474C4` accent primar, `#5379AE` accent secundar, `#2C444C` suprafață, `#A8C4EC` text/accent luminos, `#06457F` accent apăsat, `#262B40` fundal închis
   - [x] Culori pentru stări (succes/atenție/eroare) — derivate separat, plus variantele de fundal
@@ -168,7 +174,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Scală tipografică fluidă, spațieri, radius, umbre (`shadow-jos/mediu/sus`)
   - [x] Definire ca variabile CSS + mapare Tailwind v4 (`@theme` în `src/index.css`, fără `tailwind.config`)
   - [x] Verificare contrast WCAG AA pe toate perechile text/fundal — `python3 scripts/verifica-contrast.py`, toate trec în ambele teme
-  - [x] Regulă de contrast: pe fundal închis, textul-accent e `#A8C4EC` (**7,84:1** măsurat față de `#262B40`), **nu** `#0474C4` (**2,86:1** — doar umplere, niciodată text). Perechea interzisă a rămas în script, ca test de regresie
+  - [x] Regulă de contrast: pe fundal închis, textul-accent e `#A8C4EC` (**7,84:1** măsurat față de `#262B40`), **nu** `#0474C4` (**2,86:1** — doar umplere, niciodată text). Simetric, pe fundal deschis textul-accent e `#0474C4` (**4,63:1** față de `#F7F9FD`), **nu** `#5379AE` (**4,23:1**). Ambele perechi interzise au rămas în script, ca teste de regresie
 - [x] Componente de bază (shadcn + adaptare la temă)
   - [x] Button (primar, secundar, contur, ghost, link, iconiță)
   - [x] Card
@@ -179,14 +185,14 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Tooltip + Popover
   - [x] Badge (dificultate, capitol, stări)
   - [x] Skeleton / stare de încărcare
-- [x] Componente specifice proiectului (deocamdată doar shell vizual; logica vine în Faza 4)
+- [ ] Componente specifice proiectului (deocamdată doar shell vizual; logica vine în Faza 4)
   - [x] `AlgorithmCard` — card pentru pagina de cuprins, cu starea „în curând"
   - [x] `ControlPanel` — grup de parametri, responsiv, cu „Resetează"
   - [x] `PlaybackBar` — play/pauză, pas înainte, pas înapoi, reset, viteză, poziție
   - [x] `IterationTable` — antet lipit, scroll pe mobil, rând curent evidențiat, clic = sari la pas
   - [x] `FormulaBlock` — KaTeX încărcat **la cerere** (~78 KB gzip, chunk separat, nu intră în bundle-ul inițial), cu evidențierea părților din formulă prin `\htmlId`
   - [x] `Callout` — „de știut", „de reținut", „atenție", „capcană"
-- [x] Mișcare și micro-interacțiuni („stil Gemini")
+- [ ] Mișcare și micro-interacțiuni („stil Gemini")
   - [x] Definire durate și easing standard: 150 / 250 / 400 ms, `ease-standard` implicit
   - [x] Reguli: ce se animează și ce nu (vezi `docs/design-system.md`, §4)
   - [x] ~~Alegere lib de animație~~ → **niciuna deocamdată**: CSS + `tw-animate-css` acoperă tot. Framer Motion (~34 KB gzip) se ia în calcul doar dacă o pagină chiar cere layout animations
@@ -195,12 +201,12 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Regulă: efectele decorative stau pe pagina de cuprins și pe hero; pe paginile de algoritm animația e a graficului, nu a decorului
   - [x] Respectare `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, plus tăierea globală a duratelor din `index.css`
   - [x] Stări hover/focus/active consistente; inel de focus `#A8C4EC` peste tot
-- [x] Responsivitate
+- [ ] Responsivitate
   - [x] Breakpoint-uri definite și documentate (cele Tailwind, cu ce se schimbă la fiecare)
   - [x] Toate controalele ≥ 44px țintă de atingere (utilitarul `.tinta-atingere`)
   - [x] Regulă: pe mobil graficul deasupra, controalele dedesubt; pe desktop, alături
   - [x] Tabelele mari fac scroll orizontal propriu (`.scroll-tabel`), nu împing pagina
-- [x] Pagină internă cu toate componentele la un loc — `src/pages/DesignSystem.tsx` (mutată pe ruta `/design-system`, doar în dev, în Faza 3)
+- [ ] Pagină internă cu toate componentele la un loc — `src/pages/DesignSystem.tsx` (mutată pe ruta `/design-system`, doar în dev, în Faza 3)
 
 **Rămâne de făcut la o revenire:**
 
@@ -208,34 +214,40 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [ ] alegerea efectelor Magic UI / Aceternity (are sens doar cu hero-ul din Faza 3)
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
-**Gata când:** pagina de design system arată toate componentele, în ambele teme, corect pe telefon și pe desktop. ✅ _(verificat prin capturi headless la 390 px și 1280 px, ambele teme)_
+**Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —
+nu doar galeria de componente.
 
 ---
 
-## Faza 3 — Shell-ul aplicației
+## Faza 3 — Shell-ul aplicației _(în lucru)_
 
 **Obiectiv:** navigație completă și pagina de cuprins funcțională, chiar dacă algoritmii lipsesc.
 
-- [ ] Rutare
-  - [ ] Instalare `react-router`
-  - [ ] Decizie: `HashRouter` (sigur pe Pages) vs. `BrowserRouter` + `404.html`
-  - [ ] Rute: `/`, `/algoritm/:slug`, `/despre`, `/contact`, `*` (404)
-  - [ ] Scroll to top la schimbarea rutei
-  - [ ] Lazy loading pe rute (`React.lazy` + `Suspense`)
+> Făcut: `HashRouter` + rutele, layout-ul (`SiteLayout`, `Header`, `Footer`, `Container`,
+> `PageHeader`, `Logo`), registrul celor 14 pagini, cuprinsul cu căutare și filtre, scheletul
+> paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
+> Rămân: meniul mobil, TOC, `/despre` și `/contact`, manifest, verificările de conformitate.
+
+- [x] Rutare
+  - [x] Instalare `react-router`
+  - [x] Decizie: **`HashRouter`** — sigur pe Pages, fără `404.html`
+  - [x] Rute: `/`, `/algoritm/:slug`, `*` (404) + `/design-system`, doar în dev. `/despre` și `/contact` — mai încolo
+  - [x] Scroll to top la schimbarea rutei
+  - [x] Lazy loading pe rute (`React.lazy` + `Suspense`)
 - [ ] Layout
-  - [ ] Header: logo, navigație, comutator temă, buton căutare
+  - [x] Header: logo, navigație, comutator temă. Butonul de căutare — căutarea e deocamdată doar în cuprins
   - [ ] Meniu mobil (drawer), închidere la navigare, blocare scroll în fundal
-  - [ ] Footer: linkuri, an, licență, „construit cu Manim + React"
-  - [ ] Breadcrumb pe paginile de algoritm
-  - [ ] Container cu lățime maximă și spațieri consistente
-- [ ] Pagina principală (cuprins)
-  - [ ] Hero scurt: ce e site-ul, pentru cine, în 2 propoziții
-  - [ ] Registru central de algoritmi (`src/algorithms/registry.ts`) — sursa unică de adevăr
-  - [ ] Grilă de `AlgorithmCard`, grupată pe capitole
-  - [ ] Căutare instant după nume (fără backend)
-  - [ ] Filtre: capitol, dificultate
-  - [ ] Stare „în curând" pentru metodele neimplementate (afișate, dar dezactivate)
-  - [ ] Stare goală pentru căutare fără rezultate
+  - [x] Footer: linkuri, an, licență, „construit cu Manim + React"
+  - [x] Breadcrumb pe paginile de algoritm
+  - [x] Container cu lățime maximă și spațieri consistente
+- [x] Pagina principală (cuprins)
+  - [x] Hero scurt: ce e site-ul, pentru cine, în 2 propoziții
+  - [x] Registru central de algoritmi (`src/algorithms/registry.ts`) — sursa unică de adevăr
+  - [x] ~~Grilă grupată pe capitole~~ → **o singură grilă**, în ordinea din `Plan.md`: cu 14 pagini și 5 capitole, grupurile lăsau rânduri pe jumătate goale
+  - [x] Căutare instant după nume (fără backend)
+  - [x] Filtre: capitol (5 capitole largi, nu unul per pagină). Filtrul pe dificultate — de văzut dacă e util
+  - [x] Stare **„în lucru"**: toate cele 14 au pagină și se pot deschide; badge-ul spune că e doar scheletul
+  - [x] Stare goală pentru căutare fără rezultate
 - [ ] TOC (cuprins)
   - [ ] TOC lateral pe paginile de algoritm, cu evidențierea secțiunii curente
   - [ ] Pe mobil: TOC colapsabil în partea de sus
@@ -245,7 +257,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] `/contact` — fără backend: `mailto:` sau formular terț fără cookies; spune clar ce se întâmplă cu mesajul
   - [ ] `404` — mesaj prietenos + link către cuprins
 - [ ] Branding
-  - [ ] Logo placeholder (SVG, funcționează pe ambele teme)
+  - [x] Logo placeholder (SVG, funcționează pe ambele teme)
   - [ ] Favicon + `apple-touch-icon`
   - [ ] `manifest.webmanifest` cu nume și culori
 - [ ] Conformitate (verificare explicită, conform `Plan.md`)
