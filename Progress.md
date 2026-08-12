@@ -196,7 +196,25 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Definire durate și easing standard: 150 / 250 / 400 ms, `ease-standard` implicit
   - [x] Reguli: ce se animează și ce nu (vezi `docs/design-system.md`, §4)
   - [x] ~~Alegere lib de animație~~ → **niciuna deocamdată**: CSS + `tw-animate-css` acoperă tot. Framer Motion (~34 KB gzip) se ia în calcul doar dacă o pagină chiar cere layout animations
-  - [ ] [Magic UI](https://magicui.design) / [Aceternity UI](https://ui.aceternity.com) — alege 2–3 efecte pentru hero și carduri — **amânat în Faza 3**, când există hero-ul și pagina de cuprins
+  - [x] ~~Alege 2–3 efecte [Magic UI](https://magicui.design)~~ → **alese** (vezi `Plan.md`,
+        secțiunea Design). Rămâne integrarea:
+    - [ ] [`particles`](https://magicui.design/docs/components/particles) — fundal pentru hero-ul
+          din pagina de cuprins. **Zero dependențe noi** (canvas). De re-colorat: implicit e
+          `#ffffff`, la noi trebuie legat de temă (`--color-cer` pe închis, `--color-estompat`
+          pe deschis)
+    - [ ] [`animated-beam`](https://magicui.design/docs/components/animated-beam) — fascicul între
+          două elemente. **Aduce `motion`** (framer-motion, ~34 KB gzip) — vezi decizia de mai jos
+    - [ ] [`animated-theme-toggler`](https://magicui.design/docs/components/animated-theme-toggler) —
+          înlocuiește `ThemeToggle`-ul actual. Singura dependență e `lucide-react`, deja în proiect.
+          **Atenție:** folosește View Transitions API și scrie direct pe `<html>` — trebuie legat de
+          `use-theme.ts`, altfel avem două surse de adevăr pentru temă
+  - [ ] **Decizia despre biblioteca de animație se redeschide:** `animated-beam` aduce `motion`, deci
+        „deocamdată niciuna" nu mai ține dacă îl integrăm. De hotărât: ori îl păstrăm și acceptăm
+        `motion` în bundle (și atunci merită folosit și pentru tranzițiile de pagină), ori îl tăiem
+        și rămânem pe CSS. `particles` și `animated-theme-toggler` nu ridică problema asta
+  - [ ] Comanda de instalare din `Plan.md` e cu `pnpm`; proiectul e pe **npm** →
+        `npx shadcn@latest add @magicui/particles`. Componentele aterizează în `src/components/ui`,
+        care e exclus din lint — după copiere, re-colorează-le pe paletă înainte de folosire
   - [x] Regulă scrisă: efectele împrumutate se re-colorează pe paleta proiectului înainte de folosire
   - [x] Regulă: efectele decorative stau pe pagina de cuprins și pe hero; pe paginile de algoritm animația e a graficului, nu a decorului
   - [x] Respectare `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, plus tăierea globală a duratelor din `index.css`
@@ -206,12 +224,35 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Toate controalele ≥ 44px țintă de atingere (utilitarul `.tinta-atingere`)
   - [x] Regulă: pe mobil graficul deasupra, controalele dedesubt; pe desktop, alături
   - [x] Tabelele mari fac scroll orizontal propriu (`.scroll-tabel`), nu împing pagina
-- [ ] Pagină internă cu toate componentele la un loc — `src/pages/DesignSystem.tsx` (mutată pe ruta `/design-system`, doar în dev, în Faza 3)
+- [x] Pagină internă cu toate componentele la un loc — `src/pages/DesignSystem.tsx`, pe ruta `/design-system`, doar în dev (mutată acolo în Faza 3)
+
+### Piesele care duc matematica pe ecran — **lipsesc**
+
+> Design system-ul are tot ambalajul (butoane, tabel, playback, callout-uri, carduri), dar niciuna
+> dintre piesele din care se desenează efectiv o metodă. Din cauza asta nu se poate începe nicio
+> pagină de conținut: nu e o scăpare de stil, e blocajul principal al proiectului.
+
+- [ ] `Legend` — legenda de culori. **Cerință explicită din `Plan.md`**: fiecare interfață
+      interactivă trebuie să aibă una. Citește rolurile din tokens (`--viz-*`), ca legenda să nu
+      poată ajunge să mintă față de desen
+- [ ] `StepExplanation` — propoziția care spune ce se întâmplă la pasul curent, lângă animație.
+      Notat în `docs/referinte.md` ca „împrumutăm de la visualgo", dar nefăcut
+- [ ] `MatrixGrid` — matricea desenată, cu stări per celulă (normală, evidențiată, deja calculată,
+      pivot, zero). Necesară pe paginile **1, 3, 4, 7, 8, 13** — jumătate din site
+- [ ] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
+      **5, 6, 9, 10, 11, 12, 13, 14**
+- [ ] **Decizie de luat înainte de `Plot`:** SVG scris de mână vs. bibliotecă de charting
+      (Recharts / visx / D3). Bibliotecile sunt gândite pentru date de business și încurcă exact
+      ce ne trebuie (o tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB.
+      Recomandare: **SVG de mână**
+- [ ] Aceleași stări vizuale trebuie să arate la fel în `MatrixGrid` (web) și în scenele Manim —
+      tokens-urile `--viz-*` sunt deja comune, dar nu s-a desenat încă nimic în Manim
 
 **Rămâne de făcut la o revenire:**
 
 - [ ] 3–5 site-uri suplimentare de referință pentru estetică și animații
-- [ ] alegerea efectelor Magic UI / Aceternity (are sens doar cu hero-ul din Faza 3)
+- [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
+- [ ] cele patru piese de mai sus (`Legend`, `StepExplanation`, `MatrixGrid`, `Plot`)
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
 **Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —
@@ -255,7 +296,7 @@ nu doar galeria de componente.
 - [ ] Pagini statice
   - [ ] `/despre` — scopul proiectului, cum se folosește, credite
   - [ ] `/contact` — fără backend: `mailto:` sau formular terț fără cookies; spune clar ce se întâmplă cu mesajul
-  - [ ] `404` — mesaj prietenos + link către cuprins
+  - [x] `404` — mesaj prietenos + link către cuprins (`src/pages/NotFound.tsx`, rutat pe `*`, verificat)
 - [ ] Branding
   - [x] Logo placeholder (SVG, funcționează pe ambele teme)
   - [ ] Favicon + `apple-touch-icon`

@@ -49,8 +49,9 @@ Verificare automată a contrastului:
 python3 scripts/verifica-contrast.py
 ```
 
-Toate perechile folosite trec AA (≥ 4,5:1). Singura care „pică" e safirul ca text pe fundal
-închis — e în listă intenționat, ca test de regresie pentru regula de mai sus.
+Toate perechile folosite trec AA (≥ 4,5:1). Cele două care „pică" sunt perechile **interzise** —
+safirul ca text pe fundal închis și estompatul ca text pe fundal deschis — și sunt în listă
+intenționat, ca teste de regresie pentru regula de mai sus.
 
 ## 2. Teme
 
@@ -113,9 +114,23 @@ re-colorate pe paleta noastră înainte de folosire (vin cu gradienturi violet/r
 Tot ce se mișcă respectă `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, iar
 `index.css` taie duratele global la utilizatorii care au cerut asta.
 
-**Bibliotecă de animație:** deocamdată **niciuna**. CSS + Tailwind (`tw-animate-css`, deja în
-proiect) acoperă tot ce avem. Framer Motion aduce ~34 KB gzip și se ia în calcul abia dacă o
-pagină chiar are nevoie de layout animations — decizia se scrie aici când se ia.
+**Bibliotecă de animație:** deocamdată **niciuna** instalată. CSS + Tailwind (`tw-animate-css`,
+deja în proiect) acoperă tot ce avem.
+
+**Decizie deschisă.** Din Magic UI sunt alese trei componente (vezi `Plan.md`):
+
+| Componentă               | Unde                      | Ce aduce                                  |
+| ------------------------ | ------------------------- | ----------------------------------------- |
+| `particles`              | fundalul hero-ului        | nimic — canvas pur                        |
+| `animated-beam`          | hero / carduri            | **`motion`** (framer-motion, ~34 KB gzip) |
+| `animated-theme-toggler` | înlocuiește `ThemeToggle` | `lucide-react`, deja în proiect           |
+
+Dacă `animated-beam` intră, atunci `motion` intră cu el și regula de mai sus se schimbă — și
+atunci merită folosit și pentru tranzițiile de pagină, nu doar pentru un efect de hero. Dacă nu,
+rămânem pe CSS. Decizia se scrie aici când se ia.
+
+`animated-theme-toggler` scrie direct pe `<html>` prin View Transitions API: la integrare trebuie
+legat de `src/hooks/use-theme.ts`, altfel avem două surse de adevăr pentru temă.
 
 ## 5. Componente
 

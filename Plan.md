@@ -155,3 +155,9 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 | `#262B40` | bleumarin inchis  | fundal tema intunecata                 |
 
 - **Font:** Nunito Sans (titluri + text). Mono pentru formule/tabele numerice: de ales separat.
+
+- Componente UI:
+  - https://magicui.design/docs/components/animated-beam
+  - import { AnimatedBeam } from "@/components/ui/animated-beam"
+  - pnpm dlx shadcn@latest add @magicui/particles
+  - pnpm dlx shadcn@latest add @magicui/animated-theme-toggler
