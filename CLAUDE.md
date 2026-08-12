@@ -48,6 +48,22 @@ Inspirația pentru animații și interfețe poate veni de oriunde — formulele 
 Fiecare interfață interactivă trebuie să aibă legendă și explicație a modului de funcționare, și să
 facă paralela explicită formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
 
+## Stările de progres nu ajung niciodată în interfață
+
+**Pe site nu apare nicio etichetă de stare: „în lucru", „în curând", „urmează", „TODO", „beta",
+„work in progress" sau orice altă formulă care spune vizitatorului că ceva nu e gata.** Fără
+badge-uri de progres, fără secțiuni „ce urmează", fără note de scuze. Regula ține și de anunțuri:
+nu promitem în interfață pagini sau funcții viitoare.
+
+Ce nu e gata are două variante, ambele tăcute:
+
+- **lipsește din interfață** — nu adaugi linkul, nu adaugi rândul; sau
+- **stă ca placeholder neutru** — un `Skeleton`, un card gol, un spațiu rezervat, fără text care
+  să explice că lipsește ceva.
+
+Evidența a ce urmează se ține **exclusiv în `Progress.md`**. Acolo scrii tot: ce e schelet, ce
+pagini vin, ce s-a amânat. În `src/` — nimic.
+
 ## Arhitectură
 
 Site 100% static, fără auth, fără cookies, fără tracking, fără cereri către domenii externe (de

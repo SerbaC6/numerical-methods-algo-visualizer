@@ -21,7 +21,7 @@
 
   /* Scală tipografică fluidă (raport ~1,25). Titlurile cresc cu ecranul,
      textul curent rămâne la mărimile Tailwind. */
-  --text-afis: clamp(2.25rem, 1.65rem + 3vw, 3.5rem);
+  --text-afis: clamp(2.5rem, 1.7rem + 4vw, 4.5rem);
   --text-afis--line-height: 1.05;
   --text-afis--letter-spacing: -0.02em;
   --text-titlu: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);

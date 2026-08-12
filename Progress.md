@@ -186,7 +186,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Badge (dificultate, capitol, stări)
   - [x] Skeleton / stare de încărcare
 - [ ] Componente specifice proiectului (deocamdată doar shell vizual; logica vine în Faza 4)
-  - [x] `AlgorithmCard` — card pentru pagina de cuprins, cu starea „în curând"
+  - [x] `AlgorithmCard` — card pentru pagina de cuprins: titlu + descriere + „Deschide". Fără etichete de stare (vezi regula din `CLAUDE.md`)
   - [x] `ControlPanel` — grup de parametri, responsiv, cu „Resetează"
   - [x] `PlaybackBar` — play/pauză, pas înainte, pas înapoi, reset, viteză, poziție
   - [x] `IterationTable` — antet lipit, scroll pe mobil, rând curent evidențiat, clic = sari la pas
@@ -267,8 +267,8 @@ nu doar galeria de componente.
 **Obiectiv:** navigație completă și pagina de cuprins funcțională, chiar dacă algoritmii lipsesc.
 
 > Făcut: `HashRouter` + rutele, layout-ul (`SiteLayout`, `Header`, `Footer`, `Container`,
-> `PageHeader`, `Logo`), registrul celor 14 pagini, cuprinsul cu căutare și filtre, scheletul
-> paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
+> `PageHeader`, `Logo`), registrul celor 14 pagini, cuprinsul pe trei secțiuni, căutarea din
+> header, scheletul paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
 > Rămân: meniul mobil, TOC, `/despre` și `/contact`, manifest, verificările de conformitate.
 
 - [x] Rutare
@@ -278,19 +278,22 @@ nu doar galeria de componente.
   - [x] Scroll to top la schimbarea rutei
   - [x] Lazy loading pe rute (`React.lazy` + `Suspense`)
 - [ ] Layout
-  - [x] Header: logo, navigație, comutator temă. Butonul de căutare — căutarea e deocamdată doar în cuprins
+  - [x] Header: siglă, **căutarea în toate metodele** (`CautareMetode`, combobox cu listă derulantă, funcționează de pe orice pagină) și comutatorul de temă. Fără link „Cuprins" — cuprinsul stă pe pagina principală, iar sigla duce înapoi la ea. Pe mobil dispare wordmark-ul, ca să încapă câmpul
   - [ ] Meniu mobil (drawer), închidere la navigare, blocare scroll în fundal
-  - [x] Footer: linkuri, an, licență, „construit cu Manim + React"
+  - [x] Footer: siglă, o propoziție despre site, an și „construit cu React și Manim". ~~Coloana „Urmează" (Despre, Contact, marcate „în curând")~~ → **scoasă**: nicio stare de progres în interfață. `/despre` și `/contact` apar în footer abia când există
   - [x] Breadcrumb pe paginile de algoritm
   - [x] Container cu lățime maximă și spațieri consistente
 - [x] Pagina principală (cuprins)
-  - [x] Hero scurt: ce e site-ul, pentru cine, în 2 propoziții
+  - [x] Hero: titlul și paragraful în stânga, panoul split-flap în dreapta. ~~Pe toată înălțimea ecranului (`min-h-[calc(100svh-7rem)]`)~~ → **înălțimea o dă conținutul** (~520 px), ca primele carduri să înceapă imediat sub el. ~~Eyebrow-ul „Metode numerice · 14 pagini interactive”~~ → scos
+  - [x] Panou split-flap în hero (`TextFlippingBoard`, din registry-ul Aceternity): 16 coloane × 4 rânduri, 5 mesaje care se rotesc din 5 în 5 secunde, rotire rapidă (`duration={0.6}`). Adaptat: culori doar din paletă (panoul e întunecat în ambele teme), alfabet cu Ă/Â/Î/Ș/Ț, `prefers-reduced-motion` → literele apar fără rotire, textul întreg într-un `sr-only`. **Costă `motion` (~41 kB gzip)**, încărcat amânat (`lazy`), deci nu ține în loc textul din hero — de reevaluat față de bugetul din Faza 9
+  - [x] ~~Cuprins pe pagina principală (bandă cu pastile → arbore cu toate paginile → arbore doar cu secțiunile, în hero)~~ → **scos de tot**: navigarea se face din căutarea din header și din cardurile de mai jos. Titlurile de secțiune au rămas cu `id` (`sectiune-…`) și `scroll-mt-24`, deci o eventuală revenire la scurtături e ieftină
   - [x] Registru central de algoritmi (`src/algorithms/registry.ts`) — sursa unică de adevăr
-  - [x] ~~Grilă grupată pe capitole~~ → **o singură grilă**, în ordinea din `Plan.md`: cu 14 pagini și 5 capitole, grupurile lăsau rânduri pe jumătate goale
-  - [x] Căutare instant după nume (fără backend)
-  - [x] Filtre: capitol (5 capitole largi, nu unul per pagină). Filtrul pe dificultate — de văzut dacă e util
-  - [x] Stare **„în lucru"**: toate cele 14 au pagină și se pot deschide; badge-ul spune că e doar scheletul
-  - [x] Stare goală pentru căutare fără rezultate
+  - [x] ~~Grilă grupată pe capitole~~ → ~~o singură grilă~~ → **trei secțiuni**: „Metode liniare", „Metode neliniare", „Interpolare, integrare și ODE". Cele 5 capitole rămân (supratitlul paginii de metodă), dar se grupează în secțiuni prin `CAPITOLE[…].sectiune`
+  - [x] ~~Căutare instant în cuprins~~ → **căutarea a urcat în header**, ca listă derulantă care duce direct pe pagina metodei (`src/lib/cautare.ts` + `CautareMetode`); caută în titlu, descriere, metode și capitol, fără diacritice
+  - [x] ~~Filtre: capitol~~ → **scoase**: cu trei secțiuni vizibile pe pagină, filtrele nu mai aveau ce filtra. Filtrul pe dificultate — abandonat
+  - [x] ~~Stare „în lucru" pe carduri~~ → **scoasă**, odată cu numărul paginii, eticheta capitolului, dificultatea și pastilele metodelor: cardul e doar titlu + descriere + „Deschide"
+  - [x] La fel pe pagina de metodă: ~~Callout-ul „Pagină în lucru" cu cursul-sursă~~ → **scos**; rămân doar `Skeleton`-urile, ca placeholder tăcut. Cursul-sursă se citește din `registry.ts` și din tabelul Fazei 7
+  - [x] Stare goală pentru căutare fără rezultate (acum în lista derulantă)
 - [ ] TOC (cuprins)
   - [ ] TOC lateral pe paginile de algoritm, cu evidențierea secțiunii curente
   - [ ] Pe mobil: TOC colapsabil în partea de sus
@@ -310,7 +313,7 @@ nu doar galeria de componente.
   - [ ] Fără `localStorage` cu date personale (doar preferința de temă, documentată)
   - [ ] Fără cereri către domenii externe (tab Network gol după încărcare)
 
-**Gata când:** poți naviga tot site-ul pe telefon și pe desktop, cuprinsul afișează metodele (fie și „în curând"), iar tab-ul Cookies e gol.
+**Gata când:** poți naviga tot site-ul pe telefon și pe desktop, cuprinsul afișează toate metodele, iar tab-ul Cookies e gol.
 
 ---
 
@@ -500,13 +503,12 @@ fișier din `cursuri_MN/` se ia conținutul.
 - [ ] **7. Livrare**
   - [ ] PR cu screenshot mobil + desktop
   - [ ] Review, merge, bifare în tabelul de mai sus
-  - [ ] Scoatere din starea „în curând" pe pagina de cuprins
 
 </details>
 
 **Ordinea sugerată:** întâi metodele cu vizual simplu (rădăcini de ecuații, integrare numerică), apoi sistemele liniare (vizual mai greu — matrice, convergență), apoi ecuațiile diferențiale.
 
-**Gata când:** toate rândurile din tabel sunt bifate și nicio metodă nu mai e „în curând".
+**Gata când:** toate rândurile din tabel sunt bifate și fiecare pagină are conținut, nu schelet.
 
 ---
 

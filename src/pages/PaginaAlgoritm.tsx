@@ -3,7 +3,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
 import { CAPITOLE, getAlgoritm, getVecini } from "@/algorithms/registry";
-import { Callout } from "@/components/content/Callout";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
@@ -57,18 +56,10 @@ export default function PaginaAlgoritm() {
       </PageHeader>
 
       <Container className="pb-8">
-        <Callout tip="atentie" titlu="Pagină în lucru">
-          Deocamdată există doar scheletul. Conținutul se scrie din{" "}
-          {pagina.cursSursa.map((f, i) => (
-            <span key={f}>
-              {i > 0 && ", "}
-              <code className="font-mono text-xs">cursuri_MN/{f}</code>
-            </span>
-          ))}
-          .
-        </Callout>
-
-        <div className="mt-8 flex flex-col gap-8">
+        {/* Fără anunț de „pagină în lucru”: scheletele de mai jos țin locul
+            conținutului în tăcere. Cursul-sursă e în `registry.ts` și în
+            tabelul din Faza 7 din `Progress.md`. */}
+        <div className="flex flex-col gap-8">
           {SECTIUNI.map((s) => (
             <section key={s.titlu} aria-labelledby={`sectiune-${s.titlu}`}>
               <h2 id={`sectiune-${s.titlu}`} className="text-sectiune font-bold">

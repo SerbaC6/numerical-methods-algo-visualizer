@@ -242,7 +242,7 @@ export default function DesignSystem() {
             <div className="flex flex-wrap items-center gap-2">
               <Badge>ușor</Badge>
               <Badge variant="secondary">capitol</Badge>
-              <Badge variant="outline">în curând</Badge>
+              <Badge variant="outline">contur</Badge>
               <Badge variant="succes">a convergit</Badge>
               <Badge variant="atentie">limită atinsă</Badge>
               <Badge variant="eroare">a divergit</Badge>
@@ -345,29 +345,16 @@ export default function DesignSystem() {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <AlgorithmCard
             titlu="Factorizări LU"
-            capitol="Sisteme liniare — metode directe"
             descriere="Vezi cum se sparge o matrice în L și U, element cu element."
-            dificultate="mediu"
-            metode={["Cramer", "LU", "Doolittle", "Crout", "Cholesky"]}
             to="/algoritm/factorizari-lu"
           />
           <AlgorithmCard
             titlu="Puncte fixe și rădăcini"
-            capitol="Ecuații neliniare"
             descriere="Alege intervalul și vezi cum îl strânge fiecare metodă."
-            dificultate="ușor"
-            metode={["bisecție", "Newton", "secantă"]}
             to="/algoritm/ecuatii-neliniare"
-            stare="in-lucru"
           />
-          <AlgorithmCard
-            titlu="Metodele puterii"
-            capitol="Valori și vectori proprii"
-            descriere="De la puterea directă la PageRank."
-            dificultate="greu"
-            metode={["puterea directă", "puterea inversă", "Rayleigh", "deflație"]}
-            stare="in-curand"
-          />
+          {/* Fără `to`: cardul rămâne estompat și neclicabil. */}
+          <AlgorithmCard titlu="Metodele puterii" descriere="De la puterea directă la PageRank." />
         </div>
       </Sectiune>
 

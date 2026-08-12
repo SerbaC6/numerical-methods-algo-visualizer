@@ -1,5 +1,3 @@
-import type { Dificultate } from "@/components/content/AlgorithmCard";
-
 /**
  * Registrul celor 14 pagini tematice — sursa unică de adevăr pentru cuprins,
  * rute și navigația dintre pagini.
@@ -8,6 +6,11 @@ import type { Dificultate } from "@/components/content/AlgorithmCard";
  * tabelul „Lista paginilor" din `Progress.md`, Faza 7. Nu se inventează pagini noi
  * aici: dacă se schimbă lista, se schimbă întâi `Plan.md`.
  */
+
+export type Dificultate = "ușor" | "mediu" | "greu";
+
+/** Cele trei grupuri din cuprins. Un capitol aparține exact unei secțiuni. */
+export type Sectiune = "liniare" | "neliniare" | "interpolare-integrare";
 
 export type Capitol =
   | "sisteme-liniare"
@@ -34,16 +37,39 @@ export type IntrareAlgoritm = {
   gata: boolean;
 };
 
+/** Cele trei secțiuni ale cuprinsului, în ordinea în care apar pe pagină. */
+export const SECTIUNI: Record<Sectiune, { titlu: string; ordine: number }> = {
+  liniare: { titlu: "Metode liniare", ordine: 1 },
+  neliniare: { titlu: "Metode neliniare", ordine: 2 },
+  "interpolare-integrare": { titlu: "Interpolare, integrare și ODE", ordine: 3 },
+};
+
 /**
- * Capitole largi, nu unul per pagină: filtrele din cuprins au sens doar dacă
- * fiecare adună mai multe pagini.
+ * Capitole largi, nu unul per pagină. Capitolul apare ca supratitlu pe pagina
+ * metodei; secțiunea lui dă grupul din cuprins.
  */
-export const CAPITOLE: Record<Capitol, { titlu: string; ordine: number }> = {
-  "sisteme-liniare": { titlu: "Sisteme liniare", ordine: 1 },
-  "ortogonalitate-valori-proprii": { titlu: "Ortogonalitate și valori proprii", ordine: 2 },
-  "ecuatii-optimizare": { titlu: "Ecuații neliniare și optimizare", ordine: 3 },
-  "interpolare-aproximare": { titlu: "Interpolare și aproximare", ordine: 4 },
-  "integrare-ode": { titlu: "Integrare și ecuații diferențiale", ordine: 5 },
+export const CAPITOLE: Record<Capitol, { titlu: string; ordine: number; sectiune: Sectiune }> = {
+  "sisteme-liniare": { titlu: "Sisteme liniare", ordine: 1, sectiune: "liniare" },
+  "ortogonalitate-valori-proprii": {
+    titlu: "Ortogonalitate și valori proprii",
+    ordine: 2,
+    sectiune: "liniare",
+  },
+  "ecuatii-optimizare": {
+    titlu: "Ecuații neliniare și optimizare",
+    ordine: 3,
+    sectiune: "neliniare",
+  },
+  "interpolare-aproximare": {
+    titlu: "Interpolare și aproximare",
+    ordine: 4,
+    sectiune: "interpolare-integrare",
+  },
+  "integrare-ode": {
+    titlu: "Integrare și ecuații diferențiale",
+    ordine: 5,
+    sectiune: "interpolare-integrare",
+  },
 };
 
 export const ALGORITMI: IntrareAlgoritm[] = [
@@ -233,6 +259,22 @@ export const ALGORITMI: IntrareAlgoritm[] = [
 /** Pagina cu slug-ul dat, sau `undefined` dacă ruta e greșită. */
 export function getAlgoritm(slug: string | undefined): IntrareAlgoritm | undefined {
   return ALGORITMI.find((a) => a.slug === slug);
+}
+
+/**
+ * Paginile grupate pe cele trei secțiuni, gata de afișat în cuprins: secțiunile
+ * în ordinea din `SECTIUNI`, iar în interior paginile în ordinea din `Plan.md`.
+ */
+export function getAlgoritmiPeSectiuni() {
+  return (Object.keys(SECTIUNI) as Sectiune[])
+    .sort((a, b) => SECTIUNI[a].ordine - SECTIUNI[b].ordine)
+    .map((sectiune) => ({
+      sectiune,
+      titlu: SECTIUNI[sectiune].titlu,
+      algoritmi: ALGORITMI.filter((a) => CAPITOLE[a.capitol].sectiune === sectiune).sort(
+        (a, b) => a.numar - b.numar,
+      ),
+    }));
 }
 
 /** Vecinii din cuprins, pentru navigația de la finalul unei pagini. */
