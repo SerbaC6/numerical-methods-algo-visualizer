@@ -1,10 +1,16 @@
 # Progress — Vizualizator de Metode Numerice
 
 Documentul de lucru al proiectului. Sursa viziunii: [`Plan.md`](./Plan.md).
-Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat, adaugi o linie în [Jurnal de lucru](#jurnal-de-lucru).
+Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 
-**Legendă:** `- [ ]` de făcut · `- [~]` în lucru · `- [x]` gata
-Fiecare fază se încheie cu un criteriu **„Gata când:"**. Nu treci mai departe până nu e îndeplinit (excepție: fazele marcate ca paralelizabile).
+**Decizii deschise:**
+
+- [ ] **Lista celor ~15 metode numerice** — de completat în `Plan.md` și în tabelul din Faza 7
+- [ ] Fonturi și temă (decizie a utilizatorului, conform `Plan.md`)
+- [ ] Domeniu: `github.io` sau domeniu propriu
+- [ ] Unde stau fișierele Manim: în repo sau în GitHub Releases
+- [ ] MDX pentru conținut sau fișiere TypeScript simple
+- [ ] `HashRouter` vs. `BrowserRouter` + `404.html`
 
 **Ordinea fazelor și dependențele:**
 
@@ -478,27 +484,6 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
     - [ ] Mod „quiz" — ghicește următoarea iterație
     - [ ] Partajare stare prin URL (parametrii în query string)
     - [ ] Metode suplimentare peste cele 15
-    - [ ] Versiune în engleză
-
----
-
-## Jurnal de lucru
-
-| Data | Ce s-a făcut | Ce urmează |
-|------|--------------|------------|
-| 2026-08-12 | `Plan.md` scris, `Progress.md` structurat pe faze | Faza 0 — init Vite + React |
-|      |              |            |
-
----
-
-## Decizii deschise
-
-- [ ] **Lista celor ~15 metode numerice** — de completat în `Plan.md` și în tabelul din Faza 7
-- [ ] Fonturi și temă (decizie a utilizatorului, conform `Plan.md`)
-- [ ] Domeniu: `github.io` sau domeniu propriu
-- [ ] Unde stau fișierele Manim: în repo sau în GitHub Releases
-- [ ] MDX pentru conținut sau fișiere TypeScript simple
-- [ ] `HashRouter` vs. `BrowserRouter` + `404.html`
 
 ---
 
