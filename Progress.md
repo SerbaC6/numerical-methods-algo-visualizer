@@ -6,7 +6,8 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 **Decizii deschise:**
 
 - [ ] **Lista celor ~15 metode numerice** — de completat în `Plan.md` și în tabelul din Faza 7
-- [ ] Fonturi și temă (decizie a utilizatorului, conform `Plan.md`)
+- [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
+- [ ] Font monospace pentru formule și tabele numerice (cifre tabulare)
 - [ ] Domeniu: `github.io` sau domeniu propriu
 - [ ] Unde stau fișierele Manim: în repo sau în GitHub Releases
 - [ ] MDX pentru conținut sau fișiere TypeScript simple
@@ -57,7 +58,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] Verificare TypeScript strict (`strict: true`, `noUncheckedIndexedAccess`)
   - [ ] Path aliases (`@/`) în `tsconfig` + `vite.config`
 - [ ] Librăria de componente
-  - [ ] Cercetare opțiuni gratuite (shadcn/ui, Radix, Headless UI, Park UI) — notează alegerea și motivul
+  - [ ] Cercetare opțiuni gratuite (shadcn/ui, [Magic UI](https://magicui.design), [Aceternity UI](https://ui.aceternity.com), Radix, Headless UI, Park UI) — notează alegerea și motivul
   - [ ] Instalare Tailwind + configurare
   - [ ] Init shadcn/ui, adăugare 2–3 componente de test (Button, Card, Slider)
   - [ ] Smoke test: componentele se randează și arată corect în dev
@@ -123,19 +124,21 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
   - [ ] Caută 3–5 site-uri suplimentare de referință (estetică, animații)
   - [ ] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
-- [ ] Identitate vizuală (decizie a utilizatorului, conform `Plan.md`)
-  - [ ] Alegere font pentru titluri + font pentru text
-  - [ ] Alegere font monospace pentru formule/tabele numerice
-  - [ ] Verificare suport diacritice românești (ă â î ș ț) în toate fonturile
-  - [ ] Self-hosting fonturi în `public/fonts` (fără CDN — evităm cereri externe)
-  - [ ] Alegere temă (paletă, „mood": academic / ludic / minimal)
+- [ ] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))
+  - [ ] Nunito Sans pentru titluri și text, grosimile 400 / 600 / 700–800
+  - [ ] Alegere font monospace pentru formule/tabele numerice (cifre tabulare)
+  - [ ] Verificare diacritice românești în Nunito Sans: **ș** și **ț** cu virgulă, nu cu sedilă
+  - [ ] Self-hosting fonturi în `public/fonts`, subset latin + latin-ext (fără CDN — evităm cereri externe)
+  - [ ] Tema implicită: întunecată, fundal `#262B40`
 - [ ] Design tokens
-  - [ ] Culori: fundal, suprafață, text, accent, stări (succes/atenție/eroare)
-  - [ ] Culori dedicate vizualizării: funcție, iterație curentă, iterații anterioare, soluție, interval
-  - [ ] Temă întunecată + temă luminoasă, ambele definite explicit
+  - [ ] Culorile paletei ca tokens: `#0474C4` accent primar, `#5379AE` accent secundar, `#2C444C` suprafață, `#A8C4EC` text/accent luminos, `#06457F` accent apăsat, `#262B40` fundal închis
+  - [ ] Culori pentru stări (succes/atenție/eroare) — derivate separat, paleta e monocromă și nu poate purta singură sensul de „eroare"
+  - [ ] Culori dedicate vizualizării: `#0474C4` iterația curentă, `#5379AE` iterații anterioare, `#A8C4EC` grilă și adnotări, `#06457F` interval evidențiat
+  - [ ] Temă întunecată + temă luminoasă, ambele definite explicit (paleta e gândită întâi pentru cea închisă)
   - [ ] Scală tipografică, spațieri, radius, umbre
   - [ ] Definire ca variabile CSS + mapare în `tailwind.config`
   - [ ] Verificare contrast WCAG AA pe toate perechile text/fundal
+  - [ ] Regulă de contrast: pe fundal închis, textul-accent e `#A8C4EC` (~8,5:1 față de `#262B40`), **nu** `#0474C4` (~2,9:1 — doar umplere, niciodată text)
 - [ ] Componente de bază (shadcn + adaptare la temă)
   - [ ] Button (primar, secundar, ghost, iconiță)
   - [ ] Card
@@ -157,6 +160,9 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] Definire durate și easing standard (ex. 150/250/400ms)
   - [ ] Reguli: ce se animează și ce nu
   - [ ] Alegere lib de animație (Framer Motion / CSS pur) + justificare de mărime
+  - [ ] [Magic UI](https://magicui.design) / [Aceternity UI](https://ui.aceternity.com) — alege 2–3 efecte pentru hero și carduri, nu mai mult; se copiază în `src/components/ui`, deci verifică ce dependențe aduce fiecare
+  - [ ] Efectele împrumutate se re-colorează pe paleta proiectului înainte de folosire (multe vin cu gradienturi proprii, violet/roz)
+  - [ ] Regulă: efectele decorative stau pe pagina de cuprins și pe hero; pe paginile de algoritm animația e a graficului, nu a decorului
   - [ ] Respectare `prefers-reduced-motion` peste tot, testat
   - [ ] Stări hover/focus/active consistente
 - [ ] Responsivitate
@@ -276,7 +282,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [ ] `manim/README.md`: instalare pas cu pas, comenzi de randare
   - [ ] Randare de test a unei scene demo
 - [ ] Șablon și temă
-  - [ ] `manim/theme.py` — culorile și fonturile site-ului, importate de toate scenele
+  - [ ] `manim/theme.py` — paleta „Sapphire nightfall whisper" și Nunito Sans, importate de toate scenele (aceleași valori ca în `tailwind.config`)
   - [ ] Scenă de bază cu titlu, fundal pe temă și ritm standard
   - [ ] Toate textele din scene **în română**, cu diacritice verificate în randare
   - [ ] Convenție de nume: `<slug-algoritm>_<variantă>.mp4`
