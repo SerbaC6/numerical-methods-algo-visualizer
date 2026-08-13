@@ -13,9 +13,15 @@ export default function NotFound() {
         Poate a fost un link vechi sau o greșeală de tastare. Cuprinsul le are pe toate cele{" "}
         {NUMAR_PAGINI}.
       </p>
-      <Button asChild className="mt-6">
-        <Link to="/">Înapoi la cuprins</Link>
-      </Button>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <Button asChild>
+          <Link to="/">Înapoi la cuprins</Link>
+        </Button>
+        {/* Un link rupt de la noi n-are cum să se repare dacă nu aflăm de el. */}
+        <Button asChild variant="ghost">
+          <Link to="/contact">Spune-ne ce link te-a adus aici</Link>
+        </Button>
+      </div>
     </Container>
   );
 }

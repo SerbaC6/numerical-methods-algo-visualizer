@@ -10,6 +10,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const Acasa = lazy(() => import("@/pages/Acasa"));
 const PaginaAlgoritm = lazy(() => import("@/pages/PaginaAlgoritm"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Termeni = lazy(() => import("@/pages/Termeni"));
+const Confidentialitate = lazy(() => import("@/pages/Confidentialitate"));
 // Instrument intern. Ternarul pe `import.meta.env.DEV` e important: la build
 // devine `false ? ... : null`, deci pagina nu ajunge deloc în producție.
 const DesignSystem = import.meta.env.DEV ? lazy(() => import("@/pages/DesignSystem")) : null;
@@ -32,6 +35,9 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Acasa />} />
             <Route path="/algoritm/:slug" element={<PaginaAlgoritm />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/termeni" element={<Termeni />} />
+            <Route path="/confidentialitate" element={<Confidentialitate />} />
             {DesignSystem && <Route path="/design-system" element={<DesignSystem />} />}
             <Route path="*" element={<NotFound />} />
           </Routes>
