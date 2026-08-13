@@ -1,15 +1,19 @@
 import { ChevronRight } from "lucide-react";
-import { Link } from "react-router";
+import { Link, type To } from "react-router";
 
 import { Container } from "@/components/layout/Container";
 
 export type PageHeaderProps = {
-  /** Textul de deasupra titlului (capitol, „Pagina 3 din 14" etc.). */
+  /** Textul de deasupra titlului (capitol, „Pagina 3 din 19" etc.). */
   supratitlu?: string;
   titlu: string;
   descriere?: string;
-  /** Ultimul element e pagina curentă și nu e link. */
-  breadcrumb?: { eticheta: string; to?: string }[];
+  /**
+   * Ultimul element e pagina curentă: nu e link și primește `aria-current`.
+   * Un element intermediar fără `to` rămâne text simplu — dar **fără**
+   * `aria-current`, altfel cititorul de ecran ar anunța două „pagini curente".
+   */
+  breadcrumb?: { eticheta: string; to?: To }[];
   children?: React.ReactNode;
 };
 
@@ -34,7 +38,10 @@ export function PageHeader({
                     {item.eticheta}
                   </Link>
                 ) : (
-                  <span aria-current="page" className="text-text">
+                  <span
+                    aria-current={i === breadcrumb.length - 1 ? "page" : undefined}
+                    className="text-text"
+                  >
                     {item.eticheta}
                   </span>
                 )}
