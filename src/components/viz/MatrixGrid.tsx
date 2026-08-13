@@ -294,7 +294,10 @@ export function MatrixGrid({
                           "duration-mediu ease-standard min-w-11 rounded-md border-2 px-2 py-1.5 text-center transition-colors",
                           // Linia/coloana activă stau dedesubt, ca fundal; starea
                           // celulei se desenează peste ele, deci nu se pierde.
-                          (peLinieActiva || peColoanaActiva) && "bg-viz-interval",
+                          // `/20` fiindcă `--viz-interval` e culoare plină:
+                          // transparența o pune consumatorul. Plin, ar înghiți
+                          // cifra din celulă.
+                          (peLinieActiva || peColoanaActiva) && "bg-viz-interval/20",
                           CLASE_STARE[stare],
                         )}
                       >

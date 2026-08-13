@@ -46,6 +46,24 @@ export const ROLURI_VIZ = {
     varCss: "--viz-pivot",
     forma: "celula",
   },
+  /**
+   * Al doilea rol din afara albastrului, după `pivot`. Paranteza intervalului
+   * se desenează exact peste curbă și peste punctul iterației curente, deci nu
+   * poate fi tot albastră: s-ar topi în ele.
+   *
+   * Singurul rol care schimbă **nuanța** între teme, nu doar luminozitatea:
+   * chihlimbar (`#BE7434`) pe temă deschisă, turcoaz (`#4CA49C`) pe cea
+   * întunecată. Fiecare temă cere altă direcție ca să se desprindă de fundalul
+   * ei; de aceea legendele și explicațiile nu numesc culoarea, ci rolul.
+   *
+   * Amândouă sunt domolite cât se poate fără să scadă sub 3:1 pe suprafață —
+   * pragul WCAG pentru un element grafic — și amândouă trec
+   * `scripts/verifica-daltonism.py` la distanță de cel puțin ΔE 25 față de
+   * celelalte culori din același desen.
+   *
+   * Culoarea e **plină**: transparența o pune cine desenează (banda din grafic
+   * la 14%, linia activă din `MatrixGrid` la 20%).
+   */
   interval: {
     eticheta: "intervalul de căutare",
     varCss: "--viz-interval",
@@ -66,4 +84,43 @@ export const ROLURI_VIZ = {
 /** Culoarea unui rol, ca `var(--viz-...)` — de pus direct într-un `style` sau într-un SVG. */
 export function culoareRol(rol: RolViz): string {
   return `var(${ROLURI_VIZ[rol].varCss})`;
+}
+
+/**
+ * Rolurile care pot ajunge **scrise ca text** pe un desen — numele de lângă un
+ * marcaj: „x₀", „a₀", „b₀". `grila` lipsește fiindcă e decor, nu marchează nimic
+ * care să aibă nume.
+ */
+const ROLURI_CU_ETICHETA = [
+  "functie",
+  "curent",
+  "anterior",
+  "interval",
+  "solutie",
+  "pivot",
+] as const;
+
+type RolCuEticheta = (typeof ROLURI_CU_ETICHETA)[number];
+
+/**
+ * Culoarea cu care se **scrie** numele unui element, nu cu care se desenează.
+ *
+ * Sunt două lucruri diferite și e ușor de greșit: WCAG cere 4,5:1 pentru text de
+ * corp obișnuit, dar doar 3:1 pentru un element grafic. Rolurile sunt calibrate
+ * pentru desen, deci ca literă cad sub prag — safirul iterației curente ajungea
+ * la 2,11:1 pe tema întunecată, adică exact ce interzice CLAUDE.md („safirul:
+ * doar umplere, niciodată text").
+ *
+ * Eticheta păstrează nuanța rolului, ca legătura dintre numele „x₀" și punctul
+ * lui să rămână vizibilă; se schimbă doar luminozitatea, în direcția cerută de
+ * temă. Valorile stau în `src/index.css`, ca `--viz-*-eticheta`.
+ *
+ * Pentru un rol fără variantă de text (`grila`) se întoarce culoarea rolului:
+ * n-are ce eticheta să poarte, iar o excepție aruncată aici ar rupe un desen
+ * întreg pentru o problemă de contrast.
+ */
+export function culoareEticheta(rol: RolViz): string {
+  return (ROLURI_CU_ETICHETA as readonly string[]).includes(rol)
+    ? `var(${ROLURI_VIZ[rol as RolCuEticheta].varCss}-eticheta)`
+    : culoareRol(rol);
 }

@@ -73,7 +73,19 @@
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
   --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
-  --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
+  /* Intervalul de căutare. Nu poate fi albastru: paranteza lui stă exact peste
+     curbă (`--viz-functie`) și peste punctul iterației (`--viz-curent`), iar o a
+     treia nuanță de albastru s-ar topi în celelalte două — pe tema întunecată
+     albastrul adânc de dinainte era literalmente invizibil pe fundal.
+     Culoarea diferă ca nuanță între teme, nu doar ca luminozitate: chihlimbar pe
+     deschis, turcoaz pe închis. E singurul rol construit așa; motivul e că
+     fiecare temă cere altă direcție ca să se desprindă de fundalul ei.
+     Tokenul e **opac** — cine îl folosește își pune singur transparența
+     (paranteza îl vrea plin, banda din `MatrixGrid` la 20%).
+     Nuanța e domolită intenționat, cât să nu strige peste albastruri: 3,66:1 pe
+     suprafață. Mai jos de atât nu coboară — 3:1 e pragul WCAG 1.4.11 pentru un
+     element grafic, iar sub el paranteza redevine invizibilă. */
+  --viz-interval: #be7434;
   --viz-solutie: #15803d;
   /* Pivotul — singura culoare caldă din desen, ca să sară în ochi printr-o
      paletă rece. Pe grilă roșul înseamnă exclusiv „pivot": erorile reale nu
@@ -83,6 +95,26 @@
      roșul închis (5,48:1), noapte pe cel deschis (5,45:1). Invers pică sub prag
      în ambele cazuri — vezi testele din scripts/verifica-contrast.py. */
   --viz-pivot-text: #ffffff;
+
+  /* Etichetele scrise pe grafic („x₀", „a₀", „b₀") — varianta de TEXT a
+     fiecărui rol. Culoarea desenului nu poate fi refolosită ca text: WCAG cere
+     4,5:1 pentru text de corp obișnuit, iar rolurile sunt gândite să treacă
+     3:1, pragul elementelor grafice. Pe tema întunecată safirul ajungea la
+     2,11:1 ca literă, ceea ce e chiar interdicția scrisă în CLAUDE.md
+     („safirul: doar umplere, niciodată text").
+     Nu se confundă cu `--viz-pivot-text` de mai sus, care e cifra scrisă PE
+     umplerea pivotului, nu eticheta de lângă un marcaj.
+     Direcția diferă între teme: pe fundal închis eticheta e mai deschisă decât
+     rolul, pe fundal deschis mai închisă. Fiecare valoare de mai jos trece
+     4,5:1 și pe suprafață, și pe fundal — verificat în
+     scripts/verifica-contrast.py. Unde rolul trecea deja pragul, eticheta e
+     chiar rolul, ca să nu inventăm nuanțe fără rost. */
+  --viz-functie-eticheta: var(--viz-functie);
+  --viz-curent-eticheta: var(--viz-curent);
+  --viz-anterior-eticheta: #4a6e9e;
+  --viz-interval-eticheta: #a05e20;
+  --viz-solutie-eticheta: var(--viz-solutie);
+  --viz-pivot-eticheta: var(--viz-pivot);
 
   /* Stări — derivate în afara paletei, care e monocromă pe albastru */
   --succes: #15803d;
@@ -132,10 +164,26 @@
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
   --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
-  --viz-interval: color-mix(in oklab, var(--color-adanc) 55%, transparent);
+  /* Turcoazul e perechea întunecată a chihlimbarului de mai sus (vezi
+     comentariul de acolo): 4,73:1 pe fundal și 3,48:1 pe suprafață.
+     A înlocuit un violet (#9B85D8) care arăta bine, dar cădea la simularea de
+     daltonism: pentru un protanop ajungea la ΔE 10,9 față de safirul iterației
+     curente și 13,1 față de albastrul estompat — adică paranteza și punctele
+     deveneau aceeași culoare. Turcoazul stă la minimum 25 față de toți vecinii
+     din desen, în toate cele trei viziuni. */
+  --viz-interval: #4ca49c;
   --viz-solutie: #4ade80;
   --viz-pivot: #ff7a5c;
   --viz-pivot-text: var(--color-noapte);
+
+  /* Etichetele de pe grafic — vezi comentariul lung din `:root`. Aici sunt mai
+     deschise decât rolul, fiindcă fundalul e închis. */
+  --viz-functie-eticheta: var(--viz-functie);
+  --viz-curent-eticheta: #6fbaf0;
+  --viz-anterior-eticheta: #9cb4d6;
+  --viz-interval-eticheta: #5fbdb3;
+  --viz-solutie-eticheta: var(--viz-solutie);
+  --viz-pivot-eticheta: #ff8e74;
 
   --succes: #4ade80;
   --atentie: #fbbf24;
@@ -178,6 +226,12 @@
   --color-viz-solutie: var(--viz-solutie);
   --color-viz-pivot: var(--viz-pivot);
   --color-viz-pivot-text: var(--viz-pivot-text);
+  --color-viz-functie-eticheta: var(--viz-functie-eticheta);
+  --color-viz-curent-eticheta: var(--viz-curent-eticheta);
+  --color-viz-anterior-eticheta: var(--viz-anterior-eticheta);
+  --color-viz-interval-eticheta: var(--viz-interval-eticheta);
+  --color-viz-solutie-eticheta: var(--viz-solutie-eticheta);
+  --color-viz-pivot-eticheta: var(--viz-pivot-eticheta);
 
   /* Aceleași valori, sub numele așteptate de shadcn/ui */
   --color-background: var(--background);

@@ -130,8 +130,9 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 > **NICIODATĂ nu folosi altă culoare în afara acestei liste.** Nu inventa culori, nu „completa"
 > paleta, nu împrumuta culori din exemple de pe net, din shadcn, din Magic UI sau din Tailwind
 > (`slate-800`, `blue-500` etc. sunt interzise). Excepțiile deja aprobate, toate definite explicit
-> în `src/index.css`, sunt stările succes/atenție/eroare și cele două culori de vizualizare care
-> nu pot fi albastre: `--viz-solutie` (verde) și `--viz-pivot` (vermillion, vezi mai jos).
+> în `src/index.css`, sunt stările succes/atenție/eroare și cele trei culori de vizualizare care
+> nu pot fi albastre: `--viz-solutie` (verde), `--viz-pivot` (vermillion) și `--viz-interval`
+> (chihlimbar/turcoaz) — ultimele două, explicate mai jos.
 >
 > Dacă o componentă sau o vizualizare pare că are nevoie de o culoare nouă: **oprește-te și
 > întreabă-mă**. Nu adăuga culoarea și nu explica după aceea — decizia de culoare e a mea, nu a ta.
@@ -171,6 +172,51 @@ Cifra de pe o celulă umplută cu vermillion își schimbă culoarea între teme
 
 Când se scrie `manim/theme.py` (Faza 5), tokenul se oglindește și acolo.
 
+#### Intervalul — `--viz-interval` (aprobat explicit)
+
+`#BE7434` (chihlimbar) pe tema luminoasă, `#4CA49C` (turcoaz) pe cea întunecată. Ca și vermillionul
+de mai sus, **nu e culoare de interfață**: doar rol de vizualizare, niciodată buton, text sau
+bordură.
+
+Amândouă sunt **domolite intenționat**, ca să nu strige peste albastruri: 3,66:1 pe suprafață pe
+luminoasă, 3,48:1 pe întunecată. Mai jos de atât **nu se coboară** — 3:1 e pragul WCAG 1.4.11 pentru
+un element grafic, iar sub el paranteza redevine invizibilă, adică exact bugul de la care s-a
+pornit. `scripts/verifica-contrast.py` ține treapta următoare (`#3C837D`, 2,32:1) ca test care
+trebuie să pice.
+
+> **Turcoazul a intrat în locul unui violet (`#9B85D8`), și motivul e de reținut.** Violetul arăta
+> mai bine pe ecran și trecea toate pragurile de contrast. A picat la
+> `scripts/verifica-daltonism.py`: pentru un protanop ajungea la ΔE **10,9** față de safirul
+> iterației curente și **13,1** față de albastrul estompat — adică paranteza și punctele deveneau
+> practic aceeași culoare. Turcoazul stă la minimum **25** față de toți vecinii din desen, în toate
+> cele trei viziuni. Morala: contrastul față de fundal nu e suficient; se verifică și separarea
+> dintre culorile care apar în **același** desen.
+
+Există fiindcă paranteza intervalului se desenează **exact peste** curbă (`--viz-functie`) și peste
+punctul iterației curente (`--viz-curent`). Albastrul adânc de dinainte, la 55% pe fundal bleumarin,
+era literalmente invizibil pe tema întunecată — capetele intervalului nu se vedeau deloc.
+
+E **singurul rol care schimbă nuanța între teme**, nu doar luminozitatea. Fiecare temă cere altă
+direcție ca să se desprindă de fundalul ei. Consecința, de ținut minte când scrii texte: legendele
+și explicațiile **nu numesc culoarea** („banda mov"), ci rolul („intervalul").
+
+Tokenul e **opac**; transparența o pune consumatorul — banda din grafic la 14%, linia activă din
+`MatrixGrid` la 20%. Plin, ar înghiți cifra din celulă.
+
+> Chihlimbarul și vermillionul pivotului sunt amândouă calde, deci s-ar putea confunda la daltonism
+> roșu-verde **dacă ar apărea amândouă pline**. Nu apar: în grafic nu există pivot, iar în matrice
+> intervalul e doar fundal la 20% — compus pe alb dă `#F2E3D6`, care stă la 4,37:1 față de
+> celula-pivot. Dacă vreodată intervalul ajunge culoare plină pe o matrice, verificarea asta cade și
+> trebuie refăcută.
+
+Separarea față de curbă și de iterația curentă e prin **nuanță**, nu prin luminanță, iar formele
+diferă oricum (paranteză vs. linie). De aceea `scripts/verifica-contrast.py` nu pune prag de
+luminanță acolo: n-ar măsura nimic real. Ce măsoară ceva real e
+`scripts/verifica-daltonism.py` — rulează-l ori de câte ori adaugi sau schimbi o culoare de
+vizualizare.
+
+Când se scrie `manim/theme.py` (Faza 5), ambele valori se oglindesc și acolo.
+
 **Tipografie:** **Nunito Sans** pentru titluri și text, **JetBrains Mono** pentru formule, valori
 de parametri și tabele de iterații (cifre tabulare, distinge `0/O` și `1/l/I`). Ambele
 auto-găzduite în `public/fonts/`, fără CDN.
@@ -194,6 +240,15 @@ Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-cure
   `--viz-pivot` = pivotul. Sursa unică e `src/lib/viz-roles.ts`, de unde își ia și `Legend`
   culorile — deci legenda nu poate ajunge să contrazică desenul. Aceleași valori se oglindesc în
   `manim/theme.py`, ca vizualurile pre-randate să nu se bată cap în cap cu interfața.
+- **Culoarea cu care desenezi nu e culoarea cu care scrii.** Fiecare rol are o a doua valoare,
+  `--viz-*-eticheta`, folosită exclusiv pentru numele scrise pe desen („x₀", „a₀", „b₀"). Motivul e
+  un prag, nu o preferință: WCAG cere 4,5:1 pentru text de corp obișnuit, dar doar 3:1 pentru un
+  element grafic, iar rolurile sunt calibrate pentru desen. Safirul iterației curente ajungea la
+  2,11:1 ca literă pe tema întunecată — exact interdicția de mai jos. Se ia cu `culoareEticheta(rol)`
+  din `src/lib/viz-roles.ts`, **niciodată** cu `culoareRol(rol)` pentru un `<text>`. Eticheta
+  păstrează nuanța rolului și schimbă doar luminozitatea (mai deschisă pe fundal închis, mai închisă
+  pe fundal deschis), ca legătura dintre numele „x₀" și punctul lui să rămână vizibilă.
+  A nu se confunda cu `--viz-pivot-text`, care e cifra scrisă **pe** umplerea pivotului.
 - Paleta e monocromă pe albastru, deci nu poate purta singură sensul de „eroare": stările
   (succes/atenție/eroare) sunt derivate separat, în afara paletei.
 - `#0474C4` nu se folosește ca text pe fundal închis (~2,9:1) — pe închis, accentul de text e

@@ -273,8 +273,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
       Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
       pagina 5 (ecuații neliniare)
-- [ ] `--viz-pivot` trebuie oglindit în `manim/theme.py` când se scrie fișierul (Faza 5), altfel
-      clipurile randate folosesc alt roșu decât interfața
+- [ ] `--viz-pivot` **și `--viz-interval`** trebuie oglindite în `manim/theme.py` când se scrie
+      fișierul (Faza 5), altfel clipurile randate folosesc alt roșu și alt interval decât interfața.
+      Atenție: `--viz-interval` are **nuanțe diferite pe cele două teme** (`#BE7434` pe luminoasă,
+      `#4CA49C` pe întunecată), deci oglindirea cere ambele valori, nu una singură
 - [ ] **Matematica graficului e verificată, dar nu automat.** `src/lib/plot-scara.ts` și
       `plot-esantionare.ts` au fost testate rulând module compilate cu esbuild, în afara aplicației:
       repere (pas din 1/2/5/10, etichetă = valoare desenată, densitate adaptivă, cazuri
