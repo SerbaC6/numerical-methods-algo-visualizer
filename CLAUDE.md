@@ -150,11 +150,21 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 Șase culori de interfață, atât. Dacă ai nevoie de o nuanță intermediară, **derivă** din cele de mai jos cu
 `color-mix(in oklab, …)`, cum se face deja în `src/index.css` — asta nu e culoare nouă.
 
+> **Suprafața temei întunecate e o derivată, nu ardezia.** Ardezia stă pe hue 195, adică
+> albastru-verde; pusă ca fundal de card lângă un fundal albastru curat (noapte, hue 228), făcea
+> fiecare căsuță de pe site să pară verde. Acum se folosește
+> `color-mix(in oklab, var(--color-noapte) 70%, var(--color-estompat))` → `#33415F`, hue 221.
+>
+> Mai deschisă de atât **nu se poate**, oricât ar cere ochiul, iar limita e ușor de uitat: eticheta
+> pivotului (`#FF8E74`) ajunge la exact 4,55:1 pe suprafața asta, la un prag de 4,5:1. Următoarea
+> treaptă o coboară sub prag. Un card alb ar duce textul (`#EEF3FB`) la 1,02:1 — invizibil. Ca să se
+> poată lumina suprafața, trebuie întâi recalibrate `--viz-*-eticheta` și `--text-slab`.
+
 | Hex       | Token              | Rol                                                               |
 | --------- | ------------------ | ----------------------------------------------------------------- |
 | `#0474C4` | `--color-safir`    | accent principal — buton primar, linia funcției, iterația curentă |
 | `#5379AE` | `--color-estompat` | accent secundar — iterații anterioare, elemente inactive, borduri |
-| `#2C444C` | `--color-ardezie`  | suprafețe — carduri, panouri de control, fundal de tabel          |
+| `#2C444C` | `--color-ardezie`  | suprafețe pe tema luminoasă; grila din grafice                    |
 | `#A8C4EC` | `--color-cer`      | text pe fundal închis, grilă și etichete de axe                   |
 | `#06457F` | `--color-adanc`    | accent apăsat — hover/active, interval evidențiat                 |
 | `#262B40` | `--color-noapte`   | fundalul temei întunecate (tema implicită)                        |

@@ -19,7 +19,7 @@ Paleta „Sapphire nightfall whisper". Tokens brute în `src/index.css`, blocul 
 | ------------------ | --------- | -------------------------------------------------- |
 | `--color-safir`    | `#0474C4` | accent principal, iterația curentă                 |
 | `--color-estompat` | `#5379AE` | accent secundar, iterații anterioare               |
-| `--color-ardezie`  | `#2C444C` | suprafețe                                          |
+| `--color-ardezie`  | `#2C444C` | grila din grafice (tema luminoasă)                 |
 | `--color-cer`      | `#A8C4EC` | text secundar, grilă, adnotări, inel focus         |
 | `--color-adanc`    | `#06457F` | accent apăsat, interval evidențiat                 |
 | `--color-noapte`   | `#262B40` | fundalul temei întunecate, textul pe temă deschisă |

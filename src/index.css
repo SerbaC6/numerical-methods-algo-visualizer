@@ -160,7 +160,16 @@
 .dark {
   --fundal: var(--color-noapte);
   --fundal-ridicat: color-mix(in oklab, var(--color-noapte) 82%, #ffffff);
-  --suprafata: var(--color-ardezie);
+  /* Suprafața temei întunecate NU e ardezia. Ardezia (#2C444C) e pe hue 195,
+     adică albastru-verde: pusă ca fundal de card, lângă un fundal albastru
+     curat (noapte, hue 228), citea ca verde în fiecare căsuță de pe site.
+     Derivata de mai jos stă pe hue 221 — albastru, ca restul temei — și e chiar
+     un pic mai deschisă decât ardezia (L 0,053 față de 0,052).
+     Mai deschisă de atât **nu se poate**, oricât ar cere ochiul: eticheta
+     pivotului (#FF8E74) ajunge la exact 4,55:1 aici, iar pragul e 4,5:1. Un
+     card alb ar duce textul (#EEF3FB) la 1,02:1, adică invizibil.
+     Ardezia rămâne în paletă; pe tema luminoasă ține grila din grafice. */
+  --suprafata: color-mix(in oklab, var(--color-noapte) 70%, var(--color-estompat));
   --text: #eef3fb;
   --text-slab: var(--color-cer);
   --accent: var(--color-safir);
@@ -216,7 +225,9 @@
   --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
 
   --secondary: color-mix(in oklab, var(--color-estompat) 25%, transparent);
-  --muted: color-mix(in oklab, var(--color-ardezie) 70%, transparent);
+  /* Se ia din suprafață, nu din ardezie: altfel fundalurile „domolite" ar fi
+     rămas singurele pete verzui de pe temă. */
+  --muted: color-mix(in oklab, var(--suprafata) 70%, transparent);
   --ring: var(--color-cer);
 
   --shadow-jos: 0 1px 2px 0 rgb(6 12 30 / 0.18);

@@ -1,4 +1,12 @@
-"""Contrast WCAG pentru perechile text/fundal din design system."""
+"""Contrast WCAG pentru perechile text/fundal din design system.
+
+Suprafața temei întunecate e #33415F — valoarea randată de
+`color-mix(in oklab, var(--color-noapte) 70%, var(--color-estompat))` din
+`src/index.css`. Nu e ardezia (#2C444C): aceea stă pe hue 195, adică
+albastru-verde, și făcea fiecare card să pară verde. Dacă amestecul din CSS se
+schimbă, se schimbă și hexul de aici — altfel scriptul verifică altceva decât
+se vede pe ecran.
+"""
 
 
 def lum(hexc):
@@ -16,29 +24,29 @@ def raport(a, b):
 PERECHI = [
     # (descriere, text, fundal, prag)
     ("întunecat: text principal / fundal", "#EEF3FB", "#262B40", 4.5),
-    ("întunecat: text principal / suprafață", "#EEF3FB", "#2C444C", 4.5),
+    ("întunecat: text principal / suprafață", "#EEF3FB", "#33415F", 4.5),
     ("întunecat: text slab (cer) / fundal", "#A8C4EC", "#262B40", 4.5),
-    ("întunecat: text slab (cer) / suprafață", "#A8C4EC", "#2C444C", 4.5),
+    ("întunecat: text slab (cer) / suprafață", "#A8C4EC", "#33415F", 4.5),
     ("întunecat: safir ca TEXT / fundal (interzis)", "#0474C4", "#262B40", 4.5),
     ("întunecat: alb pe buton safir", "#FFFFFF", "#0474C4", 4.5),
     ("întunecat: succes / fundal", "#F2F5FA", "#262B40", 4.5),
     ("întunecat: atenție / fundal", "#FBBF24", "#262B40", 4.5),
     ("întunecat: eroare / fundal", "#F87171", "#262B40", 4.5),
-    ("întunecat: pivot ca inel / suprafață", "#FF7A5C", "#2C444C", 3.0),
+    ("întunecat: pivot ca inel / suprafață", "#FF7A5C", "#33415F", 3.0),
     ("întunecat: pivot ca cifră / fundal", "#FF7A5C", "#262B40", 4.5),
     ("întunecat: noapte pe umplere pivot", "#262B40", "#FF7A5C", 4.5),
     ("întunecat: ALB pe umplere pivot (interzis)", "#FFFFFF", "#FF7A5C", 4.5),
     ("întunecat: inel focus (cer) / fundal", "#A8C4EC", "#262B40", 3.0),
     # Intervalul e element grafic, nu text: pragul e 3:1 (WCAG 1.4.11).
     ("întunecat: interval (portocaliu) / fundal", "#F97B06", "#262B40", 3.0),
-    ("întunecat: interval (portocaliu) / suprafață", "#F97B06", "#2C444C", 3.0),
+    ("întunecat: interval (portocaliu) / suprafață", "#F97B06", "#33415F", 3.0),
     # Treapta următoare spre fundal, respinsă: culoarea e domolită cât se poate,
     # dar sub 3:1 paranteza redevine invizibilă — bugul de la care s-a pornit.
-    ("întunecat: interval prea domol (interzis)", "#D96A05", "#2C444C", 3.0),
+    ("întunecat: interval prea domol (interzis)", "#D96A05", "#33415F", 3.0),
     # Banda din MatrixGrid pe temă închisă: portocaliul la 20% peste suprafață
-    # dă #554F3E. Aceleași două verificări ca pe tema deschisă, mai jos.
-    ("întunecat: text principal / bandă interval 20%", "#EEF3FB", "#554F3E", 4.5),
-    ("întunecat: pivot plin / bandă interval 20%", "#FF7A5C", "#554F3E", 3.0),
+    # dă #5B4D4D. Aceleași două verificări ca pe tema deschisă, mai jos.
+    ("întunecat: text principal / bandă interval 20%", "#EEF3FB", "#5B4D4D", 4.5),
+    ("întunecat: pivot plin / bandă interval 20%", "#FF7A5C", "#5B4D4D", 3.0),
     # Față de curbă și de iterația curentă, intervalul se desprinde prin NUANȚĂ,
     # nu prin luminanță (chihlimbar/safir e chiar 1,03:1) — și e în regulă:
     # albastru↔portocaliu rămâne distinct la daltonismul roșu-verde, iar formele
@@ -64,16 +72,16 @@ PERECHI = [
     # Sunt TEXT, deci pragul e 4,5:1, nu 3:1 ca la elementele grafice. De aceea
     # au tokeni proprii (`--viz-*-eticheta`) și nu refolosesc culoarea de desen.
     # Fiecare se verifică pe amândouă fundalurile pe care poate cădea un grafic.
-    ("întunecat: eticheta curent / suprafață", "#6FBAF0", "#2C444C", 4.5),
+    ("întunecat: eticheta curent / suprafață", "#6FBAF0", "#33415F", 4.5),
     ("întunecat: eticheta curent / fundal", "#6FBAF0", "#262B40", 4.5),
-    ("întunecat: eticheta anterior / suprafață", "#9CB4D6", "#2C444C", 4.5),
+    ("întunecat: eticheta anterior / suprafață", "#9CB4D6", "#33415F", 4.5),
     ("întunecat: eticheta anterior / fundal", "#9CB4D6", "#262B40", 4.5),
-    ("întunecat: eticheta interval / suprafață", "#FA983D", "#2C444C", 4.5),
+    ("întunecat: eticheta interval / suprafață", "#FA983D", "#33415F", 4.5),
     ("întunecat: eticheta interval / fundal", "#FA983D", "#262B40", 4.5),
-    ("întunecat: eticheta funcție / suprafață", "#A8C4EC", "#2C444C", 4.5),
-    ("întunecat: eticheta soluție / suprafață", "#F2F5FA", "#2C444C", 4.5),
+    ("întunecat: eticheta funcție / suprafață", "#A8C4EC", "#33415F", 4.5),
+    ("întunecat: eticheta soluție / suprafață", "#F2F5FA", "#33415F", 4.5),
     ("întunecat: eticheta soluție / fundal", "#F2F5FA", "#262B40", 4.5),
-    ("întunecat: eticheta pivot / suprafață", "#FF8E74", "#2C444C", 4.5),
+    ("întunecat: eticheta pivot / suprafață", "#FF8E74", "#33415F", 4.5),
     ("luminos: eticheta curent / suprafață", "#0474C4", "#FFFFFF", 4.5),
     ("luminos: eticheta curent / fundal", "#0474C4", "#F7F9FD", 4.5),
     ("luminos: eticheta anterior / suprafață", "#4A6E9E", "#FFFFFF", 4.5),
@@ -84,8 +92,8 @@ PERECHI = [
     ("luminos: eticheta soluție / suprafață", "#15803D", "#FFFFFF", 4.5),
     ("luminos: eticheta pivot / suprafață", "#C43314", "#FFFFFF", 4.5),
     # Greșeala pe care tokenii ăștia o previn: culoarea de DESEN folosită ca text.
-    ("întunecat: safir ca etichetă (interzis)", "#0474C4", "#2C444C", 4.5),
-    ("întunecat: portocaliul de desen ca etichetă (interzis)", "#F97B06", "#2C444C", 4.5),
+    ("întunecat: safir ca etichetă (interzis)", "#0474C4", "#33415F", 4.5),
+    ("întunecat: portocaliul de desen ca etichetă (interzis)", "#F97B06", "#33415F", 4.5),
     ("luminos: interval (chihlimbar) / fundal", "#BE7434", "#F7F9FD", 3.0),
     ("luminos: interval (chihlimbar) / suprafață", "#BE7434", "#FFFFFF", 3.0),
     # Banda din MatrixGrid e chihlimbarul la 20% peste alb (#F2E3D6): trebuie să
