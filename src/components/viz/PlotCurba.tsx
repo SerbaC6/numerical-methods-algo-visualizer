@@ -14,6 +14,14 @@ export type PlotCurbaProps = {
   /** Curbă punctată — pentru o funcție de comparație, nu cea principală. */
   punctata?: boolean;
   opacitate?: number;
+  /**
+   * Conturul în culoarea suprafeței, desenat sub linie.
+   *
+   * Fără el, curba trecută peste o arie hașurată sau peste banda unui interval
+   * se pierde în ele — sunt toate nuanțe de albastru. Haloul o desprinde de
+   * fundal fără să ceară o culoare nouă.
+   */
+  halou?: boolean;
 };
 
 /**
@@ -57,9 +65,10 @@ function traseu(
 export function PlotCurba({
   segmente,
   rol = "functie",
-  grosime = 2,
+  grosime = 2.5,
   punctata = false,
   opacitate = 1,
+  halou = true,
 }: PlotCurbaProps) {
   const { x, y, zona, idTaiere } = usePlot();
 
@@ -69,23 +78,40 @@ export function PlotCurba({
 
   return (
     <g clipPath={`url(#${idTaiere})`} aria-hidden="true">
-      {segmente.map((segment, i) =>
-        segment.length < 2 ? null : (
-          <path
-            key={i}
-            d={traseu(segment, x.la, y.la, minY, maxY)}
-            fill="none"
-            stroke={culoareRol(rol)}
-            strokeWidth={grosime}
-            strokeOpacity={opacitate}
-            // Capete și îmbinări rotunde: fără ele, o curbă cu pantă mare arată
-            // zimțată exact acolo unde e mai interesantă.
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray={punctata ? "5 4" : undefined}
-          />
-        ),
-      )}
+      {segmente.map((segment, i) => {
+        if (segment.length < 2) return null;
+        const d = traseu(segment, x.la, y.la, minY, maxY);
+        return (
+          <g key={i}>
+            {halou && (
+              <path
+                d={d}
+                fill="none"
+                stroke="var(--suprafata)"
+                strokeWidth={grosime + 4}
+                strokeOpacity={0.75 * opacitate}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                // Curba punctată își păstrează golurile și în halou, altfel
+                // haloul ar umple linia la loc și ar șterge punctarea.
+                strokeDasharray={punctata ? "5 4" : undefined}
+              />
+            )}
+            <path
+              d={d}
+              fill="none"
+              stroke={culoareRol(rol)}
+              strokeWidth={grosime}
+              strokeOpacity={opacitate}
+              // Capete și îmbinări rotunde: fără ele, o curbă cu pantă mare arată
+              // zimțată exact acolo unde e mai interesantă.
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={punctata ? "5 4" : undefined}
+            />
+          </g>
+        );
+      })}
     </g>
   );
 }

@@ -70,6 +70,9 @@ const indice = (n: number) =>
     .map((c) => CIFRE_INDICE[Number(c)] ?? c)
     .join("");
 
+/** Număr scris ca în română: virgulă zecimală, minus tipografic. */
+const zecimale = (x: number, n: number) => x.toFixed(n).replace("-", "−").replace(".", ",");
+
 /** Bisecție pe f(x) = x³ − 2x − 5, interval [2, 3] — doar ca date de probă. */
 function bisectie(pasi: number) {
   let a = 2;
@@ -807,7 +810,7 @@ export default function DesignSystem() {
               {
                 rol: "interval",
                 eticheta: "intervalul în care e rădăcina",
-                explicatie: "se înjumătățește la fiecare pas",
+                explicatie: "paranteza cu capetele aₖ și bₖ; se înjumătățește la fiecare pas",
               },
               {
                 rol: "curent",
@@ -819,7 +822,7 @@ export default function DesignSystem() {
             ]}
             pasi={[
               "Apasă play sau mergi pas cu pas.",
-              "Urmărește cum banda colorată se strânge în jurul rădăcinii.",
+              "Urmărește cum cele două capete, aₖ și bₖ, se apropie unul de altul.",
               "Linia punctată arată în dreptul cărei valori de pe axă a ajuns mijlocul.",
               "Trage de grafic sau apasă lupa ca să te apropii; butonul din dreapta revine.",
             ]}
@@ -841,7 +844,9 @@ export default function DesignSystem() {
                 <PlotInterval
                   de={randuri[pas].a}
                   la={randuri[pas].b}
-                  eticheta={`[${randuri[pas].a.toFixed(3)} , ${randuri[pas].b.toFixed(3)}]`}
+                  etichetaDe={`a${indice(pas)}`}
+                  etichetaLa={`b${indice(pas)}`}
+                  eticheta={`[${zecimale(randuri[pas].a, 3)} ; ${zecimale(randuri[pas].b, 3)}]`}
                 />
               )}
 
@@ -890,11 +895,14 @@ export default function DesignSystem() {
               rezumat="Formula trapezelor pentru f(x) = x³ − 2x − 5 pe intervalul de la 2,2 la 3"
               descriere={`Aria de sub curbă e aproximată cu un trapez cu vârfurile la ${trapez.a} și 3. Aproximarea dă ${trapez.aproximare.toFixed(4)}, iar valoarea exactă e 6,2336.`}
             >
-              <PlotArie puncte={trapez.capete} baza={0} />
+              {/* Fără contur: latura de sus a trapezului **este** coarda de mai
+                  jos, iar desenată de două ori, în două culori, ar arăta ca
+                  două linii diferite. */}
+              <PlotArie puncte={trapez.capete} baza={0} contur={false} />
               <PlotCurba segmente={trapez.segmente} />
               {/* Coarda: dreapta prin cele două capete, adică chiar polinomul
                   Lagrange de ordinul întâi din care iese formula. */}
-              <PlotDreapta intre={trapez.capete} rol="anterior" punctata />
+              <PlotDreapta intre={trapez.capete} rol="anterior" punctata grosime={2.5} />
               {trapez.capete.map((capat, i) => (
                 <PlotPunct
                   key={i}

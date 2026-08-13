@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import { usePlot } from "@/components/viz/plot-context";
 import type { Punct } from "@/lib/plot-esantionare";
 import { culoareRol, type RolViz } from "@/lib/viz-roles";
@@ -15,6 +17,16 @@ export type PlotArieProps = {
   opacitate?: number;
   /** Conturul ariei — util ca să se vadă unde se lipesc două trapeze vecine. */
   contur?: boolean;
+  /**
+   * Hașura diagonală peste umplere.
+   *
+   * Paleta e monocromă pe albastru, deci aria și curba de deasupra ei ar fi
+   * două nuanțe apropiate ale aceleiași culori. Hașura le desparte prin
+   * **textură**, nu prin culoare nouă: aria se citește ca suprafață, curba
+   * rămâne o linie continuă peste ea. Merge și pentru daltonism, unde diferența
+   * de nuanță singură n-ar ajunge.
+   */
+  hasura?: boolean;
 };
 
 /**
@@ -31,9 +43,11 @@ export function PlotArie({
   rol = "interval",
   opacitate = 1,
   contur = true,
+  hasura = true,
 }: PlotArieProps) {
   const plot = usePlot();
   const culoare = culoareRol(rol);
+  const idHasura = `${useId()}-hasura`;
 
   const valide = puncte.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
   const primul = valide[0];
@@ -54,15 +68,34 @@ export function PlotArie({
 
   return (
     <g clipPath={`url(#${plot.idTaiere})`} aria-hidden="true">
-      <path
-        d={d}
-        fill={culoare}
-        fillOpacity={0.45 * opacitate}
-        stroke={contur ? culoare : "none"}
-        strokeWidth={contur ? 1.5 : 0}
-        strokeOpacity={opacitate}
-        strokeLinejoin="round"
-      />
+      {hasura && (
+        <defs>
+          <pattern
+            id={idHasura}
+            width={8}
+            height={8}
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)"
+          >
+            <line x1={0} y1={0} x2={0} y2={8} stroke={culoare} strokeWidth={2.5} />
+          </pattern>
+        </defs>
+      )}
+
+      {/* Umplerea plină stă dedesubt și e slabă: dă corp figurii fără să înece
+          curba desenată peste ea. Hașura de deasupra e cea care se vede. */}
+      <path d={d} fill={culoare} fillOpacity={0.2 * opacitate} />
+      {hasura && <path d={d} fill={`url(#${idHasura})`} fillOpacity={opacitate} />}
+      {contur && (
+        <path
+          d={d}
+          fill="none"
+          stroke={culoare}
+          strokeWidth={2}
+          strokeOpacity={opacitate}
+          strokeLinejoin="round"
+        />
+      )}
     </g>
   );
 }

@@ -17,8 +17,8 @@ export type PlotPunctProps = {
   opacitate?: number;
 };
 
-/** Lățimea aproximativă a unui caracter mono de 11px, pentru a nu scoate eticheta din cadru. */
-const LATIME_CARACTER = 6.6;
+/** Lățimea aproximativă a unui caracter mono de 13px, pentru a nu scoate eticheta din cadru. */
+const LATIME_CARACTER = 7.8;
 
 /**
  * Un punct de iterație pe grafic.
@@ -90,13 +90,13 @@ export function PlotPunct({
           x={px + (spreStanga ? -10 : 10)}
           y={py + (spreJos ? 18 : -10)}
           textAnchor={spreStanga ? "end" : "start"}
-          className="font-mono text-[11px] font-semibold tabular-nums"
+          className="font-mono text-[13px] font-semibold tabular-nums"
           fill={culoare}
           fillOpacity={opacitate}
           // Contur în culoarea suprafeței, desenat sub literă: eticheta rămâne
           // lizibilă și când trece peste grilă sau peste curbă.
           stroke="var(--suprafata)"
-          strokeWidth={3}
+          strokeWidth={3.5}
           paintOrder="stroke"
         >
           {eticheta}

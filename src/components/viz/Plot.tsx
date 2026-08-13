@@ -13,12 +13,12 @@ import { creeazaScara, repere, type Domeniu } from "@/lib/plot-scara";
  * Spațiul din jurul zonei de desen. Marginea din stânga **lipsește de aici**: se
  * calculează din cât de late sunt chiar etichetele axei verticale.
  */
-const MARGINI = { sus: 14, dreapta: 20, jos: 30 } as const;
+const MARGINI = { sus: 14, dreapta: 20, jos: 34 } as const;
 
-/** Cât ocupă un caracter mono de 11px. Estimare, nu măsurătoare. */
-const LATIME_CARACTER = 6.6;
+/** Cât ocupă un caracter mono de 12px. Estimare, nu măsurătoare. */
+const LATIME_CARACTER = 7.2;
 /** Sub atât nu coboară marginea din stânga, chiar dacă etichetele sunt „0" și „1". */
-const MARGINE_STANGA_MINIMA = 34;
+const MARGINE_STANGA_MINIMA = 36;
 /** Peste atât din lățime nu urcă: pe un ecran îngust, etichetele n-au voie să înghită graficul. */
 const MARGINE_STANGA_MAXIMA = 0.4;
 
@@ -33,7 +33,7 @@ const INALTIME_MAXIMA = 420;
  * încap mult mai des. Cu o singură valoare pentru amândouă, ori axa de jos s-ar
  * înghesui, ori cea din stânga ar rămâne aproape goală.
  */
-const SPATIU_REPER = { x: 70, y: 44 } as const;
+const SPATIU_REPER = { x: 78, y: 46 } as const;
 
 /**
  * Axele, grila și etichetele. Se desenează automat în orice `Plot`.
@@ -108,12 +108,12 @@ function Axe() {
 
       {/* Etichetele stau în margini, nu pe lângă axa de zero: acolo ar cădea
           peste curbă când originea e în mijlocul graficului. */}
-      <g className="fill-text-slab font-mono text-[11px] tabular-nums">
+      <g className="fill-text-slab font-mono text-[12px] tabular-nums">
         {reperiX.map((reper) => (
           <text
             key={`tx-${reper.valoare}`}
             x={xEticheta(x.la(reper.valoare), reper.eticheta)}
-            y={zona.jos + 16}
+            y={zona.jos + 18}
             textAnchor="middle"
           >
             {reper.eticheta}
