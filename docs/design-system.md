@@ -170,13 +170,14 @@ Popover.
 | `FormulaBlock`    | formulă KaTeX, cu evidențierea părților sincron cu animația                |
 | `NumberInput`     | câmp numeric cu validare și mesaj de eroare legat prin `aria-describedby`  |
 | `ExpressionInput` | câmp pentru `f(x)`, font mono, validare la tastare, exemple cu un clic     |
-| `Legend`          | legenda de culori + „cum se folosește" în 3–5 pași                         |
+| `Legend`          | legenda de culori a desenului (formă + etichetă pentru fiecare rol)        |
 
 ### Legenda — obligatorie la fiecare interfață interactivă
 
 Cerință din `Plan.md`: orice figură sau interfață cu care se joacă utilizatorul trebuie să aibă
-legendă **și** explicația modului de funcționare. Stau în aceeași componentă tocmai ca să nu se
-uite una din ele:
+legendă. **Fără listă de „cum se folosește"** — instrucțiunile de folosire nu ajung pe site (vezi
+`CLAUDE.md`); interfața se explică prin legendă, etichetele controalelor și propoziția pasului
+curent:
 
 ```tsx
 <Legend
@@ -185,7 +186,6 @@ uite una din ele:
     { rol: "interval", eticheta: "intervalul [aₖ, bₖ]" },
     { rol: "curent", eticheta: "mijlocul xₖ" },
   ]}
-  pasi={["Scrie funcția sau alege un exemplu.", "Apasă play sau mergi pas cu pas."]}
 />
 ```
 

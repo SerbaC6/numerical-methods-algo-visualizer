@@ -22,7 +22,6 @@ import { IterationTable } from "@/components/viz/IterationTable";
 import { Legend } from "@/components/viz/Legend";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
-import { StepExplanation } from "@/components/viz/StepExplanation";
 import { useDerulare } from "@/hooks/use-derulare";
 import { stiintific, zecimale } from "@/lib/numere";
 
@@ -156,25 +155,7 @@ export function InterfataEcuatiiNeliniare() {
           utilizatorul se uitase deja la un desen pe care nu-l înțelegea. Aici
           urmează firesc după alegerea metodei — întâi afli ce metodă e și ce
           vei vedea, apoi te uiți. */}
-      <Legend
-        elemente={legendaMetodei(idMetoda, etichetaCurba)}
-        pasi={[
-          <>Alege metoda din capul interfeței și funcția din panoul de parametri.</>,
-          <>
-            Pune de unde pornește: capetele intervalului la bisecție, punctul de pornire la
-            celelalte.
-          </>,
-          <>Mergi pas cu pas cu săgețile, sau trage de bară ca să sari direct la o iterație.</>,
-          <>
-            Urmărește formula de sub desen: partea aprinsă din ea e chiar elementul care se mișcă pe
-            grafic.
-          </>,
-          <>
-            Când zona căutată devine prea mică pentru ecran, graficul se apropie singur. Poți da și
-            tu zoom: rotița cu Ctrl, două degete, sau butoanele din colțul desenului.
-          </>,
-        ]}
-      />
+      <Legend elemente={legendaMetodei(idMetoda, etichetaCurba)} />
 
       {/* Graficul și parametrii stau într-o **singură** ramă, despărțiți doar de
           o linie. Sunt un instrument, nu două panouri alăturate: tragi de un
@@ -213,7 +194,6 @@ export function InterfataEcuatiiNeliniare() {
           </div>
 
           <ControlPanel
-            descriere="Alege funcția din curs și de unde pornește metoda."
             onReset={reseteaza}
             incorporat
             className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
@@ -245,11 +225,6 @@ export function InterfataEcuatiiNeliniare() {
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-text-slab text-sm">
-                {idMetoda === "puncte-fixe"
-                  ? "Puncte fixe cere forma x = g(x). Se pot alege doar funcțiile pentru care cursul o dă explicit — transformarea nu e unică, iar o alegere greșită diverge."
-                  : "Funcțiile sunt cele din curs. Rădăcina căutată e cea din intervalul recomandat."}
-              </p>
             </div>
 
             {PORNIRE[idMetoda] === "interval" && (
@@ -344,13 +319,6 @@ export function InterfataEcuatiiNeliniare() {
             // aici: tangenta sare de zece ori, iar dacă salturile vin unul după
             // altul, nu se prinde niciunul.
             faraRedare
-          />
-
-          <StepExplanation
-            pas={derulare.pas}
-            totalPasi={rezultat.pasi.length}
-            ruleaza={derulare.ruleaza}
-            explicatie={pasCurent?.explicatie}
           />
 
           {/* Paralela formulă ↔ desen: formula are numerele pasului curent puse

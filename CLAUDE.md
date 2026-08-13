@@ -45,8 +45,20 @@ curs + 21 de capturi în `cursuri_MN/poze/`). Nimic din memorie, nimic din alte 
 scrii o pagină, citește întâi cursul-sursă indicat în tabelul din Faza 7 din `Progress.md`.
 Inspirația pentru animații și interfețe poate veni de oriunde — formulele nu.
 
-Fiecare interfață interactivă trebuie să aibă legendă și explicație a modului de funcționare, și să
-facă paralela explicită formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
+Fiecare interfață interactivă trebuie să aibă legendă și să facă paralela explicită
+formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
+
+**Fără secțiune „cum se folosește".** Nu se scrie lista de pași de folosire (`pasi` din `Legend`) și
+nici textele mărunte de sub titlul panoului de parametri sau sub câmpuri („alege funcția din
+curs…"). Interfața se explică singură prin legendă, etichetele controalelor și formula pasului
+curent; instrucțiunile de folosire nu ajung pe site, nici acum, nici mai târziu.
+
+**Antetul unei pagini de algoritm e doar breadcrumb + titlu.** Descrierea scurtă de sub titlu
+(`pagina.descriere` din registru) **nu** se afișează pe pagina metodei — rămâne exclusiv pe cardul
+din cuprins, unde chiar ajută la ales. Pe pagină, prima secțiune spune oricum același lucru, mai
+bine: un rezumat de o propoziție între titlu și teorie doar amână începutul. `PageHeader` păstrează
+prop-ul `descriere` pentru paginile statice (contact, termeni, confidențialitate); `PaginaAlgoritm`
+nu i-l dă.
 
 ### Corectitudinea matematică — zero greșeli, fără excepții
 
@@ -321,7 +333,7 @@ Referințele vizuale (ce împrumutăm și ce evităm de la fiecare site analizat
 Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 - culorile vin din `src/lib/viz-roles.ts` (`--viz-*`), niciodată scrise direct în componentă;
-- fiecare interfață primește **legendă** (`Legend`) + **mod de folosire** în 3–5 pași;
+- fiecare interfață primește **legendă** (`Legend`), fără listă de „cum se folosește";
 - fiecare interfață face **paralela explicită formulă ↔ desen** (ce parte din formulă e ce
   element vizual), prin `FormulaBlock` cu `\htmlId`;
 - matematica stă în `src/algorithms/`, desenul primește `steps[]` gata calculați;

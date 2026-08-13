@@ -70,14 +70,15 @@ export default function PaginaAlgoritm() {
 
   return (
     <>
-      {/* Antetul e doar breadcrumb + titlu + descriere.
+      {/* Antetul e doar breadcrumb + titlu.
           - Metodele paginii (`pagina.metode`) **nu** se afișează: rămân în
             registru, ca material pentru căutarea din header.
           - Numărul paginii a plecat și el; secțiunea din breadcrumb spune deja
-            unde ești, iar cifra „3 din 19" nu ajuta pe nimeni să navigheze. */}
+            unde ești, iar cifra „3 din 19" nu ajuta pe nimeni să navigheze.
+          - Descrierea (`pagina.descriere`) rămâne doar pe cardul din cuprins:
+            pe pagină, teoria începe oricum cu ce ar fi spus ea. */}
       <PageHeader
         titlu={pagina.titlu}
-        descriere={pagina.descriere}
         breadcrumb={[
           { eticheta: "Cuprins", to: "/" },
           {
