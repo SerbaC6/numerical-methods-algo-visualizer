@@ -48,7 +48,7 @@ export function StepExplanation({
     <section
       aria-label={titlu}
       className={cn(
-        "bg-suprafata border-bordura shadow-jos rounded-xl border p-4",
+        "bg-suprafata border-bordura shadow-jos rounded-xl border p-5 sm:p-6",
         // Bandă de accent în stânga: leagă vizual propoziția de iterația
         // curentă din desen, care poartă aceeași culoare.
         "border-l-viz-curent border-l-4",
@@ -56,9 +56,9 @@ export function StepExplanation({
       )}
     >
       <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-text-slab text-xs font-bold tracking-wide uppercase">{titlu}</h3>
+        <h3 className="text-text-slab text-sm font-bold tracking-wide uppercase">{titlu}</h3>
         {!gol && (
-          <span className="text-text-slab shrink-0 font-mono text-xs tabular-nums">
+          <span className="text-text-slab shrink-0 font-mono text-sm tabular-nums">
             pasul {pas + 1} din {totalPasi}
           </span>
         )}
@@ -78,7 +78,7 @@ export function StepExplanation({
       <p
         aria-live={ruleaza ? "off" : "polite"}
         aria-atomic="true"
-        className={cn("mt-2 text-pretty", gol ? "text-text-slab italic" : "text-text")}
+        className={cn("mt-3 text-lg text-pretty", gol ? "text-text-slab italic" : "text-text")}
       >
         <span key={gol ? "gol" : pas} className="motion-safe:animate-in motion-safe:fade-in-0">
           {gol ? textGol : explicatie}

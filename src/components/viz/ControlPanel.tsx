@@ -9,6 +9,19 @@ export type ControlPanelProps = {
   descriere?: string;
   /** Se afișează un buton „Resetează" dacă primește ceva de făcut. */
   onReset?: () => void;
+  /**
+   * Panoul stă **înăuntrul** altei rame, lipit de grafic, deci renunță la a
+   * lui: fundal, bordură și colțuri rotunjite.
+   *
+   * E o legătură, nu o economie de pixeli. Două cartonașe alăturate spun că
+   * sunt două lucruri; parametrii nu sunt un lucru separat de grafic, ci
+   * butoanele lui. Cu o singură ramă și o linie de despărțire, se citește ce
+   * și este: un instrument.
+   *
+   * Câmpurile trec pe o singură coloană — încorporat, panoul stă pe o fâșie
+   * îngustă, unde două coloane ar sparge fiecare etichetă pe trei rânduri.
+   */
+  incorporat?: boolean;
   children: React.ReactNode;
   className?: string;
 };
@@ -24,6 +37,7 @@ export function ControlPanel({
   titlu = "Parametri",
   descriere,
   onReset,
+  incorporat = false,
   children,
   className,
 }: ControlPanelProps) {
@@ -31,14 +45,15 @@ export function ControlPanel({
     <section
       aria-label={titlu}
       className={cn(
-        "bg-suprafata border-bordura shadow-jos rounded-xl border p-4 sm:p-5",
+        "p-5 sm:p-6",
+        !incorporat && "bg-suprafata border-bordura shadow-jos rounded-xl border",
         className,
       )}
     >
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="mb-5 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-sm font-bold tracking-wide uppercase">{titlu}</h3>
-          {descriere && <p className="text-text-slab mt-1 text-sm">{descriere}</p>}
+          {descriere && <p className="text-text-slab mt-1.5 text-base">{descriere}</p>}
         </div>
         {onReset && (
           <Button variant="ghost" size="sm" onClick={onReset} className="tinta-atingere shrink-0">
@@ -48,7 +63,7 @@ export function ControlPanel({
         )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">{children}</div>
+      <div className={cn("grid gap-5", !incorporat && "sm:grid-cols-2")}>{children}</div>
     </section>
   );
 }

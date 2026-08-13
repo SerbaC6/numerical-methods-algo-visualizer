@@ -32,7 +32,7 @@ function Simbol({ forma, culoare }: { forma: FormaLegenda; culoare: string }) {
       return (
         <span
           aria-hidden="true"
-          className={cn(comun, "h-1 w-5 rounded-full")}
+          className={cn(comun, "h-1.5 w-7 rounded-full")}
           style={{ backgroundColor: culoare }}
         />
       );
@@ -40,7 +40,7 @@ function Simbol({ forma, culoare }: { forma: FormaLegenda; culoare: string }) {
       return (
         <span
           aria-hidden="true"
-          className={cn(comun, "h-0 w-5 border-t-2 border-dashed")}
+          className={cn(comun, "h-0 w-7 border-t-[3px] border-dashed")}
           style={{ borderColor: culoare }}
         />
       );
@@ -48,7 +48,7 @@ function Simbol({ forma, culoare }: { forma: FormaLegenda; culoare: string }) {
       return (
         <span
           aria-hidden="true"
-          className={cn(comun, "size-2.5 rounded-full")}
+          className={cn(comun, "size-3.5 rounded-full")}
           style={{ backgroundColor: culoare }}
         />
       );
@@ -56,7 +56,7 @@ function Simbol({ forma, culoare }: { forma: FormaLegenda; culoare: string }) {
       return (
         <span
           aria-hidden="true"
-          className={cn(comun, "h-3.5 w-5 rounded-sm border")}
+          className={cn(comun, "h-4 w-7 rounded-sm border")}
           style={{
             backgroundColor: culoare,
             borderColor: `color-mix(in oklab, ${culoare} 70%, var(--text))`,
@@ -67,7 +67,7 @@ function Simbol({ forma, culoare }: { forma: FormaLegenda; culoare: string }) {
       return (
         <span
           aria-hidden="true"
-          className={cn(comun, "size-3.5 rounded-[3px] border-2")}
+          className={cn(comun, "size-4 rounded-[3px] border-2")}
           style={{ borderColor: culoare }}
         />
       );
@@ -87,11 +87,15 @@ export function Legend({ elemente, pasi, titlu = "Legendă", className }: Legend
   return (
     <aside
       aria-label={titlu}
-      className={cn("bg-suprafata border-bordura rounded-xl border p-4 text-sm", className)}
+      // `text-lg` (18px) e mărimea textului de teorie de mai sus pe pagină.
+      // Legenda e text de citit, nu adnotare de interfață: la 14px se citea ca
+      // o notă de subsol lângă un paragraf de 18, deși spune exact ce înseamnă
+      // fiecare lucru de pe desen.
+      className={cn("bg-suprafata border-bordura rounded-xl border p-5 text-lg sm:p-6", className)}
     >
-      <h3 className="text-text-slab text-xs font-bold tracking-wide uppercase">{titlu}</h3>
+      <h3 className="text-text-slab text-sm font-bold tracking-wide uppercase">{titlu}</h3>
 
-      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+      <ul className="mt-4 grid gap-x-8 gap-y-3.5 sm:grid-cols-2">
         {elemente.map((el, i) => {
           const implicit = el.rol ? ROLURI_VIZ[el.rol] : undefined;
           const culoare = el.culoare ?? `var(${implicit?.varCss ?? "--text-slab"})`;
@@ -99,8 +103,12 @@ export function Legend({ elemente, pasi, titlu = "Legendă", className }: Legend
           const forma = el.forma ?? implicit?.forma ?? "punct";
 
           return (
-            <li key={el.rol ?? `${eticheta}-${i}`} className="flex items-start gap-2.5">
-              <span className="flex h-5 items-center">
+            // Cheia are și indicele: același rol poate apărea de două ori în
+            // aceeași legendă, cu forme diferite — tangenta lui Newton e o
+            // linie punctată în culoarea pașilor anteriori, iar punctele lor
+            // sunt tot acolo.
+            <li key={`${el.rol ?? eticheta}-${i}`} className="flex items-start gap-3">
+              <span className="flex h-7 items-center">
                 <Simbol forma={forma} culoare={culoare} />
               </span>
               <span className="min-w-0">
@@ -114,10 +122,10 @@ export function Legend({ elemente, pasi, titlu = "Legendă", className }: Legend
 
       {pasi && pasi.length > 0 && (
         <>
-          <h4 className="text-text-slab mt-4 text-xs font-bold tracking-wide uppercase">
+          <h4 className="text-text-slab mt-7 text-sm font-bold tracking-wide uppercase">
             Cum se folosește
           </h4>
-          <ol className="text-text-slab mt-2 grid list-inside list-decimal gap-1">
+          <ol className="text-text-slab mt-3 grid list-inside list-decimal gap-2.5">
             {pasi.map((pas, i) => (
               <li key={i} className="marker:font-mono marker:font-semibold">
                 {pas}

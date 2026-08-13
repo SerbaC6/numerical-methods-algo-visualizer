@@ -15,6 +15,18 @@ export type PlaybackBarProps = {
   onPas: (pas: number) => void;
   onRuleazaChange: (ruleaza: boolean) => void;
   onVitezaChange: (viteza: Viteza) => void;
+  /**
+   * Scoate redarea automată: rămân doar pașii duși cu mâna.
+   *
+   * Nu e o economie de spațiu. Pe unele metode, derularea singură **încurcă**:
+   * tangenta face zece salturi, iar dacă ele vin unul după altul, ochiul le
+   * pierde pe toate în loc să prindă unul. Acolo pasul manual e chiar unealta
+   * potrivită, iar butonul de redare doar te ispitește să te uiți la un film.
+   *
+   * Când redarea lipsește, dispar și vitezele: fără ce să grăbească, ar fi
+   * patru butoane care nu fac nimic.
+   */
+  faraRedare?: boolean;
   className?: string;
 };
 
@@ -23,6 +35,8 @@ export type PlaybackBarProps = {
  * înainte/înapoi, reset, viteză, plus o bară de poziție cu care sari direct
  * la o iterație. Tot ce se poate face cu mouse-ul se poate face și de la
  * tastatură (sliderul Radix ascultă săgețile).
+ *
+ * Cu `faraRedare`, play-ul și vitezele dispar și rămâne doar mersul cu mâna.
  */
 export function PlaybackBar({
   pas,
@@ -32,6 +46,7 @@ export function PlaybackBar({
   onPas,
   onRuleazaChange,
   onVitezaChange,
+  faraRedare = false,
   className,
 }: PlaybackBarProps) {
   const ultimul = Math.max(totalPasi - 1, 0);
@@ -42,7 +57,7 @@ export function PlaybackBar({
       role="group"
       aria-label="Derulare"
       className={cn(
-        "bg-suprafata border-bordura shadow-jos flex flex-wrap items-center gap-3 rounded-xl border p-3",
+        "bg-suprafata border-bordura shadow-jos flex flex-wrap items-center gap-4 rounded-xl border p-4",
         className,
       )}
     >
@@ -73,16 +88,18 @@ export function PlaybackBar({
         >
           <ChevronLeft aria-hidden="true" />
         </Button>
-        <Button
-          size="icon"
-          className="tinta-atingere"
-          aria-label={ruleaza ? "Pauză" : "Pornește"}
-          aria-pressed={ruleaza}
-          disabled={gol}
-          onClick={() => onRuleazaChange(!ruleaza)}
-        >
-          {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-        </Button>
+        {!faraRedare && (
+          <Button
+            size="icon"
+            className="tinta-atingere"
+            aria-label={ruleaza ? "Pauză" : "Pornește"}
+            aria-pressed={ruleaza}
+            disabled={gol}
+            onClick={() => onRuleazaChange(!ruleaza)}
+          >
+            {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -111,12 +128,16 @@ export function PlaybackBar({
             onPas(v ?? 0);
           }}
         />
-        <span className="text-text-slab shrink-0 font-mono text-sm" aria-live="polite">
+        <span className="text-text-slab shrink-0 font-mono text-base" aria-live="polite">
           {gol ? "—" : `${pas + 1}/${totalPasi}`}
         </span>
       </div>
 
-      <div className="flex items-center gap-1" role="group" aria-label="Viteză">
+      <div
+        className={cn("flex items-center gap-1", faraRedare && "hidden")}
+        role="group"
+        aria-label="Viteză"
+      >
         {VITEZE.map((v) => (
           <Button
             key={v}

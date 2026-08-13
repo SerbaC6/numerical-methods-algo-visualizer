@@ -37,13 +37,13 @@ export function IterationTable({
   return (
     <div className={cn("border-bordura overflow-hidden rounded-xl border", className)}>
       <div className="scroll-tabel max-h-96">
-        <table className="w-full border-collapse text-sm">
+        <table className="w-full border-collapse text-base">
           <caption className="sr-only">{titlu}</caption>
           <thead className="bg-suprafata sticky top-0 z-10">
             <tr>
               <th
                 scope="col"
-                className="text-text-slab border-bordura border-b px-3 py-2 text-right font-mono text-xs font-semibold"
+                className="text-text-slab border-bordura border-b px-4 py-3 text-right font-mono text-sm font-semibold"
               >
                 k
               </th>
@@ -52,7 +52,7 @@ export function IterationTable({
                   key={c.cheie}
                   scope="col"
                   title={c.descriere}
-                  className="text-text-slab border-bordura border-b px-3 py-2 text-right text-xs font-semibold whitespace-nowrap"
+                  className="text-text-slab border-bordura border-b px-4 py-3 text-right text-sm font-semibold whitespace-nowrap"
                 >
                   {c.titlu}
                 </th>
@@ -64,7 +64,7 @@ export function IterationTable({
               <tr>
                 <td
                   colSpan={coloane.length + 1}
-                  className="text-text-slab px-3 py-6 text-center text-sm"
+                  className="text-text-slab px-4 py-8 text-center text-base"
                 >
                   Încă nu s-a calculat nicio iterație.
                 </td>
@@ -86,7 +86,7 @@ export function IterationTable({
                   <th
                     scope="row"
                     className={cn(
-                      "border-bordura/60 border-b px-3 py-1.5 text-right font-mono text-xs",
+                      "border-bordura/60 border-b px-4 py-2.5 text-right font-mono text-sm",
                       curent ? "text-text font-bold" : "text-text-slab font-normal",
                     )}
                   >
@@ -95,7 +95,7 @@ export function IterationTable({
                   {coloane.map((c) => (
                     <td
                       key={c.cheie}
-                      className="border-bordura/60 border-b px-3 py-1.5 text-right font-mono whitespace-nowrap"
+                      className="border-bordura/60 border-b px-4 py-2.5 text-right font-mono whitespace-nowrap"
                     >
                       {rand[c.cheie] ?? "—"}
                     </td>

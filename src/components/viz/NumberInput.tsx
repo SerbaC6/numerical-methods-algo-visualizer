@@ -45,8 +45,10 @@ export function NumberInput({
   const mesaj = eroare ?? ajutor;
 
   return (
-    <div className={cn("grid gap-1.5", className)}>
-      <Label htmlFor={id}>{eticheta}</Label>
+    <div className={cn("grid gap-2", className)}>
+      <Label htmlFor={id} className="text-base">
+        {eticheta}
+      </Label>
       <div className="relative">
         <Input
           id={id}
@@ -75,7 +77,7 @@ export function NumberInput({
         )}
       </div>
       {mesaj && (
-        <p id={idMesaj} className={cn("text-xs", eroare ? "text-eroare" : "text-text-slab")}>
+        <p id={idMesaj} className={cn("text-sm", eroare ? "text-eroare" : "text-text-slab")}>
           {mesaj}
         </p>
       )}
