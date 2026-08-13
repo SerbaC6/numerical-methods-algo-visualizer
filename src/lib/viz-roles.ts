@@ -36,6 +36,13 @@ export const ROLURI_VIZ = {
    * eliminare, deci trebuie să sară în ochi peste toate albastrurile — de-aia
    * are culoare proprie, nu o a treia nuanță de albastru.
    *
+   * **Rolul e mai larg decât numele.** Pe lângă pivot, poartă și „punctul în
+   * care iterația se blochează" — minimul local din animația paginii 7, unde
+   * coborârea se oprește fără să fi găsit valea cea mai adâncă. E aceeași idee
+   * vizuală (locul care decide rezultatul), iar eticheta se rescrie local acolo
+   * unde se folosește. Extinderea e aprobată explicit; nu se lărgește mai
+   * departe fără aceeași aprobare.
+   *
    * **Pe grilă, roșul înseamnă exclusiv „pivot".** Erorile reale (pivot nul,
    * împărțire la zero, divergență) nu colorează celule, ci se scriu în
    * `Callout`: pivotul și `--eroare` au luminanțe aproape egale și s-ar
@@ -68,6 +75,13 @@ export const ROLURI_VIZ = {
    *
    * Culoarea e **plină**: transparența o pune cine desenează (banda din grafic
    * la 14%, linia activă din `MatrixGrid` la 20%).
+   *
+   * **Rolul e mai larg decât numele**, ca și la `pivot`: portocaliul marchează
+   * „ce se arată acum peste desen" — intervalul care se strânge la bisecție,
+   * dar și tangenta cu săgeata pasului `α·r^(k)` din animația paginii 7. E
+   * singura culoare caldă care rămâne lizibilă peste curbă și peste punctul
+   * albastru al iterației, adică exact motivul pentru care există. Extinderea e
+   * aprobată explicit; eticheta se rescrie local, la fiecare folosire.
    */
   interval: {
     eticheta: "intervalul de căutare",

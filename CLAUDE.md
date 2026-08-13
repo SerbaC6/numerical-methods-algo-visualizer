@@ -191,6 +191,12 @@ albastru și nu poate purta singură anumite sensuri.
 Există fiindcă pivotul e elementul cel mai important dintr-o eliminare și trebuie să sară în ochi
 peste toate albastrurile. O a treia nuanță de albastru l-ar fi îngropat într-un degrade.
 
+> **Rolul e mai larg decât numele (aprobat explicit).** Pe lângă pivot, vermillionul poartă și
+> „punctul în care iterația se blochează" — minimul local din animația paginii 7, acolo unde
+> coborârea se oprește fără să fi găsit valea cea mai adâncă. E aceeași idee vizuală: locul care
+> decide rezultatul. Eticheta se rescrie local, la fiecare folosire; rolul nu se lărgește mai
+> departe fără o aprobare nouă.
+
 > **Pe grilă, roșul înseamnă exclusiv „pivot".** Erorile reale — pivot nul, împărțire la zero,
 > divergență — **nu colorează celule**; se scriu ca text în `Callout`. Motivul e măsurat, nu
 > estetic: `--viz-pivot` și `--eroare` au luminanțe aproape egale (raport ~1,0), deci s-ar
@@ -238,8 +244,12 @@ Tokenul e **opac**; transparența o pune consumatorul — banda din grafic la 14
 `MatrixGrid` la 20%. Plin, ar înghiți cifra din celulă.
 
 > Intervalul și pivotul sunt calde în **amândouă** temele, deci s-ar putea confunda la daltonism
-> roșu-verde dacă ar apărea amândouă pline. Nu apar: în grafic nu există pivot, iar în matrice
-> intervalul e doar fundal la 20% — compus dă `#F2E3D6` pe luminoasă (4,37:1 față de celula-pivot)
+> roșu-verde. **Pe pagina 7 apar amândouă pline în același desen** (săgeata pasului și steagul
+> minimului local), deci relația nu se mai poate presupune — se măsoară: `scripts/verifica-daltonism.py`
+> le dă ΔE minim **24,9** pe tema întunecată (deuteranopie) și **49,0** pe cea luminoasă, adică peste
+> pragul de ~20 sub care două culori nu se mai separă. În plus, în animație nu se suprapun în timp:
+> săgeata dispare exact când se ridică steagul. În matrice, unde ar sta una peste alta,
+> intervalul rămâne doar fundal la 20% — compus dă `#F2E3D6` pe luminoasă (4,37:1 față de celula-pivot)
 > și `#554F3E` pe întunecată (3,18:1). Ambele perechi sunt teste în
 > `scripts/verifica-contrast.py`, iar `scripts/verifica-daltonism.py` ține pivotul între vecinii
 > intervalului, ca relația să rămână măsurată. Dacă vreodată intervalul ajunge culoare plină pe o
@@ -460,7 +470,14 @@ duce singură o introducere narativă.
 Manim rămâne **exclusiv offline** (vezi §Arhitectură): randare locală, rezultat static în
 `public/media/<slug>/`, niciodată în browser. Pipeline-ul se face în Faza 5 din `Progress.md`.
 
-**Excepția: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
+**Excepția 2: pagina 7** (`metode-de-gradient`) — secțiunea „Vizual" există, dar clipul e **scris în
+cod**, nu randat cu Manim. Rulează pe un ceas propriu (`Clip` din `src/components/viz/`, cu
+`src/lib/compozitie.ts`), iar tot ce se vede e o funcție pură de timpul clipului. Regula generală
+rămâne Manim; aici clipul a venit gata făcut ca animație web și s-a portat ca atare. Ce trebuie
+ținut minte, dacă se mai repetă: un clip scris în cod **nu** capătă voie să facă și treaba
+interfeței interactive — se oprește și se derulează, dar nu primește parametrii utilizatorului.
+
+**Excepția 1: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
 Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
 doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,
 nu se pune text de așteptare, nu se anunță nimic — vezi regula despre stările de progres.

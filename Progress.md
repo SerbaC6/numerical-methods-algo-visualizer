@@ -496,7 +496,7 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a   | [x]  | [x]        | [~]   | [ ]  |
-| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 2D      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 2D | [x]     | n/a   | [x]  | [ ]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 10  | QR și DVS                                     | `qr-si-dvs`                        | curs8, curs3 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -563,6 +563,46 @@ Ce **nu** e verificat încă:
 - [ ] Deschide câte un issue GitHub pentru fiecare pagină, cu checklist-ul de mai jos
 - [ ] Pentru fiecare pagină: citește **întâi** cursul sursă din `cursuri_MN/`, apoi scrie
       textul și formulele — nimic din memorie, nimic din alte surse
+
+### Pagina 7 — `metode-de-gradient`, ce e gata și ce nu
+
+Prima pagină cu secțiunea „Vizual" completă. Clipul e **scris în cod**, nu randat cu Manim (vezi
+excepția din `CLAUDE.md`): a pornit de la o animație web gata făcută (`Coborare pe gradient.html`,
+un bundle cu motor propriu) și s-a portat în proiect ca desen pe ceas propriu.
+
+Ce există:
+
+- **Motorul de clip**, felia strict necesară din motorul original: `src/lib/compozitie.ts` (curbe,
+  `animeaza()`, `repere()` — funcții pure) plus `Clip`, `Subtitrari` și `PlaybackClip` din
+  `src/components/viz/`. Bundle-ul original **nu** a intrat în proiect: aducea React UMD, Babel
+  standalone (3 MB) și fonturile încă o dată.
+- **Scena** `src/components/content/AnimatieCoborarePeGradient.tsx`, cu matematica separată în
+  `src/algorithms/metode-de-gradient/peisaj-1d.ts`. Culorile vin din `viz-roles.ts`, deci clipul se
+  vede corect în ambele teme — originalul era pe fundal alb, cu hexuri scrise de mână.
+- **O greșeală matematică prinsă la port.** Cu înclinarea din original (`0,02·x²`), eticheta „minim
+  global" era **falsă**: valea din stânga stătea la `f ≈ 0,589`, dar `f(−8,5) = 0,289` cobora sub
+  ea chiar în cadru. Cu `0,04·x²` valea din stânga (`x ≈ −2,847`, `f = 0,755`) e minimul global
+  adevărat pe toată axa. Verificat pe `[−20, 20]`, împreună cu ambele rulări.
+- **Sub clip stă doar playerul.** Legenda de culori și panoul cu formula plus valorile lui `k`,
+  `x^(k)` și `f′(x^(k))` au existat și au fost scoase, la cerere: secțiunea „Vizual" e o
+  introducere narativă, iar aparatul explicativ o încărca. Paralela formulă ↔ desen a rămas **în**
+  clip — subtitrările spun `x^(k+1) = x^(k) + α·r^(k)` și `r^(k) = −f′(x^(k))`, iar săgeata din
+  desen e etichetată `α·r^(k)`. Regula despre legendă din `CLAUDE.md` rămâne valabilă pentru
+  interfețele **interactive**; dacă vreodată clipul capătă comenzi care schimbă parametrii, legenda
+  trebuie să revină.
+- **Teoria** (`src/content/metode-de-gradient.tsx`) din curs6 §4 și curs5 §8, verificată numeric pe
+  un sistem SPD 2×2: pașii descrescători converg, iar gradientul conjugat dă soluția exactă în
+  `n = 2` pași, cu `⟨v^(1), A·v^(2)⟩ = 0`.
+- **Două roluri de culoare lărgite**, amândouă aprobate explicit: `--viz-pivot` poartă și „punctul
+  în care iterația se blochează", `--viz-interval` poartă și „ce se arată acum peste desen".
+  Scrise în `viz-roles.ts` și în `CLAUDE.md`; scripturile de contrast și daltonism trec.
+
+Ce **nu** e făcut încă:
+
+- [ ] **Interfața interactivă** — `Ax = b` cu curbe de nivel, zigzagul coborârii lângă traseul
+      conjugat. Cere primitiva de isolinii (Etapa 3 din `CLAUDE.md`).
+- [ ] **Verificare cu ochiul pe telefon real** — portretul și peisajul au fost măsurate în browser
+      la 390 px, dar nu văzute pe un dispozitiv.
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
