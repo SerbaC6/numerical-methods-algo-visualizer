@@ -26,7 +26,11 @@ for (const fn of FUNCTII) {
 console.log("\n=== Newton e mult mai rapid decât bisecția (concluzia din curs) ===");
 {
   const r = newton.run({ functie: "cub", x0: 3, tol: 1e-12, maxIteratii: 60 });
-  verifica("sub 10 iterații acolo unde bisecția cere ~40", r.pasi.length < 10, `${r.pasi.length} pași`);
+  verifica(
+    "sub 10 iterații acolo unde bisecția cere ~40",
+    r.pasi.length < 10,
+    `${r.pasi.length} pași`,
+  );
 }
 
 console.log("\n=== Newton: convergență pătratică — eroarea se ridică la pătrat ===");
@@ -46,11 +50,19 @@ console.log("\n=== Newton: cele două condiții de eșec din curs ===");
 {
   // f'(x) = 0 pentru x² − 2 se întâmplă în 0
   const r1 = newton.run({ functie: "patrat-minus-doi", x0: 0, tol: 1e-8, maxIteratii: 10 });
-  verifica("derivată nulă → eșec explicat", r1.stare === "esuat" && /derivata e zero/.test(r1.motiv ?? ""), r1.motiv?.slice(0, 55));
+  verifica(
+    "derivată nulă → eșec explicat",
+    r1.stare === "esuat" && /derivata e zero/.test(r1.motiv ?? ""),
+    r1.motiv?.slice(0, 55),
+  );
 
   // pornire în afara domeniului: ln(x) din negativ
   const r2 = newton.run({ functie: "logaritm", x0: 0.06, tol: 1e-8, maxIteratii: 20 });
-  verifica("aruncat în afara domeniului → eșec explicat", r2.stare === "esuat", r2.motiv?.slice(0, 55));
+  verifica(
+    "aruncat în afara domeniului → eșec explicat",
+    r2.stare === "esuat",
+    r2.motiv?.slice(0, 55),
+  );
 }
 
 console.log("\n=== Secanta: converge la rădăcina corectă ===");
@@ -77,8 +89,18 @@ console.log("\n=== Secanta: cazuri-limită ===");
   verifica("valori de pornire egale → eșec", r1.stare === "esuat" && r1.pasi.length === 0);
 
   // x² − 2 în ±1 dă aceeași valoare: secanta e orizontală
-  const r2 = secanta.run({ functie: "patrat-minus-doi", x0: -1, x1: 1, tol: 1e-8, maxIteratii: 10 });
-  verifica("secantă orizontală → eșec explicat", r2.stare === "esuat" && /orizontală/.test(r2.motiv ?? ""), r2.motiv?.slice(0, 55));
+  const r2 = secanta.run({
+    functie: "patrat-minus-doi",
+    x0: -1,
+    x1: 1,
+    tol: 1e-8,
+    maxIteratii: 10,
+  });
+  verifica(
+    "secantă orizontală → eșec explicat",
+    r2.stare === "esuat" && /orizontală/.test(r2.motiv ?? ""),
+    r2.motiv?.slice(0, 55),
+  );
 }
 
 console.log("\n=== Puncte fixe: exemplul din curs, numărul de aur ===");
@@ -97,7 +119,9 @@ console.log("\n=== Puncte fixe: exemplul din curs, numărul de aur ===");
   );
   verifica(
     "converge din orice punct de pornire ≥ 0",
-    dinAltePuncte.every((r) => r.stare === "convergent" && Math.abs((r.pasi.at(-1)?.x ?? 0) - fn.radacina) < 1e-8),
+    dinAltePuncte.every(
+      (r) => r.stare === "convergent" && Math.abs((r.pasi.at(-1)?.x ?? 0) - fn.radacina) < 1e-8,
+    ),
   );
 }
 

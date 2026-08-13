@@ -67,7 +67,11 @@ export function run(params: ParamsSecanta): RezultatRulare {
     const urmator = x1 - (f1 * (x1 - x0)) / numitor;
 
     if (!Number.isFinite(urmator)) {
-      return { pasi, stare: "esuat", motiv: "Pasul următor iese din domeniul numerelor: metoda a divergit." };
+      return {
+        pasi,
+        stare: "esuat",
+        motiv: "Pasul următor iese din domeniul numerelor: metoda a divergit.",
+      };
     }
 
     const eroare = Math.abs(urmator - x1);
