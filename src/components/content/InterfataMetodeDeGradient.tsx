@@ -160,7 +160,12 @@ export function InterfataMetodeDeGradient() {
 
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,26%,380px)]">
-          <div className="flex min-w-0 items-center p-4 sm:p-5">
+          {/* Înălțime minimă doar de la `lg` în sus: acolo scena stă lângă
+              panoul de parametri, iar celula de grilă își lua înălțimea de la
+              el — ~360 px într-o casetă lată de 730, deși din lățime ar fi
+              ieșit ~500. Sub `lg` panoul trece dedesubt și containerul dictează
+              singur, deci nu se forțează nimic. */}
+          <div className="flex min-w-0 items-center p-4 sm:p-5 lg:min-h-[480px]">
             {rezultat.pasi.length > 0 ? (
               <ValeaGradientului
                 A={A}

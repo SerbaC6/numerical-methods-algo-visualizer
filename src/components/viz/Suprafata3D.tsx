@@ -17,9 +17,21 @@ export type Suprafata3DProps = {
   rol?: RolViz;
 };
 
-/** Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el. */
-const OPACITATE_BAZA = 0.45;
-const OPACITATE_LUMINA = 0.55;
+/**
+ * Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el.
+ *
+ * **Baza e 0,60, nu 0,45, și cifra e măsurată.** Lumina stă lipită de cameră,
+ * deci fețele cele mai umbrite sunt tocmai cele razante — adică **conturul**
+ * văii, acolo unde suprafața se desprinde de fundalul cardului. La 45 % acel
+ * contur ajungea la 2,39:1 pe tema luminoasă și 2,41:1 pe cea întunecată, sub
+ * pragul de 3:1 pe care WCAG 1.4.11 îl cere unui element grafic: valea își
+ * pierdea marginea pe partea întoarsă de la lumină. La 60 % iese 3,40:1 și
+ * 3,13:1. Ambele perechi sunt în `scripts/verifica-contrast.py`.
+ *
+ * Suma celor două rămâne 1: fața plin luminată e tot opacă.
+ */
+const OPACITATE_BAZA = 0.6;
+const OPACITATE_LUMINA = 0.4;
 
 /**
  * Sub atâta opacitate mesh-ul nu se mai randează deloc.

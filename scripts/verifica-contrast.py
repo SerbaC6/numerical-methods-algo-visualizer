@@ -96,6 +96,18 @@ PERECHI = [
     ("întunecat: portocaliul de desen ca etichetă (interzis)", "#F97B06", "#33415F", 4.5),
     ("luminos: interval (chihlimbar) / fundal", "#BE7434", "#F7F9FD", 3.0),
     ("luminos: interval (chihlimbar) / suprafață", "#BE7434", "#FFFFFF", 3.0),
+    # ── Suprafața văii din scena 3D (pagina 7) ───────────────────────────────
+    # Relieful vine din opacitatea unui singur rol (`--viz-functie`), între 60 %
+    # și 100 % — vezi `Suprafata3D`. Fața cea mai umbrită e cazul cel mai slab și
+    # nu e undeva în mijlocul mesh-ului: lumina stă lipită de cameră, deci cele
+    # mai umbrite fețe sunt tocmai cele razante, adică **conturul** văii.
+    # Compus: 60 % #06457F peste alb dă #6A8FB2; 60 % #A8C4EC peste #33415F dă #7990B4.
+    ("luminos: valea la 60% / suprafață", "#6A8FB2", "#FFFFFF", 3.0),
+    ("întunecat: valea la 60% / suprafață", "#7990B4", "#33415F", 3.0),
+    # Baza de dinainte, 45 %, ținută ca test care TREBUIE să pice: acolo conturul
+    # văii cobora la 2,39:1 și 2,41:1, sub pragul de 3:1 al unui element grafic.
+    ("luminos: valea la 45% — prea palidă (interzis)", "#8FABC5", "#FFFFFF", 3.0),
+    ("întunecat: valea la 45% — prea palidă (interzis)", "#687C9E", "#33415F", 3.0),
     # Banda din MatrixGrid e chihlimbarul la 20% peste alb (#F2E3D6): trebuie să
     # rămână limpede sub cifra închisă și să nu se confunde cu celula-pivot.
     ("luminos: text principal / bandă interval 20%", "#262B40", "#F2E3D6", 4.5),
