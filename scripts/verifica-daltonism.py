@@ -98,10 +98,17 @@ VECINI = {
     "iterația curentă (safir)": "#0474C4",
     "iterații anterioare": "#5379AE",
     "soluția (verde)": "#4ADE80",
+    # Pivotul nu apare în același desen cu intervalul plin — în grafic nu există
+    # pivot, iar în matrice intervalul e doar fundal la 20%. E ținut aici fiindcă
+    # intervalul pe temă întunecată e acum tot cald, deci relația trebuie să
+    # rămână măsurată, nu presupusă. Pragul real pentru perechea asta e cel de
+    # contrast dintre bandă și celula-pivot, din scripts/verifica-contrast.py.
+    "pivotul (coral)": "#FF7A5C",
 }
 
 CANDIDATI = {
-    "interval, în uz  #4CA49C": "#4CA49C",
+    "interval întunecat, în uz  #F97B06": "#F97B06",
+    "turcoaz, înlocuit  #4CA49C": "#4CA49C",
     "violet, respins  #9B85D8": "#9B85D8",
     "turcoaz rece, respins  #48A3B5": "#48A3B5",
 }

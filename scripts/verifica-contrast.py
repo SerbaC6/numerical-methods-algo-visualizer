@@ -30,15 +30,19 @@ PERECHI = [
     ("întunecat: ALB pe umplere pivot (interzis)", "#FFFFFF", "#FF7A5C", 4.5),
     ("întunecat: inel focus (cer) / fundal", "#A8C4EC", "#262B40", 3.0),
     # Intervalul e element grafic, nu text: pragul e 3:1 (WCAG 1.4.11).
-    ("întunecat: interval (turcoaz) / fundal", "#4CA49C", "#262B40", 3.0),
-    ("întunecat: interval (turcoaz) / suprafață", "#4CA49C", "#2C444C", 3.0),
+    ("întunecat: interval (portocaliu) / fundal", "#F97B06", "#262B40", 3.0),
+    ("întunecat: interval (portocaliu) / suprafață", "#F97B06", "#2C444C", 3.0),
     # Treapta următoare spre fundal, respinsă: culoarea e domolită cât se poate,
     # dar sub 3:1 paranteza redevine invizibilă — bugul de la care s-a pornit.
-    ("întunecat: interval prea domol (interzis)", "#3C837D", "#2C444C", 3.0),
+    ("întunecat: interval prea domol (interzis)", "#D96A05", "#2C444C", 3.0),
+    # Banda din MatrixGrid pe temă închisă: portocaliul la 20% peste suprafață
+    # dă #554F3E. Aceleași două verificări ca pe tema deschisă, mai jos.
+    ("întunecat: text principal / bandă interval 20%", "#EEF3FB", "#554F3E", 4.5),
+    ("întunecat: pivot plin / bandă interval 20%", "#FF7A5C", "#554F3E", 3.0),
     # Față de curbă și de iterația curentă, intervalul se desprinde prin NUANȚĂ,
     # nu prin luminanță (chihlimbar/safir e chiar 1,03:1) — și e în regulă:
-    # albastru↔portocaliu și albastru↔violet rămân distincte la daltonismul
-    # roșu-verde, iar formele sunt oricum diferite (paranteză vs. linie).
+    # albastru↔portocaliu rămâne distinct la daltonismul roșu-verde, iar formele
+    # sunt oricum diferite (paranteză vs. linie).
     # Un prag de luminanță aici n-ar măsura nimic real, deci nu se pune.
     ("luminos: text principal / fundal", "#262B40", "#F7F9FD", 4.5),
     ("luminos: text principal / suprafață", "#262B40", "#FFFFFF", 4.5),
@@ -64,8 +68,8 @@ PERECHI = [
     ("întunecat: eticheta curent / fundal", "#6FBAF0", "#262B40", 4.5),
     ("întunecat: eticheta anterior / suprafață", "#9CB4D6", "#2C444C", 4.5),
     ("întunecat: eticheta anterior / fundal", "#9CB4D6", "#262B40", 4.5),
-    ("întunecat: eticheta interval / suprafață", "#5FBDB3", "#2C444C", 4.5),
-    ("întunecat: eticheta interval / fundal", "#5FBDB3", "#262B40", 4.5),
+    ("întunecat: eticheta interval / suprafață", "#FA983D", "#2C444C", 4.5),
+    ("întunecat: eticheta interval / fundal", "#FA983D", "#262B40", 4.5),
     ("întunecat: eticheta funcție / suprafață", "#A8C4EC", "#2C444C", 4.5),
     ("întunecat: eticheta soluție / suprafață", "#4ADE80", "#2C444C", 4.5),
     ("întunecat: eticheta pivot / suprafață", "#FF8E74", "#2C444C", 4.5),
@@ -80,7 +84,7 @@ PERECHI = [
     ("luminos: eticheta pivot / suprafață", "#C43314", "#FFFFFF", 4.5),
     # Greșeala pe care tokenii ăștia o previn: culoarea de DESEN folosită ca text.
     ("întunecat: safir ca etichetă (interzis)", "#0474C4", "#2C444C", 4.5),
-    ("întunecat: turcoaz de desen ca etichetă (interzis)", "#4CA49C", "#2C444C", 4.5),
+    ("întunecat: portocaliul de desen ca etichetă (interzis)", "#F97B06", "#2C444C", 4.5),
     ("luminos: interval (chihlimbar) / fundal", "#BE7434", "#F7F9FD", 3.0),
     ("luminos: interval (chihlimbar) / suprafață", "#BE7434", "#FFFFFF", 3.0),
     # Banda din MatrixGrid e chihlimbarul la 20% peste alb (#F2E3D6): trebuie să

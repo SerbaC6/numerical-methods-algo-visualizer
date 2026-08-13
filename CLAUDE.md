@@ -139,7 +139,7 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 > (`slate-800`, `blue-500` etc. sunt interzise). Excepțiile deja aprobate, toate definite explicit
 > în `src/index.css`, sunt stările succes/atenție/eroare și cele trei culori de vizualizare care
 > nu pot fi albastre: `--viz-solutie` (verde), `--viz-pivot` (vermillion) și `--viz-interval`
-> (chihlimbar/turcoaz) — ultimele două, explicate mai jos.
+> (chihlimbar/portocaliu) — ultimele două, explicate mai jos.
 >
 > Dacă o componentă sau o vizualizare pare că are nevoie de o culoare nouă: **oprește-te și
 > întreabă-mă**. Nu adăuga culoarea și nu explica după aceea — decizia de culoare e a mea, nu a ta.
@@ -181,40 +181,46 @@ Când se scrie `manim/theme.py` (Faza 5), tokenul se oglindește și acolo.
 
 #### Intervalul — `--viz-interval` (aprobat explicit)
 
-`#BE7434` (chihlimbar) pe tema luminoasă, `#4CA49C` (turcoaz) pe cea întunecată. Ca și vermillionul
-de mai sus, **nu e culoare de interfață**: doar rol de vizualizare, niciodată buton, text sau
-bordură.
+`#BE7434` (chihlimbar) pe tema luminoasă, `#F97B06` (portocaliu) pe cea întunecată. Ca și
+vermillionul de mai sus, **nu e culoare de interfață**: doar rol de vizualizare, niciodată buton,
+text sau bordură.
 
 Amândouă sunt **domolite intenționat**, ca să nu strige peste albastruri: 3,66:1 pe suprafață pe
-luminoasă, 3,48:1 pe întunecată. Mai jos de atât **nu se coboară** — 3:1 e pragul WCAG 1.4.11 pentru
+luminoasă, 3,86:1 pe întunecată. Mai jos de atât **nu se coboară** — 3:1 e pragul WCAG 1.4.11 pentru
 un element grafic, iar sub el paranteza redevine invizibilă, adică exact bugul de la care s-a
-pornit. `scripts/verifica-contrast.py` ține treapta următoare (`#3C837D`, 2,32:1) ca test care
-trebuie să pice.
+pornit. `scripts/verifica-contrast.py` ține treapta următoare de pe fiecare temă (`#D96A05`, 2,95:1
+pe întunecată) ca test care trebuie să pice.
 
-> **Turcoazul a intrat în locul unui violet (`#9B85D8`), și motivul e de reținut.** Violetul arăta
-> mai bine pe ecran și trecea toate pragurile de contrast. A picat la
-> `scripts/verifica-daltonism.py`: pentru un protanop ajungea la ΔE **10,9** față de safirul
-> iterației curente și **13,1** față de albastrul estompat — adică paranteza și punctele deveneau
-> practic aceeași culoare. Turcoazul stă la minimum **25** față de toți vecinii din desen, în toate
-> cele trei viziuni. Morala: contrastul față de fundal nu e suficient; se verifică și separarea
-> dintre culorile care apar în **același** desen.
+> **Pe tema întunecată au picat două variante înaintea portocaliului, din motive diferite — și
+> amândouă sunt de reținut.** Un violet (`#9B85D8`) arăta cel mai bine pe ecran și trecea toate
+> pragurile de contrast, dar a căzut la `scripts/verifica-daltonism.py`: pentru un protanop ajungea
+> la ΔE **10,9** față de safirul iterației curente și **13,1** față de albastrul estompat — adică
+> paranteza și punctele deveneau practic aceeași culoare. L-a înlocuit un turcoaz (`#4CA49C`), care
+> trecea toate măsurătorile, dar a picat la ceva ce nu măsoară niciun script: citea ca „încă un
+> verde" lângă verdele soluției, iar tema întunecată ajungea să nu semene cu cea luminoasă.
+>
+> Morala dublă: contrastul față de fundal nu e suficient — se verifică și separarea dintre culorile
+> care apar în **același** desen — dar nici cifrele nu sunt suficiente. O culoare care trece toate
+> pragurile poate fi în continuare greșită pentru ochi, iar atunci se schimbă.
 
 Există fiindcă paranteza intervalului se desenează **exact peste** curbă (`--viz-functie`) și peste
 punctul iterației curente (`--viz-curent`). Albastrul adânc de dinainte, la 55% pe fundal bleumarin,
 era literalmente invizibil pe tema întunecată — capetele intervalului nu se vedeau deloc.
 
-E **singurul rol care schimbă nuanța între teme**, nu doar luminozitatea. Fiecare temă cere altă
-direcție ca să se desprindă de fundalul ei. Consecința, de ținut minte când scrii texte: legendele
-și explicațiile **nu numesc culoarea** („banda mov"), ci rolul („intervalul").
+Nuanța e **aceeași în ambele teme**, ca la toate celelalte roluri; se schimbă doar luminozitatea, cât
+să se desprindă de fundalul fiecăreia. Regula de scriere rămâne totuși: legendele și explicațiile
+**nu numesc culoarea** („banda portocalie"), ci rolul („intervalul").
 
 Tokenul e **opac**; transparența o pune consumatorul — banda din grafic la 14%, linia activă din
 `MatrixGrid` la 20%. Plin, ar înghiți cifra din celulă.
 
-> Chihlimbarul și vermillionul pivotului sunt amândouă calde, deci s-ar putea confunda la daltonism
-> roșu-verde **dacă ar apărea amândouă pline**. Nu apar: în grafic nu există pivot, iar în matrice
-> intervalul e doar fundal la 20% — compus pe alb dă `#F2E3D6`, care stă la 4,37:1 față de
-> celula-pivot. Dacă vreodată intervalul ajunge culoare plină pe o matrice, verificarea asta cade și
-> trebuie refăcută.
+> Intervalul și pivotul sunt calde în **amândouă** temele, deci s-ar putea confunda la daltonism
+> roșu-verde dacă ar apărea amândouă pline. Nu apar: în grafic nu există pivot, iar în matrice
+> intervalul e doar fundal la 20% — compus dă `#F2E3D6` pe luminoasă (4,37:1 față de celula-pivot)
+> și `#554F3E` pe întunecată (3,18:1). Ambele perechi sunt teste în
+> `scripts/verifica-contrast.py`, iar `scripts/verifica-daltonism.py` ține pivotul între vecinii
+> intervalului, ca relația să rămână măsurată. Dacă vreodată intervalul ajunge culoare plină pe o
+> matrice, verificările astea cad și trebuie refăcute.
 
 Separarea față de curbă și de iterația curentă e prin **nuanță**, nu prin luminanță, iar formele
 diferă oricum (paranteză vs. linie). De aceea `scripts/verifica-contrast.py` nu pune prag de

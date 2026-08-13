@@ -51,15 +51,20 @@ export const ROLURI_VIZ = {
    * se desenează exact peste curbă și peste punctul iterației curente, deci nu
    * poate fi tot albastră: s-ar topi în ele.
    *
-   * Singurul rol care schimbă **nuanța** între teme, nu doar luminozitatea:
-   * chihlimbar (`#BE7434`) pe temă deschisă, turcoaz (`#4CA49C`) pe cea
-   * întunecată. Fiecare temă cere altă direcție ca să se desprindă de fundalul
-   * ei; de aceea legendele și explicațiile nu numesc culoarea, ci rolul.
+   * Aceeași nuanță în ambele teme, schimbă doar luminozitatea: chihlimbar
+   * (`#BE7434`) pe temă deschisă, portocaliu (`#F97B06`) pe cea întunecată, ca
+   * fiecare să se desprindă de fundalul ei.
    *
    * Amândouă sunt domolite cât se poate fără să scadă sub 3:1 pe suprafață —
    * pragul WCAG pentru un element grafic — și amândouă trec
    * `scripts/verifica-daltonism.py` la distanță de cel puțin ΔE 25 față de
    * celelalte culori din același desen.
+   *
+   * Pe temă întunecată intervalul e cald ca și pivotul, deci separarea lor nu
+   * se presupune, ci se măsoară în două locuri: ΔE 24,9 la simularea de
+   * daltonism și 3,18:1 între banda la 20% și celula-pivot. Cele două nu apar
+   * oricum pline în același desen — în grafic nu există pivot, iar în matrice
+   * intervalul e doar fundal.
    *
    * Culoarea e **plină**: transparența o pune cine desenează (banda din grafic
    * la 14%, linia activă din `MatrixGrid` la 20%).

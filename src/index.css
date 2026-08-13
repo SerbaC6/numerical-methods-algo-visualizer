@@ -88,9 +88,8 @@
      curbă (`--viz-functie`) și peste punctul iterației (`--viz-curent`), iar o a
      treia nuanță de albastru s-ar topi în celelalte două — pe tema întunecată
      albastrul adânc de dinainte era literalmente invizibil pe fundal.
-     Culoarea diferă ca nuanță între teme, nu doar ca luminozitate: chihlimbar pe
-     deschis, turcoaz pe închis. E singurul rol construit așa; motivul e că
-     fiecare temă cere altă direcție ca să se desprindă de fundalul ei.
+     Chihlimbar pe deschis, portocaliu pe închis: aceeași nuanță în ambele teme,
+     schimbă doar luminozitatea, ca toate celelalte roluri.
      Tokenul e **opac** — cine îl folosește își pune singur transparența
      (paranteza îl vrea plin, banda din `MatrixGrid` la 20%).
      Nuanța e domolită intenționat, cât să nu strige peste albastruri: 3,66:1 pe
@@ -175,14 +174,17 @@
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
   --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
-  /* Turcoazul e perechea întunecată a chihlimbarului de mai sus (vezi
-     comentariul de acolo): 4,73:1 pe fundal și 3,48:1 pe suprafață.
-     A înlocuit un violet (#9B85D8) care arăta bine, dar cădea la simularea de
-     daltonism: pentru un protanop ajungea la ΔE 10,9 față de safirul iterației
-     curente și 13,1 față de albastrul estompat — adică paranteza și punctele
-     deveneau aceeași culoare. Turcoazul stă la minimum 25 față de toți vecinii
-     din desen, în toate cele trei viziuni. */
-  --viz-interval: #4ca49c;
+  /* Perechea întunecată a chihlimbarului de mai sus: aceeași nuanță (hue 29),
+     doar ridicată în luminozitate ca să se desprindă de fundalul închis —
+     5,24:1 pe fundal, 3,86:1 pe suprafață. Un pas mai domol (#D96A05, 2,95:1)
+     cade sub pragul de 3:1 și e ținut ca test care trebuie să pice.
+     Aici au picat două variante, din motive diferite. Un violet (#9B85D8) arăta
+     bine, dar la simularea de daltonism ajungea la ΔE 10,9 față de safirul
+     iterației curente — paranteza și punctele deveneau aceeași culoare. Apoi un
+     turcoaz (#4CA49C), care trecea toate pragurile, dar citea ca „verde" lângă
+     verdele soluției. Portocaliul stă la minimum ΔE 30,6 față de vecinii din
+     desen și 24,9 față de coralul pivotului. */
+  --viz-interval: #f97b06;
   --viz-solutie: #4ade80;
   --viz-pivot: #ff7a5c;
   --viz-pivot-text: var(--color-noapte);
@@ -192,7 +194,7 @@
   --viz-functie-eticheta: var(--viz-functie);
   --viz-curent-eticheta: #6fbaf0;
   --viz-anterior-eticheta: #9cb4d6;
-  --viz-interval-eticheta: #5fbdb3;
+  --viz-interval-eticheta: #fa983d;
   --viz-solutie-eticheta: var(--viz-solutie);
   --viz-pivot-eticheta: #ff8e74;
 
