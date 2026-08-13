@@ -860,7 +860,7 @@ export default function DesignSystem() {
                   x={rand.c}
                   y={rand.fc}
                   rol="anterior"
-                  raza={3.5}
+                  raza={6}
                   opacitate={0.35 + (0.5 * (i + 1)) / Math.max(1, pas)}
                 />
               ))}
@@ -902,14 +902,14 @@ export default function DesignSystem() {
               <PlotCurba segmente={trapez.segmente} />
               {/* Coarda: dreapta prin cele două capete, adică chiar polinomul
                   Lagrange de ordinul întâi din care iese formula. */}
-              <PlotDreapta intre={trapez.capete} rol="anterior" punctata grosime={2.5} />
+              <PlotDreapta intre={trapez.capete} rol="anterior" punctata grosime={3.5} />
               {trapez.capete.map((capat, i) => (
                 <PlotPunct
                   key={i}
                   x={capat.x}
                   y={capat.y}
                   rol="curent"
-                  raza={4}
+                  raza={7}
                   eticheta={i === 0 ? "a" : "b"}
                 />
               ))}

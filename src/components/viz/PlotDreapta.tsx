@@ -33,7 +33,7 @@ export type PlotDreaptaProps = Comun &
  * puncte cu același `x`) nu cer niciun caz special.
  */
 export function PlotDreapta(props: PlotDreaptaProps) {
-  const { rol = "curent", grosime = 1.5, punctata = false, opacitate = 1 } = props;
+  const { rol = "curent", grosime = 2.5, punctata = false, opacitate = 1 } = props;
   const plot = usePlot();
 
   let p0: { x: number; y: number };
@@ -80,7 +80,7 @@ export function PlotDreapta(props: PlotDreaptaProps) {
         stroke={culoareRol(rol)}
         strokeWidth={grosime}
         strokeOpacity={opacitate}
-        strokeDasharray={punctata ? "6 4" : undefined}
+        strokeDasharray={punctata ? "9 6" : undefined}
         strokeLinecap="round"
       />
     </g>

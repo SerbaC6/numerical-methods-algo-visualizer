@@ -1,5 +1,5 @@
 import { usePlot } from "@/components/viz/plot-context";
-import { culoareRol, type RolViz } from "@/lib/viz-roles";
+import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 
 export type PlotPunctProps = {
   x: number;
@@ -17,8 +17,8 @@ export type PlotPunctProps = {
   opacitate?: number;
 };
 
-/** Lățimea aproximativă a unui caracter mono de 13px, pentru a nu scoate eticheta din cadru. */
-const LATIME_CARACTER = 7.8;
+/** Lățimea aproximativă a unui caracter mono de 17px, pentru a nu scoate eticheta din cadru. */
+const LATIME_CARACTER = 10.2;
 
 /**
  * Un punct de iterație pe grafic.
@@ -32,12 +32,15 @@ export function PlotPunct({
   y,
   rol = "curent",
   eticheta,
-  raza = 5,
+  raza = 8,
   proiectie = false,
   opacitate = 1,
 }: PlotPunctProps) {
   const plot = usePlot();
   const culoare = culoareRol(rol);
+  // Numele punctului se scrie cu varianta de text a rolului: culoarea de desen
+  // e calibrată pentru 3:1 (element grafic), nu pentru 4,5:1 (text).
+  const culoareText = culoareEticheta(rol);
 
   const px = plot.x.la(x);
   const py = plot.y.la(y);
@@ -56,8 +59,8 @@ export function PlotPunct({
   // partea cealaltă, ca să nu iasă din grafic. E o estimare de lățime, nu o
   // măsurătoare: măsurarea reală a textului ar cere o randare în plus.
   const latimeEticheta = (eticheta?.length ?? 0) * LATIME_CARACTER;
-  const spreStanga = px + 10 + latimeEticheta > plot.zona.dreapta;
-  const spreJos = py - 10 < plot.zona.sus;
+  const spreStanga = px + 14 + latimeEticheta > plot.zona.dreapta;
+  const spreJos = py - 14 < plot.zona.sus;
 
   return (
     <g aria-hidden="true">
@@ -69,9 +72,9 @@ export function PlotPunct({
             y1={py}
             y2={capatProiectie}
             stroke={culoare}
-            strokeWidth={1.5}
-            strokeDasharray="3 3"
-            strokeOpacity={0.6 * opacitate}
+            strokeWidth={3}
+            strokeDasharray="6 5"
+            strokeOpacity={0.75 * opacitate}
           />
         )}
         <circle
@@ -81,22 +84,22 @@ export function PlotPunct({
           fill={culoare}
           fillOpacity={opacitate}
           stroke="var(--suprafata)"
-          strokeWidth={2}
+          strokeWidth={2.5}
         />
       </g>
 
       {eticheta && inCadru && (
         <text
-          x={px + (spreStanga ? -10 : 10)}
-          y={py + (spreJos ? 18 : -10)}
+          x={px + (spreStanga ? -14 : 14)}
+          y={py + (spreJos ? 24 : -14)}
           textAnchor={spreStanga ? "end" : "start"}
-          className="font-mono text-[13px] font-semibold tabular-nums"
-          fill={culoare}
+          className="font-mono text-[17px] tabular-nums"
+          fill={culoareText}
           fillOpacity={opacitate}
           // Contur în culoarea suprafeței, desenat sub literă: eticheta rămâne
           // lizibilă și când trece peste grilă sau peste curbă.
           stroke="var(--suprafata)"
-          strokeWidth={3.5}
+          strokeWidth={5}
           paintOrder="stroke"
         >
           {eticheta}
