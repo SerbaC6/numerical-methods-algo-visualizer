@@ -634,17 +634,54 @@ prima cu desen tridimensional. Ce s-a construit:
 - **Zero culori noi.** Relieful suprafeței vine din opacitatea unui singur rol (`--viz-functie`),
   între 45 % și 100 %, cu lumina lipită de cameră.
 
+**Ce a mai primit interfața** (plan executat integral, cinci commit-uri):
+
+- **Podeaua se vede de sus.** `opacitateSuprafata()` stinge mesh-ul pe ultimele 25 de grade, cu
+  smoothstep, și la 90° suprafața dispare cu totul — acolo scena chiar **devine** figura de curbe de
+  nivel din curs, pe care mesh-ul aproape opac o acoperea. Sub 0,02 nu se mai randează nimic, deci
+  la privirea de sus dispar și ~1 000 de `<path>`. Curbele de nivel se taie acum la **rama podelei**
+  (`idTaierePodea`, patrulaterul proiectat — exact, fiindcă proiecția e liniară), nu la marginea
+  SVG-ului, pe care o depășeau.
+- **Trei sisteme gata alese** (`src/algorithms/metode-de-gradient/sisteme.ts`), cu cifrele măsurate
+  pe modulele reale, nu alese din ochi: vale rotundă (κ = 1 — coborârea termină într-un pas, ca și
+  conjugatul), valea din curs (κ = 1,9387 — 16 și 2, rămâne cea implicită) și vale alungită (κ = 10,
+  semiaxe 1:3,16 — 36 și 2). `b` și `x⁽⁰⁾` sunt aceleași la toate trei, ca singurul lucru schimbat
+  să fie forma văii. Toleranța ultimului e 10⁻⁴, nu 10⁻⁸: la 10⁻⁸ ar fi cerut 68 de pași.
+- **Lupa scenei** (`urmarestePatrat` + `cadru.ts`): cadrul se apropie pe trepte când pasul devine
+  prea mic, cu aceeași treaptă pe amândouă axele — două trepte diferite ar forfeca cutia, iar sub
+  scară neizotropă un unghi de 90° se citește între 58° și 130°. Podeaua a primit **numerele
+  capetelor**; fără ele apropierea n-ar fi vizibilă deloc, o pătratică arătând la fel la orice
+  scară.
+- **Paralela dintre metode**: un comutator aprinde drumul întreg al celeilalte metode, punctat și
+  plat pe podea (`TraseuReferinta3D`). Zero culori noi — e rolul `anterior`, deosebit prin formă.
+- **Scena la mărimea ei** (762×526 măsurat, față de ~360 înainte) și perechea de contrast a
+  suprafeței, care **a picat la prima măsurare**: vezi mai jos.
+
+Două lucruri prinse de verificări, amândouă de reținut:
+
+1. **Conturul văii era sub prag.** Lumina fiind lipită de cameră, fețele cele mai umbrite sunt cele
+   razante — adică chiar silueta văii pe fundalul cardului. La opacitatea de bază de 45 % ieșea
+   2,39:1 (luminoasă) și 2,41:1 (întunecată), sub 3:1 cât cere WCAG 1.4.11 unui element grafic. Baza
+   a urcat la 60 % → 3,40:1 și 3,13:1; valorile de 45 % au rămas în `verifica-contrast.py` ca teste
+   care trebuie să pice.
+2. **Panoul de parametri e o grilă cu două coloane implicite**, create de `sm:col-span-2` de pe
+   rândul matricei. Un rând nou care nu le cere explicit iese din panou, cu textul tăiat — exact ce
+   a pățit comutatorul de comparație până la măsurare.
+
 Ce **nu** e verificat încă:
 
-- [ ] **Perechea de contrast a suprafeței** — `--viz-functie` la 45 % peste `--suprafata`, în ambele
-      teme, nu e încă în `scripts/verifica-contrast.py`.
 - [ ] **Verificare cu ochiul pe telefon real** — portretul și peisajul au fost măsurate în browser
       la 390 px, dar nu văzute pe un dispozitiv. La scena 3D se adaugă și performanța la tragere
       (~1000 de `<path>` la 60 Hz), care se decide cu profiler, nu din raționament.
-- [ ] **Zigzagul sistemului din curs e vizual palid** — `κ(A) = 1,94`, deci elipsele au raportul
-      semiaxelor 1,39, aproape cercuri. Ortogonalitatea e exactă, dar cotul arată blând. Se
-      compensează cu curba de nivel prin `x⁽ᵏ⁾`, cu privirea de sus și cu κ afișat la final; dacă
-      tot nu ajunge, se discută preseturile de sisteme (respinse deliberat la planificare).
+- [ ] **Tema întunecată, cu ochiul, pe scena 3D** — contrastul e măsurat pe amândouă temele, dar
+      desenul n-a fost văzut pe cea întunecată. Tot acolo rămâne întrebarea deschisă din plan: dacă
+      punctatul estompat al metodei de referință se confundă cu umbra metodei curente, **se
+      întreabă** înainte să se atingă paleta.
+- [ ] **Captura de ecran a scenei nu se poate face de pe mașina de lucru.** Cu scena întreagă în
+      cadru, `Page.captureScreenshot` din CDP dă timeout la 30 s — și dă la fel și pe commit-uri
+      dinaintea acestei sesiuni, deci nu e o regresie. Pagina rămâne vie (arborele de
+      accesibilitate și JS-ul răspund), doar rasterizarea celor ~1 000 de `<path>` nu se termină la
+      timp. Verificările vizuale de aici s-au făcut pe bucăți și prin măsurători din DOM.
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
