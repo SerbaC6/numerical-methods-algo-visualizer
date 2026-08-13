@@ -1,4 +1,7 @@
+import { motion } from "motion/react";
+
 import { usePlot } from "@/components/viz/plot-context";
+import { tranzitie } from "@/lib/miscare";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 
 export type PlotPunctProps = {
@@ -26,6 +29,11 @@ const LATIME_CARACTER = 10.2;
  * Are inel în culoarea fundalului, ca să rămână vizibil când cade exact peste
  * curbă — altfel punctul curent dispare taman în momentul în care metoda a
  * ajuns la rădăcină, adică fix când contează.
+ *
+ * **Se mișcă, nu sare.** Între doi pași ai unei metode punctul alunecă spre
+ * poziția nouă: drumul e informația (vezi cum se apropie `xₖ` de rădăcină), iar
+ * un salt l-ar ascunde. `prefers-reduced-motion` e tratat global, din
+ * `MotionConfig` în `src/main.tsx`.
  */
 export function PlotPunct({
   x,
@@ -62,48 +70,69 @@ export function PlotPunct({
   const spreStanga = px + 14 + latimeEticheta > plot.zona.dreapta;
   const spreJos = py - 14 < plot.zona.sus;
 
+  const miscare = tranzitie();
+
   return (
     <g aria-hidden="true">
       <g clipPath={`url(#${plot.idTaiere})`}>
         {proiectie && (
-          <line
+          // `x1`/`y1` sunt atribute obișnuite, deci `motion` le animează ca
+          // atare. Aici chiar trebuie: linia își schimbă și poziția, și
+          // lungimea, iar o transformare n-ar putea-o întinde fără s-o și
+          // deformeze — liniuțele punctate s-ar lăți odată cu ea.
+          <motion.line
             x1={px}
             x2={px}
             y1={py}
             y2={capatProiectie}
+            animate={{ x1: px, x2: px, y1: py, y2: capatProiectie }}
+            transition={miscare}
             stroke={culoare}
             strokeWidth={3}
             strokeDasharray="6 5"
             strokeOpacity={0.75 * opacitate}
           />
         )}
-        <circle
-          cx={px}
-          cy={py}
-          r={raza}
-          fill={culoare}
-          fillOpacity={opacitate}
-          stroke="var(--suprafata)"
-          strokeWidth={2.5}
-        />
+        {/* Punctul se mută prin transformare, nu prin `cx`/`cy`: e mai ieftin
+            de desenat și nu atinge geometria cercului. */}
+        <motion.g
+          // Fără asta, la prima randare punctul ar porni din colțul din
+          // stânga-sus și ar aluneca spre locul lui — un drum care nu înseamnă
+          // nimic matematic.
+          initial={false}
+          animate={{ x: px, y: py }}
+          transition={miscare}
+        >
+          <circle
+            r={raza}
+            fill={culoare}
+            fillOpacity={opacitate}
+            stroke="var(--suprafata)"
+            strokeWidth={2.5}
+          />
+        </motion.g>
       </g>
 
       {eticheta && inCadru && (
-        <text
-          x={px + (spreStanga ? -14 : 14)}
-          y={py + (spreJos ? 24 : -14)}
-          textAnchor={spreStanga ? "end" : "start"}
-          className="font-mono text-[17px] tabular-nums"
-          fill={culoareText}
-          fillOpacity={opacitate}
-          // Contur în culoarea suprafeței, desenat sub literă: eticheta rămâne
-          // lizibilă și când trece peste grilă sau peste curbă.
-          stroke="var(--suprafata)"
-          strokeWidth={5}
-          paintOrder="stroke"
+        <motion.g
+          initial={false}
+          animate={{ x: px + (spreStanga ? -14 : 14), y: py + (spreJos ? 24 : -14) }}
+          transition={miscare}
         >
-          {eticheta}
-        </text>
+          <text
+            textAnchor={spreStanga ? "end" : "start"}
+            className="font-mono text-[17px] tabular-nums"
+            fill={culoareText}
+            fillOpacity={opacitate}
+            // Contur în culoarea suprafeței, desenat sub literă: eticheta rămâne
+            // lizibilă și când trece peste grilă sau peste curbă.
+            stroke="var(--suprafata)"
+            strokeWidth={5}
+            paintOrder="stroke"
+          >
+            {eticheta}
+          </text>
+        </motion.g>
       )}
     </g>
   );

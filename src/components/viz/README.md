@@ -40,5 +40,34 @@ Matematica graficului **nu** stă aici, ci în [`src/lib/plot-scara.ts`](../../l
 (scară, repere, tăiere la cadru, zoom) și [`plot-esantionare.ts`](../../lib/plot-esantionare.ts)
 (eșantionare, rupere la asimptote) — ca să poată fi verificată în afara interfeței.
 
+## Unde se termină CSS-ul și unde începe `motion`
+
+Proiectul folosește amândouă, dar **nu la întâmplare**. Granița e după _ce_ se schimbă, nu după
+componentă:
+
+| Se schimbă                                    | Cu ce        | De ce                                                                                                                   |
+| --------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| **poziție, formă, geometrie** (`x`, `width`…) | **`motion`** | CSS nu poate anima geometria SVG pe toate browserele — pe Safari banda intervalului sărea, adică exact animația metodei |
+| **culoare, opacitate, hover, focus**          | **CSS**      | culorile se animează identic peste tot, iar `transition-colors` e mai ieftin decât un element `motion`                  |
+
+De aceea `PlotPunct` și `PlotInterval` sunt scrise cu `motion` (se mută), iar `MatrixGrid` și
+`IterationTable` rămân pe `transition-colors` (își schimbă doar culoarea celulei sau a rândului).
+Dacă `MatrixGrid` ajunge vreodată să **mute** linii — la pivotarea cu interschimbare — partea aia
+trece pe `motion`, restul rămâne unde e.
+
+Două reguli care nu se încalcă în straturile animate:
+
+- **pozițiile se animează prin transformare (`animate={{ x, y }}`), nu prin atribute de geometrie.**
+  Capcană: pe un element SVG, `x` din `animate` înseamnă `translateX`, **nu** atributul `x`. Dacă
+  scrii și atributul, și transformarea, cele două se adună. Excepție firească: ce își schimbă
+  _lungimea_, nu doar poziția (linia de proiecție din `PlotPunct`), unde se animează `x1`/`y1`/`y2`,
+  care sunt atribute obișnuite și n-au ambiguitatea asta.
+- **`initial={false}` peste tot.** Fără el, la prima randare fiecare marcaj ar veni alunecând din
+  colțul din stânga-sus — un drum care nu înseamnă nimic matematic.
+
+Duratele vin din [`src/lib/miscare.ts`](../../lib/miscare.ts) (`tranzitie()`), niciodată din numere
+scrise de mână. `prefers-reduced-motion` e tratat o singură dată, din `MotionConfig` în
+`src/main.tsx`.
+
 Nu conțin matematică — primesc `steps[]` gata calculați din `src/algorithms`.
 Convențiile de folosire sunt în [`docs/design-system.md`](../../../docs/design-system.md).

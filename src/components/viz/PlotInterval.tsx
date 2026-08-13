@@ -1,4 +1,7 @@
+import { motion } from "motion/react";
+
 import { usePlot } from "@/components/viz/plot-context";
+import { tranzitie } from "@/lib/miscare";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 
 export type PlotIntervalProps = {
@@ -36,10 +39,15 @@ const LATIME_CARACTER_BANDA = 9;
  * înjumătățește. De aceea marginile ei se mută cu tranziție, nu sar — regula 7
  * din `docs/referinte.md`: obiectul se transformă, nu se taie și reapare.
  *
- * Tranziția se pune pe atribute, care merg în orice browser; acolo unde
- * proprietățile geometrice SVG sunt animabile, banda alunecă, iar unde nu, se
- * mută instant. În ambele cazuri desenul e corect. Tăierea globală a duratelor
- * pentru `prefers-reduced-motion` din `index.css` o oprește oricum.
+ * **Mișcarea e scrisă cu `motion`, nu cu tranziții CSS, și ăsta e chiar motivul
+ * pentru care biblioteca a intrat în proiect.** CSS poate anima geometria SVG
+ * (`x`, `width`) doar în browserele care o expun ca proprietăți CSS; pe Safari
+ * nu, deci acolo banda **sărea** de la un pas la altul — adică exact animația
+ * care *este* metoda se pierdea. `motion` scrie valorile direct, deci se
+ * comportă la fel peste tot.
+ *
+ * `prefers-reduced-motion` e tratat global, din `MotionConfig` în
+ * `src/main.tsx`; regula din `index.css` nu ajunge până aici.
  */
 export function PlotInterval({
   de,
@@ -66,9 +74,7 @@ export function PlotInterval({
   const zeroVizibil = plot.y.domeniu[0] <= 0 && 0 <= plot.y.domeniu[1];
   const yBaza = zeroVizibil ? plot.y.la(0) : plot.zona.jos;
 
-  const tranzitie =
-    "x var(--duration-mediu) var(--ease-standard), width var(--duration-mediu) var(--ease-standard)";
-  const tranzitieCapat = "transform var(--duration-mediu) var(--ease-standard)";
+  const miscare = tranzitie();
 
   // Pe bandă îngustă numele capetelor n-au loc înăuntru și s-ar suprapune, deci
   // ies în afara parantezei — fiecare pe partea lui.
@@ -89,9 +95,13 @@ export function PlotInterval({
 
   /** Un capăt întreg: linie verticală, cârlige, punct pe bază, nume. */
   const capat = (px: number, semn: 1 | -1, nume?: string) => (
-    <g
-      transform={`translate(${px.toFixed(2)} 0)`}
-      style={{ transition: tranzitieCapat }}
+    <motion.g
+      // Capătul se mută prin transformare: e o deplasare rigidă, nu o
+      // schimbare de formă. `initial={false}` ca la prima randare să apară
+      // direct la locul lui, nu venind din marginea din stânga.
+      initial={false}
+      animate={{ x: px }}
+      transition={miscare}
       stroke={culoare}
       strokeOpacity={opacitate}
     >
@@ -140,7 +150,7 @@ export function PlotInterval({
           {nume}
         </text>
       )}
-    </g>
+    </motion.g>
   );
 
   // Textul din capul benzii se scrie doar dacă încape între capete; altfel ar
@@ -157,29 +167,38 @@ export function PlotInterval({
       {/* Umbrirea benzii — doar cât să se vadă care zonă e „înăuntru". Ea se
           taie la marginile zonei, altfel s-ar întinde peste etichetele axelor. */}
       <g clipPath={`url(#${plot.idTaiere})`}>
-        <rect
-          x={stanga}
+        {/* Banda: se mută **și** se strânge, deci are nevoie de amândouă —
+            `x` ca transformare (deplasarea marginii din stânga) și `width` ca
+            atribut animat (strângerea propriu-zisă). Atenție la capcana din
+            `motion`: pe un element SVG, `x` din `animate` înseamnă
+            `translateX`, nu atributul `x`. De aceea dreptunghiul stă la `x=0`
+            și e împins de transformare — dacă s-ar scrie și atributul, cele
+            două s-ar aduna și banda ar fi de două ori mai la dreapta. */}
+        <motion.rect
+          x={0}
           y={plot.zona.sus}
-          width={latime}
           height={Math.max(0, plot.zona.jos - plot.zona.sus)}
+          initial={false}
+          animate={{ x: stanga, width: latime }}
+          transition={miscare}
           fill={culoare}
           fillOpacity={0.14 * opacitate}
-          style={{ transition: tranzitie }}
         />
 
         {eticheta && incapeEticheta && (
-          <text
-            x={(stanga + dreapta) / 2}
-            y={plot.zona.sus + 18}
-            textAnchor="middle"
-            className="font-mono text-[15px] tabular-nums"
-            fill="var(--text)"
-            stroke="var(--suprafata)"
-            strokeWidth={5}
-            paintOrder="stroke"
-          >
-            {eticheta}
-          </text>
+          <motion.g initial={false} animate={{ x: (stanga + dreapta) / 2 }} transition={miscare}>
+            <text
+              y={plot.zona.sus + 18}
+              textAnchor="middle"
+              className="font-mono text-[15px] tabular-nums"
+              fill="var(--text)"
+              stroke="var(--suprafata)"
+              strokeWidth={5}
+              paintOrder="stroke"
+            >
+              {eticheta}
+            </text>
+          </motion.g>
         )}
       </g>
 
