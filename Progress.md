@@ -496,7 +496,7 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a   | [x]  | [x]        | [~]   | [ ]  |
-| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 2D | [x]     | n/a   | [x]  | [ ]        | [x]   | [ ]  |
+| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | n/a   | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 10  | QR și DVS                                     | `qr-si-dvs`                        | curs8, curs3 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -597,12 +597,54 @@ Ce există:
   în care iterația se blochează", `--viz-interval` poartă și „ce se arată acum peste desen".
   Scrise în `viz-roles.ts` și în `CLAUDE.md`; scripturile de contrast și daltonism trec.
 
-Ce **nu** e făcut încă:
+**Interfața interactivă — valea în 3D.** A doua interfață completă de pe site, după pagina 6, și
+prima cu desen tridimensional. Ce s-a construit:
 
-- [ ] **Interfața interactivă** — `Ax = b` cu curbe de nivel, zigzagul coborârii lângă traseul
-      conjugat. Cere primitiva de isolinii (Etapa 3 din `CLAUDE.md`).
+- **Primitiva 3D**, scrisă de mână în SVG, fără nicio bibliotecă: `src/lib/proiectie-3d.ts` (cameră
+  **ortografică** azimut/elevație, ordinea pictorului, umbrire) și `src/lib/curbe-de-nivel.ts`
+  (eigen 2×2 în formă închisă, elipsele de nivel **exacte**). Amândouă verificate numeric înaintea
+  oricărei componente — vezi mai jos de ce nu e o formalitate.
+- **`Scena3D`** și cele șase straturi ale ei (`Podea3D`, `Suprafata3D`, `CurbeDeNivel3D`,
+  `Traiectorie3D`, `Sageata3D`, `Eticheta3D`) — a treia familie de piese vizuale, lângă `Plot` (o
+  stare) și `Clip` (un film): aici desenul e funcție de **unghiul de privire**, iar unghiul îl ține
+  utilizatorul cu degetul.
+- **Doi algoritmi** în `src/algorithms/metode-de-gradient/`, după Algorithm 4 din curs6 §4.1 și
+  schema din curs5 §8.6. Un singur tip de pas pentru amândouă notațiile: `directie` și `pas` joacă
+  același rol în desen, iar α/r⁽ᵏ⁾ vs. t_k/v⁽ᵏ⁾/s_k trăiesc doar în `latexPas` și `explicatie`.
+- **Trei rezultate măsurate care au schimbat arhitectura**, toate în
+  `scripts/verificare-algoritmi/`:
+  1. **Sortarea pictorului după adâncimea centrului celulei e greșită** — 102 din 4 800 de raze, 2,1 %.
+     Corectă e sortarea după **proiecția orizontală** a centrului: 0 din 4 800. Sub proiecție
+     ortografică toate razele au aceeași direcție orizontală, deci înălțimea n-are niciun cuvânt în
+     ordine. Varianta greșită e ținută în script ca test **care trebuie să pice**, ca să nu fie pusă
+     înapoi ca „reparare".
+  2. **Unghiul drept al zigzagului nu supraviețuiește camerei oblice**: 90° real se citește 55° la
+     elevație 28° și 90,000° abia la 90°. De aici butonul „Privește de sus" — nu e un al doilea mod,
+     e capătul aceleiași manete.
+  3. **Scara pe x₁ și x₂ trebuie să fie izotropă.** Normalizată pe fiecare axă separat, cutia se
+     forfecă și unghiul citit variază între 58° și 130°, după azimut — desenul ar afirma pe rând că
+     e ascuțit sau obtuz.
+- **Elipse analitice, nu marching squares.** A fiind SPD, mulțimile de nivel sunt exact elipse;
+  `f(p) = c` se verifică la 2,49·10⁻¹² pe 97 000 de puncte. În plus, se poate cere curba **prin
+  `x⁽ᵏ⁾`** dintr-o singură evaluare — și aia e chiar explicația zigzagului.
+- **Cifrele metodei**, verificate pe modulele reale: coborârea face 16 pași pe sistemul din curs, cu
+  `|cos(r⁽ᵏ⁾, r⁽ᵏ⁺¹⁾)| ≤ 6,7·10⁻¹⁶` la fiecare pas; gradientul conjugat termină în exact 2, cu
+  reziduu nul și `⟨v⁽¹⁾, A·v⁽²⟩ = 0` exact. Se verifică și că **α e chiar minimul pe direcție**
+  (`|g′(α)| ≤ 1,1·10⁻¹⁰`), adică formula, nu doar codul care o rulează.
+- **Zero culori noi.** Relieful suprafeței vine din opacitatea unui singur rol (`--viz-functie`),
+  între 45 % și 100 %, cu lumina lipită de cameră.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Perechea de contrast a suprafeței** — `--viz-functie` la 45 % peste `--suprafata`, în ambele
+      teme, nu e încă în `scripts/verifica-contrast.py`.
 - [ ] **Verificare cu ochiul pe telefon real** — portretul și peisajul au fost măsurate în browser
-      la 390 px, dar nu văzute pe un dispozitiv.
+      la 390 px, dar nu văzute pe un dispozitiv. La scena 3D se adaugă și performanța la tragere
+      (~1000 de `<path>` la 60 Hz), care se decide cu profiler, nu din raționament.
+- [ ] **Zigzagul sistemului din curs e vizual palid** — `κ(A) = 1,94`, deci elipsele au raportul
+      semiaxelor 1,39, aproape cercuri. Ortogonalitatea e exactă, dar cotul arată blând. Se
+      compensează cu curba de nivel prin `x⁽ᵏ⁾`, cu privirea de sus și cu κ afișat la final; dacă
+      tot nu ajunge, se discută preseturile de sisteme (respinse deliberat la planificare).
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
