@@ -251,12 +251,18 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       celulă necompletată sunt lucruri diferite. Culoarea nu e singurul semnal — pivotul e singura
       celulă plină. Accesibilitate: `<caption>` cu rezumat care spune unde e pivotul și pe ce linie
       se lucrează, plus starea fiecărei celule rostită ca text ascuns („pivot, 2")
-- [ ] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
-      **5, 6, 9, 10, 11, 12, 13, 14**
-- [ ] **Decizie de luat înainte de `Plot`:** SVG scris de mână vs. bibliotecă de charting
-      (Recharts / visx / D3). Bibliotecile sunt gândite pentru date de business și încurcă exact
-      ce ne trebuie (o tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB.
-      Recomandare: **SVG de mână**
+- [x] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
+      **5, 6, 9, 10, 11, 12, 13, 14**. Se compune din **straturi cu nume** (`PlotCurba`,
+      `PlotPunct`, `PlotInterval`, `PlotArie`, `PlotDreapta`), fiecare luându-și scara din context
+      — deci o pagină poate adăuga un strat propriu fără să atingă `Plot`. Domeniul îl dă pagina,
+      graficul nu-l ghicește: altfel straturile ar trebui să se înregistreze într-un efect, adică
+      o a doua randare la fiecare pas. Dimensiunea vine din `ResizeObserver`, nu dintr-un `viewBox`
+      scalat, ca etichetele să nu se micșoreze pe telefon. Marginea din stânga se calculează din
+      lățimea chiar a etichetelor. Explorare: tragere, pinch, roată cu Ctrl, butoane și tastatură
+- [x] ~~**Decizie de luat înainte de `Plot`:** SVG scris de mână vs. bibliotecă de charting~~ →
+      **SVG de mână**, cum era recomandarea. Nicio dependență nouă; `Plot` + cele cinci straturi
+      ocupă ~600 de linii, față de 40–100 KB cât ar fi adus o bibliotecă gândită pentru date de
+      business
 - [ ] Aceleași stări vizuale trebuie să arate la fel în `MatrixGrid` (web) și în scenele Manim —
       tokens-urile `--viz-*` sunt deja comune, dar nu s-a desenat încă nimic în Manim
 
@@ -264,11 +270,18 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [x] ~~3–5 site-uri suplimentare de referință pentru estetică și animații~~ → gata (vezi mai sus)
 - [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
-- [ ] piesa rămasă din Etapa 0: `Plot` (`Legend`, `StepExplanation` și `MatrixGrid` — gata) —
-      ordinea de lucru și dificultatea fiecărei pagini: TODO-ul de animații din
-      [`CLAUDE.md`](./CLAUDE.md)
+- [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
+      Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
+      pagina 5 (ecuații neliniare)
 - [ ] `--viz-pivot` trebuie oglindit în `manim/theme.py` când se scrie fișierul (Faza 5), altfel
       clipurile randate folosesc alt roșu decât interfața
+- [ ] **Matematica graficului e verificată, dar nu automat.** `src/lib/plot-scara.ts` și
+      `plot-esantionare.ts` au fost testate rulând module compilate cu esbuild, în afara aplicației:
+      repere (pas din 1/2/5/10, etichetă = valoare desenată, densitate adaptivă, cazuri
+      degenerate), eșantionare (`tan`, `1/x`, `√x`, pantă mare care **nu** trebuie ruptă),
+      tăierea dreptei la cadru (verificată pe tangenta la `x²−2`, care taie axa exact în 1,5) și
+      zoom (ancora rămâne fixă, 200 de zoom-uri nu ajung la zero sau infinit). **Verificările au
+      fost manuale, deci pot regresa** — sunt primii candidați pentru Vitest, în Faza 4
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
 **Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —

@@ -230,11 +230,13 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [x] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
       calculată, pivot, zero). Fără sistem de coordonate, doar grilă + tranziții.
       Necesară pe paginile **1, 3, 4, 7, 8, 13**.
-- [ ] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
+- [x] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
       zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă opt pagini
-      (**5, 6, 9, 10, 11, 12, 13, 14**). **Decizie luată: SVG scris de mână**, nu bibliotecă de
-      charting — Recharts/visx/D3 sunt gândite pentru date de business și încurcă exact ce ne
-      trebuie (o tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB.
+      (**5, 6, 9, 10, 11, 12, 13, 14**). **SVG scris de mână**, fără bibliotecă de charting —
+      Recharts/visx/D3 sunt gândite pentru date de business și încurcă exact ce ne trebuie (o
+      tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB. Se compune din
+      straturi cu nume (`PlotCurba`, `PlotPunct`, `PlotInterval`, `PlotArie`, `PlotDreapta`), iar
+      matematica lui stă în `src/lib/plot-scara.ts` și `plot-esantionare.ts`, verificată numeric.
 
 ### Etapa 1 — pagini ușoare (refolosesc primitivele de mai sus)
 

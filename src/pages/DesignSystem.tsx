@@ -33,7 +33,15 @@ import { Legend } from "@/components/viz/Legend";
 import { MatrixGrid, type StareCelula } from "@/components/viz/MatrixGrid";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
+import { Plot } from "@/components/viz/Plot";
+import { PlotArie } from "@/components/viz/PlotArie";
+import { PlotCurba } from "@/components/viz/PlotCurba";
+import { PlotDreapta } from "@/components/viz/PlotDreapta";
+import { PlotInterval } from "@/components/viz/PlotInterval";
+import { PlotPunct } from "@/components/viz/PlotPunct";
 import { StepExplanation } from "@/components/viz/StepExplanation";
+import { esantioneaza, sparge } from "@/lib/plot-esantionare";
+import { incadreaza } from "@/lib/plot-scara";
 import { type Viteza } from "@/lib/playback";
 
 const PALETA = [
@@ -51,9 +59,19 @@ const MISCARE = [
   { token: "duration-lent", valoare: "400 ms", cand: "layout, panouri, tranziții de pagină" },
 ];
 
+/** Funcția pe care merg toate demonstrațiile de mai jos. Una singură, ca cifrele să se lege între ele. */
+const f = (x: number) => x ** 3 - 2 * x - 5;
+
+const CIFRE_INDICE = "₀₁₂₃₄₅₆₇₈₉";
+/** 12 → „₁₂". Indicele scris ca indice, nu ca „x_12". */
+const indice = (n: number) =>
+  String(n)
+    .split("")
+    .map((c) => CIFRE_INDICE[Number(c)] ?? c)
+    .join("");
+
 /** Bisecție pe f(x) = x³ − 2x − 5, interval [2, 3] — doar ca date de probă. */
 function bisectie(pasi: number) {
-  const f = (x: number) => x ** 3 - 2 * x - 5;
   let a = 2;
   let b = 3;
   const randuri = [];
@@ -254,6 +272,44 @@ export default function DesignSystem() {
     }, 900 / viteza);
     return () => clearInterval(id);
   }, [ruleaza, viteza, randuri.length]);
+
+  // Curba lui f, eșantionată o singură dată. Domeniul pe verticală iese din
+  // valorile chiar calculate, nu dintr-un număr scris de mână — dacă se schimbă
+  // funcția, încadrarea se schimbă odată cu ea.
+  const grafic = useMemo(() => {
+    const puncte = esantioneaza(f, [2, 3], 240);
+    const domeniuY = incadreaza(
+      puncte.map((p) => p.y),
+      0.08,
+    );
+    return {
+      domeniuY,
+      segmente: sparge(puncte, { inaltimeVizibila: domeniuY[1] - domeniuY[0] }),
+    };
+  }, []);
+
+  // Formula trapezelor din `curs11`: T = h/2·[f(a) + f(b)], h = b − a.
+  // Intervalul e [2,2; 3], unde f e pozitivă pe tot parcursul, deci figura
+  // desenată chiar e o arie, nu o arie cu semn.
+  const trapez = useMemo(() => {
+    const a = 2.2;
+    const b = 3;
+    const puncte = esantioneaza(f, [a, b], 160);
+    // Zeroul intră în domeniu, altfel nu s-ar vedea până unde coboară aria.
+    const domeniuY = incadreaza([0, ...puncte.map((p) => p.y)], 0.08);
+    const capete = [
+      { x: a, y: f(a) },
+      { x: b, y: f(b) },
+    ] as const;
+    return {
+      a,
+      b,
+      capete,
+      domeniuY,
+      segmente: sparge(puncte, { inaltimeVizibila: domeniuY[1] - domeniuY[0] }),
+      aproximare: ((b - a) / 2) * (f(a) + f(b)),
+    };
+  }, []);
 
   // Propoziția pasului curent. Pe o pagină reală vine din `steps[]`, calculată
   // în `src/algorithms`; aici o compunem din aceleași rânduri ca tabelul, ca
@@ -736,6 +792,121 @@ export default function DesignSystem() {
             onRuleazaChange={setRuleazaM}
             onVitezaChange={setVitezaM}
           />
+        </div>
+      </Sectiune>
+
+      <Sectiune
+        titlu="Graficul"
+        descriere="Sistemul de axe și straturile care se așază peste el. Reperele se aleg singure din 1 / 2 / 5 / 10, iar densitatea lor scade pe ecran îngust. Graficul de sus se poate explora: trage de el, apasă butoanele, sau folosește săgețile după ce îl selectezi cu Tab."
+      >
+        <div className="space-y-4">
+          <Legend
+            titlu="Legenda graficului"
+            elemente={[
+              { rol: "functie", explicatie: "funcția în care căutăm rădăcina" },
+              {
+                rol: "interval",
+                eticheta: "intervalul în care e rădăcina",
+                explicatie: "se înjumătățește la fiecare pas",
+              },
+              {
+                rol: "curent",
+                eticheta: "mijlocul de acum",
+                explicatie: "punctul calculat la pasul curent",
+              },
+              { rol: "anterior", explicatie: "mijloacele de la pașii dinainte" },
+              { rol: "grila", explicatie: "reperele de pe axe" },
+            ]}
+            pasi={[
+              "Apasă play sau mergi pas cu pas.",
+              "Urmărește cum banda colorată se strânge în jurul rădăcinii.",
+              "Linia punctată arată în dreptul cărei valori de pe axă a ajuns mijlocul.",
+              "Trage de grafic sau apasă lupa ca să te apropii; butonul din dreapta revine.",
+            ]}
+          />
+
+          <div className="bg-suprafata border-bordura shadow-jos rounded-xl border p-4">
+            <Plot
+              interactiv
+              domeniuX={[2, 3]}
+              domeniuY={grafic.domeniuY}
+              rezumat="Bisecție pe f(x) = x³ − 2x − 5, pe intervalul [2, 3]"
+              descriere={
+                randuri[pas]
+                  ? `Pasul ${pas + 1} din ${randuri.length}. Intervalul e de la ${randuri[pas].a.toFixed(4)} la ${randuri[pas].b.toFixed(4)}, iar mijlocul lui e ${randuri[pas].c.toFixed(4)}, unde funcția ia valoarea ${randuri[pas].fc.toFixed(4)}.`
+                  : undefined
+              }
+            >
+              {randuri[pas] && (
+                <PlotInterval
+                  de={randuri[pas].a}
+                  la={randuri[pas].b}
+                  eticheta={`[${randuri[pas].a.toFixed(3)} , ${randuri[pas].b.toFixed(3)}]`}
+                />
+              )}
+
+              <PlotCurba segmente={grafic.segmente} />
+
+              {/* Mijloacele de la pașii dinainte, tot mai șterse pe măsură ce
+                  se depărtează — se vede drumul, nu doar poziția de acum. */}
+              {randuri.slice(0, pas).map((rand, i) => (
+                <PlotPunct
+                  key={i}
+                  x={rand.c}
+                  y={rand.fc}
+                  rol="anterior"
+                  raza={3.5}
+                  opacitate={0.35 + (0.5 * (i + 1)) / Math.max(1, pas)}
+                />
+              ))}
+
+              {randuri[pas] && (
+                <PlotPunct
+                  x={randuri[pas].c}
+                  y={randuri[pas].fc}
+                  rol="curent"
+                  proiectie
+                  eticheta={`x${indice(pas)}`}
+                />
+              )}
+            </Plot>
+          </div>
+
+          <Callout tip="nota" titlu="Aceleași straturi, alt desen">
+            Graficul de mai jos folosește exact aceleași piese, dar pentru altceva: aria de sub
+            curbă, aproximată cu un trapez. Formula e cea din curs (<code>curs11</code>, „Formula
+            trapezelor"): <code>T = h/2·[f(a) + f(b)]</code>, cu <code>h = b − a</code>. Pe{" "}
+            <code>[2,2 ; 3]</code> funcția e pozitivă peste tot, deci figura desenată chiar e o
+            arie. Iese <code>T = {trapez.aproximare.toFixed(4)}</code>, față de valoarea exactă{" "}
+            <code>6,2336</code> — trapezul supraevaluează, fiindcă funcția e convexă aici și curba
+            stă sub coardă.
+          </Callout>
+
+          <div className="bg-suprafata border-bordura shadow-jos rounded-xl border p-4">
+            <Plot
+              domeniuX={[trapez.a, trapez.b]}
+              domeniuY={trapez.domeniuY}
+              inaltime={220}
+              rezumat="Formula trapezelor pentru f(x) = x³ − 2x − 5 pe intervalul de la 2,2 la 3"
+              descriere={`Aria de sub curbă e aproximată cu un trapez cu vârfurile la ${trapez.a} și 3. Aproximarea dă ${trapez.aproximare.toFixed(4)}, iar valoarea exactă e 6,2336.`}
+            >
+              <PlotArie puncte={trapez.capete} baza={0} />
+              <PlotCurba segmente={trapez.segmente} />
+              {/* Coarda: dreapta prin cele două capete, adică chiar polinomul
+                  Lagrange de ordinul întâi din care iese formula. */}
+              <PlotDreapta intre={trapez.capete} rol="anterior" punctata />
+              {trapez.capete.map((capat, i) => (
+                <PlotPunct
+                  key={i}
+                  x={capat.x}
+                  y={capat.y}
+                  rol="curent"
+                  raza={4}
+                  eticheta={i === 0 ? "a" : "b"}
+                />
+              ))}
+            </Plot>
+          </div>
         </div>
       </Sectiune>
 
