@@ -61,19 +61,34 @@ const CLASE_STARE: Record<StareCelula, string> = {
  */
 const ETICHETA_STARE: Record<StareCelula, string> = {
   normala: "",
-  curent: "se calculează acum,",
-  calculat: "calculat,",
+  curent: "se schimbă acum,",
+  calculat: "terminat,",
   pivot: "pivot,",
   zero: "zero din eliminare,",
 };
 
-/** O paranteză dreaptă de matrice, ca în curs. Pur decorativă. */
-function Paranteza({ parte }: { parte: "stanga" | "dreapta" }) {
+/**
+ * O paranteză dreaptă de matrice. Pur decorativă.
+ *
+ * E element de sine stătător în grilă, care se întinde peste toate liniile de
+ * date — nu și peste etichete. Matematic, `L₂` și `C₃` sunt repere din afara
+ * matricei: dacă ar sta între paranteze, ar arăta ca niște elemente ale ei.
+ */
+function Paranteza({
+  parte,
+  coloana,
+  linii,
+}: {
+  parte: "stanga" | "dreapta";
+  coloana: number;
+  linii: string;
+}) {
   return (
     <span
       aria-hidden="true"
+      style={{ gridColumn: coloana, gridRow: linii }}
       className={cn(
-        "border-estompat/70 w-2 shrink-0 border-y-2",
+        "border-estompat/70 border-y-2",
         parte === "stanga" ? "rounded-l-sm border-l-2" : "rounded-r-sm border-r-2",
       )}
     />
@@ -137,6 +152,36 @@ export function MatrixGrid({
 }: MatrixGridProps) {
   const areEtichetaColoane = etichetaColoane !== undefined;
   const areEtichetaLinii = etichetaLinii !== undefined;
+  const nrColoane = valori[0]?.length ?? 0;
+  const areSeparator = separatorColoana !== undefined && separatorColoana < nrColoane - 1;
+
+  /*
+    Aşezarea se face cu CSS Grid, cu poziţii calculate explicit, nu cu
+    `border-spacing` pe tabel. Motivul: parantezele şi linia de separare trebuie
+    să acopere exact zona de numere — nici etichetele, nici mai puţin — şi să
+    rămână aliniate oricât de late ar fi valorile. Grid-ul dimensionează
+    coloanele după conţinut, deci alinierea vine de la sine.
+
+    Ordinea coloanelor:
+      [etichete linii] [ ( ] [ date… (+ linia de separare) ] [ ) ]
+  */
+  const colEtichete = areEtichetaLinii ? 1 : 0;
+  const colParantezaStanga = colEtichete + 1;
+  const primaColDate = colParantezaStanga + 1;
+  /** Coloana din grilă a datelor cu indexul `j`. */
+  const colDate = (j: number) => primaColDate + j;
+  const colParantezaDreapta = colDate(nrColoane - 1) + 1;
+
+  const primaLinieDate = areEtichetaColoane ? 2 : 1;
+  /** Toate liniile de date, ca interval — parantezele se întind peste ele. */
+  const liniiDate = `${primaLinieDate} / ${primaLinieDate + valori.length}`;
+
+  const sabloanColoane = [
+    ...(areEtichetaLinii ? ["auto"] : []),
+    "0.5rem",
+    ...Array.from({ length: nrColoane }, () => "auto"),
+    "0.5rem",
+  ].join(" ");
 
   return (
     // `min-w-0` nu e decorativ: fără el, o matrice lată pusă într-un flex sau
@@ -151,27 +196,64 @@ export function MatrixGrid({
       )}
 
       <div className="scroll-tabel">
-        <div className="flex w-max items-stretch gap-1.5">
-          <Paranteza parte="stanga" />
+        {/*
+          Grila stă pe `<div>`, nu pe `<table>`: parantezele și linia de separare
+          sunt `<span>`-uri, iar un `<table>` n-are voie să le conțină direct.
+          Tabelul primește `display: contents`, deci celulele lui ajung în grila
+          de aici, păstrându-și structura din DOM.
 
-          <table className="border-separate border-spacing-1 font-mono text-sm tabular-nums">
+          Elementele de tabel primesc `role` explicit fiindcă schimbarea lui
+          `display` pe un `<table>` îi poate șterge semantica din arborele de
+          accesibilitate; rolurile o pun la loc.
+        */}
+        <div
+          className="grid w-max items-stretch gap-1 font-mono text-sm tabular-nums"
+          style={{ gridTemplateColumns: sabloanColoane }}
+        >
+          <Paranteza parte="stanga" coloana={colParantezaStanga} linii={liniiDate} />
+          <Paranteza parte="dreapta" coloana={colParantezaDreapta} linii={liniiDate} />
+
+          {/*
+            Linia care desparte A de b. Nu are coloană proprie în grilă, ci se
+            desenează în spaţiul dintre coloane, lipită de marginea din dreapta a
+            ultimei coloane din A. Cu o coloană proprie, lăţimea ei s-ar fi
+            simţit şi pe rândul etichetelor, iar `C₃` şi `b` ar fi apărut mai
+            depărtate decât restul. Aşa, linia există doar în dreptul numerelor.
+          */}
+          {areSeparator && separatorColoana !== undefined && (
+            <span
+              aria-hidden="true"
+              style={{
+                gridColumn: colDate(separatorColoana),
+                gridRow: liniiDate,
+                // jumătate din `gap-1` (4px), plus jumătate din grosimea liniei
+                marginRight: "-3px",
+              }}
+              className="bg-estompat/70 w-0.5 justify-self-end"
+            />
+          )}
+
+          <table role="table" className="contents">
             {/*
               Rezumatul stă în `<caption>`, nu într-un `<p>` alăturat: așa e
               legat de tabel și se citește exact la intrarea în el, nu undeva
-              înainte, rupt de context.
+              înainte, rupt de context. Fiind `sr-only` (deci scos din flux), nu
+              ocupă nicio celulă din grilă.
             */}
             <caption className="sr-only">
               {descriere ?? descriereImplicita({ valori, stari, linieActiva, titlu })}
             </caption>
+
             {areEtichetaColoane && (
-              <thead>
-                <tr>
-                  {areEtichetaLinii && <td className="p-0" />}
+              <thead className="contents">
+                <tr role="row" className="contents">
                   {etichetaColoane.map((eticheta, j) => (
                     <th
                       key={j}
+                      role="columnheader"
                       scope="col"
-                      className="text-text-slab px-2 pb-1 text-xs font-semibold"
+                      style={{ gridColumn: colDate(j), gridRow: 1 }}
+                      className="text-text-slab px-2 pb-0.5 text-center text-xs font-semibold"
                     >
                       {eticheta}
                     </th>
@@ -180,13 +262,15 @@ export function MatrixGrid({
               </thead>
             )}
 
-            <tbody>
+            <tbody className="contents">
               {valori.map((linie, i) => (
-                <tr key={i}>
+                <tr key={i} role="row" className="contents">
                   {areEtichetaLinii && (
                     <th
+                      role="rowheader"
                       scope="row"
-                      className="text-text-slab pr-2 text-right text-xs font-semibold"
+                      style={{ gridColumn: 1, gridRow: primaLinieDate + i }}
+                      className="text-text-slab flex items-center justify-end pr-1.5 text-xs font-semibold"
                     >
                       {etichetaLinii[i]}
                     </th>
@@ -200,17 +284,18 @@ export function MatrixGrid({
                     return (
                       <td
                         key={j}
+                        role="cell"
                         // Doar pentru teste și depanare — `data-*` nu se citește
                         // cu voce tare. Starea ajunge la cititorul de ecran prin
                         // textul ascuns din interiorul celulei.
                         data-stare={stare}
+                        style={{ gridColumn: colDate(j), gridRow: primaLinieDate + i }}
                         className={cn(
                           "duration-mediu ease-standard min-w-11 rounded-md border-2 px-2 py-1.5 text-center transition-colors",
                           // Linia/coloana activă stau dedesubt, ca fundal; starea
                           // celulei se desenează peste ele, deci nu se pierde.
                           (peLinieActiva || peColoanaActiva) && "bg-viz-interval",
                           CLASE_STARE[stare],
-                          separatorColoana === j && "border-r-estompat/70 mr-1.5 border-r-2",
                         )}
                       >
                         {ETICHETA_STARE[stare] && (
@@ -233,8 +318,6 @@ export function MatrixGrid({
               ))}
             </tbody>
           </table>
-
-          <Paranteza parte="dreapta" />
         </div>
       </div>
     </figure>

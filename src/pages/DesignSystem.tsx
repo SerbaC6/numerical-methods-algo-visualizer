@@ -75,8 +75,13 @@ type PasGauss = {
 
 /**
  * Eliminarea Gaussiană pe **exemplul din curs** (`curs4`, §4.3), pe matricea
- * extinsă [A|b]. Notațiile sunt cele din algoritmul de la §4.4: pivotul e
- * `a_pp`, iar multiplicatorii sunt `µ_ip = a_ip / a_pp`.
+ * extinsă [A|b]. Calculul e cel din algoritmul de la §4.4 — pivotul `a_pp` și
+ * multiplicatorii `µ_ip = a_ip / a_pp`.
+ *
+ * **Etichetele afișate sunt însă intenționat mai simple decât cele din curs:**
+ * `L₁…L₃` pentru linii și `C₁…C₃` pentru coloane, în loc de `E_i` și `x_j`.
+ * Cifrele și operațiile rămân cele din curs; se schimbă doar cum le numim, ca
+ * grila să se înțeleagă fără să știi convenția dinainte.
  *
  * Rezultatul trebuie să fie exact cele două săgeți din curs:
  * `[1 3 1 9; 0 −2 −2 −8; 0 2 5 8]`, apoi `[1 3 1 9; 0 −2 −2 −8; 0 0 3 0]`.
@@ -117,13 +122,16 @@ function eliminareGauss(): PasGauss[] {
   };
 
   const mono = (t: string) => <span className="font-mono font-semibold">{t}</span>;
+  /** Minus tipografic (−), nu cratimă (-), ca semnul să arate a matematică. */
+  const nr = (x: number) => String(x).replace("-", "−");
 
   for (let p = 0; p < 2; p++) {
     const pivot = A[p]?.[p] ?? 0;
     adauga(
       <>
-        Pasul {p + 1}: pivotul e {mono(`a${p + 1}${p + 1} = ${pivot}`)}. Cu el se anulează tot ce e
-        sub el, pe coloana {p + 1}.
+        Pasul {p + 1}: pivotul e {mono(nr(pivot))}, aflat pe linia {mono(`L${p + 1}`)} și coloana{" "}
+        {mono(`C${p + 1}`)}. Cu el se fac zero toate numerele de sub el, din coloana{" "}
+        {mono(`C${p + 1}`)}.
       </>,
       { pivot: [p, p], linieActiva: p },
     );
@@ -141,11 +149,17 @@ function eliminareGauss(): PasGauss[] {
       }
 
       zerouri.push([i, p]);
+      // Când câtul e negativ, „scădem de −1 ori" ar contrazice semnul „+" scris
+      // imediat după. Verbul urmează semnul, ca propoziția și formula să spună
+      // același lucru.
+      const cat = Math.abs(mu);
+      const verb = mu < 0 ? "adunăm la" : "scădem din";
+      const semn = mu < 0 ? "+" : "−";
       adauga(
         <>
-          {mono(`µ${i + 1}${p + 1} = ${aip}/${pivot} = ${mu}`)} — linia {i + 1} devine{" "}
-          {mono(`E${i + 1} − (${mu})·E${p + 1}`)}, deci elementul de pe coloana {p + 1} se face
-          zero.
+          Ca să facem zero primul număr din {mono(`L${i + 1}`)}, îl împărțim la pivot:{" "}
+          {mono(`${nr(aip)} ÷ ${nr(pivot)} = ${nr(mu)}`)}. Apoi {verb} {mono(`L${i + 1}`)} linia
+          pivotului înmulțită cu {mono(nr(cat))}: {mono(`L${i + 1} ${semn} ${nr(cat)}·L${p + 1}`)}.
         </>,
         {
           pivot: [p, p],
@@ -159,8 +173,8 @@ function eliminareGauss(): PasGauss[] {
 
   adauga(
     <>
-      Matricea e triunghiulară superior. De aici se rezolvă prin substituție înapoi, pornind de la
-      ultima ecuație.
+      Gata: sub diagonală sunt numai zerouri. Acum ultima linie are o singură necunoscută, deci se
+      află direct — apoi se urcă înapoi, linie cu linie.
     </>,
     { linieActiva: undefined },
   );
@@ -652,54 +666,57 @@ export default function DesignSystem() {
 
       <Sectiune
         titlu="Matricea"
-        descriere="Eliminare Gaussiană pe exemplul din curs (curs4, §4.3), pe matricea extinsă [A|b]. Apasă play: pivotul e singura celulă plină, linia pe care se lucrează are fundal, iar zerourile produse rămân stinse."
+        descriere="Eliminare Gaussiană pe exemplul din curs (curs4, §4.3). Scopul e să facem zerouri sub diagonală, ca sistemul să se rezolve de jos în sus. Liniile sunt L₁–L₃, coloanele C₁–C₃, iar ultima coloană, b, e partea din dreapta a egalului."
       >
         <div className="space-y-4">
           <Legend
             titlu="Legenda matricei"
             elemente={[
-              { rol: "pivot", explicatie: "elementul a_pp cu care se împarte" },
+              {
+                rol: "pivot",
+                explicatie: "numărul cu care împărțim ca să facem zerouri sub el",
+              },
               {
                 rol: "curent",
-                eticheta: "se calculează acum",
+                eticheta: "se schimbă acum",
                 forma: "celula",
-                explicatie: "celulele schimbate la pasul curent",
+                explicatie: "numerele recalculate la pasul curent",
               },
               {
                 rol: "interval",
-                eticheta: "linia activă",
-                explicatie: "linia care se transformă",
+                eticheta: "linia la care lucrăm",
+                explicatie: "linia care se modifică acum",
               },
               {
                 rol: "anterior",
-                eticheta: "deja calculat",
+                eticheta: "gata, nu se mai schimbă",
                 forma: "celula",
                 explicatie: "linii terminate la pașii dinainte",
               },
               {
                 culoare: "var(--text-slab)",
-                eticheta: "zero din eliminare",
+                eticheta: "zero pe care l-am făcut noi",
                 forma: "celula",
-                explicatie: "zerourile produse, nu cele date",
+                explicatie: "nu era acolo de la început",
               },
             ]}
             pasi={[
-              "Apasă play sau mergi pas cu pas.",
-              "Urmărește pivotul: e singura celulă plină.",
-              "Citește sub matrice ce se întâmplă la pasul curent.",
-              "Compară rezultatul cu cele două săgeți din curs.",
+              "Apasă play, sau mergi pas cu pas cu săgețile.",
+              "Caută pivotul: e singurul număr pe fundal plin.",
+              "Sub matrice scrie, în cuvinte, ce se întâmplă la pasul acela.",
+              "La final, sub diagonală rămân numai zerouri.",
             ]}
           />
 
           <div className="bg-suprafata border-bordura shadow-jos rounded-xl border p-4">
             <MatrixGrid
-              titlu="[A|b]"
+              titlu="matricea extinsă [A|b]"
               valori={pasiGauss[pasM]?.valori ?? []}
               stari={pasiGauss[pasM]?.stari}
               linieActiva={pasiGauss[pasM]?.linieActiva}
               separatorColoana={2}
-              etichetaLinii={["E₁", "E₂", "E₃"]}
-              etichetaColoane={["x₁", "x₂", "x₃", "b"]}
+              etichetaLinii={["L₁", "L₂", "L₃"]}
+              etichetaColoane={["C₁", "C₂", "C₃", "b"]}
             />
           </div>
 
