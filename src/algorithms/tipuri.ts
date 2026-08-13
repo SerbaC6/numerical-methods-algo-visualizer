@@ -30,6 +30,14 @@ export type PasRadacina = {
   interval?: { a: number; b: number };
   /** Aproximarea calculată la pasul acesta. */
   x: number;
+  /**
+   * Ce indice poartă aproximarea în notația cursului — `x₃` din desen și din
+   * formulă. De obicei e chiar numărul iterației, dar nu întotdeauna: secanta
+   * pornește cu **două** valori date, `p₀` și `p₁`, deci prima ei iterație
+   * produce `p₂`. Fără câmpul ăsta, desenul ar scrie „x₁" peste un punct pe
+   * care formula îl numește `x₂`.
+   */
+  indice: number;
   /** Valoarea funcției în ea. La puncte fixe e `g(x) − x`, vezi metoda. */
   fx: number;
   /** Punctul de la pasul anterior — tangenta și secanta se desenează prin el. */
@@ -45,6 +53,20 @@ export type PasRadacina = {
   eroare: number;
   /** Ce s-a întâmplat, într-o propoziție. Se afișează sub desen. */
   explicatie: string;
+  /**
+   * Formula metodei **cu numerele pasului puse în ea**, în LaTeX.
+   *
+   * Se scrie aici, nu în componentă, din același motiv ca explicația: e
+   * matematică, iar cifrele din ea trebuie să fie chiar cele calculate mai sus.
+   * Compusă în UI, ar putea ajunge să arate altceva decât desenul de lângă ea.
+   *
+   * Părțile care se leagă de desen sunt marcate cu `\htmlId{…}{…}`, ca
+   * `FormulaBlock` să le poată aprinde — asta e paralela formulă ↔ animație
+   * cerută pentru fiecare interfață.
+   */
+  latexPas?: string;
+  /** Ce id-uri din `latexPas` se aprind la pasul acesta. */
+  evidentiaza?: string[];
 };
 
 export type RezultatRulare = {

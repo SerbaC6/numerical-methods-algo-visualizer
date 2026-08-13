@@ -64,15 +64,33 @@ fiind un calcul de unică folosință; tabelul de mai sus e rezultatul lui).
 | ln(x) − 2     | 46       | 6       | 4        |
 | x² + √x − 6   | 48       | 7       | 5        |
 
-**Nu e o greșeală, dar nu e nici reproductibil.** Rulând independent, cu criteriul de oprire
-`b − a < tol` pentru bisecție și `|xₙ − xₙ₋₁| < tol` pentru celelalte două, iese: bisecție 50 la
-toate cinci (firesc — pe un interval de lungime 1, `log₂(1/10⁻¹⁵) ≈ 49,8`), secantă 7/7/7/6/7,
-tangentă 7/5/6/5/6. Secanta se potrivește; bisecția și tangenta diferă cu 1–4 pași.
+Convenția de pornire e scrisă în curs: pentru o rădăcină `c`, metodele cu două valori inițiale
+pornesc din `[[c], [c]+1]`, cele cu una din `[c]+1`. Cu ea, tabelul se poate testa — și se împarte
+în trei cazuri diferite, care nu trebuie confundate.
 
-Diferența vine din criteriul de oprire, pe care cursul nu-l precizează pentru acel experiment
-(Algorithm 1 din §1.1 folosește `|f(c)| > tol`, ceea ce dă alte numere decât `b − a < tol`).
+**Secanta se reproduce exact, pe toate cele cinci rânduri:** 7, 7, 7, 6, 7. Modulul din
+`src/algorithms/ecuatii-neliniare/secanta.ts` dă aceleași cifre, rulat cu Algorithm 3 și
+`|xₙ − xₙ₋₁| < tol`. E verificarea cea mai puternică disponibilă pentru pagina 6, fiindcă nu compară
+cu intuiția, ci cu cifre tipărite. Se rulează cu `scripts/verificare-algoritmi/tabelul-din-curs.ts`.
+
+**Bisecția diferă din cauza criteriului de oprire.** Cursul enumeră mai multe criterii la §1.1, iar
+Algorithm 1 îl folosește pe `|f(c)| > tol`. Noi am ales `b − a < tol` — primul din listă și singurul
+care se poate garanta dinainte, prin `|pₙ − p| < (b−a)/2ⁿ`. Pe un interval de lungime 1 acesta dă
+invariabil `⌈log₂(1/10⁻¹⁵)⌉ = 50` de pași, indiferent de funcție; criteriul pe `|f(c)|` depinde de
+cât de abruptă e funcția în rădăcină, de-aia cifrele din tabel variază. Transcriind Algorithm 1
+literal iese 49/51/50/**46**/51 — se potrivește exact pe `ln(x) − 2`, ceea ce confirmă că acela a
+fost criteriul folosit; restul rămân decalate cu 1–3, cel mai probabil fiindcă pseudocodul testează
+`|f(c)|` **înainte** ca `c` să fie calculat (linia 1 folosește un `c` neinițializat).
+
+**Tangenta are o abatere care nu ține de criteriu.** Aici cursul se contrazice pe sine: transcriind
+Algorithm 2 literal, cu chiar criteriul lui `|x − xprev| < tol`, ies 7, 5, 6, **5**, **6** — pe când
+tabelul de alături spune 7, 5, 6, **4**, **5**. Primele trei rânduri se potrivesc; ultimele două nu,
+și nu din cauza noastră: modulul nostru dă exact ce dă transcrierea literală. Verificarea din
+`tabelul-din-curs.ts` compară deci tangenta cu **algoritmul**, nu cu tabelul, și scrie diferența pe
+ecran ca să nu fie luată drept regresie.
 
 **Ce s-a pus pe site.** Nu cifrele exacte, ci ordinul lor de mărime și concluzia, care sunt robuste
 la criteriu: bisecția are nevoie de ordinul a 50 de iterații acolo unde secanta și tangenta termină
-în 4–7. Dacă vreodată vrem tabelul exact pe pagină, întâi trebuie stabilit criteriul de oprire și
-recalculat, nu copiat.
+în 4–7. Concluzia calitativă a cursului — tangenta e mai rapidă decât secanta — se verifică pe toate
+cele cinci funcții și e testată ca atare. Dacă vreodată vrem tabelul exact pe pagină, întâi trebuie
+stabilit criteriul de oprire și recalculat, nu copiat.

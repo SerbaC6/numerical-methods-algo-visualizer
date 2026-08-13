@@ -38,6 +38,28 @@ export type FunctieTest = {
   /** Domeniul pe care are sens desenul (evită log din negativ, etc.). */
   domeniuValid?: readonly [number, number];
   /**
+   * De unde pornesc tangenta și secanta **ca să se vadă ce fac**.
+   *
+   * Nu vine din curs și nu e matematică: e o alegere de afișare, măsurată cu
+   * `scripts/verificare-algoritmi/alegere-pornire.ts`. Motivul e că `interval`
+   * de mai sus stă lipit de rădăcină — bun pentru bisecție, care are nevoie de
+   * schimbare de semn, dar inutil pentru celelalte două: pornite de-acolo,
+   * termină în patru pași, iar primul cade deja practic pe soluție. Nu se vede
+   * nici tangenta, nici de ce ar fi metoda mai bună decât înjumătățirea.
+   *
+   * Alegerea ține de **două** măsuri deodată, nu doar de numărul de pași. Un
+   * punct de pornire foarte îndepărtat dă mulți pași, dar duce funcția în
+   * valori uriașe: pe `0,25·eˣ` pornit din 9, curba urcă la 2000, iar pe ecran
+   * devine o cârjă lipită de axă, cu rădăcina pierdută în porțiunea plată. De
+   * aceea se cere și ca `|f|` să rămână sub câteva zeci pe tot drumul.
+   *
+   * Sunt tot puncte de pornire valide — se schimbă **de unde pleacă** metoda,
+   * niciodată ce calculează.
+   */
+  pornireTangenta: number;
+  /** Aceeași alegere, pentru secantă, care cere două valori. */
+  pornireSecanta: readonly [number, number];
+  /**
    * Rădăcina din intervalul recomandat, pentru coloana de eroare din tabel.
    *
    * **Calculată, nu ghicită.** Valorile iraționale de mai jos vin din `mpmath`
@@ -59,6 +81,8 @@ export const FUNCTII: FunctieTest[] = [
     f: (x) => x ** 3 - 2 * x - 5,
     fDerivat: (x) => 3 * x ** 2 - 2,
     interval: [2, 3],
+    pornireTangenta: 4,
+    pornireSecanta: [3, 4],
     radacina: 2.0945514815423265,
   },
   {
@@ -68,6 +92,8 @@ export const FUNCTII: FunctieTest[] = [
     f: (x) => x * x - 2,
     fDerivat: (x) => 2 * x,
     interval: [1, 2],
+    pornireTangenta: 5,
+    pornireSecanta: [4, 5],
     radacina: Math.SQRT2,
   },
   {
@@ -78,6 +104,8 @@ export const FUNCTII: FunctieTest[] = [
     fDerivat: (x) => 0.25 * Math.exp(x),
     interval: [1, 3],
     // ln(8)
+    pornireTangenta: 5,
+    pornireSecanta: [-1, 1],
     radacina: Math.log(8),
   },
   {
@@ -87,6 +115,8 @@ export const FUNCTII: FunctieTest[] = [
     f: (x) => 3 * Math.cos(x) - 4 * x,
     fDerivat: (x) => -3 * Math.sin(x) - 4,
     interval: [0, 1],
+    pornireTangenta: -1,
+    pornireSecanta: [3, 4],
     radacina: 0.6133103527035523,
   },
   {
@@ -98,6 +128,8 @@ export const FUNCTII: FunctieTest[] = [
     interval: [6, 9],
     // Logaritmul nu există sub zero: desenul s-ar rupe fără marginea asta.
     domeniuValid: [0.05, Number.POSITIVE_INFINITY],
+    pornireTangenta: 18,
+    pornireSecanta: [15, 18],
     radacina: Math.E ** 2,
   },
   {
@@ -108,6 +140,8 @@ export const FUNCTII: FunctieTest[] = [
     fDerivat: (x) => 2 * x + 1 / (2 * Math.sqrt(x)),
     interval: [1, 3],
     domeniuValid: [0, Number.POSITIVE_INFINITY],
+    pornireTangenta: 1,
+    pornireSecanta: [1, 3],
     radacina: 2.1307924759421035,
   },
   {
@@ -122,6 +156,8 @@ export const FUNCTII: FunctieTest[] = [
     interval: [1, 2],
     domeniuValid: [-1, Number.POSITIVE_INFINITY],
     // Numărul de aur, (1 + √5)/2
+    pornireTangenta: 8,
+    pornireSecanta: [7, 8],
     radacina: (1 + Math.sqrt(5)) / 2,
   },
 ];

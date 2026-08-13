@@ -14,6 +14,32 @@ export function zecimale(valoare: number, cifre = 4): string {
 }
 
 /**
+ * Câte zecimale trebuie ca două valori aflate la distanța `lungime` să nu se
+ * scrie la fel.
+ *
+ * Fără ea, eticheta intervalului ajunge `[2,095 ; 2,095]` după cincisprezece
+ * înjumătățiri: capetele chiar diferă, dar rotunjirea le face identice, iar
+ * cititorul vede scris pe ecran că metoda s-a oprit din lucru. Numărul fix de
+ * zecimale merge doar cât timp cadrul stă pe loc; de îndată ce graficul se
+ * apropie, precizia afișată trebuie să-l urmeze.
+ */
+export function zecimaleUtile(lungime: number, minim = 3, maxim = 12): number {
+  if (!Number.isFinite(lungime) || lungime <= 0) return maxim;
+  return Math.max(minim, Math.min(maxim, Math.ceil(-Math.log10(lungime)) + 2));
+}
+
+/**
+ * Același număr, dar pentru interiorul unei formule LaTeX.
+ *
+ * Virgula zecimală se scrie `{,}`, nu `,`: în modul matematic al lui TeX
+ * virgula e semn de punctuație și primește spațiu după ea, deci `2,0946` s-ar
+ * culege ca „2, 0946". Acoladele o transformă în simbol obișnuit.
+ */
+export function latexNumar(valoare: number, cifre = 6): string {
+  return zecimale(valoare, cifre).replace(",", "{,}").replace("−", "-");
+}
+
+/**
  * Numere foarte mici sau foarte mari, în notație științifică — pentru coloana
  * de eroare, unde `0,0000` n-ar spune dacă mai e ceva de câștigat.
  */

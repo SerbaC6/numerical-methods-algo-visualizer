@@ -1,6 +1,6 @@
 /** Verificarea metodei bisecției — rulează chiar modulul care ajunge pe site. */
-import { run } from "./bisectie.ts";
-import { FUNCTII, getFunctie } from "./functii.ts";
+import { run } from "../../src/algorithms/ecuatii-neliniare/bisectie.ts";
+import { FUNCTII, getFunctie } from "../../src/algorithms/functii.ts";
 
 const ok = (c: boolean) => (c ? "OK  " : "PICĂ");
 let picate = 0;

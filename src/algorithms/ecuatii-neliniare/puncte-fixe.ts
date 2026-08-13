@@ -1,6 +1,6 @@
 import { getFunctie } from "@/algorithms/functii";
 import type { MetaMetoda, PasRadacina, RezultatRulare } from "@/algorithms/tipuri";
-import { zecimale } from "@/lib/numere";
+import { latexNumar, zecimale } from "@/lib/numere";
 
 export const meta: MetaMetoda = {
   id: "puncte-fixe",
@@ -75,12 +75,17 @@ export function run(params: ParamsPuncteFixe): RezultatRulare {
 
     pasi.push({
       iteratie: i,
+      indice: i,
       x: urmator,
       // Distanța până la punctul fix, ca desenul să aibă un „zero" de arătat.
       fx: g(urmator) - urmator,
       xAnterior: x,
       eroare,
       explicatie: `g aplicată lui ${zecimale(x, 6)} dă ${zecimale(urmator, 6)}. Distanța față de pasul anterior e ${zecimale(eroare, 6)} — cu cât e mai mică, cu atât suntem mai aproape de punctul fix.`,
+      latexPas: `x_{${i}} = \\htmlId{pf-g}{g\\!\\left(x_{${i - 1}}\\right)} = g\\!\\left(${latexNumar(x)}\\right) = ${latexNumar(urmator)}`,
+      // Aplicarea lui g e chiar saltul desenat: de la punctul dinainte la cel
+      // de acum, pe curba g(x) − x.
+      evidentiaza: ["pf-g"],
     });
 
     x = urmator;

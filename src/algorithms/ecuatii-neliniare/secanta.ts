@@ -1,6 +1,6 @@
 import { getFunctie } from "@/algorithms/functii";
 import type { MetaMetoda, PasRadacina, RezultatRulare } from "@/algorithms/tipuri";
-import { zecimale } from "@/lib/numere";
+import { latexNumar, zecimale } from "@/lib/numere";
 
 export const meta: MetaMetoda = {
   id: "secanta",
@@ -78,6 +78,8 @@ export function run(params: ParamsSecanta): RezultatRulare {
 
     pasi.push({
       iteratie: i,
+      // Pornind din p₀ și p₁, iterația i produce p₍ᵢ₊₁₎.
+      indice: i + 1,
       x: urmator,
       fx: f(urmator),
       xAnterior: x1,
@@ -85,6 +87,12 @@ export function run(params: ParamsSecanta): RezultatRulare {
       panta,
       eroare,
       explicatie: `Secanta prin ${zecimale(x0, 6)} și ${zecimale(x1, 6)} are panta ${zecimale(panta, 4)} și taie axa în ${zecimale(urmator, 6)}. Saltul făcut e ${zecimale(eroare, 6)}.`,
+      latexPas:
+        `x_{${i + 1}} = x_{${i}} - \\frac{f(x_{${i}})\\,\\htmlId{sec-diferenta}{(x_{${i}} - x_{${i - 1}})}}{\\htmlId{sec-numitor}{f(x_{${i}}) - f(x_{${i - 1}})}}` +
+        ` = ${latexNumar(x1)} - \\frac{${latexNumar(f1)} \\cdot (${latexNumar(x1)} - ${latexNumar(x0)})}{${latexNumar(numitor)}} = ${latexNumar(urmator)}`,
+      // Cele două părți aprinse sunt chiar panta secantei punctate de pe desen,
+      // scrisă ca raport: cât urcă funcția pe cât se deplasează x.
+      evidentiaza: ["sec-diferenta", "sec-numitor"],
     });
 
     x0 = x1;

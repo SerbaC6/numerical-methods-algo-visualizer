@@ -1,6 +1,6 @@
 import { getFunctie } from "@/algorithms/functii";
 import type { MetaMetoda, PasRadacina, RezultatRulare } from "@/algorithms/tipuri";
-import { zecimale } from "@/lib/numere";
+import { latexNumar, zecimale } from "@/lib/numere";
 
 export const meta: MetaMetoda = {
   id: "newton",
@@ -68,6 +68,7 @@ export function run(params: ParamsNewton): RezultatRulare {
     if (domeniuValid && (urmator < domeniuValid[0] || urmator > domeniuValid[1])) {
       pasi.push({
         iteratie: i,
+        indice: i,
         x: urmator,
         fx: Number.NaN,
         xAnterior: x,
@@ -87,12 +88,18 @@ export function run(params: ParamsNewton): RezultatRulare {
 
     pasi.push({
       iteratie: i,
+      indice: i,
       x: urmator,
       fx: f(urmator),
       xAnterior: x,
       panta,
       eroare,
       explicatie: `Tangenta dusă în ${zecimale(x, 6)} are panta ${zecimale(panta, 4)} și taie axa în ${zecimale(urmator, 6)}. Saltul făcut e ${zecimale(eroare, 6)}.`,
+      latexPas:
+        `x_{${i}} = \\htmlId{new-x}{x_{${i - 1}}} - \\frac{f(x_{${i - 1}})}{\\htmlId{new-panta}{f'(x_{${i - 1}})}}` +
+        ` = ${latexNumar(x)} - \\frac{${latexNumar(fx)}}{${latexNumar(panta, 4)}} = ${latexNumar(urmator)}`,
+      // Panta e chiar dreapta punctată de pe desen: ea decide unde se sare.
+      evidentiaza: ["new-panta"],
     });
 
     x = urmator;

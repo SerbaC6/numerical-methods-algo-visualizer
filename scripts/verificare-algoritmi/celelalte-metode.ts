@@ -56,8 +56,11 @@ console.log("\n=== Newton: cele două condiții de eșec din curs ===");
     r1.motiv?.slice(0, 55),
   );
 
-  // pornire în afara domeniului: ln(x) din negativ
-  const r2 = newton.run({ functie: "logaritm", x0: 0.06, tol: 1e-8, maxIteratii: 20 });
+  // A doua condiție din curs: pornire prea departe de rădăcină. Pentru
+  // ln(x) − 2, iterația e xₙ₊₁ = xₙ·(3 − ln xₙ), care devine negativă de
+  // îndată ce ln x > 3, adică x > e³ ≈ 20,09. Din 25, primul pas aruncă
+  // punctul sub zero, unde logaritmul nu există.
+  const r2 = newton.run({ functie: "logaritm", x0: 25, tol: 1e-8, maxIteratii: 20 });
   verifica(
     "aruncat în afara domeniului → eșec explicat",
     r2.stare === "esuat",

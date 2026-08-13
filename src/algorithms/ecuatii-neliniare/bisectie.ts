@@ -1,6 +1,6 @@
 import { getFunctie } from "@/algorithms/functii";
 import type { MetaMetoda, PasRadacina, RezultatRulare } from "@/algorithms/tipuri";
-import { zecimale } from "@/lib/numere";
+import { latexNumar, zecimale, zecimaleUtile } from "@/lib/numere";
 
 export const meta: MetaMetoda = {
   id: "bisectie",
@@ -74,6 +74,7 @@ export function run(params: ParamsBisectie): RezultatRulare {
       pasi: [
         {
           iteratie: 1,
+          indice: 1,
           interval: { a, b },
           x,
           fx: 0,
@@ -93,6 +94,10 @@ export function run(params: ParamsBisectie): RezultatRulare {
     const fc = f(c);
     const lungime = b - a;
 
+    // Cu cât intervalul e mai scurt, cu atât formula are nevoie de mai multe
+    // zecimale ca cele două capete să nu se scrie identic.
+    const cifre = zecimaleUtile(lungime);
+
     // Latura păstrată e cea în care semnul se schimbă — literal testul din curs.
     const stangaPastrata = f(a) * fc < 0;
 
@@ -107,11 +112,18 @@ export function run(params: ParamsBisectie): RezultatRulare {
 
     pasi.push({
       iteratie: i,
+      indice: i,
       interval: { a, b },
       x: c,
       fx: fc,
       eroare: lungime,
       explicatie,
+      latexPas:
+        `\\htmlId{bis-c}{c_{${i}}} = \\frac{\\htmlId{bis-a}{a} + \\htmlId{bis-b}{b}}{2}` +
+        ` = \\frac{${latexNumar(a, cifre)} + ${latexNumar(b, cifre)}}{2} = ${latexNumar(c, cifre)}`,
+      // Se aprinde capătul care urmează să se mute — cel care, pe desen, sare
+      // la mijlocul intervalului.
+      evidentiaza: fc === 0 ? ["bis-c"] : stangaPastrata ? ["bis-c", "bis-b"] : ["bis-c", "bis-a"],
     });
 
     if (fc === 0) {
