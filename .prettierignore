@@ -8,3 +8,8 @@ package-lock.json
 
 # Material sursă — transcrieri de curs, se păstrează exact cum sunt
 cursuri_MN
+
+# Material sursă — animația din care s-a portat clipul paginii 7. E un bundle
+# generat (React UMD + Babel + fonturi, într-o singură linie de 1,1 MB): se
+# păstrează exact cum a venit, nu se formatează și nu ajunge în build.
+Coborare pe gradient.html

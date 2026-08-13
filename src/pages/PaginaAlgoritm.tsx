@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
+import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { Container } from "@/components/layout/Container";
@@ -15,9 +16,11 @@ import { getContinut } from "@/content";
  * A nu se confunda cu `SECTIUNI` din registru, care sunt cele trei grupuri din
  * cuprins — de aici sufixul.
  *
- * Fiecare are unealta ei, fixată: „Vizual" e clipul Manim pre-randat,
- * „Interactiv" e interfața scrisă cu `motion`. Vezi `CLAUDE.md`, §„Manim sau
- * `motion`".
+ * Fiecare are unealta ei, fixată: „Vizual" e clipul narativ dinaintea oricărei
+ * formule, „Interactiv" e interfața cu care se schimbă parametrii. Vezi
+ * `CLAUDE.md`, §„Manim sau `motion`". Clipul e de obicei Manim, pre-randat;
+ * pagina 7 face excepție și îl are scris în cod, ca desen pe ceasul propriu
+ * (`Clip`) — de aceea descrierea de mai jos nu numește unealta.
  *
  * `id` e separat de `titlu` fiindcă ajunge în atributul `id` al titlului, iar
  * „Teorie pe scurt" ar da un id cu spații. `aria-labelledby` citește spațiile ca
@@ -26,7 +29,7 @@ import { getContinut } from "@/content";
  * cititorul de ecran.
  */
 const SECTIUNI_PAGINA = [
-  { id: "vizual", titlu: "Vizual", descriere: "Animația Manim care arată metoda în ansamblu." },
+  { id: "vizual", titlu: "Vizual", descriere: "Animația care arată metoda în ansamblu." },
   {
     id: "teorie",
     titlu: "Teorie pe scurt",
@@ -99,6 +102,7 @@ export default function PaginaAlgoritm() {
             // fără nicio etichetă care să spună că lipsește ceva.
             const scris = s.id === "teorie" ? continut?.teorie : undefined;
             const interactiv = s.id === "interactiv" && pagina.slug === "ecuatii-neliniare";
+            const vizual = s.id === "vizual" && pagina.slug === "metode-de-gradient";
 
             return (
               <section key={s.id} aria-labelledby={`sectiune-${s.id}`}>
@@ -112,6 +116,10 @@ export default function PaginaAlgoritm() {
                 ) : interactiv ? (
                   <div className="mt-4">
                     <InterfataEcuatiiNeliniare />
+                  </div>
+                ) : vizual ? (
+                  <div className="mt-4">
+                    <AnimatieCoborarePeGradient />
                   </div>
                 ) : (
                   <>
