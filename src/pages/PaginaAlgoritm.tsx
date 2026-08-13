@@ -5,6 +5,7 @@ import { Link, Navigate, useParams } from "react-router";
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
+import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -102,6 +103,8 @@ export default function PaginaAlgoritm() {
             // fără nicio etichetă care să spună că lipsește ceva.
             const scris = s.id === "teorie" ? continut?.teorie : undefined;
             const interactiv = s.id === "interactiv" && pagina.slug === "ecuatii-neliniare";
+            const interactivGradient =
+              s.id === "interactiv" && pagina.slug === "metode-de-gradient";
             const vizual = s.id === "vizual" && pagina.slug === "metode-de-gradient";
 
             return (
@@ -116,6 +119,10 @@ export default function PaginaAlgoritm() {
                 ) : interactiv ? (
                   <div className="mt-4">
                     <InterfataEcuatiiNeliniare />
+                  </div>
+                ) : interactivGradient ? (
+                  <div className="mt-4">
+                    <InterfataMetodeDeGradient />
                   </div>
                 ) : vizual ? (
                   <div className="mt-4">

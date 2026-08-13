@@ -1,0 +1,383 @@
+import { useMemo, useState } from "react";
+
+import * as conjugat from "@/algorithms/metode-de-gradient/conjugat";
+import * as descendent from "@/algorithms/metode-de-gradient/descendent";
+import { descrieScena } from "@/algorithms/metode-de-gradient/descriere";
+import type { RezultatGradient } from "@/algorithms/metode-de-gradient/tipuri";
+import { Callout } from "@/components/content/Callout";
+import { ValeaGradientului } from "@/components/content/ValeaGradientului";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ControlPanel } from "@/components/viz/ControlPanel";
+import { FormulaBlock } from "@/components/viz/FormulaBlock";
+import { IterationTable } from "@/components/viz/IterationTable";
+import { Legend, type ElementLegenda } from "@/components/viz/Legend";
+import { NumberInput } from "@/components/viz/NumberInput";
+import { PlaybackBar } from "@/components/viz/PlaybackBar";
+import { StepExplanation } from "@/components/viz/StepExplanation";
+import { useDerulare } from "@/hooks/use-derulare";
+import { conditionare, type Mat2, type Vec2 } from "@/lib/curbe-de-nivel";
+import { stiintific, zecimale } from "@/lib/numere";
+
+const METODE = [
+  { id: "descendent", titlu: "Gradientul descendent" },
+  { id: "conjugat", titlu: "Gradientul conjugat" },
+] as const;
+
+type IdMetoda = (typeof METODE)[number]["id"];
+
+/**
+ * Sistemul implicit e cel deja verificat numeric în teoria paginii
+ * (`src/content/metode-de-gradient.tsx`): `A = [[4, 1], [1, 3]]`, `b = (1, 2)`,
+ * cu soluția exactă `x* = (1/11, 7/11)`. Nu se schimbă fără să se schimbe și
+ * cifrele de acolo.
+ */
+const IMPLICIT = {
+  a11: 4,
+  a12: 1,
+  a22: 3,
+  b1: 1,
+  b2: 2,
+  x01: 0,
+  x02: 0,
+  tol: 1e-8,
+  maxIteratii: 40,
+} as const;
+
+const MAX_ITERATII_PERMISE = 200;
+
+type Camp = keyof typeof IMPLICIT;
+type Valori = Record<Camp, number | "">;
+
+/**
+ * Interfața interactivă a paginii 7: coborârea în vale, în 3D.
+ *
+ * Matematica **nu** stă aici. Sistemul, pașii, formulele cu numerele puse în
+ * ele și propozițiile care le descriu vin din
+ * `src/algorithms/metode-de-gradient/`; desenul, din `ValeaGradientului`.
+ * Componenta asta doar leagă controalele de rulare și alege ce pas se arată.
+ *
+ * Metoda se alege din taburi și se vede **una singură** odată: două trasee peste
+ * aceeași vale s-ar suprapune tocmai în porțiunea care contează, ultimele
+ * iterații de lângă fundul văii.
+ */
+export function InterfataMetodeDeGradient() {
+  const [idMetoda, setIdMetoda] = useState<IdMetoda>("descendent");
+  const [valori, setValori] = useState<Valori>({ ...IMPLICIT });
+
+  const seteaza = (camp: Camp) => (v: number | "") =>
+    setValori((stare) => ({ ...stare, [camp]: v }));
+
+  const reseteaza = () => setValori({ ...IMPLICIT });
+
+  const a11 = numar(valori.a11, IMPLICIT.a11);
+  const a12 = numar(valori.a12, IMPLICIT.a12);
+  const a22 = numar(valori.a22, IMPLICIT.a22);
+  const b1 = numar(valori.b1, IMPLICIT.b1);
+  const b2 = numar(valori.b2, IMPLICIT.b2);
+  const x01 = numar(valori.x01, IMPLICIT.x01);
+  const x02 = numar(valori.x02, IMPLICIT.x02);
+
+  const tolBruta = numar(valori.tol, IMPLICIT.tol);
+  const tol = tolBruta > 0 ? tolBruta : IMPLICIT.tol;
+  const maxIteratii = Math.min(
+    MAX_ITERATII_PERMISE,
+    Math.max(1, Math.round(numar(valori.maxIteratii, IMPLICIT.maxIteratii))),
+  );
+
+  // Matricea și vectorii se memorează pe **cifre**, nu pe identitate: recreați la
+  // fiecare randare, ar invalida rularea și, mai departe, toate calculele pe
+  // care `ValeaGradientului` le face o singură dată (cutia, curbele de nivel).
+  const A = useMemo<Mat2>(() => [a11, a12, a22], [a11, a12, a22]);
+  const b = useMemo<Vec2>(() => [b1, b2], [b1, b2]);
+  const x0 = useMemo<Vec2>(() => [x01, x02], [x01, x02]);
+
+  const rezultat = useMemo<RezultatGradient>(() => {
+    const parametri = { A, b, x0, tol, maxIteratii };
+    return idMetoda === "descendent" ? descendent.run(parametri) : conjugat.run(parametri);
+  }, [idMetoda, A, b, x0, tol, maxIteratii]);
+
+  const derulare = useDerulare(rezultat.pasi.length);
+  const pas = rezultat.pasi[derulare.pas];
+  const ultimulPas = derulare.pas === rezultat.pasi.length - 1;
+
+  const kappa = rezultat.conditionare ?? conditionare(A);
+  const numeMetoda = idMetoda === "descendent" ? descendent.meta.titlu : conjugat.meta.titlu;
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Tabs value={idMetoda} onValueChange={(v) => setIdMetoda(v as IdMetoda)}>
+        <TabsList className="w-full">
+          {METODE.map((m) => (
+            <TabsTrigger key={m.id} value={m.id} className="flex-1">
+              {m.titlu}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+
+      {/* Legenda înaintea desenului, ca pe pagina 6: întâi afli ce vei vedea. */}
+      <Legend elemente={LEGENDA} />
+
+      <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,26%,380px)]">
+          <div className="flex min-w-0 items-center p-4 sm:p-5">
+            {rezultat.pasi.length > 0 ? (
+              <ValeaGradientului
+                A={A}
+                b={b}
+                pasi={rezultat.pasi}
+                pasCurent={derulare.pas}
+                solutie={rezultat.solutie}
+                descriere={descrieScena(pas, rezultat.pasi.length, rezultat.solutie)}
+                numeMetoda={numeMetoda}
+                className="w-full"
+              />
+            ) : (
+              <div className="text-text-slab flex min-h-[420px] items-center justify-center px-6 text-center text-lg text-pretty">
+                {rezultat.motiv}
+              </div>
+            )}
+          </div>
+
+          <ControlPanel
+            onReset={reseteaza}
+            incorporat
+            className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
+          >
+            {/* Matricea are **trei** câmpuri, nu patru: simetria e ipoteza
+                metodei (curs 5, §8.1), nu o opțiune, deci `a₂₁` nu se poate
+                scrie separat. */}
+            <div className="grid grid-cols-3 gap-3 sm:col-span-2">
+              <NumberInput
+                eticheta="a₁₁"
+                valoare={valori.a11}
+                onChange={seteaza("a11")}
+                pas={0.1}
+              />
+              <NumberInput
+                eticheta="a₁₂ = a₂₁"
+                valoare={valori.a12}
+                onChange={seteaza("a12")}
+                pas={0.1}
+              />
+              <NumberInput
+                eticheta="a₂₂"
+                valoare={valori.a22}
+                onChange={seteaza("a22")}
+                pas={0.1}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <NumberInput eticheta="b₁" valoare={valori.b1} onChange={seteaza("b1")} pas={0.1} />
+              <NumberInput eticheta="b₂" valoare={valori.b2} onChange={seteaza("b2")} pas={0.1} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <NumberInput
+                eticheta="x₁⁽⁰⁾"
+                valoare={valori.x01}
+                onChange={seteaza("x01")}
+                pas={0.1}
+              />
+              <NumberInput
+                eticheta="x₂⁽⁰⁾"
+                valoare={valori.x02}
+                onChange={seteaza("x02")}
+                pas={0.1}
+              />
+            </div>
+
+            <NumberInput
+              eticheta="Toleranța pentru ‖r‖"
+              valoare={valori.tol}
+              onChange={seteaza("tol")}
+              min={1e-14}
+              pas={1e-8}
+              unitate="ε"
+              eroare={
+                typeof valori.tol === "number" && valori.tol <= 0
+                  ? "Toleranța trebuie să fie pozitivă."
+                  : undefined
+              }
+            />
+            <NumberInput
+              eticheta="Iterații maxime"
+              valoare={valori.maxIteratii}
+              onChange={seteaza("maxIteratii")}
+              min={1}
+              max={MAX_ITERATII_PERMISE}
+              pas={1}
+              eroare={
+                typeof valori.maxIteratii === "number" && valori.maxIteratii > MAX_ITERATII_PERMISE
+                  ? `Cel mult ${MAX_ITERATII_PERMISE} de iterații.`
+                  : undefined
+              }
+            />
+          </ControlPanel>
+        </div>
+      </div>
+
+      {rezultat.pasi.length > 0 && (
+        <>
+          <PlaybackBar
+            pas={derulare.pas}
+            totalPasi={rezultat.pasi.length}
+            ruleaza={derulare.ruleaza}
+            viteza={derulare.viteza}
+            onPas={derulare.setPas}
+            onRuleazaChange={derulare.setRuleaza}
+            onVitezaChange={derulare.setViteza}
+          />
+
+          <StepExplanation
+            explicatie={pas?.explicatie}
+            pas={derulare.pas}
+            totalPasi={rezultat.pasi.length}
+            ruleaza={derulare.ruleaza}
+          />
+
+          {/* Paralela formulă ↔ desen: partea aprinsă din formulă e chiar
+              elementul desenat — direcția săgeții, lungimea ei, vârful. */}
+          {pas?.latexPas && (
+            <FormulaBlock
+              latex={pas.latexPas}
+              eticheta="Pasul acesta, cu numerele în formulă"
+              evidentiaza={pas.evidentiaza}
+            />
+          )}
+        </>
+      )}
+
+      {/* Erorile se scriu, nu se colorează pe desen — regula din CLAUDE.md. */}
+      {rezultat.stare === "esuat" && (
+        <Callout tip="atentie" titlu="Metoda s-a oprit">
+          {rezultat.motiv}
+        </Callout>
+      )}
+      {ultimulPas && rezultat.stare === "convergent" && (
+        <Callout tip="retine" titlu="Metoda a ajuns la soluție">
+          {incheiere(idMetoda, rezultat, kappa)}
+        </Callout>
+      )}
+      {ultimulPas && rezultat.stare === "neterminat" && (
+        <Callout tip="atentie" titlu="S-au terminat iterațiile">
+          {rezultat.motiv}
+        </Callout>
+      )}
+
+      {rezultat.pasi.length > 0 && (
+        <IterationTable
+          coloane={[
+            { cheie: "x", titlu: "x⁽ᵏ⁾", descriere: "Punctul la care s-a ajuns" },
+            { cheie: "f", titlu: "f(x⁽ᵏ⁾)", descriere: "Cât de jos în vale a coborât" },
+            {
+              cheie: "pas",
+              titlu: idMetoda === "descendent" ? "α" : "tₖ",
+              descriere: "Lungimea pasului pe direcția de căutare",
+            },
+            { cheie: "eroare", titlu: "‖r⁽ᵏ⁾‖", descriere: "Criteriul de oprire" },
+            {
+              cheie: "special",
+              titlu: idMetoda === "descendent" ? "cos(r⁽ᵏ⁻¹⁾, r⁽ᵏ⁾)" : "⟨v⁽ᵏ⁻¹⁾, A·v⁽ᵏ⁾⟩",
+              descriere:
+                idMetoda === "descendent"
+                  ? "Zero la fiecare pas: fiecare direcție e perpendiculară pe cea dinainte — de aici zigzagul"
+                  : "Zero la fiecare pas: direcțiile sunt A-conjugate (curs 5, §8.4)",
+            },
+            {
+              cheie: "abatere",
+              titlu: "‖x⁽ᵏ⁾ − x*‖",
+              descriere: "Distanța până la soluția exactă, calculată separat",
+            },
+          ]}
+          randuri={rezultat.pasi.map((p) => ({
+            x: `(${zecimale(p.x[0], 6)}; ${zecimale(p.x[1], 6)})`,
+            f: zecimale(p.f, 6),
+            pas: zecimale(p.pas, 6),
+            eroare: stiintific(p.eroare, 2),
+            special:
+              idMetoda === "descendent"
+                ? p.cosDirectii === undefined
+                  ? "—"
+                  : stiintific(p.cosDirectii, 2)
+                : p.aOrtogonalitate === undefined
+                  ? "—"
+                  : stiintific(p.aOrtogonalitate, 2),
+            abatere: stiintific(p.abatere, 2),
+          }))}
+          randCurent={derulare.pas}
+          onAlegeRand={derulare.setPas}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * Legenda scenei.
+ *
+ * Ultimele două explicații nu sunt decor: fără ele desenul ar afirma tăcut două
+ * lucruri false. Înălțimea e scalată altfel decât planul (n-are cum altfel: sunt
+ * unități diferite), deci panta văzută nu e panta reală; iar unghiul drept
+ * dintre doi pași consecutivi se citește drept **numai** din privirea de sus —
+ * la unghiul implicit, un unghi real de 90° se vede ca 55°.
+ */
+const LEGENDA: ElementLegenda[] = [
+  {
+    rol: "functie",
+    eticheta: "valea funcției f(x) = ½·xᵀAx − bᵀx",
+    forma: "zona",
+    explicatie:
+      "Înălțimea e scalată separat de plan, ca valea să încapă în cadru — panta desenată nu e panta reală.",
+  },
+  {
+    rol: "grila",
+    eticheta: "curbele de nivel, pe podea",
+    forma: "linie",
+    explicatie: "Locurile în care f ia aceeași valoare. Pentru A pozitiv definită sunt elipse.",
+  },
+  {
+    rol: "interval",
+    eticheta: "curba pe care a aterizat iterația, și pasul făcut",
+    forma: "linie",
+    explicatie:
+      "Pasul următor pleacă perpendicular pe curba asta. Unghiul dintre doi pași se citește corect abia din privirea de sus.",
+  },
+  { rol: "anterior", eticheta: "iterațiile de până acum și umbra lor pe podea", forma: "punct" },
+  { rol: "curent", eticheta: "iterația curentă", forma: "punct" },
+  { rol: "solutie", eticheta: "x*, fundul văii — soluția sistemului", forma: "punct" },
+];
+
+/** Câmpul gol înseamnă „încă tastez", nu zero. */
+function numar(valoare: number | "", implicit: number): number {
+  return typeof valoare === "number" && Number.isFinite(valoare) ? valoare : implicit;
+}
+
+/**
+ * Propoziția de la final: câți pași au trebuit și de ce atâția.
+ *
+ * Numărul de condiționare nu e un ornament — el e răspunsul la „de ce coborârea
+ * are nevoie de zeci de pași, iar gradientul conjugat de doi": valea alungită
+ * face zigzagul lung, iar `n = 2` din curs 5, §8.4 nu depinde deloc de formă.
+ */
+function incheiere(idMetoda: IdMetoda, rezultat: RezultatGradient, kappa: number): string {
+  const pasi = rezultat.pasi.length;
+  const forma = Number.isFinite(kappa)
+    ? `Valea are numărul de condiționare κ = ${zecimale(kappa, 4)}`
+    : "Valea e practic degenerată";
+
+  if (idMetoda === "conjugat") {
+    return (
+      `${pasi} ${pasi === 1 ? "pas" : "pași"} — și n-ar fi putut fi mai mulți: pentru un sistem de dimensiune n, ` +
+      `direcțiile A-conjugate ating soluția exactă în cel mult n pași (curs 5, §8.4), aici n = 2. ` +
+      `${forma}, dar numărul de pași nu depinde de el.`
+    );
+  }
+
+  return (
+    `${pasi} ${pasi === 1 ? "pas" : "pași"}. Fiecare direcție e perpendiculară pe cea dinainte, ` +
+    `de unde zigzagul: coborârea taie mereu de-a curmezișul văii în loc s-o urmeze. ` +
+    `${forma}; cu cât e mai mare, cu atât valea e mai alungită și cu atât zigzagul e mai lung.`
+  );
+}
