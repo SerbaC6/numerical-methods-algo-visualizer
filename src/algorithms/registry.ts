@@ -1,10 +1,13 @@
 /**
- * Registrul celor 14 pagini tematice — sursa unică de adevăr pentru cuprins,
- * rute și navigația dintre pagini.
+ * Registrul paginilor tematice — sursa unică de adevăr pentru cuprins, rute și
+ * navigația dintre pagini.
  *
  * Împărțirea, titlurile și metodele vin din `Plan.md` („Lista Algoritmi") și din
  * tabelul „Lista paginilor" din `Progress.md`, Faza 7. Nu se inventează pagini noi
  * aici: dacă se schimbă lista, se schimbă întâi `Plan.md`.
+ *
+ * Numărul de pagini **nu se scrie de mână** nicăieri în interfață; se ia din
+ * `NUMAR_PAGINI`, de la finalul fișierului.
  */
 
 export type Dificultate = "ușor" | "mediu" | "greu";
@@ -22,7 +25,7 @@ export type Capitol =
 export type IntrareAlgoritm = {
   /** Ultimul segment din rută: `/algoritm/:slug`. */
   slug: string;
-  /** 1–14, ordinea din `Plan.md`. Dă și ordinea în cuprins și navigația înainte/înapoi. */
+  /** Ordinea din `Plan.md`. Dă și ordinea în cuprins și navigația înainte/înapoi. */
   numar: number;
   titlu: string;
   capitol: Capitol;
@@ -109,24 +112,35 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "eliminare-gaussiana",
     numar: 3,
-    titlu: "Eliminare gaussiană (pivotări), algoritmul Thomas",
+    titlu: "Eliminare gaussiană și pivotări",
     capitol: "sisteme-liniare",
     descriere:
-      "Eliminarea gaussiană văzută pe matrice, plus ce aduce în plus fiecare tip de pivotare și de ce Thomas e atât de rapid pe matrici tridiagonale.",
-    metode: [
-      "Eliminare gaussiană",
-      "Pivotare parțială",
-      "Pivot scalat",
-      "Pivotare totală",
-      "Thomas",
-    ],
+      "Eliminarea gaussiană văzută pe matrice, plus ce aduce în plus și cât costă fiecare tip de pivotare.",
+    metode: ["Eliminare gaussiană", "Pivotare parțială", "Pivot scalat", "Pivotare totală"],
     dificultate: "mediu",
     cursSursa: ["sisteme_liniare_metode_directe_MN_curs4.md"],
     gata: false,
   },
   {
-    slug: "metode-iterative",
+    slug: "algoritmul-thomas",
     numar: 4,
+    titlu: "Algoritmul Thomas (sisteme tridiagonale)",
+    capitol: "sisteme-liniare",
+    descriere:
+      "Aceeași eliminare, dar pe trei diagonale: patru vectori în loc de o matrice și O(n) operații în loc de O(n³).",
+    metode: [
+      "Sisteme tridiagonale",
+      "Eliminare înainte",
+      "Substituție înapoi",
+      "Dominanță diagonală",
+    ],
+    dificultate: "ușor",
+    cursSursa: ["sisteme_liniare_metode_directe_MN_curs4.md"],
+    gata: false,
+  },
+  {
+    slug: "metode-iterative",
+    numar: 5,
     titlu: "Jacobi, Gauss-Seidel, SOR",
     capitol: "sisteme-liniare",
     descriere:
@@ -138,7 +152,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "ecuatii-neliniare",
-    numar: 5,
+    numar: 6,
     titlu: "Puncte fixe, bisecție, Newton, secantă",
     capitol: "ecuatii-optimizare",
     descriere:
@@ -154,7 +168,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "metode-de-gradient",
-    numar: 6,
+    numar: 7,
     titlu: "Gradient descendent, gradient conjugat",
     capitol: "ecuatii-optimizare",
     descriere:
@@ -166,26 +180,37 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "metodele-puterii",
-    numar: 7,
-    titlu: "Metodele puterii, Rayleigh, deflație, PageRank",
+    numar: 8,
+    titlu: "Metodele puterii, Rayleigh, deflație",
     capitol: "ortogonalitate-valori-proprii",
     descriere:
-      "Cum scoate o simplă înmulțire repetată valoarea proprie dominantă și unde ajunge ideea: în algoritmul PageRank.",
+      "Cum scoate o simplă înmulțire repetată valoarea proprie dominantă și cum ajungi la celelalte, prin puterea inversă și deflație.",
     metode: [
       "Matrici asemenea",
       "Metoda puterii",
       "Puterea inversă",
       "Iterarea Rayleigh",
       "Deflație",
-      "PageRank",
     ],
     dificultate: "greu",
     cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
     gata: false,
   },
   {
+    slug: "pagerank",
+    numar: 9,
+    titlu: "Algoritmul PageRank",
+    capitol: "ortogonalitate-valori-proprii",
+    descriere:
+      "Importanța unei pagini web ca vector propriu pentru λ = 1 al matricei Google — adică metoda puterii, aplicată pe un graf de linkuri.",
+    metode: ["Matrice stocastică", "Matricea Google", "Metoda puterii", "Deflație pe blocuri"],
+    dificultate: "mediu",
+    cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
+    gata: false,
+  },
+  {
     slug: "qr-si-dvs",
-    numar: 8,
+    numar: 10,
     titlu: "Algoritmul QR și DVS",
     capitol: "ortogonalitate-valori-proprii",
     descriere:
@@ -197,7 +222,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "interpolare-polinomiala",
-    numar: 9,
+    numar: 11,
     titlu: "Lagrange, Neville, funcția Runge, spline",
     capitol: "interpolare-aproximare",
     descriere:
@@ -209,7 +234,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "curbe-bezier",
-    numar: 10,
+    numar: 12,
     titlu: "Curbe Bézier, algoritmul de Casteljau",
     capitol: "interpolare-aproximare",
     descriere:
@@ -220,44 +245,113 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     gata: false,
   },
   {
-    slug: "cmmp-si-fft",
-    numar: 11,
-    titlu: "Aproximare CMMP, transformata Fourier rapidă",
+    slug: "cmmp",
+    numar: 13,
+    titlu: "Aproximare CMMP și funcții raționale",
     capitol: "interpolare-aproximare",
     descriere:
-      "Dreapta care trece „cel mai aproape” de un nor de puncte și, mai departe, descompunerea unui semnal în frecvențe.",
-    metode: ["CMMP liniar", "CMMP polinomial", "Spații prehilbertiene", "Padé", "FFT"],
+      "Dreapta care trece printre punctele măsurate, nu prin ele: de ce aproximăm în loc să interpolăm și cum iese sistemul normal.",
+    metode: [
+      "CMMP liniar",
+      "CMMP polinomial",
+      "Sistem normal",
+      "Spații prehilbertiene",
+      "Padé",
+      "Cebâșev",
+    ],
     dificultate: "greu",
     cursSursa: ["cmmp_rationale_fft_teorie_curs10.md"],
     gata: false,
   },
   {
-    slug: "derivare-si-integrare",
-    numar: 12,
-    titlu: "Derivare numerică, Newton-Cotes (trapeze, Simpson)",
+    slug: "fft",
+    numar: 14,
+    titlu: "Transformata Fourier rapidă (FFT)",
+    capitol: "interpolare-aproximare",
+    descriere:
+      "Cum coboară interpolarea trigonometrică de la 4m² operații la O(m log m): coeficienții complecși și pasul de înjumătățire.",
+    metode: [
+      "FFT",
+      "Cooley-Tukey",
+      "Coeficienți complecși",
+      "Interpolare trigonometrică",
+      "Pasul de înjumătățire",
+    ],
+    dificultate: "greu",
+    cursSursa: ["cmmp_rationale_fft_teorie_curs10.md"],
+    gata: false,
+  },
+  {
+    slug: "derivare-numerica",
+    numar: 15,
+    titlu: "Derivare numerică",
     capitol: "integrare-ode",
     descriere:
-      "Aria de sub grafic, aproximată cu trapeze și parabole: vezi cum scade eroarea când crești numărul de subintervale.",
-    metode: ["Derivare numerică", "Newton-Cotes", "Trapeze", "Simpson", "Formule compuse"],
+      "Panta tangentei, aproximată prin panta unei secante: ce câștigi micșorând pasul h și de unde apare eroarea de rotunjire.",
+    metode: [
+      "Formula two-point",
+      "Derivare înainte",
+      "Derivare înapoi",
+      "Formule cu 3 puncte",
+      "Eroare de rotunjire",
+    ],
     dificultate: "ușor",
     cursSursa: ["derivare-integrare-numerica_curs11.md"],
     gata: false,
   },
   {
-    slug: "romberg-si-cuadraturi",
-    numar: 13,
-    titlu: "Romberg, cuadraturi adaptive, cuadraturi Gaussiene",
+    slug: "newton-cotes",
+    numar: 16,
+    titlu: "Newton-Cotes: trapeze și Simpson",
     capitol: "integrare-ode",
     descriere:
-      "Cum stoarce extrapolarea Richardson precizie dintr-un tabel de trapeze și de ce nodurile Gaussiene nu sunt echidistante.",
-    metode: ["Richardson", "Romberg", "Cuadraturi adaptive", "Cuadraturi Gaussiene"],
+      "Aria de sub grafic, aproximată pe noduri echidistante cu trapeze și cu parabole, plus ce câștigă formulele compuse.",
+    metode: [
+      "Cuadratură numerică",
+      "Newton-Cotes",
+      "Trapeze",
+      "Simpson",
+      "Formule compuse",
+      "Formule închise și deschise",
+    ],
+    dificultate: "ușor",
+    cursSursa: ["derivare-integrare-numerica_curs11.md"],
+    gata: false,
+  },
+  {
+    slug: "romberg",
+    numar: 17,
+    titlu: "Extrapolare Richardson și integrare Romberg",
+    capitol: "integrare-ode",
+    descriere:
+      "Cum stoarce extrapolarea Richardson precizie dintr-un tabel de trapeze, urcând de la O(h²) la O(h⁴), O(h⁶) și mai departe.",
+    metode: ["Extrapolare Richardson", "Integrare Romberg", "Tabloul Romberg"],
+    dificultate: "mediu",
+    cursSursa: ["romberg-cuadraturi-gaussiene_curs12.md"],
+    gata: false,
+  },
+  {
+    slug: "cuadraturi-adaptive-si-gaussiene",
+    numar: 18,
+    titlu: "Cuadraturi adaptive și cuadraturi Gaussiene",
+    capitol: "integrare-ode",
+    descriere:
+      "Unde își împarte Simpson intervalul când eroarea e prea mare și de ce nodurile Gaussiene nu sunt echidistante.",
+    metode: [
+      "Cuadraturi adaptive",
+      "Simpson adaptiv",
+      "Cuadraturi Gaussiene",
+      "Polinoame ortogonale",
+      "Legendre",
+      "Gauss-Radau",
+    ],
     dificultate: "greu",
     cursSursa: ["romberg-cuadraturi-gaussiene_curs12.md"],
     gata: false,
   },
   {
     slug: "ecuatii-diferentiale",
-    numar: 14,
+    numar: 19,
     titlu: "ODE: problema Cauchy, Euler, Runge-Kutta",
     capitol: "integrare-ode",
     descriere:
@@ -268,6 +362,13 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     gata: false,
   },
 ];
+
+/**
+ * Câte pagini are site-ul. Se citește de aici oriunde apare cifra în text
+ * („Pagina 3 din 19"), ca să nu rămână un număr scris de mână în urmă când lista
+ * se mai sparge o dată.
+ */
+export const NUMAR_PAGINI = ALGORITMI.length;
 
 /** Pagina cu slug-ul dat, sau `undefined` dacă ruta e greșită. */
 export function getAlgoritm(slug: string | undefined): IntrareAlgoritm | undefined {
