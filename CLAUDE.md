@@ -79,6 +79,13 @@ legendă, comentarii din cod, rezumate pentru cititorul de ecran.
 Dacă nu poți verifica ceva — nu îl scrii. Spui că nu ai putut verifica și te oprești acolo. **Un
 gol declarat e acceptabil; o afirmație matematică negarantată, nu.**
 
+**Când cursul însuși greșește**, regula de corectitudine o bate pe cea de fidelitate: formula nu
+ajunge pe site, dar nici nu se „corectează" tăcut. Se scrie în
+[`docs/erata-cursuri.md`](./docs/erata-cursuri.md), cu verificarea numerică care a prins-o, și —
+dacă se poate — se păstrează concluzia pe o cale care se verifică. Fișierul acela există ca să nu
+se repare la loc: cine compară site-ul cu cursul peste trei luni trebuie să găsească acolo de ce
+diferă.
+
 Când notația intuitivă cerută pentru interfață diferă de cea din curs (de ex. `L₁`/`C₁` în loc de
 `E₁`/`x₁`), se schimbă **doar numele**, niciodată cifrele sau operațiile — iar diferența se notează
 în cod, ca să se poată pune notația din curs alături pe pagina reală.
@@ -362,9 +369,32 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
     CSS-ul generat variabilele de temă nefolosite: `--duration-lent` și `--ease-intrare` chiar
     lipseau din build, fiindcă nu-i folosea încă nimeni.
 
-  Rămâne de făcut, la prima pagină care le atinge: trecerea pieselor din `src/components/viz/` de
-  pe tranziții CSS pe `motion`, sau — dacă se preferă un sistem mixt — regula scrisă care spune
-  unde se termină una și începe cealaltă.
+  Piesele din `src/components/viz/` care se **mișcă** au trecut deja pe `motion`; granița față de
+  CSS e scrisă în [`src/components/viz/README.md`](./src/components/viz/README.md) și e după _ce_ se
+  schimbă: geometria pe `motion`, culorile pe CSS.
+
+## Manim sau `motion`: fiecare secțiune cu unealta ei (DECIS)
+
+Cele două nu concurează, fiindcă răspund la întrebări diferite. Împărțirea e fixată și **nu se
+renegociază per pagină**:
+
+| Secțiunea din pagină | Unealta                                         | La ce e bună                                                          |
+| -------------------- | ----------------------------------------------- | --------------------------------------------------------------------- |
+| **Vizual**           | **Manim**, clip pre-randat offline              | „despre ce e vorba", în treizeci de secunde, înainte de orice formulă |
+| **Interactiv**       | **`motion`** + straturile `Plot` / `MatrixGrid` | „ce se întâmplă dacă schimb eu asta"                                  |
+
+Clipul Manim **nu** înlocuiește interfața și nici invers. Un clip nu poate fi oprit la pasul 3, nu
+primește parametrii utilizatorului, nu se leagă de evidențierea din formulă prin `\htmlId` și, la
+`prefers-reduced-motion`, nu poate decât să arate un poster static. În schimb, o interfață nu poate
+duce singură o introducere narativă.
+
+Manim rămâne **exclusiv offline** (vezi §Arhitectură): randare locală, rezultat static în
+`public/media/<slug>/`, niciodată în browser. Pipeline-ul se face în Faza 5 din `Progress.md`.
+
+**Excepția: pagina 5** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
+Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
+doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,
+nu se pune text de așteptare, nu se anunță nimic — vezi regula despre stările de progres.
 
 ## Convenții
 

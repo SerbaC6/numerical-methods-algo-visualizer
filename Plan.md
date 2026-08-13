@@ -134,6 +134,26 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 - **Pagina principala**, de cuprins cumva, in care utilizatorul va selecta ce algoritm vrea sa vada
 - **Pagina pentru fiecare algoritm**, in care va fi la inceput o chestie vizuala, apoi un scurt Briefing despre algoritm si modul in care functioneaza, apoi o interfata interactiva cu care sa schimbe modul in care este asezat, lucreaza, etc. Cumva, dupa modul in care se schimba formula de baza sa se schimbe si imaginea
 
+### Cele trei secțiuni și cu ce se fac (DECIS)
+
+Fiecare pagină de algoritm are trei secțiuni, iar fiecare are **unealta ei**, fixată:
+
+| Secțiune            | Cu ce se face                                   | Ce e                                                                                        |
+| ------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Vizual**          | **Manim**, clip pre-randat offline              | filmul care arată metoda în ansamblu; nu se poate opri pe pas, nu primește parametri        |
+| **Teorie pe scurt** | text + KaTeX, din `src/content/`                | esența metodei, formula, ce înseamnă fiecare literă                                         |
+| **Interactiv**      | **`motion`** + straturile `Plot` / `MatrixGrid` | interfața cu care te joci: schimbi parametrii, mergi pas cu pas, vezi formula aprinzându-se |
+
+Împărțirea nu e negociabilă per pagină: clipul Manim **nu** înlocuiește interfața și nici invers.
+Clipul spune „despre ce e vorba" în treizeci de secunde; interfața răspunde la „ce se întâmplă dacă
+schimb eu asta".
+
+**Excepția: pagina 5** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
+Metoda se înțelege trăgând de capetele intervalului, iar un film despre bisecție ar arăta exact ce
+face interfața, doar că fără să-l poți opri. Secțiunea „Vizual" pur și simplu nu există pe pagina
+aceea; nu se pune schelet și nu se anunță nimic (vezi regula despre stările de progres din
+`CLAUDE.md`).
+
 **Exemple:**
 
 - <https://visualgo.net/en>

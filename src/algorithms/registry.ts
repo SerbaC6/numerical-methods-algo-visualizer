@@ -33,6 +33,15 @@ export type IntrareAlgoritm = {
   dificultate: Dificultate;
   /** Fișierele din `cursuri_MN/` din care se ia conținutul — singura sursă admisă. */
   cursSursa: string[];
+  /**
+   * `false` dacă pagina **nu primește** clip Manim, prin decizie — nu „încă nu
+   * are". Atunci secțiunea „Vizual" lipsește cu totul din pagină: fără schelet,
+   * fără text de așteptare (vezi regula despre stările de progres din
+   * `CLAUDE.md`).
+   *
+   * Implicit toate paginile au clip; se scrie explicit doar excepția.
+   */
+  clipManim?: boolean;
   /** `false` cât timp pagina e doar schelet. */
   gata: boolean;
 };
@@ -137,6 +146,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Puncte fixe", "Bisecție", "Newton (tangentei)", "Secantă", "Ordin de convergență"],
     dificultate: "ușor",
     cursSursa: ["ecuatii_neliniare_MN_curs6.md", "sisteme_liniare_metode_iterative_MN_curs5.md"],
+    // Singura pagină fără clip. Bisecția se înțelege trăgând de capetele
+    // intervalului, iar un film ar arăta exact ce face interfața, doar că fără
+    // să-l poți opri. Decizia e în `Plan.md` și în `CLAUDE.md`.
+    clipManim: false,
     gata: false,
   },
   {

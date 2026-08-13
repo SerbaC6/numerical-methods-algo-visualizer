@@ -404,6 +404,13 @@ nu doar galeria de componente.
 
 **Obiectiv:** clipuri explicative pre-randate, cu aceeași estetică cu restul site-ului. Manim rulează **offline**, la build local — niciodată în browser.
 
+> **Unde intră.** Clipurile Manim umplu **exclusiv secțiunea „Vizual"** a unei pagini de algoritm.
+> Secțiunea „Interactiv" se face cu `motion` și cu straturile `Plot`/`MatrixGrid` — niciodată cu un
+> clip. Împărțirea și motivele sunt în [`CLAUDE.md`](./CLAUDE.md), §„Manim sau `motion`".
+>
+> **Pagina 5 nu primește clip** (vezi coloana Manim din tabelul Fazei 7): bisecția se înțelege
+> trăgând de capetele intervalului. Acolo secțiunea „Vizual" lipsește cu totul din pagină.
+
 - [ ] Mediu Python
   - [ ] `manim/` cu `.venv`, `requirements.txt` (versiuni fixate)
   - [ ] Verificare dependențe de sistem (ffmpeg, cairo, LaTeX dacă folosim `Tex`)
@@ -476,13 +483,16 @@ Fiecare pagină grupează metodele înrudite, ca să se poată face paralele în
 împărțirea vine din `Plan.md`, nu una metodă = una pagină. Coloana „Curs" spune din ce
 fișier din `cursuri_MN/` se ia conținutul.
 
+Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e interfața cu `motion`.
+`n/a` înseamnă că pagina **nu primește** clip, prin decizie — nu că e de făcut mai târziu.
+
 | Nr. | Pagină (metode)                                                 | Curs sursă   | Vizual     | Implem. | Manim | Text | Interactiv | Mobil | Gata |
 | --- | --------------------------------------------------------------- | ------------ | ---------- | ------- | ----- | ---- | ---------- | ----- | ---- |
 | 1   | Cramer, LU, Doolittle, Crout, Cholesky                          | curs2, curs4 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 2   | Norme, Householder, Givens, Gram-Schmidt                        | curs3, curs2 | axă + joc  | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   | Eliminare Gaussiană (pivotări), algoritmul Thomas               | curs4        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Jacobi, Gauss-Seidel, SOR                                       | curs5        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Puncte fixe, bisecție, Newton, secantă                          | curs6, curs5 | interval   | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Puncte fixe, bisecție, Newton, secantă                          | curs6, curs5 | interval   | [ ]     | n/a   | [x]  | [ ]        | [ ]   | [ ]  |
 | 6   | Gradient descendent, gradient conjugat                          | curs6, curs5 | vale 2D    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 7   | Metodele puterii, puterea inversă, Rayleigh, deflație, PageRank | curs7        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 8   | QR și DVS                                                       | curs8, curs3 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |

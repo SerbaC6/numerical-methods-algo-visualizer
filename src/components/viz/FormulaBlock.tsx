@@ -101,8 +101,11 @@ export function FormulaBlock({
         className,
       )}
     >
+      {/* `text-sm`, nu `text-xs`: eticheta spune din ce secțiune de curs vine
+          formula, adică e chiar lucrul care o face verificabilă. La 12px se
+          citea cu greu. */}
       {eticheta && !inline && (
-        <p className="text-text-slab mb-2 text-xs font-semibold tracking-wide uppercase">
+        <p className="text-text-slab mb-2 text-sm font-semibold tracking-wide uppercase">
           {eticheta}
         </p>
       )}

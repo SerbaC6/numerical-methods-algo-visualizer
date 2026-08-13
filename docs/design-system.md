@@ -29,7 +29,7 @@ Safirul `#0474C4` are 2,9:1 pe același fundal — **culoare de umplere, nicioda
 În tema luminoasă accentul de text devine `#06457F` (9,2:1).
 
 Stările (succes / atenție / eroare) sunt derivate **în afara** paletei: paleta e monocromă pe
-albastru și nu poate purta singură înțelesul de „a divergit".
+albastru și nu poate purta singură înțelesul de „divergent".
 
 **Roluri de vizualizare** — aceleași în web și în scenele Manim, ca desenul și animația să
 însemne același lucru:
@@ -128,6 +128,10 @@ grele cer secvențe, nu simple schimbări de valoare.
 
 Costul e ~124 KB, dar stă într-un chunk încărcat leneș; `MotionConfig` din rădăcină adaugă în
 bundle-ul principal doar 0,6 KB.
+
+**`motion` nu se bate cu Manim** — acoperă secțiuni diferite ale paginii. `motion` face secțiunea
+**Interactiv** (interfața cu care te joci), Manim face secțiunea **Vizual** (clipul pre-randat, care
+spune despre ce e vorba). Detaliile deciziei: [`CLAUDE.md`](../CLAUDE.md), §„Manim sau `motion`".
 
 **Duratele și curbele se iau din [`src/lib/miscare.ts`](../src/lib/miscare.ts)** — `tranzitie()`,
 `DURATE`, `CURBE` — niciodată numere scrise de mână. Fișierul ține aceleași valori ca tabelul de

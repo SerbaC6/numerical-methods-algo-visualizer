@@ -382,13 +382,13 @@ export default function DesignSystem() {
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <div className="border-succes/40 bg-succes-fundal text-succes rounded-lg border p-3 text-sm font-semibold">
-            succes — a convergit
+            succes — a ajuns la soluție
           </div>
           <div className="border-atentie/40 bg-atentie-fundal text-atentie rounded-lg border p-3 text-sm font-semibold">
             atenție — limită atinsă
           </div>
           <div className="border-eroare/40 bg-eroare-fundal text-eroare rounded-lg border p-3 text-sm font-semibold">
-            eroare — a divergit
+            eroare — s-a îndepărtat de soluție
           </div>
         </div>
       </Sectiune>
@@ -466,9 +466,9 @@ export default function DesignSystem() {
               <Badge>ușor</Badge>
               <Badge variant="secondary">capitol</Badge>
               <Badge variant="outline">contur</Badge>
-              <Badge variant="succes">a convergit</Badge>
+              <Badge variant="succes">convergent</Badge>
               <Badge variant="atentie">limită atinsă</Badge>
-              <Badge variant="eroare">a divergit</Badge>
+              <Badge variant="eroare">divergent</Badge>
             </div>
           </div>
 

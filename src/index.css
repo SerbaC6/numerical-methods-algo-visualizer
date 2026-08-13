@@ -336,6 +336,14 @@
     font-size: 1.05em;
   }
 
+  /* Mărimea formulelor **nu** se pune aici, printr-o regulă pe `.katex`.
+     Foaia de stil a KaTeX are propriul `.katex { font-size: 1.21em }` și nu e
+     în niciun layer, iar CSS-ul nelayerat bate orice regulă dintr-un
+     `@layer` — indiferent de specificitate. O regulă `.formula .katex` de aici
+     pur și simplu nu se aplică (măsurat: rămâne 1,21em).
+     Se pune pe **părinte**, cu o clasă Tailwind pe `FormulaBlock`, iar cei
+     1,21em ai KaTeX se înmulțesc cu ea. Vezi `TeorieScurta`. */
+
   .formula [data-evid="true"] {
     background-color: color-mix(in oklab, var(--accent) 30%, transparent);
     border-radius: 0.25rem;
