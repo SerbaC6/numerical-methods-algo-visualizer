@@ -1,4 +1,7 @@
+import { motion } from "motion/react";
+
 import { usePlot } from "@/components/viz/plot-context";
+import { tranzitie } from "@/lib/miscare";
 import type { Punct } from "@/lib/plot-esantionare";
 import { taieLaDreptunghi } from "@/lib/plot-scara";
 import { culoareRol, type RolViz } from "@/lib/viz-roles";
@@ -31,6 +34,9 @@ export type PlotDreaptaProps = Comun &
  * Direcția se calculează în pixeli, nu în coordonate matematice: așa o pantă
  * uriașă rămâne o direcție obișnuită, iar dreptele verticale (secantă prin două
  * puncte cu același `x`) nu cer niciun caz special.
+ *
+ * Între doi pași dreapta **se rotește**, nu sare: drumul de la o pantă la alta
+ * e chiar ce face metoda.
  */
 export function PlotDreapta(props: PlotDreaptaProps) {
   const { rol = "curent", grosime = 2.5, punctata = false, opacitate = 1 } = props;
@@ -72,11 +78,17 @@ export function PlotDreapta(props: PlotDreaptaProps) {
 
   return (
     <g aria-hidden="true">
-      <line
-        x1={inceput.x}
-        y1={inceput.y}
-        x2={sfarsit.x}
-        y2={sfarsit.y}
+      {/* Capetele se animează ca atribute, nu prin transformare: dreapta își
+          schimbă între pași și înclinarea, și lungimea. Întinsă printr-o
+          transformare, liniuțele punctate s-ar lăți odată cu ea, iar panta —
+          adică singurul lucru pe care dreapta îl spune — ar părea alta.
+
+          Aici e chiar mișcarea centrală a paginii: tangenta se rotește vizibil
+          din punctul dinainte în cel de acum, deci se duce pe treapta lentă. */}
+      <motion.line
+        initial={false}
+        animate={{ x1: inceput.x, y1: inceput.y, x2: sfarsit.x, y2: sfarsit.y }}
+        transition={tranzitie("lent")}
         stroke={culoareRol(rol)}
         strokeWidth={grosime}
         strokeOpacity={opacitate}

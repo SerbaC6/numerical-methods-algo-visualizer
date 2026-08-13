@@ -149,3 +149,36 @@ for grup, (vecini, candidati) in GRUPE.items():
                 f"   min {cel_mai_prost:5.1f}{semn}"
             )
         print()
+
+# ── Perechi care apar lipite în același desen ────────────────────────────────
+#
+# Nu sunt candidați pentru un rol nou, ci relații între roluri **existente**,
+# care au ajuns să se atingă pe ecran. Se măsoară ca să nu se presupună.
+#
+# Triunghiul pantei (rol `curent`) se desenează peste dreapta de construcție
+# (rol `anterior`), amândouă punctate. Măsurătoarea de mai jos arată că nuanța
+# **nu** e un semnal suficient acolo: paleta e monocromă pe albastru, iar cele
+# două roluri stau la ΔE 17, sub pragul de 20 — și asta chiar la vedere
+# normală, nu doar la daltonism. Separarea reală vine din formă (triunghi cu
+# unghi drept și etichetă vs. dreaptă care traversează tot cadrul) și din
+# faptul că triunghiul poartă valoarea scrisă lângă el.
+#
+# Dacă vreodată se decide o culoare proprie pentru pantă, ea intră aici ca
+# grupă, nu ca pereche.
+PERECHI_LIPITE = {
+    "triunghiul pantei (curent) / dreapta de construcție (anterior)": ("#0474C4", "#5379AE"),
+}
+
+print("### Perechi care se ating în același desen\n")
+for eticheta, (a, b) in PERECHI_LIPITE.items():
+    normal = delta_e(a, b)
+    prot = delta_e(simuleaza(a, "protanopie"), simuleaza(b, "protanopie"))
+    deut = delta_e(simuleaza(a, "deuteranopie"), simuleaza(b, "deuteranopie"))
+    cel_mai_prost = min(normal, prot, deut)
+    print(f"{eticheta}")
+    print(
+        f"   normal {normal:5.1f}   protan {prot:5.1f}   deutan {deut:5.1f}"
+        f"   min {cel_mai_prost:5.1f}"
+        f"{'   <-- separate prin formă, nu prin culoare' if cel_mai_prost < 20 else ''}"
+    )
+    print()

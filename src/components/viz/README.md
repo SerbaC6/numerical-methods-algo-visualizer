@@ -20,13 +20,15 @@ iterație, plus controalele care le însoțesc.
 [`docs/referinte.md`](../../../docs/referinte.md)). Fiecare strat își ia scara din context, deci o
 pagină poate scrie un strat propriu fără să modifice `Plot`:
 
-| Strat          | Ce desenează                                         | Unde se folosește       |
-| -------------- | ---------------------------------------------------- | ----------------------- |
-| `PlotCurba`    | curba funcției, ruptă la discontinuități             | peste tot               |
-| `PlotPunct`    | punctul de iterație, cu etichetă și proiecție pe axă | peste tot               |
-| `PlotInterval` | banda `[a, b]`, cu tranziție când se strânge         | bisecție, cuadraturi    |
-| `PlotArie`     | aria dintre un contur și o linie de bază             | trapeze, Simpson        |
-| `PlotDreapta`  | tangenta sau secanta, tăiată la marginile cadrului   | Newton, secantă, coarde |
+| Strat          | Ce desenează                                         | Unde se folosește         |
+| -------------- | ---------------------------------------------------- | ------------------------- |
+| `PlotCurba`    | curba funcției, ruptă la discontinuități             | peste tot                 |
+| `PlotPunct`    | punctul de iterație, cu etichetă și proiecție pe axă | peste tot                 |
+| `PlotInterval` | banda `[a, b]`, cu tranziție când se strânge         | bisecție, cuadraturi      |
+| `PlotArie`     | aria dintre un contur și o linie de bază             | trapeze, Simpson          |
+| `PlotDreapta`  | tangenta sau secanta, tăiată la marginile cadrului   | Newton, secantă, coarde   |
+| `PlotTaietura` | valoarea pasului marcată pe axă, cu mustață și inel  | Newton, secantă, bisecție |
+| `PlotPanta`    | triunghiul care arată de unde vine panta dreptei     | Newton, secantă           |
 
 ```tsx
 <Plot domeniuX={[2, 3]} domeniuY={domeniuY} rezumat="Bisecție pe f(x) = x³ − 2x − 5">
@@ -50,7 +52,8 @@ componentă:
 | **poziție, formă, geometrie** (`x`, `width`…) | **`motion`** | CSS nu poate anima geometria SVG pe toate browserele — pe Safari banda intervalului sărea, adică exact animația metodei |
 | **culoare, opacitate, hover, focus**          | **CSS**      | culorile se animează identic peste tot, iar `transition-colors` e mai ieftin decât un element `motion`                  |
 
-De aceea `PlotPunct` și `PlotInterval` sunt scrise cu `motion` (se mută), iar `MatrixGrid` și
+De aceea `PlotPunct`, `PlotInterval`, `PlotDreapta` și `PlotTaietura` sunt scrise cu `motion`
+(se mută), iar `MatrixGrid` și
 `IterationTable` rămân pe `transition-colors` (își schimbă doar culoarea celulei sau a rândului).
 Dacă `MatrixGrid` ajunge vreodată să **mute** linii — la pivotarea cu interschimbare — partea aia
 trece pe `motion`, restul rămâne unde e.

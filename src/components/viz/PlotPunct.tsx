@@ -70,7 +70,7 @@ export function PlotPunct({
   const spreStanga = px + 14 + latimeEticheta > plot.zona.dreapta;
   const spreJos = py - 14 < plot.zona.sus;
 
-  const miscare = tranzitie();
+  const miscare = tranzitie("lent");
 
   return (
     <g aria-hidden="true">

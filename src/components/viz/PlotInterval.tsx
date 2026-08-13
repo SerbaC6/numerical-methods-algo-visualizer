@@ -74,7 +74,7 @@ export function PlotInterval({
   const zeroVizibil = plot.y.domeniu[0] <= 0 && 0 <= plot.y.domeniu[1];
   const yBaza = zeroVizibil ? plot.y.la(0) : plot.zona.jos;
 
-  const miscare = tranzitie();
+  const miscare = tranzitie("lent");
 
   // Pe bandă îngustă numele capetelor n-au loc înăuntru și s-ar suprapune, deci
   // ies în afara parantezei — fiecare pe partea lui.
