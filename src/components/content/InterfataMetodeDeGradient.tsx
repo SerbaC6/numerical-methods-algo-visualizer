@@ -3,9 +3,15 @@ import { useMemo, useState } from "react";
 import * as conjugat from "@/algorithms/metode-de-gradient/conjugat";
 import * as descendent from "@/algorithms/metode-de-gradient/descendent";
 import { descrieScena } from "@/algorithms/metode-de-gradient/descriere";
+import {
+  SISTEME,
+  SISTEM_IMPLICIT,
+  type ValoriSistem,
+} from "@/algorithms/metode-de-gradient/sisteme";
 import type { RezultatGradient } from "@/algorithms/metode-de-gradient/tipuri";
 import { Callout } from "@/components/content/Callout";
 import { ValeaGradientului } from "@/components/content/ValeaGradientului";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
@@ -25,28 +31,25 @@ const METODE = [
 
 type IdMetoda = (typeof METODE)[number]["id"];
 
-/**
- * Sistemul implicit e cel deja verificat numeric în teoria paginii
- * (`src/content/metode-de-gradient.tsx`): `A = [[4, 1], [1, 3]]`, `b = (1, 2)`,
- * cu soluția exactă `x* = (1/11, 7/11)`. Nu se schimbă fără să se schimbe și
- * cifrele de acolo.
- */
-const IMPLICIT = {
-  a11: 4,
-  a12: 1,
-  a22: 3,
-  b1: 1,
-  b2: 2,
-  x01: 0,
-  x02: 0,
-  tol: 1e-8,
-  maxIteratii: 40,
-} as const;
+const IMPLICIT = SISTEM_IMPLICIT;
 
 const MAX_ITERATII_PERMISE = 200;
 
-type Camp = keyof typeof IMPLICIT;
+type Camp = keyof ValoriSistem;
 type Valori = Record<Camp, number | "">;
+
+/** Câmpurile pe care le încarcă un buton de sistem — toate, deodată. */
+const CAMPURI: readonly Camp[] = [
+  "a11",
+  "a12",
+  "a22",
+  "b1",
+  "b2",
+  "x01",
+  "x02",
+  "tol",
+  "maxIteratii",
+];
 
 /**
  * Interfața interactivă a paginii 7: coborârea în vale, în 3D.
@@ -68,6 +71,10 @@ export function InterfataMetodeDeGradient() {
     setValori((stare) => ({ ...stare, [camp]: v }));
 
   const reseteaza = () => setValori({ ...IMPLICIT });
+
+  const incarcaSistem = (v: ValoriSistem) => setValori({ ...v });
+  /** Sistemul ales e cel ale cărui cifre stau, toate, în câmpuri chiar acum. */
+  const esteAles = (v: ValoriSistem) => CAMPURI.every((camp) => valori[camp] === v[camp]);
 
   const a11 = numar(valori.a11, IMPLICIT.a11);
   const a12 = numar(valori.a12, IMPLICIT.a12);
@@ -144,6 +151,30 @@ export function InterfataMetodeDeGradient() {
             incorporat
             className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
           >
+            {/* Sistemele gata alese, în capul panoului: ele schimbă **forma
+                văii**, adică singurul lucru de care depinde numărul de pași al
+                coborârii. Cifrele fiecăruia sunt măsurate, nu alese din ochi —
+                vezi `src/algorithms/metode-de-gradient/sisteme.ts`. */}
+            <div className="flex flex-wrap gap-2">
+              {SISTEME.map((sistem) => {
+                const ales = esteAles(sistem.valori);
+                return (
+                  <Button
+                    key={sistem.id}
+                    // Ca la vitezele din `PlaybackBar`: sistemul ales se vede
+                    // umplut, nu doar anunțat prin `aria-pressed`.
+                    variant={ales ? "default" : "outline"}
+                    size="sm"
+                    className="tinta-atingere"
+                    aria-pressed={ales}
+                    onClick={() => incarcaSistem(sistem.valori)}
+                  >
+                    {sistem.eticheta}
+                  </Button>
+                );
+              })}
+            </div>
+
             {/* Matricea are **trei** câmpuri, nu patru: simetria e ipoteza
                 metodei (curs 5, §8.1), nu o opțiune, deci `a₂₁` nu se poate
                 scrie separat. */}
