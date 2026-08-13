@@ -26,7 +26,9 @@ export function Header() {
           </span>
         </NavLink>
 
-        <CautareMetode className="max-w-xs flex-1" />
+        {/* Numele metodelor sunt lungi („eliminare gaussiană cu pivotare"), iar
+            câmpul rămâne oricum `flex-1`: pe ecrane mici se strânge singur. */}
+        <CautareMetode className="max-w-sm flex-1 sm:max-w-md" />
 
         <div className="flex shrink-0 items-center gap-1">
           <ThemeToggle />

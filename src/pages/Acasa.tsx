@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 
-import { getAlgoritmiPeSectiuni } from "@/algorithms/registry";
+import { ALGORITMI, getAlgoritmiPeSectiuni } from "@/algorithms/registry";
 import { AlgorithmCard } from "@/components/content/AlgorithmCard";
 import { Container } from "@/components/layout/Container";
 
@@ -11,14 +11,53 @@ const TextFlippingBoard = lazy(() =>
 
 const SECTIUNI_CUPRINS = getAlgoritmiPeSectiuni();
 
-/** Ce scrie panoul din hero. Maximum 16 semne pe rând, 4 rânduri. */
-const MESAJE = [
-  "TOATE METODELE\nDIN CURS\nPAS CU PAS",
-  "BISECȚIA\nNU DĂ GREȘ\nNICIODATĂ",
-  "NEWTON CONVERGE\nPĂTRATIC",
-  "TRAPEZE, SIMPSON\nȘI ROMBERG",
-  "EULER PORNEȘTE\nRUNGE-KUTTA\nAJUNGE",
-];
+/** Panoul din hero: 4 rânduri a câte 16 semne. */
+const RANDURI_PANOU = 4;
+const COLOANE_PANOU = 16;
+
+/**
+ * Rupe titlul în rânduri care încap pe panou, fără să taie cuvinte.
+ *
+ * Titlul rămâne exact cel din registru — se schimbă doar unde cade rândul, nu
+ * cuvintele. Dacă un titlu viitor nu încape, se vede aici, nu pe ecran.
+ */
+function randuriPanou(titlu: string): string[] {
+  const randuri: string[] = [];
+  let curent = "";
+
+  for (const cuvant of titlu.toUpperCase().split(" ")) {
+    const incercare = curent ? `${curent} ${cuvant}` : cuvant;
+    if (incercare.length <= COLOANE_PANOU) {
+      curent = incercare;
+    } else {
+      if (curent) randuri.push(curent);
+      curent = cuvant;
+    }
+  }
+  if (curent) randuri.push(curent);
+
+  return randuri;
+}
+
+/**
+ * Ce scrie panoul: titlul fiecărei pagini din registru, pe rând, în ordinea din
+ * cuprins. Lista nu se scrie de mână — dacă apare o pagină nouă, apare și în
+ * panou, cu titlul ei adevărat.
+ */
+const MESAJE = ALGORITMI.map((pagina) => randuriPanou(pagina.titlu).join("\n"));
+
+// Un titlu care nu încape ar fi tăiat tăcut de panou. În dezvoltare se aude.
+if (import.meta.env.DEV) {
+  for (const pagina of ALGORITMI) {
+    const randuri = randuriPanou(pagina.titlu);
+    const prea_lat = randuri.find((r) => r.length > COLOANE_PANOU);
+    if (randuri.length > RANDURI_PANOU || prea_lat) {
+      console.warn(
+        `Titlul „${pagina.titlu}" nu încape pe panou (${RANDURI_PANOU}×${COLOANE_PANOU}).`,
+      );
+    }
+  }
+}
 
 const PAUZA_MESAJ = 5000;
 
@@ -80,10 +119,10 @@ function Hero() {
       <Container className="grid w-full items-center gap-8 py-10 sm:py-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
         <div>
           <h1 className="text-afis font-extrabold">
-            Vezi cum lucrează <span className="text-accent-slab">algoritmii</span>, pas cu pas.
+            Metode numerice explicate <span className="text-accent-slab">vizual</span>, pas cu pas.
           </h1>
           <p className="text-text-slab mt-4 max-w-2xl sm:mt-6 sm:text-xl">
-            Fiecare metodă din curs, explicată prin animație și printr-o interfață cu care te poți
+            Fiecare metodă din curs, arătată prin animație și printr-o interfață cu care te poți
             juca — cu formula alături, ca să vezi de unde vine fiecare număr.
           </p>
         </div>
@@ -109,8 +148,8 @@ function PanouMesaje() {
     >
       <TextFlippingBoard
         text={MESAJE[index] ?? ""}
-        gridRows={4}
-        gridCols={16}
+        gridRows={RANDURI_PANOU}
+        gridCols={COLOANE_PANOU}
         duration={0.6}
         className="max-w-none"
       />

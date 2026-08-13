@@ -10,8 +10,11 @@ import { cn } from "@/lib/utils";
  * la `prefers-reduced-motion` literele apar direct, fără rotire.
  */
 
-/** Alfabetul rolei. Ce nu e aici devine spațiu — de aceea Ă, Â, Î, Ș, Ț. */
-const FLAP_CHARS = " AĂÂBCDEFGHIÎJKLMNOPQRSȘTȚUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°";
+/**
+ * Alfabetul rolei. Ce nu e aici devine spațiu — de aceea Ă, Â, Î, Ș, Ț, plus É,
+ * care nu e literă românească, dar apare în „curbe Bézier".
+ */
+const FLAP_CHARS = " AĂÂBCDEÉFGHIÎJKLMNOPQRSȘTȚUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°";
 
 const BASE_COL_DELAY = 30;
 const BASE_ROW_DELAY = 20;
