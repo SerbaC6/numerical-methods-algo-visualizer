@@ -13,6 +13,16 @@ export type ValoareContextScena3D = {
   /** Id-ul măștii care taie desenul la marginea zonei. */
   idTaiere: string;
   /**
+   * Id-ul măștii care taie desenul la **rama podelei**, nu la marginea zonei.
+   *
+   * Pentru straturile care trăiesc pe podea (curbele de nivel): o elipsă de
+   * nivel e nemărginită față de cutie, deci fără masca asta ar curge peste toată
+   * scena, dincolo de rama pe care `Podea3D` tocmai a desenat-o. Patrulaterul
+   * măștii e exact cel proiectat — proiecția e liniară, deci colțurile podelei
+   * rămân colțuri.
+   */
+  idTaierePodea: string;
+  /**
    * Scena e trasă chiar acum. Straturile care se animează trec pe salt cât timp
    * e adevărat — vezi comentariul din `Traiectorie3D`.
    */

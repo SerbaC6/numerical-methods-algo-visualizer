@@ -1,7 +1,14 @@
 import { useMemo } from "react";
 
 import { useScena3D } from "@/components/viz/scena-3d-context";
-import { normalaCelulei, ordineCelule, umbrire, type Ecran, type Punct3 } from "@/lib/proiectie-3d";
+import {
+  normalaCelulei,
+  opacitateSuprafata,
+  ordineCelule,
+  umbrire,
+  type Ecran,
+  type Punct3,
+} from "@/lib/proiectie-3d";
 import { culoareRol, type RolViz } from "@/lib/viz-roles";
 
 export type Suprafata3DProps = {
@@ -13,6 +20,15 @@ export type Suprafata3DProps = {
 /** Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el. */
 const OPACITATE_BAZA = 0.45;
 const OPACITATE_LUMINA = 0.55;
+
+/**
+ * Sub atâta opacitate mesh-ul nu se mai randează deloc.
+ *
+ * Nu e o optimizare oarecare: la privirea de sus dispar ~1 000 de `<path>`
+ * exact în momentul în care utilizatorul începe să se uite la harta de nivel de
+ * dedesubt. Pragul e mic dinadins — peste el fețele chiar se văd.
+ */
+const OPACITATE_MINIMA = 0.02;
 
 /**
  * Valea, ca height-field: un mesh de patrulatere peste cutia scenei.
@@ -27,6 +43,11 @@ const OPACITATE_LUMINA = 0.55;
  * (`ordineCelule`), fiindcă SVG-ul nu are z-buffer. Criteriul de sortare **nu**
  * e adâncimea centrului, ci proiecția lui orizontală — motivul, cu măsurătoarea
  * care îl susține, e scris în `src/lib/proiectie-3d.ts`.
+ *
+ * **Se stinge când privirea urcă.** Peste `ELEVATIE_ESTOMPARE` opacitatea
+ * întregului mesh scade, iar la 90° suprafața dispare cu totul: acolo scena e
+ * chiar harta de curbe de nivel, pe care un mesh opac ar acoperi-o. Opacitatea
+ * vine din `opacitateSuprafata()`, ca și pragul — aici nu se decide nimic.
  *
  * **Fără `motion` aici, deliberat.** Mesh-ul nu trece dintr-o stare în alta: el
  * urmărește degetul. Un element animat ar interpola între poziția de acum și
@@ -55,6 +76,13 @@ export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
   }, [n, x0, x1, y0, y1, inaltime]);
 
   const ordine = useMemo(() => ordineCelule(n, camera.azimut), [n, camera.azimut]);
+
+  // Cât urcă privirea, valea se dă la o parte de pe harta ei de nivel — motivul
+  // stă la `opacitateSuprafata`. Aproape de zero nu se mai desenează nimic:
+  // fețele n-ar mai fi vizibile, dar ar rămâne ~1 000 de `<path>` de mutat la
+  // fiecare cadru de rotire.
+  const opacitateScena = opacitateSuprafata(camera.elevatie);
+  if (opacitateScena < OPACITATE_MINIMA) return null;
 
   const ecran: Ecran[] = puncte.map((p) => proiectie.laEcran(p));
   const culoare = culoareRol(rol);
@@ -91,7 +119,7 @@ export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
   }
 
   return (
-    <g aria-hidden="true" clipPath={`url(#${idTaiere})`}>
+    <g aria-hidden="true" clipPath={`url(#${idTaiere})`} opacity={opacitateScena}>
       {fete.map((fata, index) => (
         // ⚠️ Cheia e **indexul din listă**, nu o cheie stabilă derivată din
         // (i, j) — și asta e intenționat, împotriva regulii obișnuite.

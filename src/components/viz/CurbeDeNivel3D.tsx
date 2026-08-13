@@ -21,6 +21,11 @@ export type CurbeDeNivel3DProps = {
  * Stau pe podea, nu pe suprafață: acolo sunt chiar harta văii privită de sus,
  * adică imaginea din care se citește unghiul dintre doi pași consecutivi. Puse
  * pe suprafață ar fi doar niște dungi.
+ *
+ * Se taie la **rama podelei** (`idTaierePodea`), nu la marginea zonei de desen:
+ * o elipsă de nivel nu știe nimic despre cutie și, tăiată doar la marginea
+ * SVG-ului, ar curge peste toată scena, mult în afara podelei pe care ar trebui
+ * să stea.
  */
 export function CurbeDeNivel3D({
   curbe,
@@ -28,7 +33,7 @@ export function CurbeDeNivel3D({
   opacitate = 0.7,
   grosime = 1.25,
 }: CurbeDeNivel3DProps) {
-  const { proiectie, cutie, idTaiere } = useScena3D();
+  const { proiectie, cutie, idTaierePodea } = useScena3D();
   const z = cutie.z[0];
 
   const cai = curbe
@@ -44,7 +49,7 @@ export function CurbeDeNivel3D({
     .filter((d): d is string => d !== null);
 
   return (
-    <g aria-hidden="true" clipPath={`url(#${idTaiere})`}>
+    <g aria-hidden="true" clipPath={`url(#${idTaierePodea})`}>
       {cai.map((d, index) => (
         // Cheie de index: curbele n-au identitate proprie și se recalculează
         // împreună, ca listă, la fiecare schimbare de parametri.

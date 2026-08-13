@@ -60,6 +60,20 @@ export const ELEVATIE_MINIMA = 15 * GRAD;
  */
 export const ELEVATIE_MAXIMA = 90 * GRAD;
 
+/**
+ * De la ce elevație începe suprafața să se dea la o parte.
+ *
+ * La 90° scena **devine** figura de curbe de nivel din curs — singurul unghi din
+ * care unghiul drept dintre doi pași se citește drept (vezi `ELEVATIE_MAXIMA`).
+ * Un mesh opac peste podea anulează exact ce a urcat omul să vadă: harta de
+ * nivel rămâne acoperită, iar butonul „Privește de sus" nu arată nimic nou.
+ *
+ * Nu e un al doilea mod de afișare, e capătul aceleiași manete: suprafața se
+ * stinge treptat, cât urci ultimele 25 de grade, ca legătura dintre vale și
+ * harta ei să rămână văzută, nu presupusă.
+ */
+export const ELEVATIE_ESTOMPARE = 65 * GRAD;
+
 /** Unghiul de pornire: destul de oblic cât să se vadă valea, destul de ridicat cât să se vadă cotul. */
 export const CAMERA_IMPLICITA: Camera = { azimut: 35 * GRAD, elevatie: 32 * GRAD };
 
@@ -319,4 +333,21 @@ export function umbrire(normala: Punct3, cam: Camera): number {
   // aibă z pozitiv, dar la o celulă degenerată semnul poate scăpa, iar o față
   // neagră izolată se vede imediat ca defect.
   return Math.min(1, Math.abs(scalar(normalizeazaVector(normala), lumina)));
+}
+
+/**
+ * Cât de opacă e suprafața la o elevație dată: 1 sub `ELEVATIE_ESTOMPARE`, 0 fix
+ * la 90°, cu trecere netedă între ele.
+ *
+ * Trecerea e un smoothstep, nu o rampă liniară: cu rampă, stingerea pornește
+ * brusc la prag și se oprește brusc la capăt, iar la tragere se vede ca două
+ * smucituri. Smoothstep are derivata nulă la ambele capete, deci suprafața
+ * pleacă și ajunge lin, cât timp degetul urcă uniform.
+ */
+export function opacitateSuprafata(elevatie: number): number {
+  if (!Number.isFinite(elevatie) || elevatie <= ELEVATIE_ESTOMPARE) return 1;
+  if (elevatie >= ELEVATIE_MAXIMA) return 0;
+
+  const t = (elevatie - ELEVATIE_ESTOMPARE) / (ELEVATIE_MAXIMA - ELEVATIE_ESTOMPARE);
+  return 1 - t * t * (3 - 2 * t);
 }

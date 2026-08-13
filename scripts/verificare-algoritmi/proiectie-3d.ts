@@ -15,11 +15,13 @@
  */
 import {
   CAMERA_IMPLICITA,
+  ELEVATIE_ESTOMPARE,
   ELEVATIE_MAXIMA,
   ELEVATIE_MINIMA,
   bazaCamerei,
   creeazaProiectie,
   normalizeazaCamera,
+  opacitateSuprafata,
   ordineCelule,
   roteste,
 } from "../../src/lib/proiectie-3d.ts";
@@ -397,6 +399,41 @@ console.log("\n=== 9. Rotirea respectă limitele ===");
     "elevația nu coboară sub prag",
     jos.elevatie >= ELEVATIE_MINIMA - 1e-12,
     `${((jos.elevatie / Math.PI) * 180).toFixed(2)}°`,
+  );
+}
+
+console.log("\n=== 10. Suprafața se dă la o parte exact la privirea de sus ===");
+{
+  // Afirmația pe care o susține: la 90° harta de nivel se vede **întreagă**,
+  // fiindcă mesh-ul nu mai e acolo deloc. Dacă valoarea de la capăt ar fi doar
+  // „mică", elipsele s-ar citi prin ceață, iar unghiul drept — cu ezitare.
+  verifica("1 la elevația minimă", opacitateSuprafata(ELEVATIE_MINIMA) === 1);
+  verifica("1 la unghiul implicit", opacitateSuprafata(CAMERA_IMPLICITA.elevatie) === 1);
+  verifica("1 fix la prag", opacitateSuprafata(ELEVATIE_ESTOMPARE) === 1);
+  verifica("0 fix la 90°", opacitateSuprafata(ELEVATIE_MAXIMA) === 0);
+
+  // Monotonie și continuitate pe toată maneta: suprafața nu are voie să
+  // reapară pe drum, nici să sară dintr-un cadru în altul sub deget.
+  const pasi = 20000;
+  let monotona = true;
+  let saltMaxim = 0;
+  let anterior = opacitateSuprafata(0);
+  for (let i = 1; i <= pasi; i++) {
+    const e = (ELEVATIE_MAXIMA * i) / pasi;
+    const acum = opacitateSuprafata(e);
+    if (acum > anterior + 1e-15) monotona = false;
+    saltMaxim = Math.max(saltMaxim, Math.abs(acum - anterior));
+    anterior = acum;
+  }
+  verifica("nu crește niciodată", monotona);
+  verifica("fără salt", saltMaxim < 1e-3, `salt maxim ${saltMaxim.toExponential(2)}`);
+
+  // Chiar scade: o funcție constantă ar trece testele de mai sus.
+  const mijloc = (ELEVATIE_ESTOMPARE + ELEVATIE_MAXIMA) / 2;
+  verifica(
+    "la jumătatea trecerii e pe la jumătate",
+    Math.abs(opacitateSuprafata(mijloc) - 0.5) < 1e-12,
+    opacitateSuprafata(mijloc).toFixed(6),
   );
 }
 

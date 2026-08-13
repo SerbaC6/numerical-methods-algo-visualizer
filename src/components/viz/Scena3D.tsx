@@ -69,6 +69,7 @@ export function Scena3D({
   const camera = useCamera3D();
   const idBaza = useId();
   const idTaiere = `${idBaza}-taiere`;
+  const idTaierePodea = `${idBaza}-taiere-podea`;
   const idTitlu = `${idBaza}-titlu`;
   const idDescriere = `${idBaza}-descriere`;
 
@@ -99,6 +100,7 @@ export function Scena3D({
       cutie,
       zona,
       idTaiere,
+      idTaierePodea,
       inMiscare: camera.inMiscare,
       rezolutieMesh,
     };
@@ -110,8 +112,30 @@ export function Scena3D({
     cutie,
     exagerareZ,
     idTaiere,
+    idTaierePodea,
     rezolutieMesh,
   ]);
+
+  /**
+   * Colțurile podelei, proiectate: `z = cutie.z[0]`, cele patru colțuri ale
+   * bazei. Patrulaterul e **exact**, nu o aproximare — proiecția e liniară, deci
+   * imaginea unui segment e un segment (vezi `proiectie-3d.ts`).
+   */
+  const conturPodea = useMemo(() => {
+    if (!context) return "";
+    const z = cutie.z[0];
+    return (
+      [
+        { x: cutie.x[0], y: cutie.y[0], z },
+        { x: cutie.x[1], y: cutie.y[0], z },
+        { x: cutie.x[1], y: cutie.y[1], z },
+        { x: cutie.x[0], y: cutie.y[1], z },
+      ] as const
+    )
+      .map((p) => context.proiectie.laEcran(p))
+      .map((p) => `${p.x},${p.y}`)
+      .join(" ");
+  }, [context, cutie]);
 
   // ── Arbitrajul gestului ────────────────────────────────────────────────────
   // La `pointerdown` nu se revendică nimic: pe telefon, o apăsare e cel mai
@@ -287,6 +311,9 @@ export function Scena3D({
                   width={Math.max(0, context.zona.dreapta - context.zona.stanga)}
                   height={Math.max(0, context.zona.jos - context.zona.sus)}
                 />
+              </clipPath>
+              <clipPath id={idTaierePodea}>
+                <polygon points={conturPodea} />
               </clipPath>
             </defs>
 
