@@ -24,6 +24,10 @@ PERECHI = [
     ("întunecat: succes / fundal", "#4ADE80", "#262B40", 4.5),
     ("întunecat: atenție / fundal", "#FBBF24", "#262B40", 4.5),
     ("întunecat: eroare / fundal", "#F87171", "#262B40", 4.5),
+    ("întunecat: pivot ca inel / suprafață", "#FF7A5C", "#2C444C", 3.0),
+    ("întunecat: pivot ca cifră / fundal", "#FF7A5C", "#262B40", 4.5),
+    ("întunecat: noapte pe umplere pivot", "#262B40", "#FF7A5C", 4.5),
+    ("întunecat: ALB pe umplere pivot (interzis)", "#FFFFFF", "#FF7A5C", 4.5),
     ("întunecat: inel focus (cer) / fundal", "#A8C4EC", "#262B40", 3.0),
     ("luminos: text principal / fundal", "#262B40", "#F7F9FD", 4.5),
     ("luminos: text principal / suprafață", "#262B40", "#FFFFFF", 4.5),
@@ -37,6 +41,10 @@ PERECHI = [
     ("luminos: succes / fundal", "#15803D", "#F7F9FD", 4.5),
     ("luminos: atenție / fundal", "#A16207", "#F7F9FD", 4.5),
     ("luminos: eroare / fundal", "#B91C1C", "#F7F9FD", 4.5),
+    ("luminos: pivot ca inel / suprafață", "#C43314", "#FFFFFF", 3.0),
+    ("luminos: pivot ca cifră / fundal", "#C43314", "#F7F9FD", 4.5),
+    ("luminos: alb pe umplere pivot", "#FFFFFF", "#C43314", 4.5),
+    ("luminos: NOAPTE pe umplere pivot (interzis)", "#262B40", "#C43314", 4.5),
 ]
 
 for desc, fg, bg, prag in PERECHI:

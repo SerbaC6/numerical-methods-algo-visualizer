@@ -31,6 +31,21 @@ export const ROLURI_VIZ = {
     varCss: "--viz-anterior",
     forma: "punct",
   },
+  /**
+   * Singurul rol cald din paletă. Pivotul e elementul cel mai important dintr-o
+   * eliminare, deci trebuie să sară în ochi peste toate albastrurile — de-aia
+   * are culoare proprie, nu o a treia nuanță de albastru.
+   *
+   * **Pe grilă, roșul înseamnă exclusiv „pivot".** Erorile reale (pivot nul,
+   * împărțire la zero, divergență) nu colorează celule, ci se scriu în
+   * `Callout`: pivotul și `--eroare` au luminanțe aproape egale și s-ar
+   * confunda pentru cine are daltonism roșu-verde.
+   */
+  pivot: {
+    eticheta: "pivotul",
+    varCss: "--viz-pivot",
+    forma: "celula",
+  },
   interval: {
     eticheta: "intervalul de căutare",
     varCss: "--viz-interval",

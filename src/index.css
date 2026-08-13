@@ -75,6 +75,14 @@
   --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
   --viz-interval: color-mix(in oklab, var(--color-cer) 60%, transparent);
   --viz-solutie: #15803d;
+  /* Pivotul — singura culoare caldă din desen, ca să sară în ochi printr-o
+     paletă rece. Pe grilă roșul înseamnă exclusiv „pivot": erorile reale nu
+     colorează celule, se scriu în Callout (vezi CLAUDE.md, §paletă). */
+  --viz-pivot: #c43314;
+  /* Cifra de pe celula umplută cu vermillion. Se inversează între teme: alb pe
+     roșul închis (5,48:1), noapte pe cel deschis (5,45:1). Invers pică sub prag
+     în ambele cazuri — vezi testele din scripts/verifica-contrast.py. */
+  --viz-pivot-text: #ffffff;
 
   /* Stări — derivate în afara paletei, care e monocromă pe albastru */
   --succes: #15803d;
@@ -126,6 +134,8 @@
   --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
   --viz-interval: color-mix(in oklab, var(--color-adanc) 55%, transparent);
   --viz-solutie: #4ade80;
+  --viz-pivot: #ff7a5c;
+  --viz-pivot-text: var(--color-noapte);
 
   --succes: #4ade80;
   --atentie: #fbbf24;
@@ -166,6 +176,8 @@
   --color-viz-grila: var(--viz-grila);
   --color-viz-interval: var(--viz-interval);
   --color-viz-solutie: var(--viz-solutie);
+  --color-viz-pivot: var(--viz-pivot);
+  --color-viz-pivot-text: var(--viz-pivot-text);
 
   /* Aceleași valori, sub numele așteptate de shadcn/ui */
   --color-background: var(--background);

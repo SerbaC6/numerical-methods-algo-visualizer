@@ -94,15 +94,16 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 
 > **NICIODATĂ nu folosi altă culoare în afara acestei liste.** Nu inventa culori, nu „completa"
 > paleta, nu împrumuta culori din exemple de pe net, din shadcn, din Magic UI sau din Tailwind
-> (`slate-800`, `blue-500` etc. sunt interzise). Singura excepție deja existentă sunt stările
-> succes/atenție/eroare, definite explicit în `src/index.css`.
+> (`slate-800`, `blue-500` etc. sunt interzise). Excepțiile deja aprobate, toate definite explicit
+> în `src/index.css`, sunt stările succes/atenție/eroare și cele două culori de vizualizare care
+> nu pot fi albastre: `--viz-solutie` (verde) și `--viz-pivot` (vermillion, vezi mai jos).
 >
 > Dacă o componentă sau o vizualizare pare că are nevoie de o culoare nouă: **oprește-te și
 > întreabă-mă**. Nu adăuga culoarea și nu explica după aceea — decizia de culoare e a mea, nu a ta.
 > Doar dacă îți spun eu explicit „folosește culoarea X" intră ceva nou în paletă, și atunci intră
 > ca token în `src/index.css` și se oglindește în `manim/theme.py`, nu scris direct în componentă.
 
-Șase culori, atât. Dacă ai nevoie de o nuanță intermediară, **derivă** din cele de mai jos cu
+Șase culori de interfață, atât. Dacă ai nevoie de o nuanță intermediară, **derivă** din cele de mai jos cu
 `color-mix(in oklab, …)`, cum se face deja în `src/index.css` — asta nu e culoare nouă.
 
 | Hex       | Token              | Rol                                                               |
@@ -113,6 +114,27 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 | `#A8C4EC` | `--color-cer`      | text pe fundal închis, grilă și etichete de axe                   |
 | `#06457F` | `--color-adanc`    | accent apăsat — hover/active, interval evidențiat                 |
 | `#262B40` | `--color-noapte`   | fundalul temei întunecate (tema implicită)                        |
+
+#### Vermillionul pivotului — `--viz-pivot` (aprobat explicit)
+
+`#C43314` pe tema luminoasă, `#FF7A5C` pe cea întunecată. **Nu e a șaptea culoare de interfață**:
+nu se folosește niciodată pentru butoane, text, suprafețe sau borduri de UI. E un **rol de
+vizualizare**, exact ca `--viz-solutie`, care e verde din același motiv — paleta e monocromă pe
+albastru și nu poate purta singură anumite sensuri.
+
+Există fiindcă pivotul e elementul cel mai important dintr-o eliminare și trebuie să sară în ochi
+peste toate albastrurile. O a treia nuanță de albastru l-ar fi îngropat într-un degrade.
+
+> **Pe grilă, roșul înseamnă exclusiv „pivot".** Erorile reale — pivot nul, împărțire la zero,
+> divergență — **nu colorează celule**; se scriu ca text în `Callout`. Motivul e măsurat, nu
+> estetic: `--viz-pivot` și `--eroare` au luminanțe aproape egale (raport ~1,0), deci s-ar
+> distinge doar prin nuanță și s-ar confunda pentru cine are daltonism roșu-verde.
+
+Cifra de pe o celulă umplută cu vermillion își schimbă culoarea între teme: **albă** pe `#C43314`
+(5,48:1), **`#262B40`** pe `#FF7A5C` (5,45:1). Inversul pică sub prag în ambele cazuri, iar
+`scripts/verifica-contrast.py` are ambele greșeli ca teste care trebuie să pice.
+
+Când se scrie `manim/theme.py` (Faza 5), tokenul se oglindește și acolo.
 
 **Tipografie:** **Nunito Sans** pentru titluri și text, **JetBrains Mono** pentru formule, valori
 de parametri și tabele de iterații (cifre tabulare, distinge `0/O` și `1/l/I`). Ambele
@@ -133,8 +155,10 @@ Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-cure
   Există și temă deschisă (`.light`) — orice componentă nouă se verifică în ambele.
 - Culorile de vizualizare au rol semantic fix: `--viz-curent` = iterația curentă,
   `--viz-anterior` = iterații anterioare, `--viz-functie` = curba, `--viz-grila` = grilă/adnotări,
-  `--viz-interval` = zona evidențiată. Aceleași valori se oglindesc în `manim/theme.py`, ca
-  vizualurile pre-randate să nu se bată cap în cap cu interfața.
+  `--viz-interval` = zona evidențiată (și linia activă dintr-o matrice), `--viz-solutie` = soluția,
+  `--viz-pivot` = pivotul. Sursa unică e `src/lib/viz-roles.ts`, de unde își ia și `Legend`
+  culorile — deci legenda nu poate ajunge să contrazică desenul. Aceleași valori se oglindesc în
+  `manim/theme.py`, ca vizualurile pre-randate să nu se bată cap în cap cu interfața.
 - Paleta e monocromă pe albastru, deci nu poate purta singură sensul de „eroare": stările
   (succes/atenție/eroare) sunt derivate separat, în afara paletei.
 - `#0474C4` nu se folosește ca text pe fundal închis (~2,9:1) — pe închis, accentul de text e
@@ -168,7 +192,7 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 - [x] **`StepExplanation`** — propoziția care spune ce se întâmplă la pasul curent, lângă desen.
       Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 14 pagini.
-- [ ] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
+- [x] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
       calculată, pivot, zero). Fără sistem de coordonate, doar grilă + tranziții.
       Necesară pe paginile **1, 3, 4, 7, 8, 13**.
 - [ ] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
@@ -223,9 +247,10 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Decizii de luat înainte de Etapa 0
 
-- [ ] `MatrixGrid` cere stări de celulă care **nu există** azi în `viz-roles.ts` (pivot, deja
-      calculat, zero). Dacă se rezolvă prin `color-mix` din cele șase culori — se poate face direct.
-      Dacă pare că cere o culoare nouă — **se oprește lucrul și se întreabă** (vezi regula paletei).
+- [x] ~~`MatrixGrid` cere stări de celulă care nu există în `viz-roles.ts`~~ → **rezolvat**: s-a
+      adăugat un singur rol nou, `pivot`, cu vermillionul aprobat explicit (vezi secțiunea de
+      paletă). Restul stărilor refolosesc roluri existente — linia activă e `--viz-interval`, iar
+      zerourile produse se estompează, fără culoare proprie.
 - [ ] Decizia despre `motion`: e deja în bundle prin `TextFlippingBoard` din hero. Ori se asumă și
       se folosește și pentru animațiile de pe paginile de metodă, ori se taie din hero și rămânem
       pe CSS. De hotărât **înainte** de prima pagină, nu după.

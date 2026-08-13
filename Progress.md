@@ -243,8 +243,14 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       Regiunea `aria-live` e stabilă, iar anunțurile se sting în derulare automată — la 4× ar fi
       inutilizabile la cititorul de ecran. Bandă de accent în `--viz-curent`, aceeași culoare ca
       iterația curentă din desen. Demonstrație live în `/design-system`, legată de `PlaybackBar`
-- [ ] `MatrixGrid` — matricea desenată, cu stări per celulă (normală, evidențiată, deja calculată,
-      pivot, zero). Necesară pe paginile **1, 3, 4, 7, 8, 13** — jumătate din site
+- [x] `MatrixGrid` — matricea desenată, cu stări per celulă (`normala`, `curent`, `calculat`,
+      `pivot`, `zero`), plus linie/coloană activă și separator pentru matricea extinsă `[A|b]`
+      (notație din `curs4`, §4.3). Necesară pe paginile **1, 3, 4, 7, 8, 13**. Desenează **o
+      singură** matrice — compunerea `A = L·U` e treaba paginii. `valori` acceptă `null` pentru
+      celule care încă nu există (L la LU, jumătatea goală la Romberg): un zero calculat și o
+      celulă necompletată sunt lucruri diferite. Culoarea nu e singurul semnal — pivotul e singura
+      celulă plină. Accesibilitate: `<caption>` cu rezumat care spune unde e pivotul și pe ce linie
+      se lucrează, plus starea fiecărei celule rostită ca text ascuns („pivot, 2")
 - [ ] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
       **5, 6, 9, 10, 11, 12, 13, 14**
 - [ ] **Decizie de luat înainte de `Plot`:** SVG scris de mână vs. bibliotecă de charting
@@ -258,8 +264,11 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [x] ~~3–5 site-uri suplimentare de referință pentru estetică și animații~~ → gata (vezi mai sus)
 - [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
-- [ ] piesele rămase: `MatrixGrid`, `Plot` (`Legend` și `StepExplanation` — gata) — ordinea de
-      lucru și dificultatea fiecărei pagini: TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md)
+- [ ] piesa rămasă din Etapa 0: `Plot` (`Legend`, `StepExplanation` și `MatrixGrid` — gata) —
+      ordinea de lucru și dificultatea fiecărei pagini: TODO-ul de animații din
+      [`CLAUDE.md`](./CLAUDE.md)
+- [ ] `--viz-pivot` trebuie oglindit în `manim/theme.py` când se scrie fișierul (Faza 5), altfel
+      clipurile randate folosesc alt roșu decât interfața
 - [ ] test cu cititor de ecran și pe un telefon real (Faza 9)
 
 **Gata când:** paginile reale ale site-ului arată coerent în ambele teme, pe telefon și pe desktop —

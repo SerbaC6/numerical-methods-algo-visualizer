@@ -30,6 +30,7 @@ import { ExpressionInput } from "@/components/viz/ExpressionInput";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { IterationTable } from "@/components/viz/IterationTable";
 import { Legend } from "@/components/viz/Legend";
+import { MatrixGrid, type StareCelula } from "@/components/viz/MatrixGrid";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
 import { StepExplanation } from "@/components/viz/StepExplanation";
@@ -63,6 +64,108 @@ function bisectie(pasi: number) {
     else a = c;
   }
   return randuri;
+}
+
+type PasGauss = {
+  valori: number[][];
+  stari: StareCelula[][];
+  linieActiva?: number;
+  explicatie: React.ReactNode;
+};
+
+/**
+ * Eliminarea Gaussiană pe **exemplul din curs** (`curs4`, §4.3), pe matricea
+ * extinsă [A|b]. Notațiile sunt cele din algoritmul de la §4.4: pivotul e
+ * `a_pp`, iar multiplicatorii sunt `µ_ip = a_ip / a_pp`.
+ *
+ * Rezultatul trebuie să fie exact cele două săgeți din curs:
+ * `[1 3 1 9; 0 −2 −2 −8; 0 2 5 8]`, apoi `[1 3 1 9; 0 −2 −2 −8; 0 0 3 0]`.
+ */
+function eliminareGauss(): PasGauss[] {
+  const A: number[][] = [
+    [1, 3, 1, 9],
+    [1, 1, -1, 1],
+    [3, 11, 8, 35],
+  ];
+  const pasi: PasGauss[] = [];
+  const zerouri: [number, number][] = [];
+  const liniiGata = new Set<number>();
+
+  const pune = (s: StareCelula[][], i: number, j: number, stare: StareCelula) => {
+    const linie = s[i];
+    if (linie) linie[j] = stare;
+  };
+
+  const adauga = (
+    explicatie: React.ReactNode,
+    opt: { pivot?: [number, number]; curent?: [number, number][]; linieActiva?: number } = {},
+  ) => {
+    const stari: StareCelula[][] = A.map((linie) => linie.map(() => "normala" as StareCelula));
+    for (const i of liniiGata) {
+      A[i]?.forEach((_, j) => pune(stari, i, j, "calculat"));
+    }
+    for (const [i, j] of zerouri) pune(stari, i, j, "zero");
+    for (const [i, j] of opt.curent ?? []) pune(stari, i, j, "curent");
+    if (opt.pivot) pune(stari, opt.pivot[0], opt.pivot[1], "pivot");
+
+    pasi.push({
+      valori: A.map((linie) => [...linie]),
+      stari,
+      linieActiva: opt.linieActiva,
+      explicatie,
+    });
+  };
+
+  const mono = (t: string) => <span className="font-mono font-semibold">{t}</span>;
+
+  for (let p = 0; p < 2; p++) {
+    const pivot = A[p]?.[p] ?? 0;
+    adauga(
+      <>
+        Pasul {p + 1}: pivotul e {mono(`a${p + 1}${p + 1} = ${pivot}`)}. Cu el se anulează tot ce e
+        sub el, pe coloana {p + 1}.
+      </>,
+      { pivot: [p, p], linieActiva: p },
+    );
+
+    for (let i = p + 1; i < A.length; i++) {
+      const linieI = A[i];
+      const linieP = A[p];
+      if (!linieI || !linieP) continue;
+
+      // Valoarea dinainte de transformare — din ea se vede împărțirea din formulă.
+      const aip = linieI[p] ?? 0;
+      const mu = aip / pivot;
+      for (let j = 0; j < linieI.length; j++) {
+        linieI[j] = (linieI[j] ?? 0) - mu * (linieP[j] ?? 0);
+      }
+
+      zerouri.push([i, p]);
+      adauga(
+        <>
+          {mono(`µ${i + 1}${p + 1} = ${aip}/${pivot} = ${mu}`)} — linia {i + 1} devine{" "}
+          {mono(`E${i + 1} − (${mu})·E${p + 1}`)}, deci elementul de pe coloana {p + 1} se face
+          zero.
+        </>,
+        {
+          pivot: [p, p],
+          linieActiva: i,
+          curent: linieI.map((_, j) => [i, j] as [number, number]).slice(p + 1),
+        },
+      );
+    }
+    liniiGata.add(p);
+  }
+
+  adauga(
+    <>
+      Matricea e triunghiulară superior. De aici se rezolvă prin substituție înapoi, pornind de la
+      ultima ecuație.
+    </>,
+    { linieActiva: undefined },
+  );
+
+  return pasi;
 }
 
 function Sectiune({
@@ -101,6 +204,27 @@ export default function DesignSystem() {
   const [viteza, setViteza] = useState<Viteza>(1);
 
   const randuri = useMemo(() => bisectie(8), []);
+
+  // Demonstrația de matrice are derulare proprie: e alt algoritm, cu alt număr
+  // de pași, deci nu are ce împărți cu bisecția de mai sus.
+  const pasiGauss = useMemo(() => eliminareGauss(), []);
+  const [pasM, setPasM] = useState(0);
+  const [ruleazaM, setRuleazaM] = useState(false);
+  const [vitezaM, setVitezaM] = useState<Viteza>(1);
+
+  useEffect(() => {
+    if (!ruleazaM) return;
+    const id = setInterval(() => {
+      setPasM((p) => {
+        if (p >= pasiGauss.length - 1) {
+          setRuleazaM(false);
+          return p;
+        }
+        return p + 1;
+      });
+    }, 1400 / vitezaM);
+    return () => clearInterval(id);
+  }, [ruleazaM, vitezaM, pasiGauss.length]);
 
   // Derularea automată a demonstrației — se oprește la ultimul pas.
   useEffect(() => {
@@ -523,6 +647,78 @@ export default function DesignSystem() {
               </Select>
             </div>
           </ControlPanel>
+        </div>
+      </Sectiune>
+
+      <Sectiune
+        titlu="Matricea"
+        descriere="Eliminare Gaussiană pe exemplul din curs (curs4, §4.3), pe matricea extinsă [A|b]. Apasă play: pivotul e singura celulă plină, linia pe care se lucrează are fundal, iar zerourile produse rămân stinse."
+      >
+        <div className="space-y-4">
+          <Legend
+            titlu="Legenda matricei"
+            elemente={[
+              { rol: "pivot", explicatie: "elementul a_pp cu care se împarte" },
+              {
+                rol: "curent",
+                eticheta: "se calculează acum",
+                forma: "celula",
+                explicatie: "celulele schimbate la pasul curent",
+              },
+              {
+                rol: "interval",
+                eticheta: "linia activă",
+                explicatie: "linia care se transformă",
+              },
+              {
+                rol: "anterior",
+                eticheta: "deja calculat",
+                forma: "celula",
+                explicatie: "linii terminate la pașii dinainte",
+              },
+              {
+                culoare: "var(--text-slab)",
+                eticheta: "zero din eliminare",
+                forma: "celula",
+                explicatie: "zerourile produse, nu cele date",
+              },
+            ]}
+            pasi={[
+              "Apasă play sau mergi pas cu pas.",
+              "Urmărește pivotul: e singura celulă plină.",
+              "Citește sub matrice ce se întâmplă la pasul curent.",
+              "Compară rezultatul cu cele două săgeți din curs.",
+            ]}
+          />
+
+          <div className="bg-suprafata border-bordura shadow-jos rounded-xl border p-4">
+            <MatrixGrid
+              titlu="[A|b]"
+              valori={pasiGauss[pasM]?.valori ?? []}
+              stari={pasiGauss[pasM]?.stari}
+              linieActiva={pasiGauss[pasM]?.linieActiva}
+              separatorColoana={2}
+              etichetaLinii={["E₁", "E₂", "E₃"]}
+              etichetaColoane={["x₁", "x₂", "x₃", "b"]}
+            />
+          </div>
+
+          <StepExplanation
+            explicatie={pasiGauss[pasM]?.explicatie}
+            pas={pasM}
+            totalPasi={pasiGauss.length}
+            ruleaza={ruleazaM}
+          />
+
+          <PlaybackBar
+            pas={pasM}
+            totalPasi={pasiGauss.length}
+            ruleaza={ruleazaM}
+            viteza={vitezaM}
+            onPas={setPasM}
+            onRuleazaChange={setRuleazaM}
+            onVitezaChange={setVitezaM}
+          />
         </div>
       </Sectiune>
 
