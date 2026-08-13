@@ -149,6 +149,33 @@ export function InterfataEcuatiiNeliniare() {
         </TabsList>
       </Tabs>
 
+      {/* Legenda stă **înaintea** desenului, nu după el.
+
+          Ea e prima care trebuie citită: spune ce înseamnă fiecare lucru de pe
+          grafic, iar pusă dedesubt ajungea să fie citită abia după ce
+          utilizatorul se uitase deja la un desen pe care nu-l înțelegea. Aici
+          urmează firesc după alegerea metodei — întâi afli ce metodă e și ce
+          vei vedea, apoi te uiți. */}
+      <Legend
+        elemente={legendaMetodei(idMetoda, etichetaCurba)}
+        pasi={[
+          <>Alege metoda din capul interfeței și funcția din panoul de parametri.</>,
+          <>
+            Pune de unde pornește: capetele intervalului la bisecție, punctul de pornire la
+            celelalte.
+          </>,
+          <>Mergi pas cu pas cu săgețile, sau trage de bară ca să sari direct la o iterație.</>,
+          <>
+            Urmărește formula de sub desen: partea aprinsă din ea e chiar elementul care se mișcă pe
+            grafic.
+          </>,
+          <>
+            Când zona căutată devine prea mică pentru ecran, graficul se apropie singur. Poți da și
+            tu zoom: rotița cu Ctrl, două degete, sau butoanele din colțul desenului.
+          </>,
+        ]}
+      />
+
       {/* Graficul și parametrii stau într-o **singură** ramă, despărțiți doar de
           o linie. Sunt un instrument, nu două panouri alăturate: tragi de un
           parametru din dreapta și se schimbă desenul din stânga, iar două
@@ -338,26 +365,6 @@ export function InterfataEcuatiiNeliniare() {
         </>
       )}
 
-      <Legend
-        elemente={legendaMetodei(idMetoda, etichetaCurba)}
-        pasi={[
-          <>Alege metoda din capul interfeței și funcția din panoul de parametri.</>,
-          <>
-            Pune de unde pornește: capetele intervalului la bisecție, punctul de pornire la
-            celelalte.
-          </>,
-          <>Mergi pas cu pas cu săgețile, sau trage de bară ca să sari direct la o iterație.</>,
-          <>
-            Urmărește formula de sub desen: partea aprinsă din ea e chiar elementul care se mișcă pe
-            grafic.
-          </>,
-          <>
-            Când zona căutată devine prea mică pentru ecran, graficul se apropie singur. Poți da și
-            tu zoom: rotița cu Ctrl, două degete, sau butoanele din colțul desenului.
-          </>,
-        ]}
-      />
-
       {/* Erorile se scriu, nu se colorează pe desen — regula din CLAUDE.md. */}
       {rezultat.stare === "esuat" && (
         <Callout tip="atentie" titlu="Metoda s-a oprit">
@@ -538,23 +545,24 @@ function incheiere(idMetoda: IdMetoda, rezultat: RezultatRulare): string {
 }
 
 function legendaMetodei(idMetoda: IdMetoda, etichetaCurba: string) {
-  const comun = [
-    {
-      rol: "functie" as const,
-      eticheta: `Curba ${etichetaCurba}`,
-      explicatie: "rădăcina e acolo unde taie axa orizontală",
-    },
-    {
-      rol: "curent" as const,
-      eticheta: "Aproximarea de acum",
-      explicatie: "punctul calculat la pasul afișat",
-    },
-    {
-      rol: "anterior" as const,
-      eticheta: "Pașii dinainte",
-      explicatie: "tot mai șterși cu cât sunt mai vechi",
-    },
-  ];
+  const curba = {
+    rol: "functie" as const,
+    eticheta: `Curba ${etichetaCurba}`,
+    explicatie: "rădăcina e acolo unde taie axa orizontală",
+  };
+  const acum = {
+    rol: "curent" as const,
+    eticheta: "Aproximarea de acum",
+    explicatie: "punctul calculat la pasul afișat",
+  };
+  // Urmele apar doar la metodele care lasă un drum. La bisecție istoria o
+  // spune banda care se strânge, deci legenda n-are ce promite acolo.
+  const urme = {
+    rol: "anterior" as const,
+    eticheta: "Pașii dinainte",
+    explicatie: "tot mai șterși cu cât sunt mai vechi",
+  };
+  const comun = [curba, acum, urme];
 
   // Marcajul de pe axă e același desen la toate metodele — valoarea produsă
   // acum — dar **nu înseamnă același lucru**, deci nu se numește la fel. La
@@ -581,13 +589,20 @@ function legendaMetodei(idMetoda: IdMetoda, etichetaCurba: string) {
   switch (idMetoda) {
     case "bisectie":
       return [
-        ...comun,
+        curba,
+        acum,
         {
           rol: "interval" as const,
           eticheta: "Intervalul curent",
           explicatie: "zona în care rădăcina e sigur prinsă; se înjumătățește la fiecare pas",
         },
         peAxa("mijlocul intervalului, marcat pe axă", "Valoarea pasului"),
+        {
+          rol: "interval" as const,
+          eticheta: "f(a) și f(b)",
+          explicatie:
+            "valorile funcției la capete, pe curbă; semnele lor opuse sunt chiar condiția de pornire",
+        },
       ];
     case "newton":
       return [
