@@ -18,11 +18,22 @@ import { getContinut } from "@/content";
  * Fiecare are unealta ei, fixată: „Vizual" e clipul Manim pre-randat,
  * „Interactiv" e interfața scrisă cu `motion`. Vezi `CLAUDE.md`, §„Manim sau
  * `motion`".
+ *
+ * `id` e separat de `titlu` fiindcă ajunge în atributul `id` al titlului, iar
+ * „Teorie pe scurt" ar da un id cu spații. `aria-labelledby` citește spațiile ca
+ * separator între mai multe id-uri, deci ar căuta trei elemente inexistente
+ * („sectiune-Teorie", „pe", „scurt") și secțiunea ar rămâne fără nume la
+ * cititorul de ecran.
  */
 const SECTIUNI_PAGINA = [
-  { titlu: "Vizual", descriere: "Animația Manim care arată metoda în ansamblu." },
-  { titlu: "Teorie pe scurt", descriere: "Un paragraf și formula, luate din cursul sursă." },
+  { id: "vizual", titlu: "Vizual", descriere: "Animația Manim care arată metoda în ansamblu." },
   {
+    id: "teorie",
+    titlu: "Teorie pe scurt",
+    descriere: "Un paragraf și formula, luate din cursul sursă.",
+  },
+  {
+    id: "interactiv",
     titlu: "Interactiv",
     descriere: "Interfața cu care schimbi parametrii și vezi ce se întâmplă.",
   },
@@ -55,9 +66,7 @@ export default function PaginaAlgoritm() {
   // O pagină fără clip Manim nu are secțiunea „Vizual" deloc — nu un schelet
   // gol, care ar spune tăcut „aici lipsește ceva". `clipManim` e `undefined`
   // pentru paginile obișnuite, deci doar excepția scoate secțiunea.
-  const sectiuni = SECTIUNI_PAGINA.filter(
-    (s) => s.titlu !== "Vizual" || pagina.clipManim !== false,
-  );
+  const sectiuni = SECTIUNI_PAGINA.filter((s) => s.id !== "vizual" || pagina.clipManim !== false);
 
   return (
     <>
@@ -87,12 +96,12 @@ export default function PaginaAlgoritm() {
           {sectiuni.map((s) => {
             // Secțiunea are conținut? Îl arătăm. Dacă nu, rămâne scheletul —
             // fără nicio etichetă care să spună că lipsește ceva.
-            const scris = s.titlu === "Teorie pe scurt" ? continut?.teorie : undefined;
-            const interactiv = s.titlu === "Interactiv" && pagina.slug === "ecuatii-neliniare";
+            const scris = s.id === "teorie" ? continut?.teorie : undefined;
+            const interactiv = s.id === "interactiv" && pagina.slug === "ecuatii-neliniare";
 
             return (
-              <section key={s.titlu} aria-labelledby={`sectiune-${s.titlu}`}>
-                <h2 id={`sectiune-${s.titlu}`} className="text-sectiune font-bold">
+              <section key={s.id} aria-labelledby={`sectiune-${s.id}`}>
+                <h2 id={`sectiune-${s.id}`} className="text-sectiune font-bold">
                   {s.titlu}
                 </h2>
                 {scris ? (
