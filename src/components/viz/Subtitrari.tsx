@@ -1,0 +1,58 @@
+import { useClip } from "@/components/viz/clip-context";
+import { cn } from "@/lib/utils";
+
+export type Subtitrare = {
+  /** Secunda de la care se vede. */
+  la: number;
+  /** Secunda la care dispare; implicit, `la`-ul subtitrării următoare. */
+  pana?: number;
+  text: string;
+};
+
+export type SubtitrariProps = {
+  items: readonly Subtitrare[];
+  className?: string;
+};
+
+/**
+ * Propoziția de sub desen, cheiată pe ceasul clipului.
+ *
+ * E ruda de film a lui `StepExplanation`: aceeași treabă — spune ce se întâmplă
+ * acum — dar pe timp continuu, nu pe pași. **Cel mult una se vede odată**, ca
+ * ochiul să nu aleagă între două texte în timp ce se uită la desen.
+ *
+ * Elementul rămâne montat tot timpul, chiar și gol, ca să nu salte desenul de
+ * deasupra când apare sau dispare o propoziție.
+ */
+export function Subtitrari({ items, className }: SubtitrariProps) {
+  const { T } = useClip();
+
+  const ordonate = [...items].sort((a, b) => a.la - b.la);
+  const indice = ordonate.findIndex((item, i) => {
+    const pana = item.pana ?? ordonate[i + 1]?.la ?? Number.POSITIVE_INFINITY;
+    return T >= item.la && T < pana;
+  });
+  const curenta = indice === -1 ? undefined : ordonate[indice];
+
+  return (
+    <div
+      className={cn(
+        "pointer-events-none absolute inset-x-0 bottom-0 px-[6%] pt-16 pb-[3%]",
+        // Degradeul ridică textul de pe desen fără să taie o bandă peste el.
+        "from-fundal bg-linear-to-t from-40% to-transparent",
+        className,
+      )}
+    >
+      <p
+        aria-hidden="true"
+        className="text-text min-h-[2lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
+      >
+        {/* `key` pe span, nu pe `p`: așa propoziția reapare cu un fade la
+            fiecare schimbare, iar înălțimea rezervată rămâne aceeași. */}
+        <span key={indice} className="motion-safe:animate-in motion-safe:fade-in-0">
+          {curenta?.text ?? ""}
+        </span>
+      </p>
+    </div>
+  );
+}

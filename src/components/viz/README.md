@@ -15,6 +15,19 @@ iterație, plus controalele care le însoțesc.
 | `StepExplanation` | propoziția care descrie pasul curent, lângă desen                |
 | `MatrixGrid`      | matricea desenată, cu starea fiecărei celule la pasul curent     |
 | `Plot`            | sistemul de axe: grilă, repere, zoom și tragere                  |
+| `Clip`            | ceasul unui clip narativ: scene, repere, cadru, mișcare redusă   |
+| `PlaybackClip`    | comenzile clipului, pe **timp** (bara pe pași e `PlaybackBar`)   |
+| `Subtitrari`      | propoziția de sub desen, cheiată pe ceasul clipului              |
+
+**`Clip` nu e o variantă de `Plot`.** `Plot` desenează o stare — pasul `k` dintr-un `steps[]`, ales
+de utilizator. `Clip` desenează un **film**: un singur arbore de elemente, randat ca funcție pură de
+timpul autorat `T`, cu scenele declarate într-o listă și coregrafia scrisă față de reperele derivate
+din ea (`repere()` din [`src/lib/compozitie.ts`](../../lib/compozitie.ts)). Nimic nu se montează la
+granița dintre scene, deci un element poate traversa granița prin interpolare.
+
+Se folosește pentru secțiunea „Vizual" atunci când clipul e scris în cod, nu randat cu Manim — vezi
+excepția paginii 7 din `CLAUDE.md`. Un clip **nu** primește parametrii utilizatorului; când e nevoie
+de asta, e vorba de interfața interactivă, adică de `Plot`/`MatrixGrid`.
 
 `Plot` se compune din **straturi cu nume**, nu din proprietăți (regula 10 din
 [`docs/referinte.md`](../../../docs/referinte.md)). Fiecare strat își ia scara din context, deci o
