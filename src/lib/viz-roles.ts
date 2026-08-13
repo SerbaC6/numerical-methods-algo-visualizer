@@ -74,6 +74,21 @@ export const ROLURI_VIZ = {
     varCss: "--viz-interval",
     forma: "zona",
   },
+  /**
+   * Al treilea rol din afara albastrului. Verde (`#15803D`) pe temă deschisă,
+   * alb-albăstrui (`#F2F5FA`) pe cea întunecată — acolo e singurul rol care se
+   * separă prin **luminozitate**, nu prin nuanță: e punctul cel mai deschis din
+   * desen.
+   *
+   * Nu e preferință, e ce a rămas. Nuanțele erau ocupate (albastrul ține trei
+   * roluri, portocaliul intervalul, coralul pivotul), iar restul a picat la
+   * `scripts/verifica-daltonism.py`. Verdele de dinainte trecea față de desen,
+   * dar stătea la ΔE 16,8 față de coralul pivotului — amândouă devin gălbui la
+   * deuteranopie.
+   *
+   * Fiind aproape de culoarea textului, marcajul trebuie să rămână distinct ca
+   * **formă**, nu doar ca ton.
+   */
   solutie: {
     eticheta: "soluția",
     varCss: "--viz-solutie",

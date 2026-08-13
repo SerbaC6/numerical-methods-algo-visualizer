@@ -185,7 +185,15 @@
      verdele soluției. Portocaliul stă la minimum ΔE 30,6 față de vecinii din
      desen și 24,9 față de coralul pivotului. */
   --viz-interval: #f97b06;
-  --viz-solutie: #4ade80;
+  /* Soluția nu se mai separă prin nuanță, ci prin luminozitate: e punctul cel
+     mai deschis din desen. Spațiul de nuanțe e plin — albastrul ține trei
+     roluri, portocaliul intervalul, coralul pivotul — iar ce mai rămânea a
+     picat la simularea de daltonism: violetul ajunge la ΔE 14 față de safir,
+     cyanul la ΔE 4 față de curbă. Verdele de dinainte (#4ADE80) trecea față de
+     desen, dar stătea la ΔE 16,8 față de coralul pivotului: amândouă devin
+     gălbui la deuteranopie.
+     Albul stă la minimum ΔE 26,8 față de tot desenul și 49,0 față de pivot. */
+  --viz-solutie: #f2f5fa;
   --viz-pivot: #ff7a5c;
   --viz-pivot-text: var(--color-noapte);
 
@@ -198,10 +206,12 @@
   --viz-solutie-eticheta: var(--viz-solutie);
   --viz-pivot-eticheta: #ff8e74;
 
-  --succes: #4ade80;
+  /* Aceeași valoare ca `--viz-solutie` de mai sus, ca „a ajuns la soluție" din
+     desen și „a ieșit bine" din interfață să însemne vizual același lucru. */
+  --succes: #f2f5fa;
   --atentie: #fbbf24;
   --eroare: #f87171;
-  --succes-fundal: color-mix(in oklab, #4ade80 14%, transparent);
+  --succes-fundal: color-mix(in oklab, #f2f5fa 14%, transparent);
   --atentie-fundal: color-mix(in oklab, #fbbf24 14%, transparent);
   --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
 

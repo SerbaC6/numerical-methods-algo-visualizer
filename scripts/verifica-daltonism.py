@@ -93,37 +93,59 @@ def simuleaza(h, tip):
     return "#%02X%02X%02X" % tuple(inapoi(c) for c in lms)
 
 
-VECINI = {
+FIXE = {
     "curbă (cer)": "#A8C4EC",
     "iterația curentă (safir)": "#0474C4",
     "iterații anterioare": "#5379AE",
-    "soluția (verde)": "#4ADE80",
-    # Pivotul nu apare în același desen cu intervalul plin — în grafic nu există
-    # pivot, iar în matrice intervalul e doar fundal la 20%. E ținut aici fiindcă
-    # intervalul pe temă întunecată e acum tot cald, deci relația trebuie să
-    # rămână măsurată, nu presupusă. Pragul real pentru perechea asta e cel de
-    # contrast dintre bandă și celula-pivot, din scripts/verifica-contrast.py.
+    # Pivotul nu apare în același desen cu intervalul plin sau cu soluția — în
+    # grafic nu există pivot, iar în matrice intervalul e doar fundal la 20%. E
+    # ținut aici fiindcă intervalul pe temă întunecată e acum tot cald, deci
+    # relația trebuie să rămână măsurată, nu presupusă. Pragul real pentru
+    # perechea aceea e contrastul dintre bandă și celula-pivot, din
+    # scripts/verifica-contrast.py.
     "pivotul (coral)": "#FF7A5C",
 }
 
-CANDIDATI = {
-    "interval întunecat, în uz  #F97B06": "#F97B06",
-    "turcoaz, înlocuit  #4CA49C": "#4CA49C",
-    "violet, respins  #9B85D8": "#9B85D8",
-    "turcoaz rece, respins  #48A3B5": "#48A3B5",
+# Cele două roluri care nu pot fi albastre se verifică fiecare față de restul
+# desenului **și unul față de altul** — apar împreună pe același grafic.
+INTERVAL, SOLUTIE = "#F97B06", "#F2F5FA"
+
+GRUPE = {
+    "INTERVAL (tema întunecată)": (
+        {**FIXE, "soluția (alb)": SOLUTIE},
+        {
+            "în uz  #F97B06": INTERVAL,
+            "turcoaz, înlocuit  #4CA49C": "#4CA49C",
+            "violet, respins  #9B85D8": "#9B85D8",
+            "turcoaz rece, respins  #48A3B5": "#48A3B5",
+        },
+    ),
+    "SOLUȚIA (tema întunecată)": (
+        {**FIXE, "intervalul (portocaliu)": INTERVAL},
+        {
+            "în uz  #F2F5FA": SOLUTIE,
+            # Verdele de dinainte trecea față de desen, dar nu față de pivot:
+            # verdele și coralul devin amândouă gălbui la deuteranopie.
+            "verde, înlocuit  #4ADE80": "#4ADE80",
+            "cyan, respins  #13D3EC": "#13D3EC",
+            "violet, respins  #A871F4": "#A871F4",
+        },
+    ),
 }
 
 print("Distanță CIE76 (ΔE) față de vecinii din desen. Sub ~20 = greu de separat.\n")
-for nume, culoare in CANDIDATI.items():
-    print(nume)
-    for et, vecin in VECINI.items():
-        normal = delta_e(culoare, vecin)
-        prot = delta_e(simuleaza(culoare, "protanopie"), simuleaza(vecin, "protanopie"))
-        deut = delta_e(simuleaza(culoare, "deuteranopie"), simuleaza(vecin, "deuteranopie"))
-        cel_mai_prost = min(normal, prot, deut)
-        semn = "  <-- risc" if cel_mai_prost < 20 else ""
-        print(
-            f"   {et:26s} normal {normal:5.1f}   protan {prot:5.1f}   deutan {deut:5.1f}"
-            f"   min {cel_mai_prost:5.1f}{semn}"
-        )
-    print()
+for grup, (vecini, candidati) in GRUPE.items():
+    print(f"### {grup}\n")
+    for nume, culoare in candidati.items():
+        print(nume)
+        for et, vecin in vecini.items():
+            normal = delta_e(culoare, vecin)
+            prot = delta_e(simuleaza(culoare, "protanopie"), simuleaza(vecin, "protanopie"))
+            deut = delta_e(simuleaza(culoare, "deuteranopie"), simuleaza(vecin, "deuteranopie"))
+            cel_mai_prost = min(normal, prot, deut)
+            semn = "  <-- risc" if cel_mai_prost < 20 else ""
+            print(
+                f"   {et:26s} normal {normal:5.1f}   protan {prot:5.1f}   deutan {deut:5.1f}"
+                f"   min {cel_mai_prost:5.1f}{semn}"
+            )
+        print()

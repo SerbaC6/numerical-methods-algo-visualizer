@@ -138,7 +138,8 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 > paleta, nu împrumuta culori din exemple de pe net, din shadcn, din Magic UI sau din Tailwind
 > (`slate-800`, `blue-500` etc. sunt interzise). Excepțiile deja aprobate, toate definite explicit
 > în `src/index.css`, sunt stările succes/atenție/eroare și cele trei culori de vizualizare care
-> nu pot fi albastre: `--viz-solutie` (verde), `--viz-pivot` (vermillion) și `--viz-interval`
+> nu pot fi albastre: `--viz-solutie` (verde pe luminoasă, alb pe întunecată), `--viz-pivot`
+> (vermillion) și `--viz-interval`
 > (chihlimbar/portocaliu) — ultimele două, explicate mai jos.
 >
 > Dacă o componentă sau o vizualizare pare că are nevoie de o culoare nouă: **oprește-te și
@@ -162,7 +163,7 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 
 `#C43314` pe tema luminoasă, `#FF7A5C` pe cea întunecată. **Nu e a șaptea culoare de interfață**:
 nu se folosește niciodată pentru butoane, text, suprafețe sau borduri de UI. E un **rol de
-vizualizare**, exact ca `--viz-solutie`, care e verde din același motiv — paleta e monocromă pe
+vizualizare**, exact ca `--viz-solutie`, care iese din albastru din același motiv — paleta e monocromă pe
 albastru și nu poate purta singură anumite sensuri.
 
 Există fiindcă pivotul e elementul cel mai important dintr-o eliminare și trebuie să sară în ochi
@@ -227,6 +228,31 @@ diferă oricum (paranteză vs. linie). De aceea `scripts/verifica-contrast.py` n
 luminanță acolo: n-ar măsura nimic real. Ce măsoară ceva real e
 `scripts/verifica-daltonism.py` — rulează-l ori de câte ori adaugi sau schimbi o culoare de
 vizualizare.
+
+#### Soluția — `--viz-solutie` (aprobat explicit)
+
+`#15803D` (verde) pe tema luminoasă, `#F2F5FA` (alb-albăstrui) pe cea întunecată. Ca și celelalte
+două de mai sus, **doar rol de vizualizare**, niciodată buton, text sau bordură de interfață.
+
+Pe tema întunecată soluția e singurul rol care se separă prin **luminozitate**, nu prin nuanță: e
+punctul cel mai deschis din desen. Nu e o preferință, e ce a rămas. Nuanțele erau ocupate —
+albastrul ține trei roluri, portocaliul intervalul, coralul pivotul — iar tot ce mai încăpea a picat
+la `scripts/verifica-daltonism.py`: violetul ajunge la **ΔE 14,1** față de safir, cyanul la **4,5**
+față de curbă, magenta cade și față de safir, și față de curbă.
+
+> **Verdele de dinainte (`#4ADE80`) avea o problemă care nu fusese niciodată măsurată.** Trecea
+> confortabil față de tot desenul, dar stătea la **ΔE 16,8** față de coralul pivotului: verdele și
+> coralul devin amândouă gălbui la deuteranopie. Scăpase fiindcă `verifica-daltonism.py` verifica
+> doar candidații pentru interval, iar soluția era acolo doar ca vecin — nu era testată ea însăși.
+> De aceea scriptul are acum **două grupe**, una pentru fiecare rol care nu poate fi albastru, și
+> fiecare rol e verificat și față de celălalt. Regula: orice rol de vizualizare nou intră în
+> script ca **grupă**, nu doar ca vecin.
+
+Albul stă la minimum **ΔE 26,8** față de tot desenul (cel mai strâns e curba) și 49,0 față de pivot.
+
+Consecința pentru desen, de ținut minte: fiind aproape de culoarea textului, marcajul soluției
+trebuie să rămână distinct ca **formă**, nu doar ca ton. Aceeași valoare o poartă și `--succes`, ca
+„a ajuns la soluție" din grafic și „a ieșit bine" din interfață să însemne vizual același lucru.
 
 Când se scrie `manim/theme.py` (Faza 5), ambele valori se oglindesc și acolo.
 
