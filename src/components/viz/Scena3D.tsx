@@ -35,6 +35,15 @@ export type Scena3DProps = {
   exagerareZ?: number;
   /** Raport lățime/înălțime. ~1,5 în peisaj; pe portret se dă ~1,05. */
   raport?: number;
+  /**
+   * Cutia scenei se schimbă chiar acum (lupa se apropie).
+   *
+   * Se unește cu „e trasă cu degetul" în `inMiscare` din context, fiindcă
+   * straturile au nevoie de același lucru în amândouă cazurile: poziția pe ecran
+   * se schimbă din **altă** cauză decât un pas nou, deci n-are ce să interpoleze
+   * și mesh-ul poate coborî la rezoluția de mișcare.
+   */
+  seSchimba?: boolean;
   inaltimeMaxima?: number;
   children?: React.ReactNode;
   className?: string;
@@ -61,6 +70,7 @@ export function Scena3D({
   descriere,
   exagerareZ = 0.62,
   raport = 1.5,
+  seSchimba = false,
   inaltimeMaxima = INALTIME_MAXIMA,
   children,
   className,
@@ -81,7 +91,9 @@ export function Scena3D({
     Math.min(inaltimeMaxima, dinLatime, inaltimeContainer > 0 ? inaltimeContainer : dinLatime),
   );
 
-  const rezolutieMesh = camera.inMiscare
+  const inMiscare = camera.inMiscare || seSchimba;
+
+  const rezolutieMesh = inMiscare
     ? REZOLUTIE.inMiscare
     : latime > 0 && latime < PRAG_INGUST
       ? REZOLUTIE.ingust
@@ -101,14 +113,14 @@ export function Scena3D({
       zona,
       idTaiere,
       idTaierePodea,
-      inMiscare: camera.inMiscare,
+      inMiscare,
       rezolutieMesh,
     };
   }, [
     latime,
     inaltimeFinala,
     camera.camera,
-    camera.inMiscare,
+    inMiscare,
     cutie,
     exagerareZ,
     idTaiere,

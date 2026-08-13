@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { bazaPatrata, cadrulPasului } from "@/algorithms/metode-de-gradient/cadru";
 import type { PasGradient } from "@/algorithms/metode-de-gradient/tipuri";
 import { CurbeDeNivel3D } from "@/components/viz/CurbeDeNivel3D";
 import { Eticheta3D } from "@/components/viz/Eticheta3D";
@@ -18,6 +19,7 @@ import {
   type Vec2,
 } from "@/lib/curbe-de-nivel";
 import type { Cutie, Punct3 } from "@/lib/proiectie-3d";
+import { useDomeniuAnimat } from "@/hooks/use-domeniu-animat";
 
 export type ValeaGradientuluiProps = {
   A: Mat2;
@@ -39,9 +41,6 @@ export type ValeaGradientuluiProps = {
 /** Câte inele de nivel se desenează pe podea. */
 const INELE = 9;
 
-/** Cât spațiu se lasă în jurul drumului, ca fața văii să nu fie tăiată la buză. */
-const MARJA_CUTIE = 0.55;
-
 /**
  * Valea `f(x) = ½·xᵀAx − bᵀx` în 3D, cu drumul metodei pe ea și cu harta de
  * curbe de nivel pe podeaua de sub ea.
@@ -59,6 +58,14 @@ const MARJA_CUTIE = 0.55;
  * - **podeaua** arată *cum lucrează* — unghiul dintre doi pași consecutivi se
  *   citește doar în planul soluțiilor, iar din privirea de sus (butonul din
  *   colțul scenei) desenul devine chiar figura de curbe de nivel din curs.
+ *
+ * **Cadrul urmărește metoda**, ca lupa de pe pagina 6: cât timp pasul se vede,
+ * încadrarea stă pe loc — asta arată **că** pașii se scurtează — iar când pasul
+ * ajunge sub o șeptime din scenă, cadrul se apropie o treaptă. Cutia rămâne
+ * pătrată tot drumul (`urmarestePatrat` plus aceeași interpolare geometrică pe
+ * amândouă axele); una forfecată ar strica exact unghiul drept pe care desenul
+ * îl afirmă. Numerele de pe podea sunt cele care fac apropierea vizibilă: pe o
+ * pătratică, valea arată la fel oricât te-ai apropia.
  *
  * Curba de nivel **prin punctul curent** e desenată aparte, mai apăsat: ea e
  * explicația zigzagului. Reziduul de după pas e perpendicular pe curba pe care
@@ -89,39 +96,37 @@ export function ValeaGradientului({
     return lista;
   }, [pasi, solutie]);
 
+  /** Baza scenei: pătratul care cuprinde tot drumul și fundul văii. */
+  const baza = useMemo(() => bazaPatrata(puncteImportante), [puncteImportante]);
+
+  const pas = pasi[Math.max(0, Math.min(pasCurent, pasi.length - 1))];
+
+  /** Cadrul cerut de pasul curent — lupa din `cadrulPasului`. */
+  const tinta = useMemo(() => {
+    if (!pas) return baza;
+    const deInteres: Vec2[] = [pas.xAnterior, pas.x];
+    if (solutie) deInteres.push(solutie);
+    return cadrulPasului(baza, deInteres);
+  }, [baza, pas, solutie]);
+
+  // Aceeași durată și aceeași interpolare geometrică pe amândouă axele, deci
+  // cutia rămâne pătrată pe tot drumul, nu doar la capete.
+  const x = useDomeniuAnimat(tinta.x);
+  const y = useDomeniuAnimat(tinta.y);
+  const seSchimba =
+    x[0] !== tinta.x[0] || x[1] !== tinta.x[1] || y[0] !== tinta.y[0] || y[1] !== tinta.y[1];
+
   /**
-   * Cutia scenei.
-   *
-   * Baza se face **pătrată** dinadins: scara pe x₁ și x₂ e oricum izotropă
-   * (`normalizeaza` din `proiectie-3d.ts`), dar o cutie alungită ar sugera din
-   * priviri că axele au unități diferite. Cu latura egală, ce se vede drept pe
-   * ecran chiar e drept în planul soluțiilor.
+   * Cutia scenei, cu înălțimea recalculată din colțurile bazei animate: pe o
+   * pătratică, maximul pe un dreptunghi e mereu într-un colț, deci n-avem nevoie
+   * de eșantionare.
    */
   const cutie = useMemo<Cutie>(() => {
-    if (puncteImportante.length === 0) {
-      return { x: [-1, 1], y: [-1, 1], z: [0, 1] };
-    }
-
-    const xs = puncteImportante.map((p) => p[0]);
-    const ys = puncteImportante.map((p) => p[1]);
-    const centruX = (Math.min(...xs) + Math.max(...xs)) / 2;
-    const centruY = (Math.min(...ys) + Math.max(...ys)) / 2;
-
-    const intindere = Math.max(
-      Math.max(...xs) - Math.min(...xs),
-      Math.max(...ys) - Math.min(...ys),
-      1e-6,
-    );
-    const semi = (intindere / 2) * (1 + MARJA_CUTIE) + intindere * 0.15;
-
-    const x: readonly [number, number] = [centruX - semi, centruX + semi];
-    const y: readonly [number, number] = [centruY - semi, centruY + semi];
-
-    // Înălțimea cutiei se ia din colțurile bazei: pe o pătratică, maximul pe un
-    // dreptunghi e mereu într-un colț, deci n-avem nevoie de eșantionare.
     const fund = solutie
       ? valoare(A, b, solutie)
-      : Math.min(...puncteImportante.map((p) => valoare(A, b, p)));
+      : puncteImportante.length > 0
+        ? Math.min(...puncteImportante.map((p) => valoare(A, b, p)))
+        : 0;
     const colturi: Vec2[] = [
       [x[0], y[0]],
       [x[1], y[0]],
@@ -131,7 +136,7 @@ export function ValeaGradientului({
     const varf = Math.max(...colturi.map((c) => valoare(A, b, c)));
 
     return { x, y, z: [fund, varf > fund ? varf : fund + 1] };
-  }, [A, b, puncteImportante, solutie]);
+  }, [A, b, x, y, puncteImportante, solutie]);
 
   /** Harta de nivel de pe podea. Exactă, nu eșantionată — vezi `curbe-de-nivel.ts`. */
   const curbeFundal = useMemo(() => {
@@ -149,8 +154,6 @@ export function ValeaGradientului({
       .map((nivel) => elipsaNivel(A, b, nivel, 96))
       .filter((c) => c.length > 0);
   }, [A, b, cutie]);
-
-  const pas = pasi[Math.max(0, Math.min(pasCurent, pasi.length - 1))];
 
   /** Curba de nivel pe care stă chiar punctul curent. O evaluare, exactă. */
   const curbaCurenta = useMemo(() => {
@@ -189,6 +192,7 @@ export function ValeaGradientului({
       rezumat={`${numeMetoda} pe valea funcției f(x) = ½·xᵀAx − bᵀx`}
       descriere={descriere}
       raport={raport}
+      seSchimba={seSchimba}
       inaltimeMaxima={inaltimeMaxima}
       className={className}
     >

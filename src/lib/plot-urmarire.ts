@@ -145,3 +145,75 @@ export function urmareste(
 
   return { domeniu: [stanga, dreapta], nivel, apropiere };
 }
+
+/**
+ * Aceeași lupă, dar pe un plan: cutia rămâne **pătrată** la orice treaptă.
+ *
+ * **Nu se poate obține chemând `urmareste` de două ori.** Fiecare axă și-ar
+ * alege singură treapta, iar la primul pas în care una se strânge mai tare
+ * decât cealaltă, cutia s-ar forfeca — exact greșeala pe care o măsoară deja
+ * `scripts/verificare-algoritmi/proiectie-3d.ts`: cu scară neizotropă, un unghi
+ * real de 90° se citește între 58° și 130°, după azimut. Pe pagina 7 unghiul
+ * drept dintre doi pași e chiar afirmația desenului, deci o cutie forfecată ar
+ * face desenul să mintă.
+ *
+ * Regula proprie e una singură: **treapta se ia din latura mai mare a zonei de
+ * interes și se aplică identic pe amândouă axele.** Latura mai mare, fiindcă ea
+ * decide când zona nu mai încape; dacă s-ar lua cea mică, cadrul s-ar apropia
+ * cât timp zona e încă lată pe cealaltă direcție și ar tăia-o.
+ *
+ * Restul — pragul, factorul, numărul de trepte, ne-ieșirea din cutia de bază —
+ * e cel din `urmareste`, refolosit ca atare.
+ *
+ * Cutia de bază se presupune ea însăși pătrată (așa o construiește
+ * `ValeaGradientului`); latura de pornire e cea mai mare dintre cele două, ca
+ * baza să încapă întreagă și când nu e.
+ */
+export function urmarestePatrat(
+  bazaX: Domeniu,
+  bazaY: Domeniu,
+  zonaX: readonly [number, number],
+  zonaY: readonly [number, number],
+): { x: Domeniu; y: Domeniu; nivel: number; apropiere: number } {
+  const latimeBaza = Math.max(bazaX[1] - bazaX[0], bazaY[1] - bazaY[0]);
+  const laturaZona = Math.max(
+    Math.abs(zonaX[1] - zonaX[0]),
+    Math.abs(zonaY[1] - zonaY[0]),
+    // O zonă de interes strânsă la un punct (metoda a nimerit soluția exact)
+    // ar cere apropiere infinită; `nivelUrmarire` o oprește la `NIVEL_MAXIM`.
+    0,
+  );
+
+  const nivel = nivelUrmarire(latimeBaza, laturaZona);
+  const apropiere = FACTOR_APROPIERE ** nivel;
+
+  if (nivel === 0) return { x: bazaX, y: bazaY, nivel, apropiere };
+
+  const latura = latimeBaza / apropiere;
+  return {
+    x: incadreaza(bazaX, zonaX, latura),
+    y: incadreaza(bazaY, zonaY, latura),
+    nivel,
+    apropiere,
+  };
+}
+
+/** O axă a cutiei pătrate: latura dată, centrată pe zonă, fără să iasă din bază. */
+function incadreaza(baza: Domeniu, zona: readonly [number, number], latura: number): Domeniu {
+  const [zonaMin, zonaMax] = zona[0] <= zona[1] ? zona : [zona[1], zona[0]];
+  const centru = (zonaMin + zonaMax) / 2;
+
+  let jos = centru - latura / 2;
+  let sus = jos + latura;
+
+  if (jos < baza[0]) {
+    jos = baza[0];
+    sus = jos + latura;
+  }
+  if (sus > baza[1]) {
+    sus = baza[1];
+    jos = sus - latura;
+  }
+
+  return [jos, sus];
+}
