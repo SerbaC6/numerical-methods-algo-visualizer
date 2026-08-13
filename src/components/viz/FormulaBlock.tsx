@@ -50,7 +50,12 @@ export function FormulaBlock({
           katex.renderToString(latex, {
             displayMode: !inline,
             throwOnError: true,
-            strict: "warn",
+            // `\htmlId` e chiar mecanismul cu care legăm formula de animație,
+            // deci avertismentul „HTML extension is disabled on strict mode" e
+            // așteptat și doar umple consola — KaTeX aplică id-ul oricum. Îl
+            // tăcem punctual; orice altă abatere de la LaTeX rămâne semnalată,
+            // ca o formulă greșit transcrisă din curs să nu treacă neobservată.
+            strict: (cod: string) => (cod === "htmlExtension" ? "ignore" : "warn"),
             // permitem doar marcarea părților din formulă, nu HTML arbitrar
             trust: (ctx) => ctx.command === "\\htmlId" || ctx.command === "\\htmlClass",
           }),
