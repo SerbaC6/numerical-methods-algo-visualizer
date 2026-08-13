@@ -23,6 +23,13 @@ const MARGINE_STANGA_MINIMA = 36;
 const MARGINE_STANGA_MAXIMA = 0.4;
 
 const INALTIME_MINIMA = 180;
+/**
+ * Plafonul implicit al înălțimii calculate din lățime.
+ *
+ * E gândit pentru o figură care însoțește un text. Pe o pagină unde graficul
+ * **e** conținutul, nu ilustrația lui, se ridică prin `inaltimeMaxima` — vezi
+ * interfața de la ecuații neliniare, care îi dă tot ce încape pe ecran.
+ */
 const INALTIME_MAXIMA = 420;
 
 /**
@@ -155,6 +162,8 @@ export type PlotProps = {
   /** Raport lățime/înălțime, când nu se dă o înălțime fixă. */
   raport?: number;
   inaltime?: number;
+  /** Cât de înalt poate ajunge graficul calculat din lățime. */
+  inaltimeMaxima?: number;
   /**
    * Permite explorarea: tragere, zoom și butoanele din colț.
    *
@@ -191,6 +200,7 @@ export function Plot({
   descriere,
   raport = 1.6,
   inaltime,
+  inaltimeMaxima = INALTIME_MAXIMA,
   interactiv = false,
   children,
   className,
@@ -203,7 +213,7 @@ export function Plot({
   const idDescriere = `${idBaza}-descriere`;
 
   const inaltimeFinala =
-    inaltime ?? Math.round(Math.min(INALTIME_MAXIMA, Math.max(INALTIME_MINIMA, latime / raport)));
+    inaltime ?? Math.round(Math.min(inaltimeMaxima, Math.max(INALTIME_MINIMA, latime / raport)));
 
   const context = useMemo<ValoareContext | null>(() => {
     if (latime <= 0) return null;
@@ -366,7 +376,12 @@ export function Plot({
     // la `MatrixGrid`).
     <figure className={cn("relative m-0 min-w-0", className)}>
       {interactiv && (
-        <div className="absolute top-2 right-2 z-10 flex gap-1">
+        // Butoanele stau peste desen, iar colțul din dreapta-sus e chiar
+        // locul în care cade adesea primul punct al unei metode, cu eticheta
+        // lui. Se estompează cât timp nu le atinge nimeni, ca desenul să
+        // rămână citibil, și revin întregi la hover sau la focalizare de la
+        // tastatură — deci nu se pierd pentru cine navighează cu Tab.
+        <div className="duration-mediu ease-standard absolute top-2 right-2 z-10 flex gap-1 opacity-55 transition-opacity focus-within:opacity-100 hover:opacity-100">
           <Button
             variant="outline"
             size="icon"
