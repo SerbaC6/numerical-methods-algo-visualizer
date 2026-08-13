@@ -127,15 +127,36 @@ export function GraficRadacina({
     return sparge(puncte, { inaltimeVizibila: domeniuY[1] - domeniuY[0] });
   }, [curba, domeniuX, domeniuY]);
 
-  // Punctele prin care trece dreapta de construcție se desenează separat, cu
-  // numele lor. Ele sunt însă și ultimele iterații, deci ar apărea a doua oară
-  // în coada de urme — cu contur dublu, citit ca două iterații suprapuse.
-  // Secanta are **două** astfel de puncte, nu unul, de-aia se filtrează după
-  // valoare și nu se taie pur și simplu ultimul element.
-  const sprijine = [pas?.xAnterior, pas?.xPenultim].filter((v) => v !== undefined);
-  const anterioare = pasi
-    .slice(Math.max(0, pasCurent - URME), pasCurent)
-    .filter((p) => !sprijine.includes(p.x));
+  // Valorile care au deja un marcaj propriu pe desen nu mai primesc și un punct
+  // din coada de urme: cele două s-ar suprapune, iar cercul semitransparent al
+  // urmei ar spăla marcajul de dedesubt.
+  //
+  // Sunt de două feluri. Punctele de sprijin ale dreptei (`xAnterior`,
+  // `xPenultim`) sunt ultimele iterații, desenate separat fiindcă poartă nume —
+  // secanta are **două**, nu unul.
+  //
+  // La bisecție e mai subtil: mijlocul calculat la un pas **devine** un capăt
+  // al intervalului la pasul următor, iar capătul are deja bulina lui
+  // portocalie. Fără filtrul ăsta, `a` arăta spălăcit față de `b` — nu fiindcă
+  // i-ar fi lipsit ceva, ci fiindcă peste el cădea urma albastră a pasului
+  // dinainte. Se întâmplă mereu la unul dintre capete, niciodată la amândouă,
+  // de-aia dezechilibrul sărea în ochi.
+  const sprijine = [pas?.xAnterior, pas?.xPenultim, pas?.interval?.a, pas?.interval?.b].filter(
+    (v) => v !== undefined,
+  );
+  // Coada de urme are sens acolo unde **drumul** e informația: la tangentă,
+  // secantă și puncte fixe se vede cum se apropie șirul de rădăcină.
+  //
+  // La bisecție nu. Acolo istoria o spune banda, care se înjumătățește sub ochii
+  // tăi, iar mijloacele calculate mai devreme rămân **în afara** intervalului de
+  // acum — în jumătatea pe care metoda tocmai a aruncat-o. Un punct rătăcit
+  // acolo, fără nume, arată ca o rămășiță: sugerează că mai e ceva de urmărit
+  // taman în zona despre care metoda a demonstrat că nu conține rădăcina. Pe
+  // deasupra, urmele stau pe curbă, iar valoarea pasului curent e marcată pe
+  // axă — două limbaje pentru același fel de lucru.
+  const anterioare = pas?.interval
+    ? []
+    : pasi.slice(Math.max(0, pasCurent - URME), pasCurent).filter((p) => !sprijine.includes(p.x));
 
   return (
     <Plot
@@ -148,8 +169,9 @@ export function GraficRadacina({
       rezumat={`Căutarea rădăcinii pentru ${etichetaCurba}`}
       descriere={descrie(pas, pasi.length)}
     >
-      {/* Ordinea straturilor e ordinea de desenare: zona evidențiată dedesubt,
-          apoi dreapta de construcție, apoi curba, apoi punctele peste ea. */}
+      {/* Ordinea straturilor e ordinea de desenare: banda intervalului dedesubt,
+          apoi dreptele de construcție, apoi curba, apoi tot ce e informație —
+          capetele intervalului, punctele, tăietura. */}
       {pas?.interval && (
         <PlotInterval
           de={pas.interval.a}
@@ -159,6 +181,7 @@ export function GraficRadacina({
           // Precizia urmează lupa: cu trei zecimale fixe, după cincisprezece
           // înjumătățiri capetele s-ar scrie amândouă „2,095".
           eticheta={etichetaIntervalului(pas.interval.a, pas.interval.b)}
+          strat="fundal"
         />
       )}
 
@@ -166,6 +189,47 @@ export function GraficRadacina({
       {pas && <PantaConstructiei pas={pas} curba={curba} />}
 
       <PlotCurba segmente={segmente} halou />
+
+      {/* Capetele vin **după** curbă. Cu cât metoda se apropie de rădăcină, cu
+          atât capătul are `f` mai aproape de zero, deci curba trece chiar peste
+          bulina lui — și o tăia în două. Se vedea ca un dezechilibru între cele
+          două capete: unul curat, celălalt spălăcit, după cum cădea curba. */}
+      {pas?.interval && (
+        <PlotInterval
+          de={pas.interval.a}
+          la={pas.interval.b}
+          etichetaDe="a"
+          etichetaLa="b"
+          strat="capete"
+        />
+      )}
+
+      {/* Valorile funcției la capete, acolo unde parantezele taie curba.
+          Ele fac vizibilă **condiția de pornire** a bisecției, `f(a)·f(b) < 0`:
+          una cade sub axă, cealaltă deasupra, iar din desen se vede de ce
+          rădăcina e sigur prinsă între ele. Până acum condiția se putea doar
+          citi în text.
+
+          Sunt mai mari și cu inel mai gros decât bulinele de pe axă: stau chiar
+          pe curbă, iar la grosimea obișnuită linia le-ar înghiți. */}
+      {pas?.interval && (
+        <>
+          <PlotPunct
+            x={pas.interval.a}
+            y={curba(pas.interval.a)}
+            rol="interval"
+            raza={9}
+            grosimeInel={3.5}
+          />
+          <PlotPunct
+            x={pas.interval.b}
+            y={curba(pas.interval.b)}
+            rol="interval"
+            raza={9}
+            grosimeInel={3.5}
+          />
+        </>
+      )}
 
       {/* Punctele de sprijin ale dreptei: de-aici pleacă tangenta sau secanta.
           Fără ele se vede o dreaptă venită de nicăieri.

@@ -17,6 +17,11 @@ export type PlotPunctProps = {
    * urmărită: unde a ajuns `xₖ`.
    */
   proiectie?: boolean;
+  /**
+   * Grosimea inelului din culoarea fundalului. Se mărește pentru punctele care
+   * trebuie să iasă în evidență peste curba pe care stau.
+   */
+  grosimeInel?: number;
   opacitate?: number;
 };
 
@@ -42,6 +47,7 @@ export function PlotPunct({
   eticheta,
   raza = 8,
   proiectie = false,
+  grosimeInel = 2.5,
   opacitate = 1,
 }: PlotPunctProps) {
   const plot = usePlot();
@@ -108,7 +114,7 @@ export function PlotPunct({
             fill={culoare}
             fillOpacity={opacitate}
             stroke="var(--suprafata)"
-            strokeWidth={2.5}
+            strokeWidth={grosimeInel}
           />
         </motion.g>
       </g>

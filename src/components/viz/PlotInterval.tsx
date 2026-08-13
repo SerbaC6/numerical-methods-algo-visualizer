@@ -4,6 +4,18 @@ import { usePlot } from "@/components/viz/plot-context";
 import { tranzitie } from "@/lib/miscare";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 
+/**
+ * Ce parte a intervalului se desenează la apelul acesta.
+ *
+ * Există fiindcă în SVG ordinea de desenare e ordinea din document, iar cele
+ * două părți ale intervalului au nevoie de locuri diferite față de curbă:
+ * banda e fundal și trebuie să stea **sub** ea, dar capetele sunt informație și
+ * trebuie să stea **peste**. Desenate împreună, sub curbă, bulina capătului
+ * dispărea sub linie exact când capătul se apropia de rădăcină — adică fix la
+ * pașii care contează.
+ */
+export type StratInterval = "tot" | "fundal" | "capete";
+
 export type PlotIntervalProps = {
   de: number;
   la: number;
@@ -15,6 +27,8 @@ export type PlotIntervalProps = {
   /** Numele capătului din dreapta: „b", „bₖ". */
   etichetaLa?: string;
   opacitate?: number;
+  /** Implicit se desenează tot; vezi `StratInterval`. */
+  strat?: StratInterval;
 };
 
 /** Cât iese în lateral cârligul de sus și de jos al parantezei, în pixeli. */
@@ -57,6 +71,7 @@ export function PlotInterval({
   etichetaDe,
   etichetaLa,
   opacitate = 1,
+  strat = "tot",
 }: PlotIntervalProps) {
   const plot = usePlot();
   const culoare = culoareRol(rol);
@@ -162,52 +177,57 @@ export function PlotInterval({
   // o tragere a graficului, intervalul poate începe mult în afara ecranului.
   const inCadru = (px: number) => px >= plot.zona.stanga - 0.5 && px <= plot.zona.dreapta + 0.5;
 
+  const deseneazaFundal = strat !== "capete";
+  const deseneazaCapete = strat !== "fundal";
+
   return (
     <g aria-hidden="true">
       {/* Umbrirea benzii — doar cât să se vadă care zonă e „înăuntru". Ea se
           taie la marginile zonei, altfel s-ar întinde peste etichetele axelor. */}
-      <g clipPath={`url(#${plot.idTaiere})`}>
-        {/* Banda: se mută **și** se strânge, deci are nevoie de amândouă —
+      {deseneazaFundal && (
+        <g clipPath={`url(#${plot.idTaiere})`}>
+          {/* Banda: se mută **și** se strânge, deci are nevoie de amândouă —
             `x` ca transformare (deplasarea marginii din stânga) și `width` ca
             atribut animat (strângerea propriu-zisă). Atenție la capcana din
             `motion`: pe un element SVG, `x` din `animate` înseamnă
             `translateX`, nu atributul `x`. De aceea dreptunghiul stă la `x=0`
             și e împins de transformare — dacă s-ar scrie și atributul, cele
             două s-ar aduna și banda ar fi de două ori mai la dreapta. */}
-        <motion.rect
-          x={0}
-          y={plot.zona.sus}
-          height={Math.max(0, plot.zona.jos - plot.zona.sus)}
-          initial={false}
-          animate={{ x: stanga, width: latime }}
-          transition={miscare}
-          fill={culoare}
-          fillOpacity={0.14 * opacitate}
-        />
+          <motion.rect
+            x={0}
+            y={plot.zona.sus}
+            height={Math.max(0, plot.zona.jos - plot.zona.sus)}
+            initial={false}
+            animate={{ x: stanga, width: latime }}
+            transition={miscare}
+            fill={culoare}
+            fillOpacity={0.14 * opacitate}
+          />
 
-        {eticheta && incapeEticheta && (
-          <motion.g initial={false} animate={{ x: (stanga + dreapta) / 2 }} transition={miscare}>
-            <text
-              y={plot.zona.sus + 18}
-              textAnchor="middle"
-              className="font-mono text-[15px] tabular-nums"
-              fill="var(--text)"
-              stroke="var(--suprafata)"
-              strokeWidth={5}
-              paintOrder="stroke"
-            >
-              {eticheta}
-            </text>
-          </motion.g>
-        )}
-      </g>
+          {eticheta && incapeEticheta && (
+            <motion.g initial={false} animate={{ x: (stanga + dreapta) / 2 }} transition={miscare}>
+              <text
+                y={plot.zona.sus + 18}
+                textAnchor="middle"
+                className="font-mono text-[15px] tabular-nums"
+                fill="var(--text)"
+                stroke="var(--suprafata)"
+                strokeWidth={5}
+                paintOrder="stroke"
+              >
+                {eticheta}
+              </text>
+            </motion.g>
+          )}
+        </g>
+      )}
 
       {/* Capetele stau **în afara** tăierii, fiindcă ele sunt informația care
           contează. Un capăt care cade fix pe marginea zonei — cazul obișnuit la
           primul pas al bisecției, unde intervalul e tot domeniul — ar rămâne cu
           jumătate de linie tăiată și cu numele lui șters cu totul. */}
-      {inCadru(stanga) && capat(stanga, 1, etichetaDe)}
-      {inCadru(dreapta) && capat(dreapta, -1, etichetaLa)}
+      {deseneazaCapete && inCadru(stanga) && capat(stanga, 1, etichetaDe)}
+      {deseneazaCapete && inCadru(dreapta) && capat(dreapta, -1, etichetaLa)}
     </g>
   );
 }
