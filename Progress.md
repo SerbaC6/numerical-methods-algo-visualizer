@@ -269,7 +269,12 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 **Rămâne de făcut la o revenire:**
 
 - [x] ~~3–5 site-uri suplimentare de referință pentru estetică și animații~~ → gata (vezi mai sus)
-- [ ] integrarea celor trei componente Magic UI + decizia despre `motion`
+- [ ] integrarea celor trei componente Magic UI
+- [x] ~~decizia despre `motion`~~ → **se asumă** (vezi „Decizii de luat înainte de Etapa 0" din
+      [`CLAUDE.md`](./CLAUDE.md)). Puse deja: `MotionConfig reducedMotion="user"` în `main.tsx` și
+      `src/lib/miscare.ts` ca sursă unică pentru durate, cu gardă de desincronizare în dezvoltare
+- [ ] trecerea pieselor din `src/components/viz/` de pe tranziții CSS pe `motion` — se face la prima
+      pagină care le atinge, altfel rămân două sisteme de animație în paralel
 - [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
       Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
       pagina 5 (ecuații neliniare)

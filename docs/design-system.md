@@ -111,23 +111,41 @@ pașii vizualizării.
 decorative (Magic UI / Aceternity) stau pe pagina de cuprins și pe hero — maximum 2–3, și
 re-colorate pe paleta noastră înainte de folosire (vin cu gradienturi violet/roz).
 
-Tot ce se mișcă respectă `prefers-reduced-motion`: animațiile sunt scrise cu `motion-safe:`, iar
-`index.css` taie duratele global la utilizatorii care au cerut asta.
+Tot ce se mișcă respectă `prefers-reduced-motion`, dar prin **două** mecanisme, fiindcă avem două
+feluri de animație:
 
-**Bibliotecă de animație:** deocamdată **niciuna** instalată. CSS + Tailwind (`tw-animate-css`,
-deja în proiect) acoperă tot ce avem.
+- animațiile CSS — `index.css` taie duratele global la utilizatorii care au cerut asta;
+- animațiile scrise cu `motion` — `MotionConfig reducedMotion="user"`, în `src/main.tsx`.
 
-**Decizie deschisă.** Din Magic UI sunt alese trei componente (vezi `Plan.md`):
+Al doilea nu e opțional și nu se poate înlocui cu primul: regula din `index.css` n-are nicio putere
+peste animațiile în JavaScript.
 
-| Componentă               | Unde                      | Ce aduce                                  |
-| ------------------------ | ------------------------- | ----------------------------------------- |
-| `particles`              | fundalul hero-ului        | nimic — canvas pur                        |
-| `animated-beam`          | hero / carduri            | **`motion`** (framer-motion, ~34 KB gzip) |
-| `animated-theme-toggler` | înlocuiește `ThemeToggle` | `lucide-react`, deja în proiect           |
+**Bibliotecă de animație: `motion`** (fostul Framer Motion). Decizia s-a luat înainte de prima
+pagină de metodă, iar motivele sunt în [`CLAUDE.md`](../CLAUDE.md), la „Decizii de luat înainte de
+Etapa 0". Pe scurt: CSS nu poate anima geometria SVG (`x`, `width`) pe toate browserele — pe Safari
+banda intervalului sare în loc să alunece, adică exact animația centrală a bisecției — iar paginile
+grele cer secvențe, nu simple schimbări de valoare.
 
-Dacă `animated-beam` intră, atunci `motion` intră cu el și regula de mai sus se schimbă — și
-atunci merită folosit și pentru tranzițiile de pagină, nu doar pentru un efect de hero. Dacă nu,
-rămânem pe CSS. Decizia se scrie aici când se ia.
+Costul e ~124 KB, dar stă într-un chunk încărcat leneș; `MotionConfig` din rădăcină adaugă în
+bundle-ul principal doar 0,6 KB.
+
+**Duratele și curbele se iau din [`src/lib/miscare.ts`](../src/lib/miscare.ts)** — `tranzitie()`,
+`DURATE`, `CURBE` — niciodată numere scrise de mână. Fișierul ține aceleași valori ca tabelul de
+mai sus, în forma cerută de `motion` (secunde, vectori Bézier), iar `verificaMiscare()` compară
+cele două surse la pornire, în dezvoltare.
+
+Tokenii de mișcare stau într-un bloc **`@theme static`**: Tailwind v4 elimină din CSS-ul generat
+variabilele de temă nefolosite, iar `--duration-lent` și `--ease-intrare` chiar lipseau din build
+înainte de asta.
+
+**Din Magic UI** sunt alese trei componente (vezi `Plan.md`); `animated-beam` nu mai are nimic de
+decis, fiindcă `motion` e deja asumat:
+
+| Componentă               | Unde                      | Ce aduce                        |
+| ------------------------ | ------------------------- | ------------------------------- |
+| `particles`              | fundalul hero-ului        | nimic — canvas pur              |
+| `animated-beam`          | hero / carduri            | `motion`, deja în proiect       |
+| `animated-theme-toggler` | înlocuiește `ThemeToggle` | `lucide-react`, deja în proiect |
 
 `animated-theme-toggler` scrie direct pe `<html>` prin View Transitions API: la integrare trebuie
 legat de `src/hooks/use-theme.ts`, altfel avem două surse de adevăr pentru temă.

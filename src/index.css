@@ -5,6 +5,26 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------
+   Mișcare — trei trepte de durată și patru curbe, atât.
+   Vezi docs/design-system.md.
+
+   `static`, nu `@theme` obișnuit: Tailwind v4 elimină din CSS-ul generat
+   tokenii de temă pe care nu-i folosește nimeni, iar aici trebuie să existe
+   toți, tot timpul. `src/lib/miscare.ts` ține aceleași valori în forma cerută
+   de `motion` (secunde și vectori Bézier) și le compară cu astea la pornire,
+   în dezvoltare; un token lipsă din CSS ar fi arătat acolo ca desincronizare.
+   --------------------------------------------------------------- */
+@theme static {
+  --duration-rapid: 150ms; /* hover, focus, apăsare */
+  --duration-mediu: 250ms; /* apariții, schimbări de stare */
+  --duration-lent: 400ms; /* tranziții de layout, panouri */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-iesire: cubic-bezier(0, 0, 0.2, 1);
+  --ease-intrare: cubic-bezier(0.4, 0, 1, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.36, 0.64, 1);
+}
+
+/* ---------------------------------------------------------------
    Paleta „Sapphire nightfall whisper" — vezi README.md#design
    Culorile brute; rolurile semantice sunt mai jos.
    --------------------------------------------------------------- */
@@ -31,15 +51,6 @@
   --text-sectiune--line-height: 1.25;
   --text-subsectiune: 1.125rem;
   --text-subsectiune--line-height: 1.4;
-
-  /* Mișcare — trei trepte, atât. Vezi docs/design-system.md. */
-  --duration-rapid: 150ms; /* hover, focus, apăsare */
-  --duration-mediu: 250ms; /* apariții, schimbări de stare */
-  --duration-lent: 400ms; /* tranziții de layout, panouri */
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-iesire: cubic-bezier(0, 0, 0.2, 1);
-  --ease-intrare: cubic-bezier(0.4, 0, 1, 1);
-  --ease-elastic: cubic-bezier(0.34, 1.36, 0.64, 1);
 
   /* Valorile pentru tema luminoasă (cea implicită); `.dark` le suprascrie. */
   --shadow-jos: 0 1px 2px 0 rgb(38 43 64 / 0.08);

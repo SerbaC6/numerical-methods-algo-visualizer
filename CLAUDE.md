@@ -343,9 +343,28 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
       adăugat un singur rol nou, `pivot`, cu vermillionul aprobat explicit (vezi secțiunea de
       paletă). Restul stărilor refolosesc roluri existente — linia activă e `--viz-interval`, iar
       zerourile produse se estompează, fără culoare proprie.
-- [ ] Decizia despre `motion`: e deja în bundle prin `TextFlippingBoard` din hero. Ori se asumă și
-      se folosește și pentru animațiile de pe paginile de metodă, ori se taie din hero și rămânem
-      pe CSS. De hotărât **înainte** de prima pagină, nu după.
+- [x] ~~Decizia despre `motion`~~ → **se asumă**: `motion` e unealta de animație pentru paginile de
+      metodă, nu doar pentru hero. Două motive au înclinat balanța. Întâi, CSS nu poate anima
+      geometria SVG (`x`, `width`) decât în browserele care o expun ca proprietăți CSS — pe Safari,
+      banda intervalului **sare** în loc să alunece, adică exact animația centrală a bisecției. Al
+      doilea, paginile din Etapa 3 (câmp de direcții, curbe de nivel, cerc→elipsă, de Casteljau,
+      fluturele FFT) cer secvențe, nu simple schimbări de valoare.
+
+  Trei lucruri fixate odată cu decizia, toate obligatorii:
+  - **`MotionConfig reducedMotion="user"` stă în `src/main.tsx`** și e singurul loc din care
+    `motion` află de `prefers-reduced-motion`. Regula globală din `index.css` taie **doar** duratele
+    CSS; peste animațiile în JS n-are nicio putere. Nu-l muta și nu-l dubla.
+  - **Duratele și curbele se iau din `src/lib/miscare.ts`** (`tranzitie()`, `DURATE`, `CURBE`) —
+    niciodată numere scrise de mână. Fișierul oglindește tokenii CSS în forma cerută de `motion`
+    (secunde, vectori Bézier), iar `verificaMiscare()` compară cele două surse la pornire, în
+    dezvoltare, și strigă în consolă dacă se depărtează.
+  - Tokenii de mișcare stau într-un bloc **`@theme static`**, nu `@theme`. Tailwind v4 elimină din
+    CSS-ul generat variabilele de temă nefolosite: `--duration-lent` și `--ease-intrare` chiar
+    lipseau din build, fiindcă nu-i folosea încă nimeni.
+
+  Rămâne de făcut, la prima pagină care le atinge: trecerea pieselor din `src/components/viz/` de
+  pe tranziții CSS pe `motion`, sau — dacă se preferă un sistem mixt — regula scrisă care spune
+  unde se termină una și începe cealaltă.
 
 ## Convenții
 
