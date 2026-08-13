@@ -274,8 +274,9 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [x] ~~decizia despre `motion`~~ → **se asumă** (vezi „Decizii de luat înainte de Etapa 0" din
       [`CLAUDE.md`](./CLAUDE.md)). Puse deja: `MotionConfig reducedMotion="user"` în `main.tsx` și
       `src/lib/miscare.ts` ca sursă unică pentru durate, cu gardă de desincronizare în dezvoltare
-- [ ] trecerea pieselor din `src/components/viz/` de pe tranziții CSS pe `motion` — se face la prima
-      pagină care le atinge, altfel rămân două sisteme de animație în paralel
+- [x] ~~trecerea pieselor din `src/components/viz/` de pe tranziții CSS pe `motion`~~ → gata:
+      `PlotInterval` și `PlotPunct` mută geometria cu `motion`, culorile rămân pe CSS. Granița e
+      scrisă în [`src/components/viz/README.md`](./src/components/viz/README.md)
 - [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
       Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
       pagina 6 (ecuații neliniare)
@@ -494,7 +495,7 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [ ]     | n/a   | [x]  | [ ]        | [ ]   | [ ]  |
+| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a   | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 2D      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -508,6 +509,54 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 17  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 18  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 19  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+
+### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
+
+Prima pagină cu interfață interactivă completă. Ce există:
+
+- **Patru algoritmi** în `src/algorithms/ecuatii-neliniare/` — bisecție, puncte fixe, tangentă
+  (Newton), secantă — scriși după Algorithm 1–3 din curs6, fiecare cu explicația pasului **și**
+  formula pasului cu numerele puse în ea (`latexPas`, cu `\htmlId` pe partea care se aprinde).
+  Ambele stau în algoritm, nu în UI, ca să nu se poată desincroniza de cifre.
+- **Șapte funcții** din curs6 (`src/algorithms/functii.ts`), cu derivata analitică. Rădăcinile
+  sunt calculate cu `mpmath`, nu scrise din memorie — două scrise din memorie la prima încercare
+  erau greșite și le-a prins verificarea.
+- **Verificare numerică rulabilă**: `bash scripts/verificare-algoritmi/ruleaza.sh` rulează
+  modulele **reale** din `src/`, nu reimplementări. Acoperă convergența pe toate funcțiile,
+  ordinul pătratic al lui Newton, ambele condiții de eșec din curs, exemplul cu numărul de aur și
+  refuzul funcțiilor fără `g` dat de curs.
+- **Tangenta și secanta au exemplul lor.** Pe intervalul din curs termină în patru pași, cu primul
+  deja pe soluție — nu se vede nici construcția, nici de ce ar fi mai bune decât înjumătățirea.
+  Acum pornesc din `ln(x) − 2`, din 18: prima tangentă aruncă punctul tocmai în 1,97, apoi el urcă
+  înapoi prin 4,58 și 6,77 până se așază în e². Alegerea e măsurată, nu din ochi
+  (`scripts/verificare-algoritmi/alegere-pornire.ts`), și ține de **două** lucruri: destui pași
+  vizibili **și** `|f|` sub câteva zeci, ca să nu iasă curba din scara desenabilă. Exponențiala
+  pornită de la fel de departe dă mai mulți pași, dar urcă la 2000 și devine o cârjă lipită de axă.
+- **`PlotTaietura`** — locul în care dreapta taie axa, marcat pe axă. E chiar rezultatul pasului
+  la tangentă și la secantă, și până acum nu se vedea deloc.
+- **`PlotPanta`** — triunghiul care arată **unde e panta**. Catetele nu sunt alese ca să arate
+  bine, sunt chiar mărimile din formulă: la secantă `xₙ₋₁ − xₙ₋₂` pe orizontală și
+  `f(xₙ₋₁) − f(xₙ₋₂)` pe verticală, adică exact părțile aprinse în `FormulaBlock`; la tangentă,
+  saltul făcut pe orizontală și `f(xₙ₋₁)` pe verticală, al căror raport rescris dă chiar
+  `xₙ = xₙ₋₁ − f/f′`. Fără el, panta era doar un număr din propoziția de sub grafic.
+- **Secanta arată toate cele trei puncte** — `xₙ₋₂`, `xₙ₋₁`, `xₙ`. Punctul cel mai vechi se desena,
+  dar fără nume, iar o secantă cu un singur punct etichetat se citește ca o tangentă.
+- **Fără redare automată** pe pagina asta (`faraRedare` pe `PlaybackBar`): salturile tangentei
+  venite unul după altul nu se prind, iar butonul de redare doar te ispitea să te uiți la un film.
+- **Lupa care urmărește metoda** (`src/lib/plot-urmarire.ts` + `use-domeniu-animat.ts`): fără ea,
+  după opt înjumătățiri banda intervalului avea sub trei pixeli și animația părea oprită. Cadrul
+  stă pe loc cât timp banda se vede — asta arată **că** intervalul se strânge — și se apropie o
+  treaptă de patru ori când coboară sub 14% din ecran. Graficul rămâne și explorabil cu mâna.
+- Puncte fixe **refuză** funcțiile pentru care cursul nu dă forma `x = g(x)`, iar interfața nici
+  nu le lasă alese pe metoda aceea.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Portretul pe telefon, cu ochiul.** Structural nu deversează nimic la 360px (măsurat), dar
+      breakpoint-urile n-au putut fi testate: managerul de ferestre de pe Linux a ignorat
+      redimensionarea browserului. De verificat pe un dispozitiv real sau din DevTools.
+- [ ] `prefers-reduced-motion` pe interfața asta — codul îl respectă prin `MotionConfig` și prin
+      `useDomeniuAnimat`, dar n-a fost văzut rulând cu setarea pornită.
 
 - [x] ~~Completează tabelul~~ — cele 19 pagini sunt fixate din `Plan.md`
 - [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)
