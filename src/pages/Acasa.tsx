@@ -13,7 +13,7 @@ const SECTIUNI_CUPRINS = getAlgoritmiPeSectiuni();
 
 /** Ce scrie panoul din hero. Maximum 16 semne pe rând, 4 rânduri. */
 const MESAJE = [
-  "14 METODE\nNUMERICE\nPAS CU PAS",
+  "TOATE METODELE\nDIN CURS\nPAS CU PAS",
   "BISECȚIA\nNU DĂ GREȘ\nNICIODATĂ",
   "NEWTON CONVERGE\nPĂTRATIC",
   "TRAPEZE, SIMPSON\nȘI ROMBERG",

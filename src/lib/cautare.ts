@@ -19,8 +19,13 @@ const INDEX = new Map(
 /**
  * Căutarea din bara de sus: potrivire simplă pe subșir. Capitolul intră și el
  * în index, ca „integrare" sau „valori proprii" să găsească ceva chiar dacă
- * termenul nu apare în titlu. Fără fuzzy și fără dependențe — 14 pagini, e de
- * ajuns. Termen gol → listă goală (nu afișăm nimic până nu scrie ceva).
+ * termenul nu apare în titlu. Fără fuzzy și fără dependențe — sub douăzeci de
+ * pagini, e de ajuns. Termen gol → listă goală (nu afișăm nimic până nu scrie
+ * ceva).
+ *
+ * Aici ajunge și `metode`, care **nu se mai afișează** pe pagina de algoritm:
+ * lista de metode a rămas în registru tocmai ca să se poată căuta „Cholesky" sau
+ * „Cooley-Tukey" fără ca termenii să stea ca pastile pe pagină.
  */
 export function cautaAlgoritmi(termen: string, limita = 8): IntrareAlgoritm[] {
   const cautat = normalizeaza(termen.trim());

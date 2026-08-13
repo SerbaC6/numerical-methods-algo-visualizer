@@ -20,7 +20,7 @@ export function Footer() {
           </span>
         </div>
         <p className="text-text-slab mt-3 max-w-xs text-sm">
-          Cele 14 metode din curs, fiecare cu animația, formula și interfața ei.
+          Metodele din curs, fiecare cu animația, formula și interfața ei.
         </p>
 
         <div className="border-bordura text-text-slab mt-10 flex flex-col gap-2 border-t pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
