@@ -391,7 +391,15 @@ export function getAlgoritmiPeSectiuni() {
     }));
 }
 
-/** Vecinii din cuprins, pentru navigația de la finalul unei pagini. */
+/**
+ * Vecinii pentru navigația de la finalul unei pagini, în ordinea din `Plan.md`
+ * — adică strict după `numar`, nu după grupurile din cuprins.
+ *
+ * Cele două nu coincid: cuprinsul strânge paginile pe secțiuni, deci după
+ * pagina 5 („Metode liniare") vine pagina 6, care e la „Metode neliniare", iar
+ * după 7 se revine la „Metode liniare" cu pagina 8. E intenționat — numerotarea
+ * urmează ordinea cursului, iar gruparea din cuprins e doar ajutor de răsfoit.
+ */
 export function getVecini(numar: number) {
   return {
     anterior: ALGORITMI.find((a) => a.numar === numar - 1),
