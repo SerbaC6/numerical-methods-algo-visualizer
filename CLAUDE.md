@@ -10,7 +10,7 @@ Tot ce ajunge la utilizator — UI, texte, comentarii în cod, commit-uri, docum
 
 ## Înainte de orice sesiune de lucru
 
-Citește **[`Plan.md`](./Plan.md)** (viziunea, cele 14 pagini și ce trebuie să conțină fiecare) și
+Citește **[`Plan.md`](./Plan.md)** (viziunea, cele 19 pagini și ce trebuie să conțină fiecare) și
 **[`Progress.md`](./Progress.md)** (fazele, checkbox-urile, deciziile deschise). Progress.md se
 actualizează la finalul fiecărei sesiuni — bifezi ce ai terminat.
 
@@ -288,13 +288,13 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 ### Etapa 0 — primitivele de bază (blochează tot restul)
 
 - [x] **`StepExplanation`** — propoziția care spune ce se întâmplă la pasul curent, lângă desen.
-      Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 14 pagini.
+      Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 19 pagini.
 - [x] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
       calculată, pivot, zero). Fără sistem de coordonate, doar grilă + tranziții.
-      Necesară pe paginile **1, 3, 4, 7, 8, 13**.
+      Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 17**.
 - [x] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
-      zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă opt pagini
-      (**5, 6, 9, 10, 11, 12, 13, 14**). **SVG scris de mână**, fără bibliotecă de charting —
+      zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă zece pagini
+      (**6, 7, 11, 12, 13, 14, 15, 16, 18, 19**). **SVG scris de mână**, fără bibliotecă de charting —
       Recharts/visx/D3 sunt gândite pentru date de business și încurcă exact ce ne trebuie (o
       tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB. Se compune din
       straturi cu nume (`PlotCurba`, `PlotPunct`, `PlotInterval`, `PlotArie`, `PlotDreapta`), iar
@@ -302,26 +302,38 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Etapa 1 — pagini ușoare (refolosesc primitivele de mai sus)
 
-- [ ] **Pagina 5 — `ecuatii-neliniare`** (puncte fixe, bisecție, Newton, secantă). `Plot` + marker
+- [ ] **Pagina 6 — `ecuatii-neliniare`** (puncte fixe, bisecție, Newton, secantă). `Plot` + marker
       de punct, dreaptă tangentă/secantă, interval care se strânge. Interfețe interactive, nu
       animații. E pagina-pilot naturală: cea mai mică distanță între formulă și desen.
-- [ ] **Pagina 12 — `derivare-si-integrare`** (Newton-Cotes, trapeze, Simpson). `Plot` + arii
+- [ ] **Pagina 16 — `newton-cotes`** (trapeze, Simpson, formule compuse). `Plot` + arii
       colorate sub curbă. Primitivă nouă: poligon/arie umplută. Fără stare iterativă complicată.
+- [ ] **Pagina 15 — `derivare-numerica`** (two-point, înainte/înapoi, formule cu 3 puncte).
+      `Plot` + secanta care se apropie de tangentă când scade `h`. Refolosește `PlotDreapta`,
+      deci nu cere nicio primitivă nouă — cea mai ieftină pagină din listă.
+- [ ] **Pagina 13 — `cmmp`** (CMMP liniar și polinomial, Padé). `Plot` + norul de puncte și
+      dreapta de aproximare. Refolosește tot; nicio primitivă nouă.
 - [ ] **Pagina 1 — `factorizari-lu`** (Cramer, LU, Doolittle, Crout, Cholesky). `MatrixGrid` +
       umplere celulă cu celulă, plus spargerea matricei în două. **Fără input manual de valori**
       (cerință din `Plan.md`).
-- [ ] **Pagina 3 — `eliminare-gaussiana`** (pivotări, Thomas). `MatrixGrid` + operații pe linii.
+- [ ] **Pagina 3 — `eliminare-gaussiana`** (pivotări). `MatrixGrid` + operații pe linii.
       Primitivă nouă: linia care se mută, se schimbă cu alta și se scalează.
-- [ ] **Pagina 9 — `interpolare-polinomiala`** (Lagrange, Neville, Runge, spline). `Plot` + puncte
+- [ ] **Pagina 4 — `algoritmul-thomas`** (sistem tridiagonal, eliminare înainte, substituție
+      înapoi). Aceeași primitivă de linii ca la pagina 3, pe o matrice cu doar trei diagonale —
+      de făcut imediat după ea, cât e proaspătă.
+- [ ] **Pagina 11 — `interpolare-polinomiala`** (Lagrange, Neville, Runge, spline). `Plot` + puncte
       pe care utilizatorul le trage cu mouse-ul. Primitivă nouă: punct interactiv (drag).
 
 ### Etapa 2 — pagini medii (cer o primitivă nouă fiecare)
 
-- [ ] **Pagina 4 — `metode-iterative`** (Jacobi, Gauss-Seidel, SOR). `MatrixGrid` + al doilea desen,
+- [ ] **Pagina 5 — `metode-iterative`** (Jacobi, Gauss-Seidel, SOR). `MatrixGrid` + al doilea desen,
       de convergență (eroarea pe iterații). Două vizualizări sincronizate pe același `steps[]`.
-- [ ] **Pagina 13 — `romberg-si-cuadraturi`**. `MatrixGrid` triunghiular pentru Romberg + `Plot`
-      pentru cuadraturi adaptive și Gaussiene. Dificultatea e că pagina cere ambele primitive.
-- [ ] **Pagina 14 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
+- [ ] **Pagina 17 — `romberg`** (extrapolare Richardson, tabloul Romberg). `MatrixGrid`
+      triunghiular, umplut coloană cu coloană. O singură primitivă — pagina s-a ușurat când
+      cuadraturile au plecat de pe ea.
+- [ ] **Pagina 18 — `cuadraturi-adaptive-si-gaussiene`**. `Plot` pentru intervalul care se
+      înjumătățește la Simpson adaptiv și pentru nodurile neechidistante Gaussiene. Primitivă
+      nouă: subdiviziunea recursivă desenată fără să devină o pădure de linii.
+- [ ] **Pagina 19 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
       direcții** — primitivă nouă: multe segmente scurte orientate, desenate eficient.
 - [ ] **Pagina 2 — `norme-si-ortogonalitate`** (norme, Householder, Givens, Gram-Schmidt).
       Primitive noi: vector cu vârf de săgeată, reflexie și rotație interactivă, plus **jocul**
@@ -329,20 +341,23 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Etapa 3 — pagini grele (primitive scumpe, de atacat la final)
 
-- [ ] **Pagina 7 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație, PageRank).
-      `MatrixGrid` + vector care converge la direcția proprie + **graf cu noduri și muchii**
-      pentru PageRank. Trei feluri de desen pe o singură pagină.
-- [ ] **Pagina 8 — `qr-si-dvs`**. `MatrixGrid` pentru iterațiile QR + interpretarea geometrică a
+- [ ] **Pagina 8 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație).
+      `MatrixGrid` + vector care converge la direcția proprie. Două feluri de desen pe aceeași
+      pagină, sincronizate pe același `steps[]`.
+- [ ] **Pagina 9 — `pagerank`**. `MatrixGrid` pentru matricea stocastică + **graf cu noduri și
+      muchii** — primitivă nouă, și singurul loc din site care o cere. Iterația e chiar metoda
+      puterii de la pagina 8, deci se face după ea.
+- [ ] **Pagina 10 — `qr-si-dvs`**. `MatrixGrid` pentru iterațiile QR + interpretarea geometrică a
       DVS: **cerc unitate → elipsă**, primitivă nouă care trebuie legată de valorile singulare.
-- [ ] **Pagina 10 — `curbe-bezier`** (Bézier, de Casteljau, 2D **și 3D**). Interpolarea de Casteljau
+- [ ] **Pagina 12 — `curbe-bezier`** (Bézier, de Casteljau, 2D **și 3D**). Interpolarea de Casteljau
       e ușoară în 2D; comutatorul 2D/3D cerut în `Plan.md` înseamnă **proiecție 3D scrisă de mână**
       plus rotirea scenei — de departe cea mai mare bucată de cod nou.
-- [ ] **Pagina 6 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
+- [ ] **Pagina 7 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
       nouă: **curbe de nivel** (isolinii) peste o funcție de două variabile, plus traseul care
       coboară. Întâi animații explicative, apoi interfața de aprofundare.
-- [ ] **Pagina 11 — `cmmp-si-fft`**. CMMP e ușor (`Plot` + dreapta de aproximare, refolosește tot).
-      **FFT e cel mai greu vizual din site**: plan complex, rădăcini ale unității și schema
-      recursivă („fluture"). De lăsat ultimul, indiferent de ordinea din care se lucrează.
+- [ ] **Pagina 14 — `fft`**. **Cel mai greu vizual din site**: plan complex, rădăcini ale unității
+      și schema recursivă („fluture"). De lăsat ultimul, indiferent de ordinea din care se
+      lucrează. (Partea ușoară a vechii pagini 11 a plecat la pagina 13, `cmmp`.)
 
 ### Decizii de luat înainte de Etapa 0
 
@@ -391,7 +406,7 @@ duce singură o introducere narativă.
 Manim rămâne **exclusiv offline** (vezi §Arhitectură): randare locală, rezultat static în
 `public/media/<slug>/`, niciodată în browser. Pipeline-ul se face în Faza 5 din `Progress.md`.
 
-**Excepția: pagina 5** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
+**Excepția: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
 Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
 doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,
 nu se pune text de așteptare, nu se anunță nimic — vezi regula despre stările de progres.

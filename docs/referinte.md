@@ -172,7 +172,7 @@ Observable Inputs și D3.
 - **Vocabularul de „marks" din Observable Plot**: `point`, `line`, `area`, `rule`. Merită copiat ca
   _structură_ în `Plot`-ul nostru: straturi cu nume clare (punct, curbă, arie, tangentă, interval),
   compuse peste aceleași axe — nu un morman de proprietăți pe o componentă uriașă. Asta ne dă și
-  reutilizarea între paginile 5, 9, 12, 14, care desenează lucruri diferite pe aceeași bază.
+  reutilizarea între paginile 6, 11, 15, 16, 19, care desenează lucruri diferite pe aceeași bază.
 - **Observable Inputs**: controale cu valori implicite gândite, nu goale. Se leagă de regula deja
   luată de la engineersuniverse — presetări, ca studentul să vadă ceva fără să tasteze nimic.
 

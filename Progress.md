@@ -11,7 +11,8 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 
 **Decizii deschise:**
 
-- [x] ~~**Lista celor ~15 metode numerice**~~ → **14 pagini tematice**, stabilite în
+- [x] ~~**Lista celor ~15 metode numerice**~~ → ~~**14 pagini tematice**~~ → **19 pagini tematice**
+      (cinci metode care stăteau la coada altei pagini au primit pagină proprie), stabilite în
       [`Plan.md`](./Plan.md), secțiunea „Lista Algoritmi"; detaliate în tabelul din Faza 7
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
 - [x] ~~Font monospace pentru formule și tabele numerice~~ → **JetBrains Mono** (cifre tabulare,
@@ -245,14 +246,14 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       iterația curentă din desen. Demonstrație live în `/design-system`, legată de `PlaybackBar`
 - [x] `MatrixGrid` — matricea desenată, cu stări per celulă (`normala`, `curent`, `calculat`,
       `pivot`, `zero`), plus linie/coloană activă și separator pentru matricea extinsă `[A|b]`
-      (notație din `curs4`, §4.3). Necesară pe paginile **1, 3, 4, 7, 8, 13**. Desenează **o
+      (notație din `curs4`, §4.3). Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 17**. Desenează **o
       singură** matrice — compunerea `A = L·U` e treaba paginii. `valori` acceptă `null` pentru
       celule care încă nu există (L la LU, jumătatea goală la Romberg): un zero calculat și o
       celulă necompletată sunt lucruri diferite. Culoarea nu e singurul semnal — pivotul e singura
       celulă plină. Accesibilitate: `<caption>` cu rezumat care spune unde e pivotul și pe ce linie
       se lucrează, plus starea fiecărei celule rostită ca text ascuns („pivot, 2")
 - [x] `Plot` — axe, curbă, puncte, interval, tangentă, adnotări. Necesară pe paginile
-      **5, 6, 9, 10, 11, 12, 13, 14**. Se compune din **straturi cu nume** (`PlotCurba`,
+      **6, 7, 11, 12, 13, 14, 15, 16, 18, 19**. Se compune din **straturi cu nume** (`PlotCurba`,
       `PlotPunct`, `PlotInterval`, `PlotArie`, `PlotDreapta`), fiecare luându-și scara din context
       — deci o pagină poate adăuga un strat propriu fără să atingă `Plot`. Domeniul îl dă pagina,
       graficul nu-l ghicește: altfel straturile ar trebui să se înregistreze într-un efect, adică
@@ -277,7 +278,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       pagină care le atinge, altfel rămân două sisteme de animație în paralel
 - [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
       Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
-      pagina 5 (ecuații neliniare)
+      pagina 6 (ecuații neliniare)
 - [ ] `--viz-pivot` **și `--viz-interval`** trebuie oglindite în `manim/theme.py` când se scrie
       fișierul (Faza 5), altfel clipurile randate folosesc alt roșu și alt interval decât interfața.
       Atenție: `--viz-interval` are **nuanțe diferite pe cele două teme** (`#BE7434` pe luminoasă,
@@ -301,7 +302,7 @@ nu doar galeria de componente.
 **Obiectiv:** navigație completă și pagina de cuprins funcțională, chiar dacă algoritmii lipsesc.
 
 > Făcut: `HashRouter` + rutele, layout-ul (`SiteLayout`, `Header`, `Footer`, `Container`,
-> `PageHeader`, `Logo`), registrul celor 14 pagini, cuprinsul pe trei secțiuni, căutarea din
+> `PageHeader`, `Logo`), registrul paginilor, cuprinsul pe trei secțiuni, căutarea din
 > header, scheletul paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
 > Rămân: meniul mobil, TOC, `/despre` și `/contact`, manifest, verificările de conformitate.
 
@@ -408,7 +409,7 @@ nu doar galeria de componente.
 > Secțiunea „Interactiv" se face cu `motion` și cu straturile `Plot`/`MatrixGrid` — niciodată cu un
 > clip. Împărțirea și motivele sunt în [`CLAUDE.md`](./CLAUDE.md), §„Manim sau `motion`".
 >
-> **Pagina 5 nu primește clip** (vezi coloana Manim din tabelul Fazei 7): bisecția se înțelege
+> **Pagina 6 nu primește clip** (vezi coloana Manim din tabelul Fazei 7): bisecția se înțelege
 > trăgând de capetele intervalului. Acolo secțiunea „Vizual" lipsește cu totul din pagină.
 
 - [ ] Mediu Python
@@ -475,7 +476,7 @@ nu doar galeria de componente.
 
 ## Faza 7 — Implementarea metodelor numerice
 
-**Obiectiv:** 14 pagini tematice, fiecare la calitatea paginii-pilot.
+**Obiectiv:** 19 pagini tematice, fiecare la calitatea paginii-pilot.
 
 ### Lista paginilor _(sursa: `Plan.md`, secțiunea „Lista Algoritmi")_
 
@@ -486,24 +487,29 @@ fișier din `cursuri_MN/` se ia conținutul.
 Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e interfața cu `motion`.
 `n/a` înseamnă că pagina **nu primește** clip, prin decizie — nu că e de făcut mai târziu.
 
-| Nr. | Pagină (metode)                                                 | Curs sursă   | Vizual     | Implem. | Manim | Text | Interactiv | Mobil | Gata |
-| --- | --------------------------------------------------------------- | ------------ | ---------- | ------- | ----- | ---- | ---------- | ----- | ---- |
-| 1   | Cramer, LU, Doolittle, Crout, Cholesky                          | curs2, curs4 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 2   | Norme, Householder, Givens, Gram-Schmidt                        | curs3, curs2 | axă + joc  | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 3   | Eliminare Gaussiană (pivotări), algoritmul Thomas               | curs4        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 4   | Jacobi, Gauss-Seidel, SOR                                       | curs5        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Puncte fixe, bisecție, Newton, secantă                          | curs6, curs5 | interval   | [ ]     | n/a   | [x]  | [ ]        | [ ]   | [ ]  |
-| 6   | Gradient descendent, gradient conjugat                          | curs6, curs5 | vale 2D    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 7   | Metodele puterii, puterea inversă, Rayleigh, deflație, PageRank | curs7        | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 8   | QR și DVS                                                       | curs8, curs3 | matrice    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 9   | Lagrange, Neville, funcția Runge, spline                        | curs09       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 10  | Curbe Bézier, algoritmul de Casteljau (2D/3D)                   | curs09       | canvas     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 11  | Aproximare CMMP, FFT                                            | curs10       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 12  | Derivare numerică, Newton-Cotes (trapeze, Simpson)              | curs11       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  | Romberg, cuadraturi adaptive, cuadraturi Gaussiene              | curs12       | matrice+gr | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | ODE: problema Cauchy, Euler, Runge-Kutta                        | curs13       | grafic     | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Manim | Text | Interactiv | Mobil | Gata |
+| --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ----- | ---- | ---------- | ----- | ---- |
+| 1   | Cramer, LU, Doolittle, Crout, Cholesky        | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [ ]     | n/a   | [x]  | [ ]        | [ ]   | [ ]  |
+| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 2D      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 10  | QR și DVS                                     | `qr-si-dvs`                        | curs8, curs3 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 11  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 12  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | plan complex | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 17  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 18  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 19  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 
-- [x] ~~Completează tabelul~~ — cele 14 pagini sunt fixate din `Plan.md`
+- [x] ~~Completează tabelul~~ — cele 19 pagini sunt fixate din `Plan.md`
 - [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)
 - [ ] Deschide câte un issue GitHub pentru fiecare pagină, cu checklist-ul de mai jos
 - [ ] Pentru fiecare pagină: citește **întâi** cursul sursă din `cursuri_MN/`, apoi scrie
