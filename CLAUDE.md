@@ -48,6 +48,41 @@ Inspirația pentru animații și interfețe poate veni de oriunde — formulele 
 Fiecare interfață interactivă trebuie să aibă legendă și explicație a modului de funcționare, și să
 facă paralela explicită formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
 
+### Corectitudinea matematică — zero greșeli, fără excepții
+
+**Nimic din ce ajunge sub ochii utilizatorului nu are voie să fie greșit matematic.** Nici o
+formulă, nici un semn, nici un indice, nici un rezultat intermediar, nici o propoziție care descrie
+un pas. Nu există „aproximativ corect" și nu există greșeală acceptabilă fiindcă e „doar o
+demonstrație" sau „doar în galerie". Site-ul e material de învățat: un student care memorează o
+formulă greșită de aici o duce mai departe la examen.
+
+Asta se aplică la **tot** — formule, exemple numerice, etichete, explicații de pas, texte de
+legendă, comentarii din cod, rezumate pentru cititorul de ecran.
+
+**Nu ai voie să scrii matematică din memorie.** Deschizi fișierul din `cursuri_MN/` și îl citești
+înainte, de fiecare dată, chiar dacă „știi" rezultatul.
+
+Înainte să declari gata orice piesă cu conținut matematic:
+
+1. **Verifică față de sursă.** Fiecare formulă și fiecare exemplu se compară cu cursul, nu cu
+   intuiția. Dacă cursul dă un exemplu rezolvat, folosește-l pe acela.
+2. **Verifică numeric, separat.** Rulează calculul independent de aplicație (un script scurt) și
+   compară cifră cu cifră cu ce e în curs. Nu te baza pe faptul că pare corect pe ecran.
+3. **Verifică semnele și indicii.** Aici apar cele mai multe greșeli: `−(−2)` scris ca `−2`, indici
+   0-based afișați ca 1-based, `µ` calculat înainte sau după transformare, minus tipografic
+   confundat cu cratimă.
+4. **Verifică cazurile-limită** cerute de metodă: pivot nul, împărțire la zero, divergență,
+   interval greșit. Dacă metoda eșuează, textul trebuie să spună corect **de ce**.
+5. **Verifică coerența** dintre formulă, desen, tabel și propoziție. Toate patru descriu același
+   pas; dacă una spune altceva, e greșeală, chiar dacă fiecare în parte pare corectă.
+
+Dacă nu poți verifica ceva — nu îl scrii. Spui că nu ai putut verifica și te oprești acolo. **Un
+gol declarat e acceptabil; o afirmație matematică negarantată, nu.**
+
+Când notația intuitivă cerută pentru interfață diferă de cea din curs (de ex. `L₁`/`C₁` în loc de
+`E₁`/`x₁`), se schimbă **doar numele**, niciodată cifrele sau operațiile — iar diferența se notează
+în cod, ca să se poată pune notația din curs alături pe pagina reală.
+
 ## Stările de progres nu ajung niciodată în interfață
 
 **Pe site nu apare nicio etichetă de stare: „în lucru", „în curând", „urmează", „TODO", „beta",
