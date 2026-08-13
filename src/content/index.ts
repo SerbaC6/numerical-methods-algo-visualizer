@@ -1,4 +1,5 @@
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
+import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
@@ -10,6 +11,7 @@ import type { ContinutPagina } from "@/content/tipuri";
  */
 const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "ecuatii-neliniare": continutEcuatiiNeliniare,
+  "metode-de-gradient": continutMetodeDeGradient,
 };
 
 export function getContinut(slug: string | undefined): ContinutPagina | undefined {
