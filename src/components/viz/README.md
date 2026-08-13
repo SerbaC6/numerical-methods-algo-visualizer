@@ -18,6 +18,7 @@ iterație, plus controalele care le însoțesc.
 | `Clip`            | ceasul unui clip narativ: scene, repere, cadru, mișcare redusă   |
 | `PlaybackClip`    | comenzile clipului, pe **timp** (bara pe pași e `PlaybackBar`)   |
 | `Subtitrari`      | propoziția de sub desen, cheiată pe ceasul clipului              |
+| `Scena3D`         | proiecția 3D: camera trasă cu degetul, zona, tăierea             |
 
 **`Clip` nu e o variantă de `Plot`.** `Plot` desenează o stare — pasul `k` dintr-un `steps[]`, ales
 de utilizator. `Clip` desenează un **film**: un singur arbore de elemente, randat ca funcție pură de
@@ -54,6 +55,39 @@ pagină poate scrie un strat propriu fără să modifice `Plot`:
 Matematica graficului **nu** stă aici, ci în [`src/lib/plot-scara.ts`](../../lib/plot-scara.ts)
 (scară, repere, tăiere la cadru, zoom) și [`plot-esantionare.ts`](../../lib/plot-esantionare.ts)
 (eșantionare, rupere la asimptote) — ca să poată fi verificată în afara interfeței.
+
+## `Scena3D` — a treia familie
+
+`Plot` desenează **o stare**, `Clip` desenează **un film**, `Scena3D` desenează o stare **văzută
+dintr-un unghi pe care îl ține utilizatorul**. Diferența practică: desenul se recalculează la
+fiecare cadru de rotire, deci mesh-ul nu are voie să treacă prin `motion` (ar rămâne în urma
+degetului) și își coboară singur rezoluția cât timp scena e trasă.
+
+Straturile ei își iau proiecția din context (`useScena3D`), exact ca la `Plot`:
+
+| Strat            | Ce desenează                                                    |
+| ---------------- | --------------------------------------------------------------- |
+| `Podea3D`        | rama și grila planului x₁-x₂, cu numele axelor                  |
+| `Suprafata3D`    | valea, ca mesh de patrulatere umbrite prin opacitate            |
+| `CurbeDeNivel3D` | poliliniile de nivel, gata calculate, desenate pe podea         |
+| `Traiectorie3D`  | drumul coborârii: umbră, linii de cădere, puncte de iterație    |
+| `Sageata3D`      | segment orientat între două puncte din lume (pasul, gradientul) |
+| `Eticheta3D`     | un nume ancorat într-un punct din lume, împins radial           |
+
+```tsx
+<Scena3D cutie={cutie} rezumat="Coborârea pe gradient în valea lui f">
+  <Podea3D />
+  <CurbeDeNivel3D curbe={curbe} />
+  <Suprafata3D inaltime={f} />
+  <Traiectorie3D puncte={iteratii} pasCurent={k} />
+</Scena3D>
+```
+
+Matematica **nu** stă nici aici: proiecția, ordinea painter și umbrirea sunt în
+[`src/lib/proiectie-3d.ts`](../../lib/proiectie-3d.ts), iar elipsele de nivel în
+[`src/lib/curbe-de-nivel.ts`](../../lib/curbe-de-nivel.ts) — amândouă verificate numeric, separat de
+interfață. Camera (tragere, revenire animată, pași de tastatură) e în
+[`src/hooks/use-camera-3d.ts`](../../hooks/use-camera-3d.ts).
 
 ## Unde se termină CSS-ul și unde începe `motion`
 

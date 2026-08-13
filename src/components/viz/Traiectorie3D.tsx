@@ -1,0 +1,150 @@
+import { motion } from "motion/react";
+
+import { useScena3D } from "@/components/viz/scena-3d-context";
+import { tranzitie } from "@/lib/miscare";
+import type { Ecran, Punct3 } from "@/lib/proiectie-3d";
+import { culoareRol } from "@/lib/viz-roles";
+
+export type Traiectorie3DProps = {
+  /** Iterațiile, cu `z` deja evaluat: `z = f(x₁, x₂)`. */
+  puncte: readonly Punct3[];
+  /** Indicele iterației arătate acum. Ce vine după ea nu se desenează. */
+  pasCurent: number;
+  /** Umbra drumului pe podea și liniile de cădere se pot stinge. */
+  cuUmbra?: boolean;
+  /**
+   * Ce parte se desenează acum — la fel ca `strat` din `PlotInterval`, și din
+   * același motiv: cele două bucăți ale traiectoriei stau de o parte și de alta
+   * a suprafeței. Umbra e pe podea, deci trebuie desenată **sub** mesh; traseul
+   * și punctele trebuie să rămână **peste** el, altfel dispar în vale. Cu un
+   * singur element n-ai unde pune mesh-ul.
+   */
+  strat?: "tot" | "umbra" | "traseu";
+  raza?: number;
+};
+
+/**
+ * Cât se ridică drumul deasupra suprafeței, în fracțiune din înălțimea cutiei.
+ *
+ * Fără ridicare, segmentele dintre două iterații intră în mesh și dispar pe
+ * porțiuni: la un height-field desenat cu algoritmul pictorului, o linie care
+ * atinge exact suprafața e când deasupra, când dedesubt, după cum cade fața.
+ */
+const RIDICARE = 0.015;
+
+/**
+ * Drumul coborârii: umbra pe podea, liniile de cădere, traseul pe suprafață și
+ * punctele iterațiilor.
+ *
+ * Umbra există fiindcă altfel nu se poate citi **unde** în planul soluțiilor a
+ * ajuns iterația: un punct suspendat pe o suprafață oblică nu spune nimic despre
+ * `x₁` și `x₂`. Liniile de cădere sunt paralele pe ecran, oricare ar fi
+ * punctul — proprietate a proiecției ortografice, scrisă în `proiectie-3d.ts` —
+ * deci legătura punct ↔ umbră se vede fără să fie ghicită.
+ */
+export function Traiectorie3D({
+  puncte,
+  pasCurent,
+  cuUmbra = true,
+  strat = "tot",
+  raza = 7,
+}: Traiectorie3DProps) {
+  const { proiectie, cutie, idTaiere, inMiscare } = useScena3D();
+
+  const zPodea = cutie.z[0];
+  const ridicare = RIDICARE * (cutie.z[1] - cutie.z[0]);
+
+  const pana = Math.max(0, Math.min(pasCurent, puncte.length - 1));
+  const vizibile = puncte.slice(0, pana + 1);
+  if (vizibile.length === 0) return null;
+
+  const peSuprafata: Ecran[] = vizibile.map((p) =>
+    proiectie.laEcran({ x: p.x, y: p.y, z: p.z + ridicare }),
+  );
+  const peUmbra: Ecran[] = vizibile.map((p) => proiectie.laEcran({ x: p.x, y: p.y, z: zPodea }));
+
+  const cale = (lista: Ecran[]) =>
+    lista
+      .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
+      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+      .join(" ");
+
+  const curent = peSuprafata[peSuprafata.length - 1];
+
+  /**
+   * Punctul curent e singurul care se animează — și numai când scena stă.
+   *
+   * Cât timp utilizatorul rotește, poziția lui pe ecran se schimbă din **altă**
+   * cauză decât un pas nou. O tranziție ar interpola atunci între două poziții
+   * care se mișcă amândouă, iar punctul ar rămâne în urma suprafeței pe care ar
+   * trebui să stea: s-ar vedea plutind pe lângă vale. Pe salt, el rămâne lipit
+   * de mesh, care oricum urmărește degetul fără animație.
+   */
+  const miscare = inMiscare ? { duration: 0 } : tranzitie("lent");
+
+  return (
+    <g aria-hidden="true" clipPath={`url(#${idTaiere})`}>
+      {cuUmbra && strat !== "traseu" && (
+        <>
+          {/* Umbra drumului pe podea */}
+          <path
+            d={cale(peUmbra)}
+            fill="none"
+            stroke={culoareRol("anterior")}
+            strokeOpacity={0.7}
+            strokeWidth={1.75}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          {/* Liniile de cădere: de la fiecare iterație la umbra ei */}
+          <g stroke={culoareRol("grila")} strokeWidth={1} strokeDasharray="3 4" opacity={0.7}>
+            {peSuprafata.map((p, i) => {
+              const umbra = peUmbra[i];
+              if (!umbra) return null;
+              return <line key={i} x1={p.x} y1={p.y} x2={umbra.x} y2={umbra.y} />;
+            })}
+          </g>
+        </>
+      )}
+
+      {strat === "umbra" ? null : (
+        <>
+          {/* Drumul pe suprafață */}
+          <path
+            d={cale(peSuprafata)}
+            fill="none"
+            stroke={culoareRol("anterior")}
+            strokeWidth={2.5}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+
+          {/* Iterațiile trecute */}
+          <g fill={culoareRol("anterior")} stroke="var(--suprafata)" strokeWidth={2}>
+            {peSuprafata.slice(0, -1).map((p, i) => (
+              <circle key={i} cx={p.x} cy={p.y} r={raza * 0.7} />
+            ))}
+          </g>
+
+          {/* Iterația curentă */}
+          {curent && (
+            <motion.g
+              // Fără `initial={false}` punctul ar veni alunecând din colțul din
+              // stânga-sus la prima randare — un drum fără sens matematic.
+              initial={false}
+              animate={{ x: curent.x, y: curent.y }}
+              transition={miscare}
+            >
+              <circle
+                r={raza}
+                fill={culoareRol("curent")}
+                stroke="var(--suprafata)"
+                strokeWidth={2.5}
+              />
+            </motion.g>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
