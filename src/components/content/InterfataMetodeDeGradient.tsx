@@ -349,7 +349,7 @@ export function InterfataMetodeDeGradient() {
               titlu: idMetoda === "descendent" ? "cos(r⁽ᵏ⁻¹⁾, r⁽ᵏ⁾)" : "⟨v⁽ᵏ⁻¹⁾, A·v⁽ᵏ⁾⟩",
               descriere:
                 idMetoda === "descendent"
-                  ? "Zero la fiecare pas: fiecare direcție e perpendiculară pe cea dinainte — de aici zigzag-ul"
+                  ? "Zero la fiecare pas: fiecare direcție e perpendiculară pe cea dinainte — de aici zigzagul"
                   : "Zero la fiecare pas: direcțiile sunt A-conjugate — de aici numărul mic de pași",
             },
             {
@@ -426,7 +426,7 @@ function numar(valoare: number | "", implicit: number): number {
  *
  * Numărul de condiționare nu e un ornament — el e răspunsul la „de ce coborârea
  * are nevoie de zeci de pași, iar gradientul Conjugat de doi": valea alungită
- * face zigzag-ul lung, iar `n = 2` din curs 5, §8.4 nu depinde deloc de formă.
+ * face zigzagul lung, iar `n = 2` din curs 5, §8.4 nu depinde deloc de formă.
  */
 function incheiere(idMetoda: IdMetoda, rezultat: RezultatGradient, kappa: number): string {
   const pasi = rezultat.pasi.length;
@@ -444,7 +444,7 @@ function incheiere(idMetoda: IdMetoda, rezultat: RezultatGradient, kappa: number
 
   return (
     `${pasi} ${pasi === 1 ? "pas" : "pași"}. Fiecare direcție e perpendiculară pe cea dinainte, ` +
-    `de unde zigzag-ul: coborârea taie mereu de-a curmezișul văii în loc s-o urmeze. ` +
-    `${forma}; cu cât e mai mare, cu atât valea e mai alungită și cu atât zigzag-ul e mai lung.`
+    `de unde zigzagul: coborârea taie mereu de-a curmezișul văii în loc s-o urmeze. ` +
+    `${forma}; cu cât e mai mare, cu atât valea e mai alungită și cu atât zigzagul e mai lung.`
   );
 }

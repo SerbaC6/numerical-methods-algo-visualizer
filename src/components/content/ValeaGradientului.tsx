@@ -69,7 +69,7 @@ const INELE = 9;
  * pătratică, valea arată la fel oricât te-ai apropia.
  *
  * Curba de nivel **prin punctul curent** e desenată aparte, mai apăsat: ea e
- * explicația zigzag-ului. Reziduul de după pas e perpendicular pe curba pe care
+ * explicația zigzagului. Reziduul de după pas e perpendicular pe curba pe care
  * iterația tocmai a aterizat, deci pe direcția din care a venit — de aici cotul
  * drept și convergența lentă.
  */
@@ -178,7 +178,7 @@ export function ValeaGradientului({
    *
    * Se cere prin **rază** (`razaA`, calculată din vectorul `x⁽ᵏ⁾ − x*`), nu prin
    * nivel: la ultimii pași nivelul nu se mai poate scădea din `f(x*)`, iar curba
-   * — tocmai explicația zigzag-ului — dispărea de pe ecran.
+   * — tocmai explicația zigzagului — dispărea de pe ecran.
    */
   const curbaCurenta = useMemo(() => {
     if (!pas) return [];

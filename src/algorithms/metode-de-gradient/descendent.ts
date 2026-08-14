@@ -185,7 +185,7 @@ function explicaPasul(
   const zigzag =
     cos === undefined
       ? " E primul pas, deci n-are cu ce face unghi."
-      : ` Față de direcția pasului dinainte, cosinusul unghiului e ${zecimale(cos, 6)}: cele două direcții sunt perpendiculare, de aici zigzag-ul.`;
+      : ` Față de direcția pasului dinainte, cosinusul unghiului e ${zecimale(cos, 6)}: cele două direcții sunt perpendiculare, de aici zigzagul.`;
 
   return (
     `Direcția pasului e reziduul r⁽${i - 1}⁾ = ${vectorText(directie)}, adică panta cea mai abruptă în jos.` +

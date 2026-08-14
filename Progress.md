@@ -618,7 +618,7 @@ prima cu desen tridimensional. Ce s-a construit:
      ortografică toate razele au aceeași direcție orizontală, deci înălțimea n-are niciun cuvânt în
      ordine. Varianta greșită e ținută în script ca test **care trebuie să pice**, ca să nu fie pusă
      înapoi ca „reparare".
-  2. **Unghiul drept al zigzag-ului nu supraviețuiește camerei oblice**: 90° real se citește 55° la
+  2. **Unghiul drept al zigzagului nu supraviețuiește camerei oblice**: 90° real se citește 55° la
      elevație 28° și 90,000° abia la 90°. De aici butonul „Privește de sus" — nu e un al doilea mod,
      e capătul aceleiași manete.
   3. **Scara pe x₁ și x₂ trebuie să fie izotropă.** Normalizată pe fiecare axă separat, cutia se
@@ -626,7 +626,7 @@ prima cu desen tridimensional. Ce s-a construit:
      e ascuțit sau obtuz.
 - **Elipse analitice, nu marching squares.** A fiind SPD, mulțimile de nivel sunt exact elipse;
   `f(p) = c` se verifică la 2,49·10⁻¹² pe 97 000 de puncte. În plus, se poate cere curba **prin
-  `x⁽ᵏ⁾`** dintr-o singură evaluare — și aia e chiar explicația zigzag-ului.
+  `x⁽ᵏ⁾`** dintr-o singură evaluare — și aia e chiar explicația zigzagului.
 - **Cifrele metodei**, verificate pe modulele reale: coborârea face 16 pași pe sistemul din curs, cu
   `|cos(r⁽ᵏ⁾, r⁽ᵏ⁺¹⁾)| ≤ 6,7·10⁻¹⁶` la fiecare pas; gradientul conjugat termină în exact 2, cu
   reziduu nul și `⟨v⁽¹⁾, A·v⁽²⟩ = 0` exact. Se verifică și că **α e chiar minimul pe direcție**

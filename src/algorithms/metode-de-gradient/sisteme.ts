@@ -3,7 +3,7 @@
  *
  * **De ce există.** Numărul de condiționare al văii, `κ(A) = λmax/λmin`, e
  * singurul lucru care decide cum arată coborârea: el e raportul semiaxelor
- * elipselor de nivel, deci cât de tare taie zigzag-ul de-a curmezișul văii.
+ * elipselor de nivel, deci cât de tare taie zigzagul de-a curmezișul văii.
  * Sistemul din curs are `κ = 1,94`, adică elipse cu semiaxele în raport 1,39 —
  * aproape cercuri. Ortogonalitatea dintre doi pași e exactă și acolo, dar cotul
  * arată blând, iar pașii de la coadă se îngrămădesc lângă `x*`. Cele două
@@ -78,7 +78,7 @@ export const SISTEME: readonly SistemGata[] = [
   {
     id: "alungita",
     eticheta: "Vale alungită",
-    // κ = 10: semiaxele elipselor stau în raport √10 ≈ 3,16, deci zigzag-ul se
+    // κ = 10: semiaxele elipselor stau în raport √10 ≈ 3,16, deci zigzagul se
     // vede de la primul cot. Toleranța e 10⁻⁴, nu 10⁻⁸, ca rularea să se **și
     // termine**: la 10⁻⁸ coborârea ar cere 68 de pași, adică o derulare din care
     // nu se mai uită nimeni la ultimii. Cu 10⁻⁴ face 36, iar Conjugatul tot 2.
