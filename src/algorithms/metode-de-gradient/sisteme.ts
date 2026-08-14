@@ -46,8 +46,8 @@ export type SistemGata = {
   valori: ValoriSistem;
 };
 
-/** Sistemul de pornire al interfeței și cel la care duce „Resetează". */
-export const SISTEM_IMPLICIT: ValoriSistem = {
+/** `A = [[4, 1], [1, 3]]`, `b = (1, 2)`, cu soluția exactă `x* = (1/11, 7/11)`. */
+const VALEA_DIN_CURS: ValoriSistem = {
   a11: 4,
   a12: 1,
   a22: 3,
@@ -58,6 +58,42 @@ export const SISTEM_IMPLICIT: ValoriSistem = {
   tol: 1e-8,
   maxIteratii: 40,
 };
+
+/**
+ * κ = 10: semiaxele elipselor stau în raport √10 ≈ 3,16, deci zigzagul se vede
+ * de la primul cot.
+ *
+ * Toleranța e 10⁻⁴, nu 10⁻⁸, ca rularea să se **și termine**: la 10⁻⁸ coborârea
+ * ar cere 68 de pași, adică o derulare din care nu se mai uită nimeni la ultimii.
+ * Cu 10⁻⁴ face 36, iar Conjugatul tot 2.
+ */
+const VALEA_ALUNGITA: ValoriSistem = {
+  a11: 10,
+  a12: 0,
+  a22: 1,
+  b1: 1,
+  b2: 2,
+  x01: 0,
+  x02: 0,
+  tol: 1e-4,
+  maxIteratii: 60,
+};
+
+/**
+ * Sistemul cu care **pornește** pagina, și cel la care duce „Resetează".
+ *
+ * E valea alungită, nu cea din curs, și motivul e chiar subiectul paginii.
+ * Pagina explică de ce coborârea pe direcția cea mai abruptă e înceată: fiindcă
+ * taie de-a curmezișul unei văi alungite. Pe sistemul din curs `κ = 1,94`, deci
+ * elipsele au semiaxele în raport 1,39 — aproape cercuri. Ortogonalitatea dintre
+ * pași e exactă și acolo, dar cotul arată blând și fenomenul nu se vede: primul
+ * lucru pe care îl întâlnește cineva care deschide pagina ar fi tocmai cazul în
+ * care afirmația ei nu se citește de pe desen.
+ *
+ * Pe `κ = 10` cotul e ascuțit de la primul pas. Valea din curs rămâne un buton
+ * distanță, cu cifrele ei neatinse.
+ */
+export const SISTEM_IMPLICIT: ValoriSistem = VALEA_ALUNGITA;
 
 export const SISTEME: readonly SistemGata[] = [
   {
@@ -71,17 +107,8 @@ export const SISTEME: readonly SistemGata[] = [
   {
     id: "curs",
     eticheta: "Valea din curs",
-    // A = [[4, 1], [1, 3]], b = (1, 2), soluția exactă x* = (1/11, 7/11).
-    // Sistemul verificat în teoria paginii; 16 pași la coborâre, 2 la conjugat.
-    valori: SISTEM_IMPLICIT,
+    // Sistemul verificat în teoria paginii; 16 pași la coborâre, 2 la Conjugat.
+    valori: VALEA_DIN_CURS,
   },
-  {
-    id: "alungita",
-    eticheta: "Vale alungită",
-    // κ = 10: semiaxele elipselor stau în raport √10 ≈ 3,16, deci zigzagul se
-    // vede de la primul cot. Toleranța e 10⁻⁴, nu 10⁻⁸, ca rularea să se **și
-    // termine**: la 10⁻⁸ coborârea ar cere 68 de pași, adică o derulare din care
-    // nu se mai uită nimeni la ultimii. Cu 10⁻⁴ face 36, iar Conjugatul tot 2.
-    valori: { a11: 10, a12: 0, a22: 1, b1: 1, b2: 2, x01: 0, x02: 0, tol: 1e-4, maxIteratii: 60 },
-  },
+  { id: "alungita", eticheta: "Vale alungită", valori: VALEA_ALUNGITA },
 ] as const;

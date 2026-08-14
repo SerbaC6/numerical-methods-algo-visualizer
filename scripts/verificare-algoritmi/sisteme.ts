@@ -121,27 +121,43 @@ console.log("\n=== 5. Numai forma văii diferă: b și x⁽⁰⁾ sunt aceleași
   );
 }
 
-console.log("\n=== 6. Implicitul e chiar sistemul din curs ===");
+console.log("\n=== 6. Pagina pornește pe valea cu zigzagul vizibil ===");
 {
+  // Nu pe cea din curs: acolo κ = 1,94, elipsele au semiaxele în raport 1,39 și
+  // cotul arată blând — adică primul lucru pe care îl vede cineva ar fi tocmai
+  // cazul în care afirmația paginii nu se citește de pe desen.
+  const alungita = SISTEME.find((s) => s.id === "alungita");
+  verifica(
+    "Butonul „Resetează” duce la valea alungită",
+    alungita !== undefined && alungita.valori === SISTEM_IMPLICIT,
+  );
+
+  const kappaImplicit = conditionare(parametri(SISTEM_IMPLICIT).A);
+  const kappaCurs = conditionare(parametri(SISTEME.find((s) => s.id === "curs")!.valori).A);
+  verifica(
+    "valea de pornire e mai alungită decât cea din curs",
+    kappaImplicit > kappaCurs,
+    `κ = ${kappaImplicit.toFixed(2)} față de ${kappaCurs.toFixed(2)}, ` +
+      `semiaxe 1:${Math.sqrt(kappaImplicit).toFixed(2)} față de 1:${Math.sqrt(kappaCurs).toFixed(2)}`,
+  );
+
+  // Valea din curs rămâne neatinsă, ca preset: cifrele ei sunt cele din teorie.
   const curs = SISTEME.find((s) => s.id === "curs");
   verifica(
-    "Butonul „Resetează” duce la sistemul din teoria paginii",
-    curs !== undefined && curs.valori === SISTEM_IMPLICIT,
-  );
-  verifica(
-    "cifrele lui sunt cele verificate în teorie",
-    SISTEM_IMPLICIT.a11 === 4 &&
-      SISTEM_IMPLICIT.a12 === 1 &&
-      SISTEM_IMPLICIT.a22 === 3 &&
-      SISTEM_IMPLICIT.b1 === 1 &&
-      SISTEM_IMPLICIT.b2 === 2,
+    "valea din curs a rămas cu cifrele din teorie",
+    curs !== undefined &&
+      curs.valori.a11 === 4 &&
+      curs.valori.a12 === 1 &&
+      curs.valori.a22 === 3 &&
+      curs.valori.b1 === 1 &&
+      curs.valori.b2 === 2,
     "A = [[4, 1], [1, 3]], b = (1, 2)",
   );
 
   // x* = (1/11, 7/11), cifrele din `src/content/metode-de-gradient.tsx`.
-  const solutie = descendent.run(parametri(SISTEM_IMPLICIT)).solutie;
+  const solutie = curs ? descendent.run(parametri(curs.valori)).solutie : null;
   verifica(
-    "soluția exactă e x* = (1/11, 7/11)",
+    "soluția ei exactă e x* = (1/11, 7/11)",
     solutie !== null &&
       Math.abs(solutie[0] - 1 / 11) < 1e-12 &&
       Math.abs(solutie[1] - 7 / 11) < 1e-12,
