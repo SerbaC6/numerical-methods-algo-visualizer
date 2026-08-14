@@ -1,10 +1,10 @@
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
-import { zecimale, zecimaleUtile } from "@/lib/numere";
 import type { Ecran, Punct3 } from "@/lib/proiectie-3d";
 import { culoareRol } from "@/lib/viz-roles";
 
-/** Cât se împinge, de-a lungul muchiei lui, numărul care cade pe colțul comun. */
-const IMPINGERE_COLT = 22;
+/** Corpul numelor de axă. Vezi `src/lib/notatie.ts` pentru cum se scriu indicii. */
+const MARIME_NUME_AXA = 17;
 
 export type Podea3DProps = {
   /** Câte pătrate are grila pe fiecare latură. */
@@ -66,54 +66,6 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
   const mijlocY = (y0 + y1) / 2;
   const maiAproape = (a: Ecran, b: Ecran) => (a.adancime >= b.adancime ? a : b);
 
-  // Muchia dinspre privitor a fiecărei axe: pe ea stau și numele, și numerele
-  // capetelor. Se alege comparând adâncimile celor două muchii paralele.
-  const yAproape =
-    la({ x: mijlocX, y: y0, z }).adancime >= la({ x: mijlocX, y: y1, z }).adancime ? y0 : y1;
-  const xAproape =
-    la({ x: x0, y: mijlocY, z }).adancime >= la({ x: x1, y: mijlocY, z }).adancime ? x0 : x1;
-
-  /**
-   * Numerele capetelor, pe cele două muchii dinspre privitor.
-   *
-   * **Fără ele lupa ar minți.** Pe o funcție pătratică apropierea e
-   * auto-similară: valea arată la fel de adâncă și de largă oricât te-ai
-   * apropia, deci un cadru care se strânge nu se vede deloc dacă podeaua n-are
-   * nicio cifră pe ea. Numerele sunt singurul lucru care spune cât de tare s-a
-   * apropiat scena — și, pe deasupra, **unde** în planul soluțiilor stă `x*`.
-   *
-   * Numărul de zecimale se ia din latura cutiei: la o apropiere de o mie de ori,
-   * două zecimale ar scrie același număr la ambele capete.
-   *
-   * **Colțul dinspre privitor e capăt pentru amândouă muchiile**, deci acolo cad
-   * două numere unul peste altul — măsurat, exact în același punct de ecran.
-   * Cel de pe colț se împinge de-a lungul **muchiei lui**, spre celălalt capăt,
-   * deci fiecare număr rămâne lipit de axa pe care o măsoară și cele două se
-   * despart.
-   */
-  const cifre = zecimaleUtile(Math.max(x1 - x0, y1 - y0), 1);
-
-  const departeDeColt = (capat: Ecran, celalaltCapat: Ecran, peColt: boolean) => {
-    if (!peColt) return { dx: 0, dy: 0 };
-    const vx = celalaltCapat.x - capat.x;
-    const vy = celalaltCapat.y - capat.y;
-    const lungime = Math.hypot(vx, vy);
-    if (lungime < 1e-6) return { dx: 0, dy: 0 };
-    return { dx: (vx / lungime) * IMPINGERE_COLT, dy: (vy / lungime) * IMPINGERE_COLT };
-  };
-
-  const capX0 = la({ x: x0, y: yAproape, z });
-  const capX1 = la({ x: x1, y: yAproape, z });
-  const capY0 = la({ x: xAproape, y: y0, z });
-  const capY1 = la({ x: xAproape, y: y1, z });
-
-  const numere = [
-    { cheie: "x0", valoare: x0, punct: capX0, ...departeDeColt(capX0, capX1, x0 === xAproape) },
-    { cheie: "x1", valoare: x1, punct: capX1, ...departeDeColt(capX1, capX0, x1 === xAproape) },
-    { cheie: "y0", valoare: y0, punct: capY0, ...departeDeColt(capY0, capY1, y0 === yAproape) },
-    { cheie: "y1", valoare: y1, punct: capY1, ...departeDeColt(capY1, capY0, y1 === yAproape) },
-  ];
-
   const etichete = [
     { text: numeX, punct: maiAproape(la({ x: mijlocX, y: y0, z }), la({ x: mijlocX, y: y1, z })) },
     { text: numeY, punct: maiAproape(la({ x: x0, y: mijlocY, z }), la({ x: x1, y: mijlocY, z })) },
@@ -136,32 +88,9 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
         <path d={rama} strokeWidth={1.5} opacity={0.85} />
       </g>
 
-      {/* Cifrele capetelor stau la colțuri, numele axei la mijlocul muchiei —
-          deci nu se calcă, oricare ar fi azimutul. */}
-      <g className="fill-text-slab font-mono text-[11px]">
-        {numere.map((n) => {
-          const d = deplasareRadiala(proiectie, n.punct, 13);
-          return (
-            <text
-              key={n.cheie}
-              x={n.punct.x + d.dx + n.dx}
-              y={n.punct.y + d.dy + n.dy}
-              dy="0.32em"
-              textAnchor={d.ancora}
-              stroke="var(--suprafata)"
-              strokeWidth={4}
-              paintOrder="stroke"
-              opacity={0.85}
-            >
-              {zecimale(n.valoare, cifre)}
-            </text>
-          );
-        })}
-      </g>
-
       {/* Numele axelor se scriu cu tokenul de text, nu cu culoarea grilei: o
           literă are nevoie de 4,5:1, o linie de 3:1. */}
-      <g className="fill-text-slab font-mono text-[13px]">
+      <g className="fill-text-slab font-mono" fontSize={MARIME_NUME_AXA}>
         {etichete.map((e) => {
           const d = deplasareRadiala(proiectie, e.punct, 16);
           return (
@@ -175,7 +104,7 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
               strokeWidth={4}
               paintOrder="stroke"
             >
-              {e.text}
+              <NotatieSVG text={e.text} marime={MARIME_NUME_AXA} />
             </text>
           );
         })}

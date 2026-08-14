@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Notatie } from "@/components/viz/Notatie";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,7 +48,7 @@ export function NumberInput({
   return (
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={id} className="text-base">
-        {eticheta}
+        <Notatie>{eticheta}</Notatie>
       </Label>
       <div className="relative">
         <Input

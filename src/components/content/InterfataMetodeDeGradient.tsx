@@ -17,6 +17,7 @@ import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { IterationTable } from "@/components/viz/IterationTable";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
+import { Notatie } from "@/components/viz/Notatie";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
 import { StepExplanation } from "@/components/viz/StepExplanation";
@@ -129,19 +130,10 @@ export function InterfataMetodeDeGradient() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Tabs value={idMetoda} onValueChange={(v) => setIdMetoda(v as IdMetoda)}>
-        <TabsList className="w-full">
-          {METODE.map((m) => (
-            <TabsTrigger key={m.id} value={m.id} className="flex-1">
-              {m.titlu}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
-
-      {/* Legenda înaintea desenului, ca pe pagina 6: întâi afli ce vei vedea.
-          Rândul comparației apare doar cât timp e pornită: legenda descrie ce e
-          pe ecran, nu ce ar putea fi. */}
+      {/* Legenda stă înaintea **alegerii metodei**, nu doar înaintea desenului:
+          ce înseamnă fiecare culoare e același lucru la amândouă metodele, deci
+          se citește o dată, înainte de orice. Rândul comparației apare doar cât
+          timp e pornită — legenda descrie ce e pe ecran, nu ce ar putea fi. */}
       <Legend
         elemente={
           aratComparatia
@@ -157,6 +149,16 @@ export function InterfataMetodeDeGradient() {
             : LEGENDA
         }
       />
+
+      <Tabs value={idMetoda} onValueChange={(v) => setIdMetoda(v as IdMetoda)}>
+        <TabsList className="w-full">
+          {METODE.map((m) => (
+            <TabsTrigger key={m.id} value={m.id} className="flex-1">
+              {m.titlu}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,26%,380px)]">
@@ -320,7 +322,7 @@ export function InterfataMetodeDeGradient() {
           />
 
           <StepExplanation
-            explicatie={pas?.explicatie}
+            explicatie={pas?.explicatie && <Notatie>{pas.explicatie}</Notatie>}
             pas={derulare.pas}
             totalPasi={rezultat.pasi.length}
             ruleaza={derulare.ruleaza}
@@ -341,17 +343,17 @@ export function InterfataMetodeDeGradient() {
       {/* Erorile se scriu, nu se colorează pe desen — regula din CLAUDE.md. */}
       {rezultat.stare === "esuat" && (
         <Callout tip="atentie" titlu="Metoda s-a oprit">
-          {rezultat.motiv}
+          <Notatie>{rezultat.motiv ?? ""}</Notatie>
         </Callout>
       )}
       {ultimulPas && rezultat.stare === "convergent" && (
         <Callout tip="retine" titlu="Metoda a ajuns la soluție">
-          {incheiere(idMetoda, rezultat, kappa)}
+          <Notatie>{incheiere(idMetoda, rezultat, kappa)}</Notatie>
         </Callout>
       )}
       {ultimulPas && rezultat.stare === "neterminat" && (
         <Callout tip="atentie" titlu="S-au terminat iterațiile">
-          {rezultat.motiv}
+          <Notatie>{rezultat.motiv ?? ""}</Notatie>
         </Callout>
       )}
 

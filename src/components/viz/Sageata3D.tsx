@@ -1,6 +1,10 @@
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
 import type { Punct3 } from "@/lib/proiectie-3d";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+
+/** Corpul numelui săgeții. Vezi `Eticheta3D` pentru de ce nu mai e 15. */
+const MARIME_ETICHETA = 19;
 
 export type Sageata3DProps = {
   de: Punct3;
@@ -87,7 +91,8 @@ export function Sageata3D({
           y={(a.y + b.y) / 2 + deplasare.dy}
           dy="0.32em"
           textAnchor={deplasare.ancora}
-          className="font-mono text-[15px] tabular-nums"
+          className="font-mono tabular-nums"
+          fontSize={MARIME_ETICHETA}
           // Numele se scrie cu varianta de text a rolului: culoarea de desen e
           // calibrată pentru 3:1, nu pentru 4,5:1.
           fill={culoareEticheta(rol)}
@@ -96,7 +101,7 @@ export function Sageata3D({
           strokeWidth={5}
           paintOrder="stroke"
         >
-          {eticheta}
+          <NotatieSVG text={eticheta} marime={MARIME_ETICHETA} />
         </text>
       )}
     </g>

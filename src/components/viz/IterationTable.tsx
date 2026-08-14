@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Notatie } from "@/components/viz/Notatie";
 
 export type ColoanaIteratii = {
   cheie: string;
@@ -54,7 +55,7 @@ export function IterationTable({
                   title={c.descriere}
                   className="text-text-slab border-bordura border-b px-4 py-3 text-right text-sm font-semibold whitespace-nowrap"
                 >
-                  {c.titlu}
+                  {typeof c.titlu === "string" ? <Notatie>{c.titlu}</Notatie> : c.titlu}
                 </th>
               ))}
             </tr>

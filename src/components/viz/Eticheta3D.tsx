@@ -1,3 +1,4 @@
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
 import { inCutieXY, type Punct3 } from "@/lib/proiectie-3d";
 import { culoareEticheta, type RolViz } from "@/lib/viz-roles";
@@ -32,7 +33,7 @@ export function Eticheta3D({
   text,
   rol = "curent",
   distanta = 18,
-  marime = 15,
+  marime = 19,
   opacitate = 1,
 }: Eticheta3DProps) {
   const { proiectie, cutie, idTaiere } = useScena3D();
@@ -64,7 +65,7 @@ export function Eticheta3D({
         strokeWidth={5}
         paintOrder="stroke"
       >
-        {text}
+        <NotatieSVG text={text} marime={marime} />
       </text>
     </g>
   );

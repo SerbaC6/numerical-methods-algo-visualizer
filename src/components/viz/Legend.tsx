@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ROLURI_VIZ, type FormaLegenda, type RolViz } from "@/lib/viz-roles";
+import { Notatie } from "@/components/viz/Notatie";
 
 /**
  * Un element de legendă. Ori trimiți un rol cunoscut (și îți ia culoarea,
@@ -112,8 +113,15 @@ export function Legend({ elemente, pasi, titlu = "Legendă", className }: Legend
                 <Simbol forma={forma} culoare={culoare} />
               </span>
               <span className="min-w-0">
-                <span className="font-semibold">{eticheta}</span>
-                {el.explicatie && <span className="text-text-slab"> — {el.explicatie}</span>}
+                <span className="font-semibold">
+                  <Notatie>{eticheta}</Notatie>
+                </span>
+                {el.explicatie && (
+                  <span className="text-text-slab">
+                    {" — "}
+                    <Notatie>{el.explicatie}</Notatie>
+                  </span>
+                )}
               </span>
             </li>
           );

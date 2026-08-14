@@ -38,7 +38,7 @@ export function StepExplanation({
   pas,
   totalPasi,
   ruleaza = false,
-  titlu = "Ce se întâmplă acum",
+  titlu = "Explicația pasului",
   textGol = "Pornește derularea ca să vezi explicația fiecărui pas.",
   className,
 }: StepExplanationProps) {
@@ -55,14 +55,17 @@ export function StepExplanation({
         className,
       )}
     >
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-text-slab text-sm font-bold tracking-wide uppercase">{titlu}</h3>
-        {!gol && (
+      {/* Fără titlu vizibil: propoziția spune oricum ce se întâmplă, iar un
+          antet peste ea doar repeta cu majuscule ceva ce se citea deja. `titlu`
+          rămâne numele secțiunii pentru cititorul de ecran, care are nevoie de
+          unul. */}
+      {!gol && (
+        <div className="flex justify-end">
           <span className="text-text-slab shrink-0 font-mono text-sm tabular-nums">
             pasul {pas + 1} din {totalPasi}
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       {/*
         Regiunea live e `<p>`-ul, care rămâne montat tot timpul — dacă i-am da
@@ -78,7 +81,7 @@ export function StepExplanation({
       <p
         aria-live={ruleaza ? "off" : "polite"}
         aria-atomic="true"
-        className={cn("mt-3 text-lg text-pretty", gol ? "text-text-slab italic" : "text-text")}
+        className={cn("text-lg text-pretty", gol ? "text-text-slab italic" : "text-text")}
       >
         <span key={gol ? "gol" : pas} className="motion-safe:animate-in motion-safe:fade-in-0">
           {gol ? textGol : explicatie}

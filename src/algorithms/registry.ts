@@ -180,7 +180,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     titlu: "Gradient descendent, gradient conjugat",
     capitol: "ecuatii-optimizare",
     descriere:
-      "Coborârea într-o vale: de ce pasul cel mai abrupt zigzaghează și cum îl îndreaptă direcțiile conjugate.",
+      "Coborârea într-o vale: de ce pasul cel mai abrupt coboară de-a curmezișul și cum îl îndreaptă direcțiile conjugate.",
     metode: ["Gradient descendent", "Gradient conjugat", "Precondiționare"],
     dificultate: "greu",
     cursSursa: ["ecuatii_neliniare_MN_curs6.md", "sisteme_liniare_metode_iterative_MN_curs5.md"],

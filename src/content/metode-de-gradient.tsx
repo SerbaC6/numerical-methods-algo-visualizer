@@ -131,10 +131,10 @@ export const continutMetodeDeGradient: ContinutPagina = {
             continut: (
               <>
                 Slăbiciunea metodei se vede pe curbele de nivel: fiecare direcție e ortogonală cu
-                cea dinaintea ei, deci traseul <strong>zigzaghează</strong> și înaintează încet.
-                Cursul o spune direct — pentru sisteme liniare pașii descrescători nu se folosesc,
-                fiindcă au convergență slabă; rămân buni pentru sisteme neliniare și pentru probleme
-                de optimizare.
+                cea dinaintea ei, deci traseul <strong>coboară</strong> de-a curmezișul văii și
+                înaintează încet. Cursul o spune direct — pentru sisteme liniare pașii descrescători
+                nu se folosesc, fiindcă au convergență slabă; rămân buni pentru sisteme neliniare și
+                pentru probleme de optimizare.
               </>
             ),
           },
@@ -218,7 +218,7 @@ export const continutMetodeDeGradient: ContinutPagina = {
                 Reziduurile și direcțiile avansează în același subspațiu Krylov, Kₖ =
                 span&#123;r⁽⁰⁾, A·r⁽⁰⁾, …, A^(k−1)·r⁽⁰⁾&#125;, iar pentru A simetrică pozitiv
                 definită metoda atinge soluția <strong>exactă după cel mult n pași</strong>, dacă nu
-                intervin erori numerice. Pe un sistem 2×2, gradientul descendent tot mai zigzaghează
+                intervin erori numerice. Pe un sistem 2×2, gradientul descendent tot mai coboară
                 când conjugatul a terminat deja.
               </>
             ),
@@ -232,7 +232,7 @@ export const continutMetodeDeGradient: ContinutPagina = {
         Animația de mai sus arată partea grea a coborârii: pasul cel mai abrupt te duce în valea de
         lângă tine. Pe un sistem A·x = b cu A simetrică pozitiv definită valea e una singură, deci
         capcana dispare — rămâne cealaltă problemă, viteza. Acolo se vede diferența: coborârea alege
-        de fiecare dată direcția de moment și zigzaghează spre soluție, în timp ce direcțiile
+        de fiecare dată direcția de moment și coboară în trepte spre soluție, în timp ce direcțiile
         conjugate țin minte pe unde s-a mers și termină în cel mult n pași.
       </>
     ),

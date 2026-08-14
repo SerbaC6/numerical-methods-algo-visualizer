@@ -49,7 +49,7 @@ import {
 export const meta: MetaMetoda = {
   id: "gradient-descendent",
   titlu: "Gradientul descendent (pașii descrescători)",
-  rezumat: "Merge de fiecare dată pe direcția în care valea coboară cel mai abrupt și zigzaghează.",
+  rezumat: "Merge de fiecare dată pe direcția în care valea coboară cel mai abrupt.",
   sursa: "ecuatii_neliniare_MN_curs6.md",
 };
 
@@ -162,7 +162,7 @@ export function run(p: ParametriGradient): RezultatGradient {
     motiv:
       `S-au consumat cele ${maxIteratii} iterații fără ca ‖r‖ să scadă sub toleranță — ultima valoare e ${zecimale(norma(r), 6)}. ` +
       `Numărul de condiționare al matricei e κ = ${zecimale(kappa, 3)}: cu cât e mai mare, cu atât elipsele de nivel sunt mai alungite, ` +
-      `unghiul drept dintre direcții taie mai puțin din drum și coborârea zigzaghează mai mult înainte să ajungă la fund.`,
+      `unghiul drept dintre direcții taie mai puțin din drum și coborârea are nevoie de mai mulți pași până la fund.`,
     ...context,
   };
 }
