@@ -45,6 +45,14 @@ export type IntrareAlgoritm = {
    * Implicit toate paginile au clip; se scrie explicit doar excepția.
    */
   clipManim?: boolean;
+  /**
+   * `false` dacă pagina **nu primește** interfață interactivă, prin decizie — nu
+   * „încă nu are". Ca la `clipManim`, atunci secțiunea „Interactiv" lipsește cu
+   * totul: fără schelet, fără text de așteptare.
+   *
+   * Implicit toate paginile au interfață; se scrie explicit doar excepția.
+   */
+  interactiv?: boolean;
   /** `false` cât timp pagina e doar schelet. */
   gata: boolean;
 };
@@ -206,6 +214,9 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Matrice stocastică", "Matricea Google", "Metoda puterii", "Deflație pe blocuri"],
     dificultate: "mediu",
     cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
+    // Pagina se sprijină pe clip și pe teorie; interfața interactivă a fost
+    // construită și scoasă prin decizie, deci secțiunea nu se pune deloc.
+    interactiv: false,
     gata: false,
   },
   {

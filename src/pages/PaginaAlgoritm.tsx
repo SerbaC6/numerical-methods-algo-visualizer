@@ -85,10 +85,15 @@ export default function PaginaAlgoritm() {
   // integrare și ODE") — capitolul e mai fin decât atât și nu apare în antet.
   const sectiune = CAPITOLE[pagina.capitol].sectiune;
 
-  // O pagină fără clip Manim nu are secțiunea „Vizual" deloc — nu un schelet
-  // gol, care ar spune tăcut „aici lipsește ceva". `clipManim` e `undefined`
-  // pentru paginile obișnuite, deci doar excepția scoate secțiunea.
-  const sectiuni = SECTIUNI_PAGINA.filter((s) => s.id !== "vizual" || pagina.clipManim !== false);
+  // O pagină care **nu primește** o secțiune, prin decizie, n-o are deloc — nu un
+  // schelet gol, care ar spune tăcut „aici lipsește ceva". Amândouă steagurile
+  // sunt `undefined` pentru paginile obișnuite, deci doar excepțiile scot ceva:
+  // pagina 6 e fără clip, pagina 9 fără interfață interactivă.
+  const sectiuni = SECTIUNI_PAGINA.filter(
+    (s) =>
+      (s.id !== "vizual" || pagina.clipManim !== false) &&
+      (s.id !== "interactiv" || pagina.interactiv !== false),
+  );
 
   return (
     <>
