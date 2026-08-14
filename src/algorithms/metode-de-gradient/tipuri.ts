@@ -6,7 +6,7 @@
  * (SPD, direcție de căutare și pas, A-ortogonalitate, schema din §8.6).**
  *
  * **De ce un singur tip de pas pentru două notații.** Cursul 6 scrie coborârea
- * cu `α` și `r^(k)`; cursul 5 scrie gradientul conjugat cu `t_k`, `v^(k)` și
+ * cu `α` și `r^(k)`; cursul 5 scrie gradientul Conjugat cu `t_k`, `v^(k)` și
  * `s_k`. Sunt notații diferite pentru mărimi care joacă **același rol în
  * desen**: „încotro" și „cât de departe". De aceea câmpurile se numesc aici
  * `directie` și `pas`, iar notația fiecărui curs trăiește exclusiv în

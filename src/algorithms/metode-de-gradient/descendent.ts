@@ -48,7 +48,7 @@ import {
 
 export const meta: MetaMetoda = {
   id: "gradient-descendent",
-  titlu: "Gradientul descendent (pașii descrescători)",
+  titlu: "Gradientul Descendent (pașii descrescători)",
   rezumat: "Merge de fiecare dată pe direcția în care valea coboară cel mai abrupt.",
   sursa: "ecuatii_neliniare_MN_curs6.md",
 };

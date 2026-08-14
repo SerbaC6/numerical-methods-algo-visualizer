@@ -177,11 +177,11 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "metode-de-gradient",
     numar: 7,
-    titlu: "Gradient descendent, gradient conjugat",
+    titlu: "Gradient Descendent, Gradient Conjugat",
     capitol: "ecuatii-optimizare",
     descriere:
       "Coborârea într-o vale: de ce pasul cel mai abrupt coboară de-a curmezișul și cum îl îndreaptă direcțiile conjugate.",
-    metode: ["Gradient descendent", "Gradient conjugat", "Precondiționare"],
+    metode: ["Gradient Descendent", "Gradient Conjugat", "Precondiționare"],
     dificultate: "greu",
     cursSursa: ["ecuatii_neliniare_MN_curs6.md", "sisteme_liniare_metode_iterative_MN_curs5.md"],
     gata: false,

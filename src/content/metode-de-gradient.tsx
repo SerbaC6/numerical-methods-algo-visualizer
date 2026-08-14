@@ -1,10 +1,10 @@
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
- * Pagina 7 — gradientul descendent (pașii descrescători) și gradientul conjugat.
+ * Pagina 7 — gradientul Descendent (pașii descrescători) și gradientul Conjugat.
  *
  * **Surse: `cursuri_MN/ecuatii_neliniare_MN_curs6.md`, §4 (gradientul
- * descendent, alegerea lui α, gradientul conjugat) și
+ * descendent, alegerea lui α, gradientul Conjugat) și
  * `cursuri_MN/sisteme_liniare_metode_iterative_MN_curs5.md`, §8 (SPD, direcții
  * de căutare, A-ortogonalitate, schema din §8.6).** Nimic scris din memorie.
  *
@@ -21,7 +21,7 @@ import type { ContinutPagina } from "@/content/tipuri";
  * - pașii descrescători, cu `α` din line search, converg la `x*` (după 12
  *   iterații, ‖r‖² ≈ 5,6·10⁻¹³), iar reziduul recurent `r^(k+1) = r^(k) − α·A·r^(k)`
  *   coincide cu `b − A·x^(k+1)`;
- * - gradientul conjugat dă **exact** `x* = (1/11, 7/11)` după `n = 2` pași, cu
+ * - gradientul Conjugat dă **exact** `x* = (1/11, 7/11)` după `n = 2` pași, cu
  *   reziduu nul și `⟨v^(1), A·v^(2)⟩ = 0` — adică A-ortogonalitatea cerută.
  */
 export const continutMetodeDeGradient: ContinutPagina = {
@@ -39,7 +39,7 @@ export const continutMetodeDeGradient: ContinutPagina = {
     metode: [
       {
         id: "gradient-descendent",
-        titlu: "Gradientul descendent (pașii descrescători)",
+        titlu: "Gradientul Descendent (pașii descrescători)",
         esenta: (
           <>
             La fiecare pas merge în direcția în care funcția scade cel mai repede: opusul
@@ -143,7 +143,7 @@ export const continutMetodeDeGradient: ContinutPagina = {
 
       {
         id: "gradient-conjugat",
-        titlu: "Gradientul conjugat",
+        titlu: "Gradientul Conjugat",
         esenta: (
           <>
             Alege direcții care nu se încurcă între ele și ajunge la soluția exactă în cel mult n
@@ -218,8 +218,8 @@ export const continutMetodeDeGradient: ContinutPagina = {
                 Reziduurile și direcțiile avansează în același subspațiu Krylov, Kₖ =
                 span&#123;r⁽⁰⁾, A·r⁽⁰⁾, …, A^(k−1)·r⁽⁰⁾&#125;, iar pentru A simetrică pozitiv
                 definită metoda atinge soluția <strong>exactă după cel mult n pași</strong>, dacă nu
-                intervin erori numerice. Pe un sistem 2×2, gradientul descendent tot mai coboară
-                când conjugatul a terminat deja.
+                intervin erori numerice. Pe un sistem 2×2, gradientul Descendent tot mai coboară
+                când Conjugatul a terminat deja.
               </>
             ),
           },

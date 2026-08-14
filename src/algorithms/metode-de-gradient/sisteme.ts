@@ -9,7 +9,7 @@
  * arată blând, iar pașii de la coadă se îngrămădesc lângă `x*`. Cele două
  * capete — valea rotundă și valea alungită — arată tocmai ce nu se vede pe
  * sistemul din curs: că numărul de pași al coborârii **depinde** de formă, iar
- * al gradientului conjugat **nu**.
+ * al gradientului Conjugat **nu**.
  *
  * **Cifrele nu sunt alese din ochi.** `scripts/verificare-algoritmi/sisteme.ts`
  * rulează modulele reale și verifică pe fiecare sistem că A e SPD, că `κ` e cel
@@ -65,7 +65,7 @@ export const SISTEME: readonly SistemGata[] = [
     eticheta: "Vale rotundă",
     // κ = 1: curbele de nivel sunt cercuri, deci direcția cea mai abruptă arată
     // chiar spre fundul văii. Coborârea termină într-un pas — exact ca
-    // gradientul conjugat, care aici n-are ce îmbunătăți.
+    // gradientul Conjugat, care aici n-are ce îmbunătăți.
     valori: { a11: 2, a12: 0, a22: 2, b1: 1, b2: 2, x01: 0, x02: 0, tol: 1e-8, maxIteratii: 40 },
   },
   {
@@ -81,7 +81,7 @@ export const SISTEME: readonly SistemGata[] = [
     // κ = 10: semiaxele elipselor stau în raport √10 ≈ 3,16, deci zigzagul se
     // vede de la primul cot. Toleranța e 10⁻⁴, nu 10⁻⁸, ca rularea să se **și
     // termine**: la 10⁻⁸ coborârea ar cere 68 de pași, adică o derulare din care
-    // nu se mai uită nimeni la ultimii. Cu 10⁻⁴ face 36, iar conjugatul tot 2.
+    // nu se mai uită nimeni la ultimii. Cu 10⁻⁴ face 36, iar Conjugatul tot 2.
     valori: { a11: 10, a12: 0, a22: 1, b1: 1, b2: 2, x01: 0, x02: 0, tol: 1e-4, maxIteratii: 60 },
   },
 ] as const;

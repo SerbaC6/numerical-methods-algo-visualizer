@@ -55,7 +55,7 @@ const INELE = 9;
  *
  * **Nu știe ce metodă rulează.** Ca `GraficRadacina` de pe pagina 6, ramifică pe
  * **datele** pasului, nu pe un nume: `cosDirectii` vine numai de la coborâre,
- * `aOrtogonalitate` și `s` numai de la gradientul conjugat. Așa, adăugarea unei
+ * `aOrtogonalitate` și `s` numai de la gradientul Conjugat. Așa, adăugarea unei
  * a treia metode nu cere nicio modificare aici.
  *
  * Cele două jumătăți ale desenului spun lucruri diferite și amândouă sunt
@@ -279,7 +279,7 @@ export function ValeaGradientului({
  * Numele săgeții, în notația cursului din care vine metoda.
  *
  * Ramificarea e pe **datele** pasului, nu pe un nume de metodă: `s` există doar
- * în schema gradientului conjugat (curs 5, §8.6), unde pasul se numește `t_k` și
+ * în schema gradientului Conjugat (curs 5, §8.6), unde pasul se numește `t_k` și
  * direcția `v⁽ᵏ⁾`; la coborâre (curs 6, §4.1) sunt `α` și `r⁽ᵏ⁾`.
  */
 function etichetaPasului(pas: PasGradient): string {

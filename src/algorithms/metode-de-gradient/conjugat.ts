@@ -1,5 +1,5 @@
 /**
- * Metoda gradientului conjugat.
+ * Metoda gradientului Conjugat.
  *
  * **Sursă: `cursuri_MN/sisteme_liniare_metode_iterative_MN_curs5.md`, §8.6 —
  * schema pe scurt**, luată literal:
@@ -53,7 +53,7 @@ import {
 
 export const meta: MetaMetoda = {
   id: "gradient-conjugat",
-  titlu: "Gradientul conjugat",
+  titlu: "Gradientul Conjugat",
   rezumat: "Alege direcții A-ortogonale între ele și atinge soluția exactă în cel mult n pași.",
   sursa: "sisteme_liniare_metode_iterative_MN_curs5.md",
 };

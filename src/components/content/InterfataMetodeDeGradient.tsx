@@ -26,8 +26,8 @@ import { conditionare, type Mat2, type Vec2 } from "@/lib/curbe-de-nivel";
 import { stiintific, zecimale } from "@/lib/numere";
 
 const METODE = [
-  { id: "descendent", titlu: "Gradientul descendent" },
-  { id: "conjugat", titlu: "Gradientul conjugat" },
+  { id: "descendent", titlu: "Gradientul Descendent" },
+  { id: "conjugat", titlu: "Gradientul Conjugat" },
 ] as const;
 
 type IdMetoda = (typeof METODE)[number]["id"];
@@ -126,7 +126,7 @@ export function InterfataMetodeDeGradient() {
   // pe un sistem pe care ea eșuează n-ar fi nimic de desenat.
   const areComparatie = rezultatCelalalt.pasi.length > 0;
   const aratComparatia = cuComparatie && areComparatie;
-  const numeCelalalt = idMetoda === "descendent" ? "gradientul conjugat" : "coborârea pe gradient";
+  const numeCelalalt = idMetoda === "descendent" ? "gradientul Conjugat" : "coborârea pe gradient";
 
   return (
     <div className="flex flex-col gap-6">
@@ -459,7 +459,7 @@ function numar(valoare: number | "", implicit: number): number {
  * Propoziția de la final: câți pași au trebuit și de ce atâția.
  *
  * Numărul de condiționare nu e un ornament — el e răspunsul la „de ce coborârea
- * are nevoie de zeci de pași, iar gradientul conjugat de doi": valea alungită
+ * are nevoie de zeci de pași, iar gradientul Conjugat de doi": valea alungită
  * face zigzagul lung, iar `n = 2` din curs 5, §8.4 nu depinde deloc de formă.
  */
 function incheiere(idMetoda: IdMetoda, rezultat: RezultatGradient, kappa: number): string {

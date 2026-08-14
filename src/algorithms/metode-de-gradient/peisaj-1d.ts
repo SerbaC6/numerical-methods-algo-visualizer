@@ -2,7 +2,7 @@
  * Peisajul pe care coboară animația paginii 7 și iterația care coboară pe el.
  *
  * **Nu e o metodă din curs și nu respectă contractul `meta`/`params`/`run`.**
- * Cursul definește gradientul descendent pe `f(x) = ½xᵀAx − bᵀx`, cu
+ * Cursul definește gradientul Descendent pe `f(x) = ½xᵀAx − bᵀx`, cu
  * `r = b − Ax` și cu pasul `α` ales prin line search (curs 6, §4.1). Aici e
  * doar **intuiția** aceleiași idei, în dimensiunea 1: gradientul lui `f` e
  * `f′(x)`, direcția de scădere maximă e `−f′(x)`, iar iterația
