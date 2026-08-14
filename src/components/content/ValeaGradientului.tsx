@@ -12,9 +12,10 @@ import { Traiectorie3D } from "@/components/viz/Traiectorie3D";
 import { TraseuReferinta3D } from "@/components/viz/TraseuReferinta3D";
 import {
   centrul,
-  elipsaNivel,
-  niveleEchidistante,
+  elipsaRaza,
+  inaltimePesteFund,
   razaA,
+  razeEchidistante,
   valoare,
   type Mat2,
   type Vec2,
@@ -92,7 +93,22 @@ export function ValeaGradientului({
   inaltimeMaxima = 560,
   className,
 }: ValeaGradientuluiProps) {
-  const inaltime = useMemo(() => (x: number, y: number) => valoare(A, b, [x, y]), [A, b]);
+  /**
+   * Înălțimea desenată e măsurată **de la fundul văii**, nu de la zero.
+   *
+   * Nu e o alegere de încadrare, e o condiție ca desenul să existe: aproape de
+   * `x*`, `f(p)` și `f(x*)` diferă în cifre pe care virgula mobilă nu le mai
+   * are, iar scăderea lor dă zero sau chiar negativ — măsurat, exact asta se
+   * întâmpla la ultimii pași, iar valea se desena ca un plan gol. Tabelul cu
+   * cifrele stă la `inaltimePesteFund`. Când A nu are centru (nu e SPD), se
+   * cade înapoi pe valoarea absolută, care acolo e singura definită.
+   */
+  const areCentru = useMemo(() => centrul(A, b) !== null, [A, b]);
+  const h = useMemo(
+    () => (p: Vec2) => (areCentru ? inaltimePesteFund(A, b, p) : valoare(A, b, p)),
+    [A, b, areCentru],
+  );
+  const inaltime = useMemo(() => (x: number, y: number) => h([x, y]), [h]);
 
   /**
    * Toate punctele pe care desenul trebuie să le cuprindă: drumul, fundul văii
@@ -147,9 +163,9 @@ export function ValeaGradientului({
    */
   const cutie = useMemo<Cutie>(() => {
     const fund = solutie
-      ? valoare(A, b, solutie)
+      ? h(solutie)
       : puncteImportante.length > 0
-        ? Math.min(...puncteImportante.map((p) => valoare(A, b, p)))
+        ? Math.min(...puncteImportante.map((p) => h(p)))
         : 0;
     const colturi: Vec2[] = [
       [x[0], y[0]],
@@ -157,10 +173,10 @@ export function ValeaGradientului({
       [x[0], y[1]],
       [x[1], y[1]],
     ];
-    const varf = Math.max(...colturi.map((c) => valoare(A, b, c)));
+    const varf = Math.max(...colturi.map((c) => h(c)));
 
     return { x, y, z: [fund, varf > fund ? varf : fund + 1] };
-  }, [A, b, x, y, puncteImportante, solutie]);
+  }, [h, x, y, puncteImportante, solutie]);
 
   /** Harta de nivel de pe podea. Exactă, nu eșantionată — vezi `curbe-de-nivel.ts`. */
   const curbeFundal = useMemo(() => {
@@ -174,15 +190,23 @@ export function ValeaGradientului({
     const raza = Math.max(...colturi.map((c) => razaA(A, b, c)));
     if (!Number.isFinite(raza) || raza <= 0) return [];
 
-    return niveleEchidistante(A, b, raza, INELE)
-      .map((nivel) => elipsaNivel(A, b, nivel, 96))
+    // Prin rază, nu prin nivel: raza se calculează din vectorul diferență, deci
+    // nu trece prin scăderea care se pierde lângă `x*`.
+    return razeEchidistante(raza, INELE)
+      .map((rho) => elipsaRaza(A, b, rho, 96))
       .filter((c) => c.length > 0);
   }, [A, b, cutie]);
 
-  /** Curba de nivel pe care stă chiar punctul curent. O evaluare, exactă. */
+  /**
+   * Curba de nivel pe care stă chiar punctul curent.
+   *
+   * Se cere prin **rază** (`razaA`, calculată din vectorul `x⁽ᵏ⁾ − x*`), nu prin
+   * nivel: la ultimii pași nivelul nu se mai poate scădea din `f(x*)`, iar curba
+   * — tocmai explicația zigzagului — dispărea de pe ecran.
+   */
   const curbaCurenta = useMemo(() => {
     if (!pas) return [];
-    const curba = elipsaNivel(A, b, valoare(A, b, pas.x), 128);
+    const curba = elipsaRaza(A, b, razaA(A, b, pas.x), 128);
     return curba.length > 0 ? [curba] : [];
   }, [A, b, pas]);
 
@@ -190,24 +214,24 @@ export function ValeaGradientului({
     const lista: Punct3[] = [];
     const prim = pasi[0];
     if (prim) {
-      lista.push({ x: prim.xAnterior[0], y: prim.xAnterior[1], z: valoare(A, b, prim.xAnterior) });
+      lista.push({ x: prim.xAnterior[0], y: prim.xAnterior[1], z: h(prim.xAnterior) });
     }
-    for (const p of pasi) lista.push({ x: p.x[0], y: p.x[1], z: p.f });
+    for (const p of pasi) lista.push({ x: p.x[0], y: p.x[1], z: h(p.x) });
     return lista;
-  }, [A, b, pasi]);
+  }, [h, pasi]);
 
   // Punctul curent din `drum` e cu unu mai departe decât indicele pasului:
   // `drum[0]` e pornirea `x⁽⁰⁾`, care nu e produsă de niciun pas.
   const indiceDrum = pas ? Math.max(0, Math.min(pasCurent, pasi.length - 1)) + 1 : 0;
 
-  const varfSageata: Punct3 | null = pas ? { x: pas.x[0], y: pas.x[1], z: pas.f } : null;
+  const varfSageata: Punct3 | null = pas ? { x: pas.x[0], y: pas.x[1], z: h(pas.x) } : null;
   const coadaSageata: Punct3 | null = pas
-    ? { x: pas.xAnterior[0], y: pas.xAnterior[1], z: valoare(A, b, pas.xAnterior) }
+    ? { x: pas.xAnterior[0], y: pas.xAnterior[1], z: h(pas.xAnterior) }
     : null;
 
   const pornire = drum[0];
   const fundulVaii: Punct3 | null = solutie
-    ? { x: solutie[0], y: solutie[1], z: valoare(A, b, solutie) }
+    ? { x: solutie[0], y: solutie[1], z: h(solutie) }
     : null;
 
   return (

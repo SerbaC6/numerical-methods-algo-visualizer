@@ -165,10 +165,24 @@ export function normalizeaza(p: Punct3, cutie: Cutie, exagerareZ: number): Punct
   };
 }
 
+/**
+ * O latură de cutie, cu singura pază de care are nevoie: să nu fie nulă.
+ *
+ * **Pragul nu poate fi absolut.** Cu `Math.max(latura, 1e-12)`, o cutie
+ * legitim mică era înlocuită tăcut cu una de 10⁻¹²: la ultimii pași ai
+ * coborârii, înălțimea văii peste fundul ei e ~10⁻¹⁶ pe cadrul vizibil, iar
+ * pragul o strivea la o zecime de mie din cutie — adică valea se desena ca un
+ * plan gol. Aici o cutie subțire e un caz normal, nu o eroare; degenerată e
+ * doar cea de lățime zero.
+ */
+function laturaNenula(latura: number): number {
+  return Number.isFinite(latura) && latura > 0 ? latura : 1;
+}
+
 function masuriCutie(cutie: Cutie) {
-  const latimeX = Math.max(cutie.x[1] - cutie.x[0], 1e-12);
-  const latimeY = Math.max(cutie.y[1] - cutie.y[0], 1e-12);
-  const latimeZ = Math.max(cutie.z[1] - cutie.z[0], 1e-12);
+  const latimeX = laturaNenula(cutie.x[1] - cutie.x[0]);
+  const latimeY = laturaNenula(cutie.y[1] - cutie.y[0]);
+  const latimeZ = laturaNenula(cutie.z[1] - cutie.z[0]);
 
   return {
     centruX: (cutie.x[0] + cutie.x[1]) / 2,

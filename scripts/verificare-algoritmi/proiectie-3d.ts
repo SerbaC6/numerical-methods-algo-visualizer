@@ -518,5 +518,52 @@ console.log("\n=== 11. Tăierea drumului la fereastra scenei ===");
   );
 }
 
+console.log("\n=== 12. O cutie legitim subțire își păstrează relieful ===");
+{
+  // Bugul pe care îl prinde: cu un prag absolut (`Math.max(latura, 1e-12)`), o
+  // cutie mai subțire decât pragul era înlocuită tăcut cu una de 10⁻¹². La
+  // ultimii pași ai coborârii, valea are ~10⁻¹⁶ înălțime pe cadrul vizibil, deci
+  // se desena ca un plan gol — deși forma ei e aceeași la orice scară.
+  //
+  // Proprietatea cerută: scena e **invariantă la scară**. Aceeași cutie,
+  // micșorată de 10¹⁰ ori pe toate axele, trebuie să dea exact aceleași pixeli.
+  const mare: Cutie = { x: [-1, 1], y: [-1, 1], z: [0, 2] };
+  const proiMare = creeazaProiectie(CAMERA_IMPLICITA, mare, ZONA, EXAGERARE);
+
+  let abatereMaxima = 0;
+  for (const factor of [1e-4, 1e-8, 1e-12, 1e-16]) {
+    const mica: Cutie = {
+      x: [-factor, factor],
+      y: [-factor, factor],
+      z: [0, 2 * factor],
+    };
+    const proiMica = creeazaProiectie(CAMERA_IMPLICITA, mica, ZONA, EXAGERARE);
+
+    for (const [u, v, w] of [
+      [0.5, -0.25, 1.5],
+      [-1, 1, 0],
+      [1, 1, 2],
+    ] as const) {
+      const a = proiMare.laEcran({ x: u, y: v, z: w });
+      const b = proiMica.laEcran({ x: u * factor, y: v * factor, z: w * factor });
+      abatereMaxima = Math.max(abatereMaxima, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+    }
+  }
+  verifica(
+    "aceeași imagine la orice scară a cutiei",
+    abatereMaxima < 1e-9,
+    `abatere maximă ${abatereMaxima.toExponential(2)} px`,
+  );
+
+  // Iar cutia chiar degenerată nu produce NaN.
+  const plata: Cutie = { x: [0, 1], y: [0, 1], z: [3, 3] };
+  const p = creeazaProiectie(CAMERA_IMPLICITA, plata, ZONA, EXAGERARE).laEcran({
+    x: 0.5,
+    y: 0.5,
+    z: 3,
+  });
+  verifica("cutia cu înălțime zero nu dă NaN", Number.isFinite(p.x) && Number.isFinite(p.y));
+}
+
 console.log(picate === 0 ? "\n✓ proiecția 3D e verificată" : `\n✗ ${picate} verificări au picat`);
 process.exit(picate === 0 ? 0 : 1);

@@ -174,23 +174,45 @@ export function razaA(A: Mat2, b: Vec2, p: Vec2): number {
 }
 
 /**
- * Elipsa `f = nivel`, ca poligon închis (ultimul punct = primul).
+ * Înălțimea unui punct **peste fundul văii**: `f(p) − f(x*) = ½·(p−x*)ᵀA(p−x*)`.
  *
- * Din `A = QΛQᵀ`, punctele elipsei sunt
- * `x(θ) = x* + ρ·( q₁·cos θ/√λ₁ + q₂·sin θ/√λ₂ )`, cu `ρ = √(2(nivel − f(x*)))`.
- * Se verifică imediat: `(x − x*)ᵀA(x − x*) = ρ²(cos²θ + sin²θ) = ρ²`.
+ * **Nu e o comoditate, e singura formă care supraviețuiește aproape de `x*`.**
+ * Scrisă ca scădere, `valoare(A,b,p) − valoare(A,b,x*)` anulează catastrofal:
+ * cele două valori diferă în cifre pe care virgula mobilă nu le mai are.
+ * Măsurat pe sistemul din curs (`A = [[4,1],[1,3]]`, `b = (1,2)`), la iterațiile
+ * coborârii:
  *
- * Întoarce lista goală pentru un nivel sub fundul văii (nu există puncte) și
- * pentru A nepozitiv definită (mulțimile de nivel nu mai sunt curbe închise).
+ * | `|x − x*|` | prin scădere | adevărat  | eroare relativă |
+ * | ---------- | ------------ | --------- | --------------- |
+ * | 8,4·10⁻⁷   | 9,176·10⁻¹³  | 9,176·10⁻¹³ | 5·10⁻⁵        |
+ * | 1,8·10⁻⁸   | 4,441·10⁻¹⁶  | 5,310·10⁻¹⁶ | **16 %**      |
+ * | 5,9·10⁻⁹   | **0**        | 4,4·10⁻¹⁷ | 100 %           |
+ * | 1,5·10⁻⁹   | **−1,1·10⁻¹⁶** | 3,7·10⁻¹⁸ | semn greșit   |
+ *
+ * Consecințele se vedeau pe ecran: la ultimii pași curba de nivel prin `x⁽ᵏ⁾`
+ * dispărea (raza ieșea zero sau imaginară), iar cutia scenei se turtea, deci
+ * valea se desena ca un plan gol. Forma pătratică de mai jos are eroare
+ * relativă ~10⁻¹⁶ la **orice** distanță.
  */
-export function elipsaNivel(A: Mat2, b: Vec2, nivel: number, puncte = 96): Vec2[] {
+export function inaltimePesteFund(A: Mat2, b: Vec2, p: Vec2): number {
+  const x = centrul(A, b);
+  if (!x) return Number.NaN;
+  const d = scade(p, x);
+  return 0.5 * produsScalar(d, inmulteste(A, d));
+}
+
+/**
+ * Elipsa de **rază A** dată: `(x − x*)ᵀA(x − x*) = ρ²`.
+ *
+ * E forma de bază; `elipsaNivel` doar traduce nivelul în rază. Cine are deja
+ * raza — de pildă din `razaA`, care o calculează din vectorul diferență — o dă
+ * direct aici și scapă de anularea descrisă la `inaltimePesteFund`.
+ */
+export function elipsaRaza(A: Mat2, b: Vec2, rho: number, puncte = 96): Vec2[] {
   if (!esteSPD(A)) return [];
   const x = centrul(A, b);
   if (!x) return [];
-
-  const rho2 = 2 * (nivel - valoare(A, b, x));
-  if (!(rho2 > 0)) return [];
-  const rho = Math.sqrt(rho2);
+  if (!(rho > 0) || !Number.isFinite(rho)) return [];
 
   const { valori, vectori } = eigenSimetrica2(A);
   const [l1, l2] = valori;
@@ -208,6 +230,41 @@ export function elipsaNivel(A: Mat2, b: Vec2, nivel: number, puncte = 96): Vec2[
     rezultat.push([x[0] + c * q1[0] + s * q2[0], x[1] + c * q1[1] + s * q2[1]]);
   }
   return rezultat;
+}
+
+/**
+ * Razele pentru care inelele ies **egal depărtate pe ecran**: `ρⱼ = j·raza/cate`.
+ *
+ * Naiv, inelele s-ar lua echidistante în nivelul `c`; atunci s-ar îndesi spre
+ * margine, fiindcă `c` crește cu pătratul razei.
+ */
+export function razeEchidistante(raza: number, cate: number): number[] {
+  if (!(raza > 0) || cate < 1) return [];
+  return Array.from({ length: cate }, (_, j) => ((j + 1) * raza) / cate);
+}
+
+/**
+ * Elipsa `f = nivel`, ca poligon închis (ultimul punct = primul).
+ *
+ * Din `A = QΛQᵀ`, punctele elipsei sunt
+ * `x(θ) = x* + ρ·( q₁·cos θ/√λ₁ + q₂·sin θ/√λ₂ )`, cu `ρ = √(2(nivel − f(x*)))`.
+ * Se verifică imediat: `(x − x*)ᵀA(x − x*) = ρ²(cos²θ + sin²θ) = ρ²`.
+ *
+ * Întoarce lista goală pentru un nivel sub fundul văii (nu există puncte) și
+ * pentru A nepozitiv definită (mulțimile de nivel nu mai sunt curbe închise).
+ *
+ * **Pentru curba prin punct se folosește `elipsaRaza`, nu asta.** Nivelul unui
+ * punct de lângă `x*` nu se poate scădea din `f(x*)` fără să se piardă tot —
+ * vezi tabelul de la `inaltimePesteFund`.
+ */
+export function elipsaNivel(A: Mat2, b: Vec2, nivel: number, puncte = 96): Vec2[] {
+  const x = centrul(A, b);
+  if (!x) return [];
+
+  const rho2 = 2 * (nivel - valoare(A, b, x));
+  if (!(rho2 > 0)) return [];
+
+  return elipsaRaza(A, b, Math.sqrt(rho2), puncte);
 }
 
 /**

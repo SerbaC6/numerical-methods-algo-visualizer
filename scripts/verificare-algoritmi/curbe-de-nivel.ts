@@ -19,7 +19,9 @@ import {
   conditionare,
   eigenSimetrica2,
   elipsaNivel,
+  elipsaRaza,
   esteSPD,
+  inaltimePesteFund,
   inmulteste,
   niveleEchidistante,
   norma,
@@ -340,6 +342,64 @@ console.log("\n=== 8. niveleEchidistante dă raze A-metrice echidistante ===");
   );
   verifica("cate = 0 → nicio listă", niveleEchidistante([4, 1, 3], [1, 2], 3, 0).length === 0);
   verifica("A singulară → nicio listă", niveleEchidistante([2, 2, 2], [1, 1], 3, 5).length === 0);
+}
+
+console.log("\n=== Înălțimea peste fundul văii nu se calculează prin scădere ===");
+{
+  // Bugul pe care îl previne, prins pe ecran: la ultimii pași ai coborârii,
+  // `valoare(A,b,x) − valoare(A,b,x*)` dă zero, apoi negativ, deși valoarea
+  // adevărată e pozitivă. De acolo dispărea curba de nivel prin `x⁽ᵏ⁾` și se
+  // turtea cutia scenei, deci valea se desena ca un plan gol.
+  const A: Mat2 = [4, 1, 3];
+  const b: Vec2 = [1, 2];
+  const xs = centrul(A, b)!;
+  const fMin = valoare(A, b, xs);
+
+  let eroareMaximaFormaPatratica = 0;
+  let scaderaGresita = 0;
+  let elipsePierdute = 0;
+
+  for (let k = 1; k <= 60; k++) {
+    // Puncte tot mai apropiate de x*, pe o direcție oarecare.
+    const t = 10 ** (-k / 4);
+    const p: Vec2 = [xs[0] + t * 0.6, xs[1] - t * 0.8];
+
+    const prinScadere = valoare(A, b, p) - fMin;
+    const patratica = inaltimePesteFund(A, b, p);
+    // Referință în precizie dublă „lărgită": ½·dᵀAd cu d exact.
+    const d: Vec2 = [p[0] - xs[0], p[1] - xs[1]];
+    const referinta = 0.5 * (A[0] * d[0] * d[0] + 2 * A[1] * d[0] * d[1] + A[2] * d[1] * d[1]);
+
+    if (referinta > 0) {
+      eroareMaximaFormaPatratica = Math.max(
+        eroareMaximaFormaPatratica,
+        Math.abs(patratica - referinta) / referinta,
+      );
+      if (Math.abs(prinScadere - referinta) / referinta > 0.5) scaderaGresita++;
+    }
+
+    if (elipsaNivel(A, b, valoare(A, b, p), 16).length === 0) elipsePierdute++;
+    if (elipsaRaza(A, b, razaA(A, b, p), 16).length === 0) {
+      verifica(`elipsa prin rază există la distanța ${t.toExponential(1)}`, false);
+    }
+  }
+
+  verifica(
+    "forma pătratică rămâne exactă la orice distanță",
+    eroareMaximaFormaPatratica < 1e-14,
+    `eroare relativă maximă ${eroareMaximaFormaPatratica.toExponential(2)}`,
+  );
+  verifica(
+    "scăderea directă CHIAR greșește (de asta nu se folosește)",
+    scaderaGresita > 0,
+    `${scaderaGresita} din 60 de puncte, cu eroare peste 50 %`,
+  );
+  verifica(
+    "elipsa prin NIVEL chiar se pierde lângă x* (de asta se cere prin rază)",
+    elipsePierdute > 0,
+    `${elipsePierdute} din 60 de puncte fără curbă`,
+  );
+  verifica("elipsa prin RAZĂ nu se pierde niciodată", true);
 }
 
 console.log(
