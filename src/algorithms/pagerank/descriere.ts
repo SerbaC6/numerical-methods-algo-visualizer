@@ -53,11 +53,7 @@ export function clasamentText(clasament: LocClasament[]): string {
 }
 
 /** Propoziția citită de cititorul de ecran: ce arată graful la pasul curent. */
-export function descrieScena(
-  pas: PasPageRank | undefined,
-  total: number,
-  nume: string[],
-): string {
+export function descrieScena(pas: PasPageRank | undefined, total: number, nume: string[]): string {
   if (!pas) return "Nu s-a calculat încă niciun pas.";
 
   const antet = `Pasul ${pas.index} din ${total}.`;

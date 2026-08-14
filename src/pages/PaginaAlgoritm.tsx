@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type ComponentType } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
@@ -6,6 +6,7 @@ import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registr
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
+import { InterfataPageRank } from "@/components/content/InterfataPageRank";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -42,6 +43,23 @@ const SECTIUNI_PAGINA = [
     descriere: "Interfața cu care schimbi parametrii și vezi ce se întâmplă.",
   },
 ] as const;
+
+/**
+ * Ce piesă vizuală are fiecare pagină, pe slug.
+ *
+ * Tabel, nu un lanț de condiții: cu trei pagini scrise mergeau și `if`-urile,
+ * dar fiecare pagină nouă adăuga încă o ramură în JSX-ul de mai jos, iar
+ * secțiunea „Vizual" și cea „Interactiv" ajungeau descrise în locuri diferite.
+ * Aici o pagină e un rând; ce lipsește din rând rămâne schelet tăcut.
+ */
+const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: ComponentType }> = {
+  "ecuatii-neliniare": { interactiv: InterfataEcuatiiNeliniare },
+  "metode-de-gradient": {
+    vizual: AnimatieCoborarePeGradient,
+    interactiv: InterfataMetodeDeGradient,
+  },
+  pagerank: { interactiv: InterfataPageRank },
+};
 
 /**
  * Scheletul unei pagini de metodă. Aceeași componentă pentru toate rutele —
@@ -102,10 +120,13 @@ export default function PaginaAlgoritm() {
             // Secțiunea are conținut? Îl arătăm. Dacă nu, rămâne scheletul —
             // fără nicio etichetă care să spună că lipsește ceva.
             const scris = s.id === "teorie" ? continut?.teorie : undefined;
-            const interactiv = s.id === "interactiv" && pagina.slug === "ecuatii-neliniare";
-            const interactivGradient =
-              s.id === "interactiv" && pagina.slug === "metode-de-gradient";
-            const vizual = s.id === "vizual" && pagina.slug === "metode-de-gradient";
+            const piese = PIESE_PAGINA[pagina.slug];
+            const Piesa =
+              s.id === "interactiv"
+                ? piese?.interactiv
+                : s.id === "vizual"
+                  ? piese?.vizual
+                  : undefined;
 
             return (
               <section key={s.id} aria-labelledby={`sectiune-${s.id}`}>
@@ -116,17 +137,9 @@ export default function PaginaAlgoritm() {
                   <div className="mt-4">
                     <TeorieScurta continut={scris} />
                   </div>
-                ) : interactiv ? (
+                ) : Piesa ? (
                   <div className="mt-4">
-                    <InterfataEcuatiiNeliniare />
-                  </div>
-                ) : interactivGradient ? (
-                  <div className="mt-4">
-                    <InterfataMetodeDeGradient />
-                  </div>
-                ) : vizual ? (
-                  <div className="mt-4">
-                    <AnimatieCoborarePeGradient />
+                    <Piesa />
                   </div>
                 ) : (
                   <>

@@ -49,7 +49,15 @@ export const meta: MetaMetoda = {
 };
 
 export const params: Parametru[] = [
-  { nume: "d", eticheta: "d — șansa de a urma un link", tip: "numar", implicit: 0.85, min: 0.5, max: 0.99, pas: 0.01 },
+  {
+    nume: "d",
+    eticheta: "d — șansa de a urma un link",
+    tip: "numar",
+    implicit: 0.85,
+    min: 0.5,
+    max: 0.99,
+    pas: 0.01,
+  },
   { nume: "tol", eticheta: "toleranța pentru ‖v − vprev‖", tip: "numar", implicit: 1e-6 },
   { nume: "maxIteratii", eticheta: "iterații maxime", tip: "numar", implicit: 100, min: 1, pas: 1 },
 ];
@@ -99,7 +107,7 @@ export function run(p: ParametriPageRank): RezultatPageRank {
     matrice: A,
     explicatie:
       "Se scrie rețeaua ca matrice: pe linia i stau link-urile care pleacă din pagina i, " +
-      "deci a[i][j] = 1 înseamnă „pagina i trimite către pagina j". " +
+      "deci a[i][j] = 1 se citește: pagina i trimite către pagina j. " +
       `Din fiecare pagină pleacă ${grade.map((g, i) => `${nume[i] ?? `P${i + 1}`}: ${g}`).join(", ")} link-uri.`,
     latexPas: `\\htmlId{pr-A}{A} = ${matriceLatex(A)}`,
     evidentiaza: ["pr-A"],
@@ -219,8 +227,7 @@ export function run(p: ParametriPageRank): RezultatPageRank {
       "Bucla s-a oprit, iar ultima linie a algoritmului împarte vectorul la suma modulelor lui, nu la lungime: " +
       "abia acum cifrele însumează 100 % și se pot citi ca probabilități. " +
       `Clasamentul e ${clasamentText(clasament)}.`,
-    latexPas:
-      `\\htmlId{pr-final}{R} = \\frac{v^{(${iteratii})}}{\\lVert v^{(${iteratii})}\\rVert_1} = ${vectorLatex(pagerank)}`,
+    latexPas: `\\htmlId{pr-final}{R} = \\frac{v^{(${iteratii})}}{\\lVert v^{(${iteratii})}\\rVert_1} = ${vectorLatex(pagerank)}`,
     evidentiaza: ["pr-final"],
   });
 
@@ -240,7 +247,8 @@ export function construiesteClasament(scoruri: number[], nume: string[]): LocCla
   const clasament: LocClasament[] = [];
   for (const [pozitie, intrare] of ordonate.entries()) {
     const anterior = clasament.at(-1);
-    const egal = anterior !== undefined && Math.abs(anterior.scor - intrare.scor) < TOLERANTA_EGALITATE;
+    const egal =
+      anterior !== undefined && Math.abs(anterior.scor - intrare.scor) < TOLERANTA_EGALITATE;
     clasament.push({ ...intrare, loc: egal ? anterior.loc : pozitie + 1 });
   }
   return clasament;

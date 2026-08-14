@@ -3,6 +3,9 @@ import { zecimale, zecimaleUtile } from "@/lib/numere";
 import type { Ecran, Punct3 } from "@/lib/proiectie-3d";
 import { culoareRol } from "@/lib/viz-roles";
 
+/** Cât se împinge, de-a lungul muchiei lui, numărul care cade pe colțul comun. */
+const IMPINGERE_COLT = 22;
+
 export type Podea3DProps = {
   /** Câte pătrate are grila pe fiecare latură. */
   diviziuni?: number;
@@ -81,13 +84,34 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
    *
    * Numărul de zecimale se ia din latura cutiei: la o apropiere de o mie de ori,
    * două zecimale ar scrie același număr la ambele capete.
+   *
+   * **Colțul dinspre privitor e capăt pentru amândouă muchiile**, deci acolo cad
+   * două numere unul peste altul — măsurat, exact în același punct de ecran.
+   * Cel de pe colț se împinge de-a lungul **muchiei lui**, spre celălalt capăt,
+   * deci fiecare număr rămâne lipit de axa pe care o măsoară și cele două se
+   * despart.
    */
   const cifre = zecimaleUtile(Math.max(x1 - x0, y1 - y0), 1);
+
+  const departeDeColt = (capat: Ecran, celalaltCapat: Ecran, peColt: boolean) => {
+    if (!peColt) return { dx: 0, dy: 0 };
+    const vx = celalaltCapat.x - capat.x;
+    const vy = celalaltCapat.y - capat.y;
+    const lungime = Math.hypot(vx, vy);
+    if (lungime < 1e-6) return { dx: 0, dy: 0 };
+    return { dx: (vx / lungime) * IMPINGERE_COLT, dy: (vy / lungime) * IMPINGERE_COLT };
+  };
+
+  const capX0 = la({ x: x0, y: yAproape, z });
+  const capX1 = la({ x: x1, y: yAproape, z });
+  const capY0 = la({ x: xAproape, y: y0, z });
+  const capY1 = la({ x: xAproape, y: y1, z });
+
   const numere = [
-    { cheie: "x0", valoare: x0, punct: la({ x: x0, y: yAproape, z }) },
-    { cheie: "x1", valoare: x1, punct: la({ x: x1, y: yAproape, z }) },
-    { cheie: "y0", valoare: y0, punct: la({ x: xAproape, y: y0, z }) },
-    { cheie: "y1", valoare: y1, punct: la({ x: xAproape, y: y1, z }) },
+    { cheie: "x0", valoare: x0, punct: capX0, ...departeDeColt(capX0, capX1, x0 === xAproape) },
+    { cheie: "x1", valoare: x1, punct: capX1, ...departeDeColt(capX1, capX0, x1 === xAproape) },
+    { cheie: "y0", valoare: y0, punct: capY0, ...departeDeColt(capY0, capY1, y0 === yAproape) },
+    { cheie: "y1", valoare: y1, punct: capY1, ...departeDeColt(capY1, capY0, y1 === yAproape) },
   ];
 
   const etichete = [
@@ -120,8 +144,8 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
           return (
             <text
               key={n.cheie}
-              x={n.punct.x + d.dx}
-              y={n.punct.y + d.dy}
+              x={n.punct.x + d.dx + n.dx}
+              y={n.punct.y + d.dy + n.dy}
               dy="0.32em"
               textAnchor={d.ancora}
               stroke="var(--suprafata)"
