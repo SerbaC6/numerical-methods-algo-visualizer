@@ -5,6 +5,7 @@ import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
 import { continutFactorizariLu } from "@/content/factorizari-lu";
 import { continutFft } from "@/content/fft";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
+import { continutMetodeIterative } from "@/content/metode-iterative";
 import { continutPagerank } from "@/content/pagerank";
 import type { ContinutPagina } from "@/content/tipuri";
 
@@ -22,6 +23,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "eliminare-gaussiana": continutEliminareGaussiana,
   "factorizari-lu": continutFactorizariLu,
   fft: continutFft,
+  "metode-iterative": continutMetodeIterative,
   "metode-de-gradient": continutMetodeDeGradient,
   pagerank: continutPagerank,
 };

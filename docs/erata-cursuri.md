@@ -294,3 +294,90 @@ pe care se sprijină e celălalt.
 Testele care țin erata pe loc sunt în `scripts/verificare-algoritmi/eliminare-gaussiana.ts`: se cere
 explicit ca pivotarea parțială să **permute** pe sistemul din §5.1 și să **nu** permute pe cel din
 §5.3. Dacă cineva „repară" alegerea înapoi la litera observației, verificarea pică.
+---
+
+## curs5, §5.1 — „ori converg amândouă, ori niciuna"
+
+**Cursul scrie**, în comparația Jacobi vs. Gauss-Seidel, două afirmații fără nicio ipoteză în jurul
+lor:
+
+> - **Teorema Stein-Rosenberg**: metodele Jacobi și Gauss-Seidel ori sunt ambele convergente, ori
+>   niciuna nu este convergentă.
+> - Atunci când converg, Gauss-Seidel converge mai rapid decât Jacobi: `ρ(GS) < ρ(J) < 1`.
+
+Teorema Stein-Rosenberg **cere ca matricea de iterație Jacobi să aibă toate elementele nenegative**
+— adică, pentru o matrice cu diagonala pozitivă, ca elementele din afara diagonalei să fie ≤ 0.
+Scrisă fără ipoteza aia, afirmația e falsă, iar contraexemplul stă **în același curs**: problema 4
+din §10.
+
+**Verificare**, pe sistemul din problema 4 (`2x + y + z = 4`, `x + 2y + z = 4`, `x + y + 2z = 4`,
+cu soluția `(1, 1, 1)`), pornind din `x⁰ = 0`, la toleranța `10⁻⁸`:
+
+| metodă       | `ρ(G)`      | ce face                                                 |
+| ------------ | ----------- | ------------------------------------------------------- |
+| Jacobi       | **1 exact** | oscilează la nesfârșit între `(0, 0, 0)` și `(2, 2, 2)` |
+| Gauss-Seidel | 0,353553    | ajunge la `(1, 1, 1)` în **20** de iterații             |
+
+Matricea are elementele din afara diagonalei **pozitive**, deci `G_J = D⁻¹(L + U)` are elemente
+negative și ipoteza teoremei nu e îndeplinită. Valorile proprii ale lui `G_J` sunt `−1`, `½`, `½`:
+raza spectrală e exact 1, deci nici nu converge, nici nu diverge — se blochează. A doua afirmație
+cade odată cu prima: `ρ(J) = 1`, deci nu e `< 1`.
+
+Oscilația nu e un accident numeric, ci se citește din vectorul propriu: eroarea de pornire
+`x⁰ − x* = −(1, 1, 1)` stă **exact** pe direcția proprie a valorii `−1`, deci fiecare iterație o
+înmulțește cu `−1` și n-o micșorează niciodată.
+
+**Ce s-a pus pe site.** Afirmația din §5.1 nu apare, în nicio formă. Ce apare e ce se verifică:
+Gauss-Seidel folosește valorile deja calculate, iar pe sistemele pe care **amândouă** converg asta
+îl face mai rapid (pe problema 3 din §10: `ρ(J) = 0,6072` și 33 de iterații, față de `ρ(GS) = 0,4082`
+și 23). Sistemul din problema 4 e chiar unul dintre cele două exemple gata alese ale paginii, tocmai
+ca diferența să se poată vedea, nu doar citi.
+
+Verificarea e ținută ca **test care trebuie să pice** dacă cineva „repară" afirmația:
+`scripts/verificare-algoritmi/metode-iterative.ts`, secțiunea 7.
+
+---
+
+## curs5, §6 — pseudocodul SOR nu e metoda SOR
+
+**Cursul scrie**, în aceeași secțiune, formula pe componente:
+
+```
+x_i^(k+1) = x_i^(k) + ω·R_i^(k)/a_ii
+R_i^(k)   = b_i − Σ_{j<i} a_ij·x_j^(k+1) − Σ_{j≥i} a_ij·x_j^(k)
+```
+
+și forma matriceală care decurge din ea, `x = (D − ωL)⁻¹[(1−ω)D + ωU]·x + ω(D − ωL)⁻¹b`. Amândouă
+relaxează **fiecare componentă pe rând**, iar valoarea relaxată intră imediat în linia următoare.
+
+**Algorithm 3, din aceeași secțiune, face altceva**: baleiază întâi cu formula Gauss-Seidel curată
+(linia 5), și abia după ce baleiajul s-a terminat aplică relaxarea, **o singură dată, pe tot
+vectorul**:
+
+```
+5:     x[j] ← ( b[j] − Σ_{k≠j} A[j,k]·x[k] ) / A[j,j]
+7:     x ← ω·x + (1 − ω)·xprev
+```
+
+**Verificare.** Pe sistemul din problema 3 (§10), pornind din `x⁰ = (0,3; −0,7; 1,1)`, o singură
+iterație:
+
+| ω    | formula din §6 (= forma matriceală) | Algorithm 3                   |
+| ---- | ----------------------------------- | ----------------------------- |
+| 0,8  | `(−0,2280; 0,0456; −0,40656)`       | `(−0,2280; 0,0720; −0,51200)` |
+| 1,0  | `(−0,3600; 0,2650; −0,91500)`       | `(−0,3600; 0,2650; −0,91500)` |
+| 1,25 | `(−0,5250; 0,5578; −1,63242)`       | `(−0,5250; 0,5063; −1,41875)` |
+
+Prima componentă coincide întotdeauna — pentru `i = 1` nu există nimic „la stânga" de relaxat —, iar
+la `ω = 1` coincid toate, fiindcă atunci amândouă sunt Gauss-Seidel. Pentru orice alt `ω`, de la a
+doua componentă încolo cele două se despart: adevăratul SOR trimite mai departe valoarea
+**relaxată**, pseudocodul trimite valoarea Gauss-Seidel nerelaxată și abia la final amestecă.
+
+**Ce s-a pus pe site.** Formula din §6, adică cea care se potrivește cu forma matriceală și cu
+matricea de iterație `G = (D − ωL)⁻¹[(1−ω)D + ωU]`. Motivul e că altfel pagina s-ar contrazice
+singură: raza spectrală afișată se calculează din `G`, iar dacă iterația desenată ar fi cea din
+Algorithm 3, numărul afișat n-ar mai descrie ce se vede pe ecran. Pseudocodul nu apare pe pagină în
+nicio formă.
+
+Verificarea e ținută ca **test care trebuie să pice**:
+`scripts/verificare-algoritmi/metode-iterative.ts`, secțiunea 7.

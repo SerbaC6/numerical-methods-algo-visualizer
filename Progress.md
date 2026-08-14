@@ -522,7 +522,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [ ]  | [x]  | [ ]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -552,6 +552,47 @@ Ating **toate** paginile cu secțiune „Vizual", deci nu stau la niciuna dintre
   doar pentru `<video>` — rămâne un strat fix peste pagină, cu aceleași comenzi. Escape închide
   amândouă variantele. Pe tot ecranul cadrul renunță la 16:9 și ia toată suprafața: SVG-ul se
   centrează singur, fără să se deformeze.
+
+### Pagina 5 — `metode-iterative`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/metode-iterative/` — prima pagină construită în ordinea
+  „întâi modulul, apoi desenul". Partiționarea `A = D − L − U` și tabelul `M`, `N`, `G`, `c`
+  (`partitionare.ts`), raza spectrală în formă închisă pentru `n ≤ 3` (`spectru.ts`), eliminarea cu
+  pivotare care dă `x*` de comparație (`liniar.ts`) și **o singură buclă pentru toate trei metodele**
+  (`cadru.ts`): ele diferă doar prin ce citesc și prin `ω`, deci trei bucle paralele ar fi trebuit
+  ținute sincronizate cu mâna. Fiecare pas păstrează, pe lângă vector, ce s-a citit pe fiecare linie
+  și de unde — `veche` sau `proaspata` —, fiindcă exact aia e diferența Jacobi ↔ Gauss-Seidel și
+  exact aia trebuie desenată.
+- **Verificarea numerică**, `scripts/verificare-algoritmi/metode-iterative.ts`, pe modulele reale:
+  partiționarea și tabelul de sinteză, raza spectrală comparată cu `‖Gᵏ‖^(1/k)` (altă cale, fără
+  polinom caracteristic), iterația pe componente = forma matriceală `G·x + c` la toate trei,
+  cifrele scrise pe pagină, cazurile-limită (diagonală nulă, `ω` în afara lui `(0, 2)`, divergență,
+  pornire chiar din `x*`) și cele două abateri de la curs, ca teste care trebuie să pice.
+  **A prins o eroare reală**: Gauss-Seidel citea dintr-un tablou vechi, deci se purta ca Jacobi
+  fără ca nimic să arate altfel pe ecran.
+- **Teoria**, `src/content/metode-iterative.tsx`, din curs5 §1–§7: forma comună `x = G·x + c`,
+  convergența prin `ρ(G)`, dominanța diagonală, cele trei metode cu formulele lor pe componente și
+  matriceale, regulile pentru `ω` și criteriul de oprire.
+- **Două erate**, `docs/erata-cursuri.md`:
+  - §5.1 — „Jacobi și Gauss-Seidel converg ori amândouă, ori niciuna" e fals fără ipotezele
+    teoremei Stein-Rosenberg, iar contraexemplul e chiar problema 4 din §10 al aceluiași curs:
+    `ρ(J) = 1` exact (Jacobi oscilează între `(0,0,0)` și `(2,2,2)`), `ρ(GS) = 0,3536` (20 de
+    iterații). Cade odată cu ea și `ρ(GS) < ρ(J) < 1`.
+  - §6 — Algorithm 3 nu e SOR: relaxează o singură dată, pe tot vectorul, după baleiaj, în loc de
+    componentă cu componentă. Coincide cu formula doar la `ω = 1`. Pagina implementează formula,
+    fiindcă altfel raza spectrală afișată n-ar descrie iterația desenată.
+- **Sistemele gata alese**, `sisteme.ts`: amândouă din §10 — cel dominant diagonal (problema 3) și
+  cel care blochează Jacobi (problema 4). Cifrele lor (33/23/22 de iterații, `ω` optim 0,935 —
+  **subunitar**, deci suprarelaxarea strică acolo) sunt măsurate, nu alese din ochi.
+
+Ce **nu** e făcut încă:
+
+- [ ] **Clipul** din secțiunea „Vizual" — cel care arată de ce Gauss-Seidel nu e Jacobi.
+- [ ] **Interfața interactivă**: matrice + cursor pentru `ω` + al doilea desen, cu eroarea pe
+      iterații.
+- [ ] **Verificare cu ochiul pe telefon real.**
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
