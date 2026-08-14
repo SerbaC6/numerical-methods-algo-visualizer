@@ -668,20 +668,54 @@ Două lucruri prinse de verificări, amândouă de reținut:
    rândul matricei. Un rând nou care nu le cere explicit iese din panou, cu textul tăiat — exact ce
    a pățit comutatorul de comparație până la măsurare.
 
+**Trei bug-uri găsite uitându-mă la desen, după ce planul era executat.** Toate trei se vedeau
+numai la apropierea lupei, adică exact acolo unde nu se uitase nimeni:
+
+3. **Rămânea o linie care intra din afara cadrului și nu ducea nicăieri.** `Traiectorie3D` se tăia
+   la dreptunghiul SVG-ului, nu la cutia scenei, deci iterațiile de la începutul rulării rămâneau
+   desenate — iar proiecția fiind liniară, ele nu ajung „undeva lângă", ci foarte departe: pe valea
+   alungită, `x⁽⁰⁾` se proiectează în (−2104, −5315) px la pasul 11 și în (−2,6·10⁶, −4,9·10⁹) la
+   ultimul. `taieLaCutieXY()` / `poliliniiTaiate()` taie acum drumul **în lume**, exact (proiecția
+   fiind liniară, parametrul t de pe segmentul din lume e chiar cel de pe ecran).
+4. **Curba de nivel prin `x⁽ᵏ⁾` dispărea, iar valea se desena ca un plan gol** — și **nu** din
+   geometrie: pe o pătratică apropierea e auto-similară, deci imaginea ar trebui să arate la fel la
+   orice scară. Cauza era **anularea catastrofală** din `f(p) − f(x*)`: la `|x−x*| = 5,9·10⁻⁹`
+   scăderea dă exact 0, la 1,5·10⁻⁹ dă negativ, unde adevărul e pozitiv. Se calculează acum ca formă
+   pătratică pe vectorul diferență (`inaltimePesteFund`), iar elipsele se cer prin **rază**
+   (`elipsaRaza` + `razaA`), nu prin nivel. A doua cauză, în `masuriCutie`: pragul
+   `Math.max(latura, 1e-12)` strivea o cutie legitim subțire — la ultimii pași valea are ~10⁻¹⁶
+   înălțime pe cadrul vizibil.
+5. **Două dintre cele patru numere de pe podea cădeau în același punct de ecran**: muchiile dinspre
+   privitor au un colț comun și fiecare își punea acolo eticheta capătului. Cel de pe colț se
+   împinge acum de-a lungul muchiei lui.
+
 Ce **nu** e verificat încă:
 
+- [ ] **Trecerea vizuală completă** — cele trei preseturi × cele două metode, comparația pornită și
+      oprită, ambele teme. Văzute cu ochiul până acum: tema **întunecată** la unghiul implicit și la
+      90° (harta de nivel se vede întreagă, suprafața dispare), preseturile și rândul de legendă al
+      comparației. Restul a rămas nefăcut fiindcă aplicația nu mai compila — pagina 9 era în lucru
+      în același working tree.
+- [ ] **Întrebarea deschisă din plan**, nedecisă fiindcă cere ochiul: dacă punctatul estompat al
+      metodei de referință se confundă cu umbra metodei curente, **se întreabă** înainte să se
+      atingă paleta.
+- [ ] **Numerele de pe podea la apropiere mare** ajung de 12 caractere (0,0909090843) și două dintre
+      ele se ating. E singurul simptom rămas din ce se vedea la ultimii pași. Plafonarea lupei a fost
+      propusă și **respinsă ca inutilă**: criteriul „oprim când elipsa nu se mai vede curbată" nu se
+      declanșează niciodată, fiindcă elipsa e curbată la orice adâncime — dispărea din aritmetică,
+      nu din geometrie (vezi punctul 4). Dacă se plafonează totuși, trebuie alt criteriu.
 - [ ] **Verificare cu ochiul pe telefon real** — portretul și peisajul au fost măsurate în browser
-      la 390 px, dar nu văzute pe un dispozitiv. La scena 3D se adaugă și performanța la tragere
-      (~1000 de `<path>` la 60 Hz), care se decide cu profiler, nu din raționament.
-- [ ] **Tema întunecată, cu ochiul, pe scena 3D** — contrastul e măsurat pe amândouă temele, dar
-      desenul n-a fost văzut pe cea întunecată. Tot acolo rămâne întrebarea deschisă din plan: dacă
-      punctatul estompat al metodei de referință se confundă cu umbra metodei curente, **se
-      întreabă** înainte să se atingă paleta.
-- [ ] **Captura de ecran a scenei nu se poate face de pe mașina de lucru.** Cu scena întreagă în
-      cadru, `Page.captureScreenshot` din CDP dă timeout la 30 s — și dă la fel și pe commit-uri
-      dinaintea acestei sesiuni, deci nu e o regresie. Pagina rămâne vie (arborele de
-      accesibilitate și JS-ul răspund), doar rasterizarea celor ~1 000 de `<path>` nu se termină la
-      timp. Verificările vizuale de aici s-au făcut pe bucăți și prin măsurători din DOM.
+      la 390 px, dar nu văzute pe un dispozitiv.
+- [ ] `prefers-reduced-motion` pe interfața asta — codul îl respectă prin `MotionConfig` și prin
+      `useDomeniuAnimat`, dar n-a fost văzut rulând cu setarea pornită.
+
+**Performanța: măsurată, e în regulă** — și cifrele de dinainte erau greșite. Cu fereastra chiar
+focalizată, scena stă la 60 fps, iar un salt între pași costă o secundă la 29–39 fps; clicul e 0–1 ms
+de JS. Toate măsurătorile care păreau catastrofale (16 s, un singur cadru) s-au făcut cu fereastra
+necompozitată: `hasFocus` fals oprește `requestAnimationFrame`, deși `visibilityState` rămâne
+`visible`. **De reținut pentru orice măsurătoare viitoare de aici: se verifică întâi `document.hasFocus()`.**
+Din același motiv, `Page.captureScreenshot` din CDP dă timeout cu scena întreagă în cadru — pagina
+rămâne vie, doar nu se rasterizează.
 
 ### Pagina 9 — `pagerank`, ce e gata și ce nu
 
