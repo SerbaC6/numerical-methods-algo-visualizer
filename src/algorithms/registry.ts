@@ -38,17 +38,17 @@ export type IntrareAlgoritm = {
   /** Fișierele din `cursuri_MN/` din care se ia conținutul — singura sursă admisă. */
   cursSursa: string[];
   /**
-   * `false` dacă pagina **nu primește** clip Manim, prin decizie — nu „încă nu
+   * `false` dacă pagina **nu primește** clip, prin decizie — nu „încă nu
    * are". Atunci secțiunea „Vizual" lipsește cu totul din pagină: fără schelet,
    * fără text de așteptare (vezi regula despre stările de progres din
    * `CLAUDE.md`).
    *
    * Implicit toate paginile au clip; se scrie explicit doar excepția.
    */
-  clipManim?: boolean;
+  clip?: boolean;
   /**
    * `false` dacă pagina **nu primește** interfață interactivă, prin decizie — nu
-   * „încă nu are". Ca la `clipManim`, atunci secțiunea „Interactiv" lipsește cu
+   * „încă nu are". Ca la `clip`, atunci secțiunea „Interactiv" lipsește cu
    * totul: fără schelet, fără text de așteptare.
    *
    * Implicit toate paginile au interfață; se scrie explicit doar excepția.
@@ -191,7 +191,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     // Singura pagină fără clip. Bisecția se înțelege trăgând de capetele
     // intervalului, iar un film ar arăta exact ce face interfața, doar că fără
     // să-l poți opri. Decizia e în `Plan.md` și în `CLAUDE.md`.
-    clipManim: false,
+    clip: false,
     gata: false,
   },
   {
@@ -349,7 +349,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     ],
     dificultate: "greu",
     cursSursa: ["cmmp_rationale_fft_teorie_curs10.md"],
-    gata: false,
+    // Fără interfață interactivă, prin decizie: clipul din secțiunea „Vizual"
+    // duce singur povestea, iar teoria o scrie în formule.
+    interactiv: false,
+    gata: true,
   },
   {
     slug: "derivare-numerica",

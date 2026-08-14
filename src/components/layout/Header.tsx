@@ -9,7 +9,11 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 /**
  * Bara de sus: siglă, căutarea în toate metodele și comutatorul de temă. Atât —
  * cuprinsul stă pe pagina principală, sub hero; sigla e deja drumul înapoi
- * spre el. Meniul-sertar are sens abia când apar paginile statice.
+ * spre el.
+ *
+ * **Fără meniu-sertar**, decis: căutarea duce direct pe metodă de pe orice
+ * pagină, iar paginile de sine stătătoare (contact, termeni, confidențialitate)
+ * stau în subsol. Un sertar ar dubla subsolul și ar adăuga o capcană de focus.
  */
 export function Header() {
   return (

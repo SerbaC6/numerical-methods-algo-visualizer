@@ -21,7 +21,8 @@ Mod prin care studentii sa vada si sa se joace cu algoritmii, sa-i inteleaga viz
 
 ## Claude Specific Instructions
 
-- Library Python Manim
+- ~~Library Python Manim~~ → **abandonat**: nu se folosește Manim nicăieri în proiect. Clipurile din
+  secțiunea „Vizual" se scriu **în cod**, ca animații web (`Clip` din `src/components/viz/`)
 - All in romanian
 - No auth
 - No cookies
@@ -172,15 +173,20 @@ Fiecare pagină de algoritm are trei secțiuni, iar fiecare are **unealta ei**, 
 
 | Secțiune            | Cu ce se face                                   | Ce e                                                                                        |
 | ------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Vizual**          | **Manim**, clip pre-randat offline              | filmul care arată metoda în ansamblu; nu se poate opri pe pas, nu primește parametri        |
+| **Vizual**          | **clip scris în cod** (`Clip`, ceas propriu)    | filmul care arată metoda în ansamblu; nu se poate opri pe pas, nu primește parametri        |
 | **Teorie pe scurt** | text + KaTeX, din `src/content/`                | esența metodei, formula, ce înseamnă fiecare literă                                         |
 | **Interactiv**      | **`motion`** + straturile `Plot` / `MatrixGrid` | interfața cu care te joci: schimbi parametrii, mergi pas cu pas, vezi formula aprinzându-se |
 
-Împărțirea nu e negociabilă per pagină: clipul Manim **nu** înlocuiește interfața și nici invers.
-Clipul spune „despre ce e vorba" în treizeci de secunde; interfața răspunde la „ce se întâmplă dacă
-schimb eu asta".
+**Manim nu se folosește deloc** — nici offline, nici în browser. Clipurile din secțiunea „Vizual"
+sunt animații web scrise în cod, care rulează pe ceasul lor (`Clip` + `src/lib/compozitie.ts`), cu
+culorile din `src/lib/viz-roles.ts`. Așa merg în ambele teme, respectă `prefers-reduced-motion` și
+își iau cifrele din `src/algorithms/`, deci desenul și textul nu se pot contrazice.
 
-**Excepția: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
+Împărțirea nu e negociabilă per pagină: clipul **nu** înlocuiește interfața și nici invers.
+Clipul spune „despre ce e vorba" în treizeci de secunde; interfața răspunde la „ce se întâmplă dacă
+schimb eu asta". Un clip nu primește parametrii utilizatorului, oricât ar fi de tentant.
+
+**Excepția: pagina 6** (`ecuatii-neliniare`) — **fără clip**, doar interfața interactivă.
 Metoda se înțelege trăgând de capetele intervalului, iar un film despre bisecție ar arăta exact ce
 face interfața, doar că fără să-l poți opri. Secțiunea „Vizual" pur și simplu nu există pe pagina
 aceea; nu se pune schelet și nu se anunță nimic (vezi regula despre stările de progres din

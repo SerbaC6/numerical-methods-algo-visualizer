@@ -4,9 +4,11 @@ import { ADRESE_EMAIL, DATA_ACTUALIZARE } from "@/content/contact";
 
 /**
  * Politica de confidențialitate descrie site-ul **așa cum e acum**: static, fără
- * conturi, fără cookies, fără cereri către alte domenii. Dacă vreodată apare
- * ceva care culege date (analytics, formular, font de la CDN), textul de aici se
- * schimbă în același commit — altfel devine o promisiune falsă.
+ * conturi, fără cookies proprii, cu o singură cerere posibilă către alt domeniu
+ * — clipul de pe pagina 15, și numai dacă vizitatorul apasă pe redare. Dacă
+ * vreodată apare ceva care culege date (analytics, formular, font de la CDN),
+ * textul de aici se schimbă în același commit — altfel devine o promisiune
+ * falsă.
  */
 export default function Confidentialitate() {
   return (
@@ -26,8 +28,24 @@ export default function Confidentialitate() {
             fiindcă nu avem ce transmite. Nu există publicitate și nu există profilare.
           </p>
           <p className="text-text-slab mt-3">
-            Paginile nu cer nimic de la alte domenii: fonturile, imaginile și clipurile sunt
-            găzduite chiar de site. Adică browserul tău nu anunță pe nimeni că ești aici.
+            Fonturile, imaginile și animațiile sunt găzduite chiar de site, deci la încărcarea unei
+            pagini browserul tău nu anunță pe nimeni că ești aici.
+          </p>
+
+          <h2 className="text-sectiune mt-10 font-bold">Singura excepție: un clip de pe YouTube</h2>
+          <p className="text-text-slab mt-3">
+            O pagină are un clip pe care nu l-am făcut noi și care e găzduit de YouTube. Cât timp nu
+            apeși pe redare, nu pleacă nicio cerere într-acolo: se vede doar o imagine, servită tot
+            de site.
+          </p>
+          <p className="text-text-slab mt-3">
+            Când apeși, clipul se încarcă de la{" "}
+            <code className="font-mono">youtube-nocookie.com</code> — varianta fără cookies de
+            publicitate — și de pe serverele de imagini și video ale Google, de unde vine filmul
+            propriu-zis. Rulează în pagină, fără să te mute pe alt site. Din acel moment YouTube îți
+            vede adresa IP și tipul de browser, ca orice site pe care îl deschizi, iar ce face cu
+            ele scrie în politica lor. La noi tot nu ajunge nimic: nu primim niciun semnal că ai
+            pornit clipul și nu numărăm vizionări.
           </p>
 
           <h2 className="text-sectiune mt-10 font-bold">Ce se salvează în browserul tău</h2>

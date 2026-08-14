@@ -18,8 +18,12 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
 - [x] ~~Font monospace pentru formule și tabele numerice~~ → **JetBrains Mono** (cifre tabulare,
       distinge `0/O` și `1/l/I`), self-hosted lângă Nunito Sans
+- [x] ~~**Manim sau nu**~~ → **nu se folosește deloc**. Clipurile din secțiunea „Vizual" se scriu
+      **în cod**, ca animații web pe ceas propriu (`Clip` + `src/lib/compozitie.ts`), cum s-a
+      întâmplat deja pe paginile 7, 9, 10 și 11. Fără Python, fără randare offline, fără fișiere
+      video în repo — deci și întrebarea „unde stau fișierele randate, în repo sau în Releases"
+      dispare
 - [ ] Domeniu: `github.io` sau domeniu propriu
-- [ ] Unde stau fișierele Manim: în repo sau în GitHub Releases
 - [ ] MDX pentru conținut sau fișiere TypeScript simple
 - [ ] `HashRouter` vs. `BrowserRouter` + `404.html`
 
@@ -53,15 +57,16 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] `src/lib/` — utilitare (are deja `cn()` în `utils.ts`)
   - [x] `src/hooks/`
   - [x] `public/media/`, `public/fonts/`
-  - [x] `manim/` + `manim/scenes/` — scene Python (izolat de aplicație)
+  - [x] ~~`manim/` + `manim/scenes/` — scene Python~~ → **de șters**: Manim nu se mai folosește;
+        clipurile sunt scrise în cod, în `src/components/content/`
   - [x] `docs/`
   - [x] Fișier `README` scurt în fiecare folder care nu e evident
 - [x] `.gitignore`
   - [x] `node_modules/`, `dist/`, `.vite/`, `coverage/`
   - [x] `.env*`, `*.local`
-  - [x] `manim/media/`, `__pycache__/`, `.venv/`
+  - [x] `__pycache__/`, `.venv/` (rămân pentru scripturile din `scripts/`; `manim/media/` nu mai
+        are obiect)
   - [x] `.DS_Store`, `Thumbs.db`
-  - [ ] Verificare: `git status` e curat și după o randare Manim (de reverificat în Faza 5)
 - [x] Calitatea codului
   - [x] ~~ESLint~~ → **oxlint** (noul default al scaffold-ului Vite, mult mai rapid; `.oxlintrc.json` cu plugin react/typescript, `src/components/ui` exclus fiind cod copiat)
   - [x] Prettier + `.prettierrc.json` + `prettier-plugin-tailwindcss` (sortează clasele)
@@ -78,8 +83,8 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Licențe: shadcn/ui, Radix, Tailwind, oxlint, Vite — toate MIT
 - [x] `README.md` actualizat
   - [x] Ce este proiectul, pentru cine, în română
-  - [x] Cerințe (Node 22+, Python 3.12+ pentru Manim)
-  - [x] Cum rulezi local, cum faci build, cum randezi scenele Manim
+  - [x] Cerințe (Node 22+; Python 3.12+ doar pentru scripturile de verificare din `scripts/`)
+  - [x] Cum rulezi local, cum faci build — ~~cum randezi scenele Manim~~ (nu mai există)
   - [x] Structura folderelor
   - [x] Secțiunea Design (paletă + tipografie)
   - [ ] Cum contribui (link la convenția de commit-uri — se scrie în Faza 1)
@@ -103,7 +108,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [ ] Repo GitHub
   - [ ] Creare repo (public), push `main`
-  - [ ] Descriere + topics (`numerical-methods`, `education`, `react`, `manim`, `romanian`)
+  - [ ] Descriere + topics (`numerical-methods`, `education`, `react`, `visualization`, `romanian`)
   - [ ] Licență aleasă și adăugată (`LICENSE`)
   - [ ] 🔒 Branch protection pe `main`: PR obligatoriu, CI verde obligatoriu — **după primul deploy**
 - [ ] Convenții de lucru
@@ -160,7 +165,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Analiză [csvistool.com](https://csvistool.com/) — layout și claritate
   - [x] Analiză [dsavisualizer.in](https://www.dsavisualizer.in/) — structura paginii de algoritm
   - [x] Analiză [Numerical Methods Visualizer (engineersuniverse.com)](https://engineersuniverse.com/webapps/numerical-methods-visualizer) — **cel mai apropiat de noi ca subiect**: acoperă doar bisecție, Newton-Raphson, sume Riemann și trapeze; luăm de la el afișarea erorii absolute + relative și presetările, evităm textul lung dinaintea vizualizării
-  - [x] ~~Caută 3–5 site-uri suplimentare de referință (estetică, animații)~~ → **adăugate**: [3Blue1Brown](https://www.3blue1brown.com) (mișcare — și motorul e chiar Manim-ul nostru), [Desmos](https://www.desmos.com/calculator) (modelul pentru `Plot`), [Observable](https://observablehq.com) (reactivitate + straturi de desen). Plus [PerfectlyNormal](https://math345-games.github.io/PerfectlyNormal/), pentru jocul de Gram-Schmidt de pe pagina 2. Analiza în `docs/referinte.md`, care are acum 8 site-uri și 11 reguli
+  - [x] ~~Caută 3–5 site-uri suplimentare de referință (estetică, animații)~~ → **adăugate**: [3Blue1Brown](https://www.3blue1brown.com) (mișcare — referință de estetică, nu de unealtă), [Desmos](https://www.desmos.com/calculator) (modelul pentru `Plot`), [Observable](https://observablehq.com) (reactivitate + straturi de desen). Plus [PerfectlyNormal](https://math345-games.github.io/PerfectlyNormal/), pentru jocul de Gram-Schmidt de pe pagina 2. Analiza în `docs/referinte.md`, care are acum 8 site-uri și 11 reguli
   - [x] Documentează în `docs/referinte.md`: ce împrumutăm, ce evităm
 - [x] Identitate vizuală — **decisă**: paleta „Sapphire nightfall whisper" + Nunito Sans (detalii în [`README.md`](./README.md#design))
   - [x] Nunito Sans pentru titluri și text, grosimile 400 / 600 / 700–800
@@ -171,7 +176,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [x] Design tokens
   - [x] Culorile paletei ca tokens: `#0474C4` accent primar, `#5379AE` accent secundar, `#2C444C` suprafață, `#A8C4EC` text/accent luminos, `#06457F` accent apăsat, `#262B40` fundal închis
   - [x] Culori pentru stări (succes/atenție/eroare) — derivate separat, plus variantele de fundal
-  - [x] Culori dedicate vizualizării: `--viz-curent`, `--viz-anterior`, `--viz-grila`, `--viz-interval`, `--viz-functie`, `--viz-solutie` — aceleași tokens se folosesc și în scenele Manim
+  - [x] Culori dedicate vizualizării: `--viz-curent`, `--viz-anterior`, `--viz-grila`, `--viz-interval`, `--viz-functie`, `--viz-solutie` — aceleași tokens se folosesc în tot desenul, grafice și clipuri
   - [x] Temă întunecată + temă luminoasă, ambele definite explicit; comutator cu preferința în `localStorage` (cheia `mn-tema` — singurul lucru scris în browser)
   - [x] Scală tipografică fluidă, spațieri, radius, umbre (`shadow-jos/mediu/sus`)
   - [x] Definire ca variabile CSS + mapare Tailwind v4 (`@theme` în `src/index.css`, fără `tailwind.config`)
@@ -236,7 +241,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [x] `Legend` — legenda de culori **plus** modul de folosire în 3–5 pași, în aceeași componentă
       (`Plan.md` le cere pe amândouă, deci nu se poate uita una). Culorile vin din
-      `src/lib/viz-roles.ts` — sursa unică pentru rolurile `--viz-*`, aceleași și în Manim — deci
+      `src/lib/viz-roles.ts` — sursa unică pentru rolurile `--viz-*` — deci
       legenda nu poate ajunge să contrazică desenul. Fiecare element are formă (linie, linie
       punctată, punct, zonă, celulă) și text, nu doar culoare. Verificat în ambele teme
 - [x] `StepExplanation` — propoziția care spune ce se întâmplă la pasul curent, lângă animație
@@ -265,8 +270,9 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       **SVG de mână**, cum era recomandarea. Nicio dependență nouă; `Plot` + cele cinci straturi
       ocupă ~600 de linii, față de 40–100 KB cât ar fi adus o bibliotecă gândită pentru date de
       business
-- [ ] Aceleași stări vizuale trebuie să arate la fel în `MatrixGrid` (web) și în scenele Manim —
-      tokens-urile `--viz-*` sunt deja comune, dar nu s-a desenat încă nimic în Manim
+- [x] ~~Aceleași stări vizuale trebuie să arate la fel în `MatrixGrid` (web) și în scenele Manim~~ →
+      **fără obiect**: nu există scene Manim. Totul se desenează în browser, din `--viz-*`, deci
+      nu mai există două randări care s-ar putea depărta una de alta
 
 **Rămâne de făcut la o revenire:**
 
@@ -281,10 +287,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 - [x] ~~piesele din Etapa 0~~ → **toate gata**: `Legend`, `StepExplanation`, `MatrixGrid`, `Plot`.
       Urmează Etapa 1 din TODO-ul de animații din [`CLAUDE.md`](./CLAUDE.md), care începe cu
       pagina 6 (ecuații neliniare)
-- [ ] `--viz-pivot` **și `--viz-interval`** trebuie oglindite în `manim/theme.py` când se scrie
-      fișierul (Faza 5), altfel clipurile randate folosesc alt roșu și alt interval decât interfața.
-      Atenție: `--viz-interval` are **nuanțe diferite pe cele două teme** (`#BE7434` pe luminoasă,
-      `#4CA49C` pe întunecată), deci oglindirea cere ambele valori, nu una singură
+- [x] ~~`--viz-pivot` și `--viz-interval` trebuie oglindite în `manim/theme.py`~~ → **fără obiect**:
+      nu mai există un al doilea loc în care să se scrie culorile. Clipurile își iau rolurile din
+      `src/lib/viz-roles.ts`, ca orice altă piesă de desen, deci nu pot ajunge pe alt roșu decât
+      interfața
 - [ ] **Matematica graficului e verificată, dar nu automat.** `src/lib/plot-scara.ts` și
       `plot-esantionare.ts` au fost testate rulând module compilate cu esbuild, în afara aplicației:
       repere (pas din 1/2/5/10, etichetă = valoare desenată, densitate adaptivă, cazuri
@@ -306,18 +312,24 @@ nu doar galeria de componente.
 > Făcut: `HashRouter` + rutele, layout-ul (`SiteLayout`, `Header`, `Footer`, `Container`,
 > `PageHeader`, `Logo`), registrul paginilor, cuprinsul pe secțiuni, căutarea din
 > header, scheletul paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
-> Rămân: meniul mobil, TOC, `/despre` și `/contact`, manifest, verificările de conformitate.
+> Rămân: TOC, favicon + manifest, verificările de conformitate.
 
 - [x] Rutare
   - [x] Instalare `react-router`
   - [x] Decizie: **`HashRouter`** — sigur pe Pages, fără `404.html`
-  - [x] Rute: `/`, `/algoritm/:slug`, `*` (404) + `/design-system`, doar în dev. `/despre` și `/contact` — mai încolo
+  - [x] Rute: `/`, `/algoritm/:slug`, `/contact`, `/termeni`, `/confidentialitate`, `*` (404) + `/design-system`, doar în dev. `/despre` — **nu se face**, vezi mai jos
   - [x] Scroll to top la schimbarea rutei
   - [x] Lazy loading pe rute (`React.lazy` + `Suspense`)
 - [ ] Layout
   - [x] Header: siglă, **căutarea în toate metodele** (`CautareMetode`, combobox cu listă derulantă, funcționează de pe orice pagină) și comutatorul de temă. Fără link „Cuprins" — cuprinsul stă pe pagina principală, iar sigla duce înapoi la ea. Pe mobil dispare wordmark-ul, ca să încapă câmpul
-  - [ ] Meniu mobil (drawer), închidere la navigare, blocare scroll în fundal
-  - [x] Footer: siglă, o propoziție despre site, an și „construit cu React și Manim". ~~Coloana „Urmează" (Despre, Contact, marcate „în curând")~~ → **scoasă**: nicio stare de progres în interfață. `/despre` și `/contact` apar în footer abia când există
+  - [x] ~~Meniu mobil (drawer), închidere la navigare, blocare scroll în fundal~~ → **nu se face**.
+        N-are ce pune în el: antetul are deja căutarea în toate metodele, care merge de pe orice
+        pagină și duce direct pe metodă — mai repede decât o listă derulată cu degetul —, iar sigla
+        e drumul înapoi la cuprins. Cele trei pagini de sine stătătoare (contact, termeni,
+        confidențialitate) stau în subsol, unde le caută oricine. Un sertar ar fi dublat subsolul și
+        ar fi adăugat o capcană de focus de întreținut
+  - [x] Footer: siglă, o propoziție despre site, an și „construit cu React" (~~„cu React și
+        Manim"~~ → scos, odată cu decizia de a nu folosi Manim). ~~Coloana „Urmează" (Despre, Contact, marcate „în curând")~~ → **scoasă**: nicio stare de progres în interfață. `/despre` și `/contact` apar în footer abia când există
   - [x] Breadcrumb pe paginile de algoritm
   - [x] Container cu lățime maximă și spațieri consistente
 - [x] Pagina principală (cuprins)
@@ -335,9 +347,11 @@ nu doar galeria de componente.
   - [ ] TOC lateral pe paginile de algoritm, cu evidențierea secțiunii curente
   - [ ] Pe mobil: TOC colapsabil în partea de sus
   - [ ] Ancore stabile pe secțiuni (linkuri partajabile)
-- [ ] Pagini statice
-  - [ ] `/despre` — scopul proiectului, cum se folosește, credite
-  - [ ] `/contact` — fără backend: `mailto:` sau formular terț fără cookies; spune clar ce se întâmplă cu mesajul
+- [x] Pagini statice
+  - [x] ~~`/despre`~~ → **nu se face**: pagina principală spune deja ce e site-ul, iar creditele
+        (fonturi, librării, surse) intră în `/termeni`, nu într-o pagină proprie
+  - [x] `/contact` — fără backend, doar `mailto:` (`src/content/contact.ts`), plus link către codul sursă
+  - [x] `/termeni` și `/confidentialitate` — în plus față de plan, cerute de subsol
   - [x] `404` — mesaj prietenos + link către cuprins (`src/pages/NotFound.tsx`, rutat pe `*`, verificat)
 - [ ] Branding
   - [x] Logo placeholder (SVG, funcționează pe ambele teme)
@@ -403,43 +417,51 @@ nu doar galeria de componente.
 
 ---
 
-## Faza 5 — Pipeline Manim _(poate merge în paralel cu Fazele 3–4)_
+## Faza 5 — Clipurile secțiunii „Vizual" _(poate merge în paralel cu Fazele 3–4)_
 
-**Obiectiv:** clipuri explicative pre-randate, cu aceeași estetică cu restul site-ului. Manim rulează **offline**, la build local — niciodată în browser.
-
-> **Unde intră.** Clipurile Manim umplu **exclusiv secțiunea „Vizual"** a unei pagini de algoritm.
-> Secțiunea „Interactiv" se face cu `motion` și cu straturile `Plot`/`MatrixGrid` — niciodată cu un
-> clip. Împărțirea și motivele sunt în [`CLAUDE.md`](./CLAUDE.md), §„Manim sau `motion`".
+> **Manim s-a scos de tot.** Pipeline-ul Python (mediu virtual, `theme.py`, `render.py`, export
+> `mp4` + poster, fișiere în `public/media/`, decizia „repo sau Releases") **nu se mai face**.
+> Toate clipurile se scriu **în cod**, ca animații web.
 >
-> **Pagina 6 nu primește clip** (vezi coloana Manim din tabelul Fazei 7): bisecția se înțelege
+> Ce a înclinat balanța: paginile 7, 9, 10 și 11 au primit deja clip scris în cod și merge mai bine
+> decât ar fi mers un film randat — culorile vin din `viz-roles.ts`, deci clipul se vede corect în
+> **ambele teme** (un mp4 are un singur fundal); cifrele vin din `src/algorithms/`, deci desenul și
+> textul nu se pot contrazice; `prefers-reduced-motion` e respectat cu adevărat, nu prin înlocuirea
+> cu un poster; textul rămâne text, deci se poate citi cu cititorul de ecran și nu se pixelează; iar
+> o corectură nu cere reinstalarea unui lanț Python cu ffmpeg și cairo. În plus, dispar megabaiții
+> de video din repo — adică și riscul cu limitele Pages.
+
+**Obiectiv:** clipuri explicative scrise în cod, cu aceeași estetică cu restul site-ului, rulând pe
+un ceas propriu.
+
+> **Unde intră.** Clipurile umplu **exclusiv secțiunea „Vizual"** a unei pagini de algoritm.
+> Secțiunea „Interactiv" se face cu `motion` și cu straturile `Plot`/`MatrixGrid` — niciodată cu un
+> clip, și invers: un clip nu primește parametrii utilizatorului. Împărțirea și motivele sunt în
+> [`CLAUDE.md`](./CLAUDE.md).
+>
+> **Pagina 6 nu primește clip** (vezi coloana Clip din tabelul Fazei 7): bisecția se înțelege
 > trăgând de capetele intervalului. Acolo secțiunea „Vizual" lipsește cu totul din pagină.
 
-- [ ] Mediu Python
-  - [ ] `manim/` cu `.venv`, `requirements.txt` (versiuni fixate)
-  - [ ] Verificare dependențe de sistem (ffmpeg, cairo, LaTeX dacă folosim `Tex`)
-  - [ ] `manim/README.md`: instalare pas cu pas, comenzi de randare
-  - [ ] Randare de test a unei scene demo
-- [ ] Șablon și temă
-  - [ ] `manim/theme.py` — paleta „Sapphire nightfall whisper" și Nunito Sans, importate de toate scenele (aceleași valori ca în `tailwind.config`)
-  - [ ] Scenă de bază cu titlu, fundal pe temă și ritm standard
-  - [ ] Toate textele din scene **în română**, cu diacritice verificate în randare
-  - [ ] Convenție de nume: `<slug-algoritm>_<variantă>.mp4`
-- [ ] Randare și export
-  - [ ] Script `manim/render.py` (sau `Makefile`): randează toate scenele într-o comandă
-  - [ ] Rezoluții: 1080p desktop + variantă sigură pentru mobil
-  - [ ] Export `mp4` (h264) + `webm` opțional + `poster.jpg` (primul cadru)
-  - [ ] Compresie și verificare mărime — țintă sub ~2 MB per clip
-  - [ ] Copiere automată în `public/media/<slug>/`
-  - [ ] Decizie: fișierele intră în repo sau în GitHub Releases/CDN (dacă repo-ul crește prea mult → Releases)
-- [ ] Integrare în site
-  - [ ] Componentă `<ManimHero>`: `poster`, `preload="none"`, lazy load la intrarea în vizor
-  - [ ] Fără sunet: `muted`, `playsInline`, `loop` unde are sens
-  - [ ] Controale vizibile (play/pauză) — nu doar autoplay
-  - [ ] `prefers-reduced-motion`: afișează doar poster-ul static
-  - [ ] Fallback: dacă lipsește clipul, se arată imaginea statică + text descriptiv
-  - [ ] Text alternativ / descriere pentru accesibilitate
+- [x] Motorul de clip
+  - [x] `src/lib/compozitie.ts` — curbe, `animeaza()`, `repere()`, funcții pure de timpul clipului
+  - [x] `Clip`, `Subtitrari`, `PlaybackClip` în `src/components/viz/`
+  - [x] Culorile din `src/lib/viz-roles.ts`, deci ambele teme dintr-o singură scenă
+  - [x] `prefers-reduced-motion` prin `MotionConfig` + ceasul clipului
+- [ ] Convenții de scenă
+  - [ ] Scenele stau în `src/components/content/Animatia<Ceva>.tsx`, una per pagină
+  - [ ] Cifrele vin din `src/algorithms/<slug>/`, niciodată scrise în componentă (excepția
+        rămasă: pagina 11, de mutat — vezi mai jos)
+  - [ ] Textele în română, cu `Notatie`/`NotatieSVG` pentru exponenți și indici
+  - [ ] Etichetele scrise pe desen folosesc `culoareEticheta()`, nu `culoareRol()`
+- [ ] De curățat după decizie
+  - [ ] Șters folderul `manim/` și `public/media/`
+  - [ ] Scos `manim` din `README.md`, `docs/design-system.md`, `docs/referinte.md`,
+        `src/index.css`, `src/lib/viz-roles.ts`, `src/pages/PaginaAlgoritm.tsx`
+  - [ ] Redenumit `clipManim` → `clip` în `src/algorithms/registry.ts`
+  - [x] Footer: „construit cu React și Manim" → fără Manim
 
-**Gata când:** un clip Manim se randează cu o comandă, ajunge în `public/media/` și se afișează corect pe o pagină, inclusiv pe conexiune lentă.
+**Gata când:** o pagină nouă primește clip scris doar în TypeScript, fără niciun pas offline, și
+arată corect în ambele teme și cu `prefers-reduced-motion` pornit.
 
 ---
 
@@ -448,7 +470,7 @@ nu doar galeria de componente.
 **Obiectiv:** o structură fixă, dusă până la capăt pe o metodă-pilot, pe care apoi o repetăm.
 
 - [ ] Structura paginii (ordine fixă, conform `Plan.md`)
-  1. [ ] **Hero vizual** — clipul Manim, imediat, fără text lung înainte
+  1. [ ] **Hero vizual** — clipul, imediat, fără text lung înainte
   2. [ ] **Briefing** — maximum un paragraf despre ce face metoda
   3. [ ] **Formula de bază** — afișată clar, cu notațiile explicate
   4. [ ] **Instrucțiuni de folosire** — cum te joci cu interfața de mai jos, 3–5 pași
@@ -466,7 +488,7 @@ nu doar galeria de componente.
   - [ ] Buton „exemplu interesant" — preîncarcă un set de parametri didactic
 - [ ] Pagina-pilot
   - [ ] Alege prima metodă (una cu vizual simplu)
-  - [ ] Du-o până la capăt: cod, text, Manim, interactiv, mobil
+  - [ ] Du-o până la capăt: cod, text, clip, interactiv, mobil
   - [ ] Review de design pe pilot înainte de a replica structura
   - [ ] Verificare pe telefon real (nu doar DevTools)
   - [ ] Verificare cu tastatura și contrast
@@ -486,31 +508,36 @@ Fiecare pagină grupează metodele înrudite, ca să se poată face paralele în
 împărțirea vine din `Plan.md`, nu una metodă = una pagină. Coloana „Curs" spune din ce
 fișier din `cursuri_MN/` se ia conținutul.
 
-Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e interfața cu `motion`.
-`n/a` înseamnă că pagina **nu primește** clip, prin decizie — nu că e de făcut mai târziu.
+Coloana **Clip** e clipul din secțiunea „Vizual", scris în cod (nu Manim — vezi Faza 5); coloana
+**Interactiv** e interfața cu `motion`. `n/a` înseamnă că pagina **nu primește** piesa aceea, prin
+decizie — nu că e de făcut mai târziu.
 
-| Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Manim | Text | Interactiv | Mobil | Gata |
-| --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ----- | ---- | ---------- | ----- | ---- |
-| 1   | Cramer, LU, Doolittle, Crout, Cholesky        | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a   | [x]  | [x]        | [~]   | [ ]  |
-| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | n/a   | [x]  | [x]        | [x]   | [ ]  |
-| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | n/a   | [x]  | [ ]        | [~]   | [ ]  |
-| 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice      | [ ]     | n/a   | [x]  | n/a        | [~]   | [ ]  |
-| 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | n/a   | [x]  | n/a        | [~]   | [ ]  |
-| 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 15  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | plan complex | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 17  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 20  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+Singura pagină al cărei clip **nu** e scris în cod e 15 (`fft`): acolo secțiunea „Vizual" e un clip
+găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu restanță — vezi
+`CLAUDE.md`.
+
+| Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Clip | Text | Interactiv | Mobil | Gata |
+| --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ---- | ---- | ---------- | ----- | ---- |
+| 1   | Cramer, LU, Doolittle, Crout, Cholesky        | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
+| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
+| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
+| 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice      | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
+| 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
+| 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 15  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
+| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 17  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 20  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
@@ -568,8 +595,8 @@ Ce **nu** e verificat încă:
 
 ### Pagina 7 — `metode-de-gradient`, ce e gata și ce nu
 
-Prima pagină cu secțiunea „Vizual" completă. Clipul e **scris în cod**, nu randat cu Manim (vezi
-excepția din `CLAUDE.md`): a pornit de la o animație web gata făcută (`Coborare pe gradient.html`,
+Prima pagină cu secțiunea „Vizual" completă. Clipul e **scris în cod** — pe atunci o excepție de la
+regula Manim, între timp regula însăși (vezi Faza 5): a pornit de la o animație web gata făcută (`Coborare pe gradient.html`,
 un bundle cu motor propriu) și s-a portat în proiect ca desen pe ceas propriu.
 
 Ce există:
@@ -778,7 +805,8 @@ Ce există:
 - **Teoria**, `src/content/pagerank.tsx`, din curs7 §10: matricea stocastică, `M·R = R`, matricea
   Google și metoda puterii, plus de ce apare transpusa.
 - **Clipul**, `src/components/content/AnimatiaMatriceiPageRank.tsx` — a treia excepție de la regula
-  Manim (după paginile 6 și 7), din același motiv: animația a venit gata făcută ca animație web
+  Manim de atunci (după paginile 6 și 7), din același motiv pentru care regula a și căzut: animația a
+  venit gata făcută ca animație web
   (`Matricea PageRank.html`) și s-a portat pe `Clip`. Toate cifrele vin din
   `src/algorithms/pagerank/`, culorile din `viz-roles.ts` (deci merge în ambele teme, spre deosebire
   de originalul pe fundal alb), iar scena matricei a fost **rescrisă pe linii plus transpunere**, ca
@@ -813,7 +841,7 @@ Ce există:
   singulare sunt chiar valorile proprii — fals când o valoare proprie e negativă
   (`A = [[1,2],[2,1]]`: valori proprii −1 și 3, valori singulare 3 și 1), și în contradicție cu
   propria lui cerință `Sᵢᵢ ≥ 0`. Pe pagină e scrisă concluzia corectă, `sᵢ = |λᵢ|`.
-- **Clipul**, `src/components/content/AnimatiaDvs.tsx` — a patra excepție de la regula Manim (după
+- **Clipul**, `src/components/content/AnimatiaDvs.tsx` — a patra excepție de la regula Manim de atunci (după
   paginile 6, 7 și 9), din același motiv: animația a venit gata făcută ca animație web
   (`Animatie DVS.html`) și s-a portat pe `Clip`. Culorile vin din `viz-roles.ts`, deci merge în
   ambele teme, iar textele desenului folosesc `culoareEticheta`, nu culoarea de desen — safirul lui
@@ -860,10 +888,10 @@ Ce **nu** e făcut încă:
   - [ ] Vizualizarea se actualizează când se schimbă formula sau parametrii
   - [ ] Tabelul de iterații sincronizat cu playback-ul
   - [ ] Cel puțin un preset „exemplu interesant" + un preset care eșuează (didactic)
-- [ ] **5. Manim**
-  - [ ] Scenă în `manim/scenes/<slug>.py`
-  - [ ] Randare + optimizare + poster
-  - [ ] Integrare în pagină și verificare pe conexiune lentă
+- [ ] **5. Clipul „Vizual"** _(dacă pagina primește unul)_
+  - [ ] Scenă în `src/components/content/Animatia<Ceva>.tsx`, pe `Clip`
+  - [ ] Cifrele din `src/algorithms/<slug>/`, culorile din `viz-roles.ts`
+  - [ ] Verificat în ambele teme și cu `prefers-reduced-motion`
 - [ ] **6. Verificare finală**
   - [ ] Mobil: portret și peisaj
   - [ ] Tastatură + focus vizibil
@@ -897,7 +925,7 @@ Ce **nu** e făcut încă:
   - [ ] Open Graph + Twitter cards, cu imagine de preview per algoritm (sau una generică)
   - [ ] URL canonic
 - [ ] Date structurate (opțional): `schema.org/LearningResource` pe paginile de algoritm
-- [ ] Pagină de credite/licențe: fonturi, librării, Manim, surse bibliografice
+- [ ] Pagină de credite/licențe: fonturi, librării, surse bibliografice
 - [ ] Verificare că nu se încarcă nimic de pe domenii terțe
 
 **Gata când:** `sitemap.xml` și `robots.txt` sunt live și valide, iar fiecare pagină are titlu și descriere proprii.
@@ -914,7 +942,7 @@ Ce **nu** e făcut încă:
   - [ ] Analiză bundle (`rollup-plugin-visualizer`), eliminare dependențe grase
   - [ ] Code splitting per rută, verificat în tab-ul Network
   - [ ] Fonturi: `font-display: swap`, preload doar pentru fontul principal
-  - [ ] Video Manim: lazy, niciodată descărcat înainte de a fi vizibil
+  - [ ] Clipurile: componenta scenei se încarcă amânat, nu odată cu pagina
   - [ ] Animațiile de plot nu blochează firul principal
 - [ ] Accesibilitate
   - [ ] Navigare completă cu tastatura, inclusiv sliderele și graficul
@@ -939,7 +967,7 @@ Ce **nu** e făcut încă:
 
 - [ ] Pre-lansare
   - [ ] Verificare linkuri moarte pe build-ul final
-  - [ ] Toate media-urile Manim există și se încarcă
+  - [ ] Toate clipurile pornesc și se derulează pe fiecare pagină care are unul
   - [ ] Fără text placeholder rămas („Lorem", „TODO", „de completat")
   - [ ] Recitire finală a tuturor textelor românești
   - [ ] Verificare finală: fără cookies, fără auth, fără cereri externe
@@ -965,8 +993,7 @@ Ce **nu** e făcut încă:
 
 | Risc                                              | Impact                                        | Cum îl reducem                                                               |
 | ------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
-| Fișierele Manim umflă repo-ul                     | Clonare lentă, limite Pages                   | Compresie agresivă, mutare în Releases dacă depășim ~100 MB                  |
 | Parsarea expresiilor introduse de utilizator      | Erori, blocaje, cod nesigur                   | Librărie testată, fără `eval`, limită de evaluări, validare la tastare       |
 | Animațiile lagg-uiesc pe telefon                  | Site inutilizabil exact pentru publicul-țintă | Buget de performanță, testare pe device real de la Faza 6                    |
 | Cele 15 metode devin repetitive și se abandonează | Site incomplet                                | Template congelat după pilot, un issue per metodă, ordine de la ușor la greu |
-| Manim consumă mult timp per metodă                | Întârzieri                                    | Scene scurte (10–20s), șablon comun, fallback imagine statică acceptabil     |
+| Clipurile scrise în cod consumă mult timp/metodă  | Întârzieri                                    | Scene scurte (10–20 s), motor comun (`Clip`), pagini fără clip sunt admise   |

@@ -5,11 +5,13 @@ import { Link, Navigate, useParams } from "react-router";
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
 import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmuluiQr";
 import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
+import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
+import { VideoFft } from "@/components/content/VideoFft";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,9 +24,8 @@ import { getContinut } from "@/content";
  *
  * Fiecare are unealta ei, fixată: „Vizual" e clipul narativ dinaintea oricărei
  * formule, „Interactiv" e interfața cu care se schimbă parametrii. Vezi
- * `CLAUDE.md`, §„Manim sau `motion`". Clipul e de obicei Manim, pre-randat;
- * pagina 7 face excepție și îl are scris în cod, ca desen pe ceasul propriu
- * (`Clip`) — de aceea descrierea de mai jos nu numește unealta.
+ * `CLAUDE.md`, §„Clip sau `motion`". Clipul e scris în cod și rulează pe ceasul
+ * lui (`Clip`); interfața primește parametrii utilizatorului, clipul nu.
  *
  * `id` e separat de `titlu` fiindcă ajunge în atributul `id` al titlului, iar
  * „Teorie pe scurt" ar da un id cu spații. `aria-labelledby` citește spațiile ca
@@ -56,6 +57,7 @@ const SECTIUNI_PAGINA = [
  */
 const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: ComponentType }> = {
   "ecuatii-neliniare": { interactiv: InterfataEcuatiiNeliniare },
+  "eliminare-gaussiana": { vizual: AnimatiaEliminariiGaussiene },
   "metode-de-gradient": {
     vizual: AnimatieCoborarePeGradient,
     interactiv: InterfataMetodeDeGradient,
@@ -63,6 +65,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },
+  fft: { vizual: VideoFft },
 };
 
 /**
@@ -96,7 +99,7 @@ export default function PaginaAlgoritm() {
   // pagina 6 e fără clip, pagina 9 fără interfață interactivă.
   const sectiuni = SECTIUNI_PAGINA.filter(
     (s) =>
-      (s.id !== "vizual" || pagina.clipManim !== false) &&
+      (s.id !== "vizual" || pagina.clip !== false) &&
       (s.id !== "interactiv" || pagina.interactiv !== false),
   );
 

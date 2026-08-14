@@ -208,3 +208,49 @@ convergență din `|λj+1/λj|` în `|(λj+1 − σ)/(λj − σ)|` și accelere
 Scriptul de verificare: `scratchpad/verifica_qr.py` din sesiunea de lucru (calcul de unică
 folosință, ca la curs6 §3.2; tabelul de mai sus e rezultatul lui). Când pagina 10 primește modulul
 din `src/algorithms/`, verificarea se mută în `scripts/verificare-algoritmi/`, pe cod real.
+
+---
+
+## curs4, §5.2 — „pivotarea parțială nu permută pe exemplul de mai sus"
+
+**Cursul scrie**, ca observație la Algorithm 2 (pivotare parțială):
+
+> „această metodă **încă nu rezolvă** eroarea din sistemul exemplu de mai sus — nu se efectuează
+> nicio permutare."
+
+Sistemul la care trimite „mai sus" e cel din §5.1:
+
+```
+[0.001  1] [x1]   [1]
+[1      1] [x2] = [2]
+```
+
+**Afirmația nu se verifică.** Pivotarea parțială alege, pe coloana 1, elementul cel mai mare în
+modul: `|1| > |0,001|`, deci **permută** liniile — și tocmai permutarea aceea repară exemplul.
+
+**Verificare**, în chiar aritmetica cerută de curs (trei zecimale, cu trunchiere):
+
+| varianta                      | `x*`             | eroare relativă `‖x − x*‖/‖x‖` |
+| ----------------------------- | ---------------- | ------------------------------ |
+| fără pivotare (cum e în curs) | `(2; 0,998)`     | **70,6 %**                     |
+| cu pivotare parțială          | `(1,002; 0,998)` | **0,1 %**                      |
+
+Soluția reală e `(1,001; 0,999)`. Prima linie reproduce exact cifrele tipărite în curs (`µ = 1000`,
+`a₂₂ = −999`, termen liber `−998`, `x₂ = 0,998`, `x₁ = 2`, eroare ≈ 71 %), deci aritmetica simulată
+e cea potrivită; a doua arată că permutarea chiar are loc și că eroarea scade de trei ordine de
+mărime.
+
+Cel mai probabil observația a alunecat de la exemplul **următor**, din §5.3
+(`[1 10000; 1 0.0001]`), unde ea e adevărată: acolo ambele elemente din prima coloană sunt `1`,
+pivotarea parțială nu are ce permuta, și abia pivotul **scalat** repară — exact motivul pentru care
+cursul introduce GPPS.
+
+**Ce s-a pus pe site.** Motivul corect al fiecărei metode: pivotarea parțială rezolvă exemplul din
+§5.1, iar pivotul scalat există pentru cazul în care pivotarea parțială **nu** are ce alege, fiindcă
+elementele coloanei sunt egale ca mărime, dar liniile lor au ordine de mărime diferite. **Concluzia
+cursului rămâne neatinsă** — pivotarea parțială nu e suficientă în toate cazurile —, doar exemplul
+pe care se sprijină e celălalt.
+
+Testele care țin erata pe loc sunt în `scripts/verificare-algoritmi/eliminare-gaussiana.ts`: se cere
+explicit ca pivotarea parțială să **permute** pe sistemul din §5.1 și să **nu** permute pe cel din
+§5.3. Dacă cineva „repară" alegerea înapoi la litera observației, verificarea pică.

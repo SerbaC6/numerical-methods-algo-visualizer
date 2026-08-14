@@ -28,12 +28,8 @@ npm run lint:fix
 
 Testele nu există încă; se introduc în Faza 4, odată cu `src/algorithms/`.
 
-Manim (offline, local — niciodată în browser):
-
-```bash
-cd manim && python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && python render.py
-```
+Nu există pas de randare offline: clipurile din secțiunea „Vizual" sunt scrise în cod și rulează în
+browser (vezi §„Clip sau `motion`").
 
 Scripturile din `scripts/` (`descarca-fonturi.py`, `verifica-contrast.py`) se rulează manual, cu
 Python 3 pur, și nu fac parte din build.
@@ -165,7 +161,9 @@ pagini vin, ce s-a amânat. În `src/` — nimic.
 ## Arhitectură
 
 Site 100% static, fără auth, fără cookies, fără tracking, fără cereri către domenii externe (de
-aceea fonturile sunt auto-găzduite în `public/fonts/`). Singura scriere în `localStorage` e
+aceea fonturile sunt auto-găzduite în `public/fonts/`). **Singura excepție e pagina 15**, unde
+secțiunea „Vizual" e un clip găzduit de YouTube; și acolo nu pleacă nicio cerere până când
+vizitatorul nu apasă pe redare (vezi `VideoIncorporat`). Singura scriere în `localStorage` e
 preferința de temă (`mn-tema`). Deploy pe GitHub Pages ca _project page_ — de aici `base` din
 `vite.config.ts`; dacă se trece pe domeniu propriu, `base` devine `/`.
 
@@ -181,7 +179,7 @@ Separarea de bază, care ține tot proiectul:
   se poată corecta fără să atingi logica.
 - `src/components/ui/` — shadcn/ui copiat în repo; e cod al proiectului, se poate modifica, dar
   re-colorează-l pe paletă. Exclus din lint în `.oxlintrc.json`.
-- `src/lib/`, `src/hooks/`, `src/pages/`, `src/styles/`, `public/media/` (Manim randat), `manim/`.
+- `src/lib/`, `src/hooks/`, `src/pages/`, `src/styles/`, `src/components/content/` (scenele de clip).
 
 Evaluarea expresiilor utilizatorului: **niciodată `eval`**. `src/lib/expresii.ts` face doar
 validare de suprafață; parserul adevărat vine în Faza 4.
@@ -201,7 +199,8 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 > Dacă o componentă sau o vizualizare pare că are nevoie de o culoare nouă: **oprește-te și
 > întreabă-mă**. Nu adăuga culoarea și nu explica după aceea — decizia de culoare e a mea, nu a ta.
 > Doar dacă îți spun eu explicit „folosește culoarea X" intră ceva nou în paletă, și atunci intră
-> ca token în `src/index.css` și se oglindește în `manim/theme.py`, nu scris direct în componentă.
+> ca token în `src/index.css` (și, dacă e rol de desen, în `src/lib/viz-roles.ts`), nu scris direct în
+> componentă.
 
 Șase culori de interfață, atât. Dacă ai nevoie de o nuanță intermediară, **derivă** din cele de mai jos cu
 `color-mix(in oklab, …)`, cum se face deja în `src/index.css` — asta nu e culoare nouă.
@@ -249,8 +248,6 @@ peste toate albastrurile. O a treia nuanță de albastru l-ar fi îngropat într
 Cifra de pe o celulă umplută cu vermillion își schimbă culoarea între teme: **albă** pe `#C43314`
 (5,48:1), **`#262B40`** pe `#FF7A5C` (5,45:1). Inversul pică sub prag în ambele cazuri, iar
 `scripts/verifica-contrast.py` are ambele greșeli ca teste care trebuie să pice.
-
-Când se scrie `manim/theme.py` (Faza 5), tokenul se oglindește și acolo.
 
 #### Intervalul — `--viz-interval` (aprobat explicit)
 
@@ -330,8 +327,6 @@ Consecința pentru desen, de ținut minte: fiind aproape de culoarea textului, m
 trebuie să rămână distinct ca **formă**, nu doar ca ton. Aceeași valoare o poartă și `--succes`, ca
 „a ajuns la soluție" din grafic și „a ieșit bine" din interfață să însemne vizual același lucru.
 
-Când se scrie `manim/theme.py` (Faza 5), ambele valori se oglindesc și acolo.
-
 **Tipografie:** **Nunito Sans** pentru titluri și text, **JetBrains Mono** pentru formule, valori
 de parametri și tabele de iterații (cifre tabulare, distinge `0/O` și `1/l/I`). Ambele
 auto-găzduite în `public/fonts/`, fără CDN.
@@ -353,8 +348,8 @@ Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-cure
   `--viz-anterior` = iterații anterioare, `--viz-functie` = curba, `--viz-grila` = grilă/adnotări,
   `--viz-interval` = zona evidențiată (și linia activă dintr-o matrice), `--viz-solutie` = soluția,
   `--viz-pivot` = pivotul. Sursa unică e `src/lib/viz-roles.ts`, de unde își ia și `Legend`
-  culorile — deci legenda nu poate ajunge să contrazică desenul. Aceleași valori se oglindesc în
-  `manim/theme.py`, ca vizualurile pre-randate să nu se bată cap în cap cu interfața.
+  culorile — deci legenda nu poate ajunge să contrazică desenul. De acolo își iau culorile și
+  clipurile din secțiunea „Vizual", deci nu există un al doilea loc care s-ar putea depărta.
 - **Culoarea cu care desenezi nu e culoarea cu care scrii.** Fiecare rol are o a doua valoare,
   `--viz-*-eticheta`, folosită exclusiv pentru numele scrise pe desen („x₀", „a₀", „b₀"). Motivul e
   un prag, nu o preferință: WCAG cere 4,5:1 pentru text de corp obișnuit, dar doar 3:1 pentru un
@@ -467,9 +462,10 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [ ] **Pagina 7 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
       nouă: **curbe de nivel** (isolinii) peste o funcție de două variabile, plus traseul care
       coboară. Întâi animații explicative, apoi interfața de aprofundare.
-- [ ] **Pagina 15 — `fft`**. **Cel mai greu vizual din site**: plan complex, rădăcini ale unității
-      și schema recursivă („fluture"). De lăsat ultimul, indiferent de ordinea din care se
-      lucrează. (Partea ușoară a vechii pagini 11 a plecat la pagina 14, `cmmp`.)
+- [x] **Pagina 15 — `fft`**. Era **cel mai greu vizual din site** — plan complex, rădăcini ale
+      unității, schema recursivă („fluture") — și a ieșit din listă: pagina a primit un clip
+      încorporat (`VideoFft`) plus teorie, fără secțiune „Interactiv". Nicio primitivă nouă.
+      (Partea ușoară a vechii pagini 11 a plecat la pagina 14, `cmmp`.)
 
 ### Decizii de luat înainte de Etapa 0
 
@@ -500,54 +496,65 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
   CSS e scrisă în [`src/components/viz/README.md`](./src/components/viz/README.md) și e după _ce_ se
   schimbă: geometria pe `motion`, culorile pe CSS.
 
-## Manim sau `motion`: fiecare secțiune cu unealta ei (DECIS)
+## Clip sau `motion`: fiecare secțiune cu unealta ei (DECIS)
 
-Cele două nu concurează, fiindcă răspund la întrebări diferite. Împărțirea e fixată și **nu se
-renegociază per pagină**:
+**Manim nu se folosește deloc** — nici în browser, nici offline. Nu se instalează, nu se scriu
+scene Python, nu se randează fișiere video. Clipul din secțiunea „Vizual" se scrie **în cod**, ca
+animație web pe ceas propriu (`Clip` din `src/components/viz/`, cu `src/lib/compozitie.ts`), și tot
+ce se vede e o funcție pură de timpul clipului.
+
+Motivele, măsurate pe paginile 7, 9, 10 și 11, care au primit deja clip scris în cod: culorile vin
+din `viz-roles.ts`, deci clipul se vede corect în **ambele teme** (un mp4 are un singur fundal);
+cifrele vin din `src/algorithms/`, deci desenul și textul nu se pot contrazice; textul rămâne text,
+deci se citește cu cititorul de ecran și nu se pixelează; `prefers-reduced-motion` e respectat cu
+adevărat, nu prin înlocuirea cu un poster; iar o corectură e o linie de TypeScript, nu o reinstalare
+de lanț Python cu ffmpeg și cairo.
+
+Cele două unelte nu concurează, fiindcă răspund la întrebări diferite. Împărțirea e fixată și **nu
+se renegociază per pagină**:
 
 | Secțiunea din pagină | Unealta                                         | La ce e bună                                                          |
 | -------------------- | ----------------------------------------------- | --------------------------------------------------------------------- |
-| **Vizual**           | **Manim**, clip pre-randat offline              | „despre ce e vorba", în treizeci de secunde, înainte de orice formulă |
+| **Vizual**           | **clip scris în cod** (`Clip`, ceas propriu)    | „despre ce e vorba", în treizeci de secunde, înainte de orice formulă |
 | **Interactiv**       | **`motion`** + straturile `Plot` / `MatrixGrid` | „ce se întâmplă dacă schimb eu asta"                                  |
 
-Clipul Manim **nu** înlocuiește interfața și nici invers. Un clip nu poate fi oprit la pasul 3, nu
-primește parametrii utilizatorului, nu se leagă de evidențierea din formulă prin `\htmlId` și, la
-`prefers-reduced-motion`, nu poate decât să arate un poster static. În schimb, o interfață nu poate
-duce singură o introducere narativă.
+Clipul **nu** înlocuiește interfața și nici invers. Un clip se oprește și se derulează, dar **nu
+primește parametrii utilizatorului** și nu se leagă de evidențierea din formulă prin `\htmlId`; în
+schimb, o interfață nu poate duce singură o introducere narativă. Regula asta e cea care rămâne din
+vechea împărțire Manim/`motion`: e singurul lucru care ținea granița în picioare.
 
-Manim rămâne **exclusiv offline** (vezi §Arhitectură): randare locală, rezultat static în
-`public/media/<slug>/`, niciodată în browser. Pipeline-ul se face în Faza 5 din `Progress.md`.
+Ce se cere de la orice clip nou: scena stă în `src/components/content/Animatia<Ceva>.tsx`, cifrele
+vin din `src/algorithms/<slug>/`, culorile din `viz-roles.ts` (etichetele cu `culoareEticheta()`),
+iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` pornit.
 
-**Excepția 2: pagina 7** (`metode-de-gradient`) — secțiunea „Vizual" există, dar clipul e **scris în
-cod**, nu randat cu Manim. Rulează pe un ceas propriu (`Clip` din `src/components/viz/`, cu
-`src/lib/compozitie.ts`), iar tot ce se vede e o funcție pură de timpul clipului. Regula generală
-rămâne Manim; aici clipul a venit gata făcut ca animație web și s-a portat ca atare. Ce trebuie
-ținut minte, dacă se mai repetă: un clip scris în cod **nu** capătă voie să facă și treaba
-interfeței interactive — se oprește și se derulează, dar nu primește parametrii utilizatorului.
+**Pagini fără clip, prin decizie** — nu „încă nu au":
 
-**Excepția 3: pagina 9** (`pagerank`) — la fel ca pagina 7: secțiunea „Vizual" există, dar clipul e
-**scris în cod** (`AnimatiaMatriceiPageRank`), fiindcă a venit gata făcut ca animație web și s-a
-portat ca atare. Aceleași două condiții: rulează pe ceasul lui (`Clip`), iar cifrele vin din
-`src/algorithms/pagerank/`, ca desenul și textul să nu poată spune lucruri diferite. `d` e fixat —
-un clip nu primește parametrii utilizatorului.
+- **pagina 6** (`ecuatii-neliniare`) — doar interfața interactivă. Bisecția se înțelege trăgând de
+  capetele intervalului, iar un film ar arăta exact ce face interfața, doar că fără să-l poți opri.
+  Secțiunea „Vizual" **nu există** acolo: fără schelet, fără text de așteptare — vezi regula despre
+  stările de progres.
 
-**Excepția 5: pagina 10** (`algoritmul-qr`) — la fel ca paginile 7, 9 și 11: secțiunea „Vizual"
-există, dar clipul e **scris în cod** (`AnimatiaAlgoritmuluiQr`), fiindcă a venit gata făcut ca
-animație web și s-a portat ca atare. Aceleași două condiții: rulează pe ceasul lui (`Clip`) și nu
-primește parametrii utilizatorului — matricea desenată e simbolică (`a₁…a₄`, `b₂…b₄`), nu numerică.
-Pagina **nu primește** secțiune „Interactiv": clipul duce singur toată povestea, de la observația
-cu `b = 0` până la diagonala de valori proprii.
+**Pagini fără secțiune „Interactiv", prin decizie:**
 
-**Excepția 4: pagina 11** (`dvs`) — la fel ca paginile 7 și 9: secțiunea „Vizual" există, dar clipul
-e **scris în cod** (`AnimatiaDvs`), fiindcă a venit gata făcut ca animație web și s-a portat ca
-atare. Aceleași două condiții: rulează pe ceasul lui (`Clip`) și nu primește parametrii
-utilizatorului — transformarea desenată e fixă, DVS-ul exact al matricei `A = [[1, 2], [0, 1]]`.
-Pagina **nu primește** secțiune „Interactiv": geometria cerc → elipsă se înțelege din clip.
+- **pagina 10** (`algoritmul-qr`) — clipul (`AnimatiaAlgoritmuluiQr`) duce singur toată povestea, de
+  la observația cu `b = 0` până la diagonala de valori proprii. Matricea desenată e simbolică
+  (`a₁…a₄`, `b₂…b₄`), nu numerică.
+- **pagina 11** (`dvs`) — geometria cerc → elipsă se înțelege din clip (`AnimatiaDvs`).
+  Transformarea desenată e fixă: DVS-ul exact al matricei `A = [[1, 2], [0, 1]]`.
+- **pagina 9** (`pagerank`) — interfața a fost construită și **scoasă la cerere**; pe pagină rămâne
+  clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
+- **pagina 15** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
+  set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
 
-**Excepția 1: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
-Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
-doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,
-nu se pune text de așteptare, nu se anunță nimic — vezi regula despre stările de progres.
+**Singura pagină cu clip care nu e scris în cod:**
+
+- **pagina 15** (`fft`) — secțiunea „Vizual" e un clip găzduit de YouTube, pus prin
+  `VideoIncorporat`. E o excepție **decisă**, nu un plan amânat: piesele de desen pe care le-ar cere
+  (planul complex, recombinarea nivel cu nivel) nu se refolosesc nicăieri altundeva.
+  `VideoIncorporat` încarcă întâi o facadă — miniatura, găzduită de site —, iar iframe-ul către
+  `youtube-nocookie.com` se montează abia la clic, ca promisiunea din politica de confidențialitate
+  să rămână adevărată pentru cine nu apasă. Regula rămâne totuși: **niciun alt clip nu se
+  încorporează de la terți fără o decizie nouă.**
 
 ## Convenții
 

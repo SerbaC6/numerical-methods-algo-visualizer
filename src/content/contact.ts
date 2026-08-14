@@ -20,4 +20,4 @@ export const GITHUB_URL = "https://github.com/SerbaC6/numerical-methods-algo-vis
  * cu mâna, la fiecare modificare a textului lor — nu se ia din ceas, fiindcă
  * „actualizat azi" pe un text nemodificat de un an ar fi o minciună.
  */
-export const DATA_ACTUALIZARE = "13 august 2026";
+export const DATA_ACTUALIZARE = "14 august 2026";

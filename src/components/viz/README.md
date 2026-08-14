@@ -19,6 +19,7 @@ iterație, plus controalele care le însoțesc.
 | `PlaybackClip`    | comenzile clipului, pe **timp** (bara pe pași e `PlaybackBar`)   |
 | `Subtitrari`      | propoziția de sub desen, cheiată pe ceasul clipului              |
 | `Scena3D`         | proiecția 3D: camera trasă cu degetul, zona, tăierea             |
+| `VideoIncorporat` | clip găzduit de terți; nicio cerere externă până la clic         |
 
 **`Clip` nu e o variantă de `Plot`.** `Plot` desenează o stare — pasul `k` dintr-un `steps[]`, ales
 de utilizator. `Clip` desenează un **film**: un singur arbore de elemente, randat ca funcție pură de

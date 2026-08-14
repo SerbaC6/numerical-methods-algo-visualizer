@@ -1,6 +1,8 @@
 import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
+import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
+import { continutFft } from "@/content/fft";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
 import { continutPagerank } from "@/content/pagerank";
 import type { ContinutPagina } from "@/content/tipuri";
@@ -16,6 +18,8 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   dvs: continutDvs,
   "algoritmul-qr": continutAlgoritmulQr,
   "ecuatii-neliniare": continutEcuatiiNeliniare,
+  "eliminare-gaussiana": continutEliminareGaussiana,
+  fft: continutFft,
   "metode-de-gradient": continutMetodeDeGradient,
   pagerank: continutPagerank,
 };

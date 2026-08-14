@@ -95,7 +95,7 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
         <Separator className="mt-10" />
 
         <div className="text-text-slab flex flex-col gap-2 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>© {AN} · Vizualizator de metode numerice · construit cu React și Manim</p>
+          <p>© {AN} · Vizualizator de metode numerice · construit cu React</p>
           <p>
             Conținutul urmează cursul predat. Site static, fără conturi, fără cookies, fără
             urmărire.
