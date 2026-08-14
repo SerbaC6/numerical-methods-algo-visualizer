@@ -986,11 +986,11 @@ const SUBTITRARI = [
 /**
  * Clipul paginii 5: de ce Gauss-Seidel nu e Jacobi, deși au aceeași formulă.
  *
- * **Clip scris în cod, nu randat cu Manim** — aceeași excepție ca la paginile 1,
- * 7, 9, 10 și 11, dar din alt motiv: aici diferența dintre metode e **ce valori
- * se citesc**, iar asta se arată cu săgeți care apar și dispar peste aceleași
- * cifre. Cifrele nu sunt transcrise, ci calculate la încărcare cu modulele reale
- * din `src/algorithms/metode-iterative/`, ca desenul și textul să nu se poată
+ * **Scris în cod**, ca toate clipurile site-ului. Aici forma se potrivește mai
+ * bine ca oriunde: diferența dintre metode e **ce valori se citesc**, iar asta
+ * se arată cu săgeți care apar și dispar peste aceleași cifre. Cifrele nu sunt
+ * transcrise, ci calculate la încărcare cu modulele reale din
+ * `src/algorithms/metode-iterative/`, ca desenul și textul să nu se poată
  * contrazice.
  *
  * Ca orice clip, **nu** primește parametrii utilizatorului: sistemul e fix, cel

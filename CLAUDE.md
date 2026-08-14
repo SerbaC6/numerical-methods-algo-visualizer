@@ -503,7 +503,7 @@ scene Python, nu se randează fișiere video. Clipul din secțiunea „Vizual" s
 animație web pe ceas propriu (`Clip` din `src/components/viz/`, cu `src/lib/compozitie.ts`), și tot
 ce se vede e o funcție pură de timpul clipului.
 
-Motivele, măsurate pe paginile 1, 3, 7, 9, 10 și 11, care au primit deja clip scris în cod: culorile vin
+Motivele, măsurate pe paginile 1, 3, 5, 7, 9, 10 și 11, care au primit deja clip scris în cod: culorile vin
 din `viz-roles.ts`, deci clipul se vede corect în **ambele teme** (un mp4 are un singur fundal);
 cifrele vin din `src/algorithms/`, deci desenul și textul nu se pot contrazice; textul rămâne text,
 deci se citește cu cititorul de ecran și nu se pixelează; `prefers-reduced-motion` e respectat cu
