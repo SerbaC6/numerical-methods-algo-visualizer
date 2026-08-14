@@ -133,7 +133,21 @@ export function Traiectorie3D({
 
       {strat === "umbra" ? null : (
         <>
-          {/* Drumul pe suprafață */}
+          {/* Drumul pe suprafață, cu halou.
+              Haloul nu e ornament: traseul trece peste vale, iar valea e din
+              aceeași familie de albastruri. Măsurat, pe tema luminoasă traseul
+              ieșea la 1,31:1 față de suprafața de sub el, iar pe cea întunecată
+              săgeata pasului la 1,13:1 — adică linia se pierdea în vale. Un
+              contur în culoarea cardului o desprinde de orice fundal, exact
+              trucul folosit deja la etichete și la punctele iterațiilor. */}
+          <path
+            d={caleTaiata((p) => p.z + ridicare)}
+            fill="none"
+            stroke="var(--suprafata)"
+            strokeWidth={6}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
           <path
             d={caleTaiata((p) => p.z + ridicare)}
             fill="none"

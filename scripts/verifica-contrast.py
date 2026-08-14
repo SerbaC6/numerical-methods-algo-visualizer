@@ -97,17 +97,37 @@ PERECHI = [
     ("luminos: interval (chihlimbar) / fundal", "#BE7434", "#F7F9FD", 3.0),
     ("luminos: interval (chihlimbar) / suprafață", "#BE7434", "#FFFFFF", 3.0),
     # ── Suprafața văii din scena 3D (pagina 7) ───────────────────────────────
-    # Relieful vine din opacitatea unui singur rol (`--viz-functie`), între 60 %
-    # și 100 % — vezi `Suprafata3D`. Fața cea mai umbrită e cazul cel mai slab și
-    # nu e undeva în mijlocul mesh-ului: lumina stă lipită de cameră, deci cele
-    # mai umbrite fețe sunt tocmai cele razante, adică **conturul** văii.
-    # Compus: 60 % #06457F peste alb dă #6A8FB2; 60 % #A8C4EC peste #33415F dă #7990B4.
-    ("luminos: valea la 60% / suprafață", "#6A8FB2", "#FFFFFF", 3.0),
+    # Relieful vine din opacitatea unui singur rol (`--viz-functie`) — vezi
+    # `Suprafata3D`. Fața cea mai umbrită e cazul cel mai slab și nu e undeva în
+    # mijlocul mesh-ului: lumina stă lipită de cameră, deci cele mai umbrite fețe
+    # sunt tocmai cele razante, adică **conturul** văii.
+    #
+    # Pe tema ÎNTUNECATĂ valea e pata deschisă de pe un fundal închis, deci
+    # conturul trece: 60 % #A8C4EC peste #33415F dă #7990B4.
     ("întunecat: valea la 60% / suprafață", "#7990B4", "#33415F", 3.0),
-    # Baza de dinainte, 45 %, ținută ca test care TREBUIE să pice: acolo conturul
-    # văii cobora la 2,39:1 și 2,41:1, sub pragul de 3:1 al unui element grafic.
-    ("luminos: valea la 45% — prea palidă (interzis)", "#8FABC5", "#FFFFFF", 3.0),
-    ("întunecat: valea la 45% — prea palidă (interzis)", "#687C9E", "#33415F", 3.0),
+    #
+    # Pe tema LUMINOASĂ valea e exact invers — pata cea mai închisă, pe alb — și
+    # atunci ea înghite tot ce se desenează peste ea. Cele două cerințe nu se pot
+    # împăca dintr-o singură opacitate; măsurat, cu valea la 60 % conturul trece
+    # (3,40:1) dar săgeata pasului peste ea cade la 1,08:1, iar la 12 % e invers.
+    # S-a ales lizibilitatea liniilor: valea coboară la 16–38 % și devine fundal,
+    # iar liniile își iau contrastul din halou, nu din ea. Conturul văii rămâne
+    # deci sub 3:1 pe tema luminoasă — gol declarat, nu scăpare.
+    ("luminos: valea la 16% / suprafață — sub prag, ales dinadins", "#D7E1EB", "#FFFFFF", 1.2),
+    ("luminos: valea la 38% / suprafață", "#A0B8CE", "#FFFFFF", 1.8),
+    # Ce câștigă în schimb: liniile de peste vale. Cea mai slabă e săgeata
+    # pasului; înainte 1,08:1, acum peste vale la 38 %.
+    ("luminos: săgeata pasului / valea la 38%", "#BE7434", "#A0B8CE", 1.5),
+    #
+    # ── Liniile de pe podea ──────────────────────────────────────────────────
+    # `--viz-grila` a urcat de la 20–22 % la 65 %: la 20 % grila și curbele de
+    # nivel ieșeau la 1,41:1 și 1,49:1 chiar desenate la opacitate 1, fiindcă
+    # tokenul însuși era aproape transparent.
+    ("luminos: grila podelei / suprafață", "#76858B", "#FFFFFF", 3.0),
+    ("întunecat: grila podelei / suprafață", "#7F96BB", "#33415F", 3.0),
+    # Vechile valori, ținute ca teste care TREBUIE să pice.
+    ("luminos: grila la 20% — invizibilă (interzis)", "#D5DADB", "#FFFFFF", 3.0),
+    ("întunecat: grila la 22% — invizibilă (interzis)", "#4D5E7E", "#33415F", 3.0),
     # Banda din MatrixGrid e chihlimbarul la 20% peste alb (#F2E3D6): trebuie să
     # rămână limpede sub cifra închisă și să nu se confunde cu celula-pivot.
     ("luminos: text principal / bandă interval 20%", "#262B40", "#F2E3D6", 4.5),

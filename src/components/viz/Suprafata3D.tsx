@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { useTheme } from "@/hooks/use-theme";
+
 import { useScena3D } from "@/components/viz/scena-3d-context";
 import {
   normalaCelulei,
@@ -18,20 +20,29 @@ export type Suprafata3DProps = {
 };
 
 /**
- * Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el.
+ * Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el —
+ * **altfel pe fiecare temă**, fiindcă valea joacă roluri opuse.
  *
- * **Baza e 0,60, nu 0,45, și cifra e măsurată.** Lumina stă lipită de cameră,
- * deci fețele cele mai umbrite sunt tocmai cele razante — adică **conturul**
- * văii, acolo unde suprafața se desprinde de fundalul cardului. La 45 % acel
- * contur ajungea la 2,39:1 pe tema luminoasă și 2,41:1 pe cea întunecată, sub
- * pragul de 3:1 pe care WCAG 1.4.11 îl cere unui element grafic: valea își
- * pierdea marginea pe partea întoarsă de la lumină. La 60 % iese 3,40:1 și
- * 3,13:1. Ambele perechi sunt în `scripts/verifica-contrast.py`.
+ * Pe tema **întunecată** valea e `--color-cer`, adică pata cea mai deschisă de
+ * pe un fundal închis. Acolo 0,60–1,00 e corect: conturul iese la 3,13:1, peste
+ * pragul de 3:1 al unui element grafic.
  *
- * Suma celor două rămâne 1: fața plin luminată e tot opacă.
+ * Pe tema **luminoasă** valea e `--color-adanc`, deci exact invers: pata cea
+ * mai închisă, pe alb. La 0,60–1,00 ea înghițea tot ce se desena peste ea —
+ * măsurat, traseul ajungea la 1,31:1, iterația curentă la 1,44:1, iar săgeata
+ * pasului la **1,08:1**, adică invizibilă. Aici valea trebuie să fie fundal,
+ * nu subiect.
+ *
+ * Cele două cerințe nu se pot împăca dintr-o singură opacitate: la 0,60
+ * conturul trece (3,40:1) dar liniile pică (1,08:1), iar la 0,12 liniile trec
+ * (2,98:1) și conturul pică (1,23:1). Compromisul e împărțit — valea coboară la
+ * o spoială, iar liniile își capătă lizibilitatea din **halou**, nu din
+ * contrastul cu ea (vezi `Traiectorie3D` și `Sageata3D`).
  */
-const OPACITATE_BAZA = 0.6;
-const OPACITATE_LUMINA = 0.4;
+const OPACITATE = {
+  intunecata: { baza: 0.6, lumina: 0.4 },
+  luminoasa: { baza: 0.16, lumina: 0.22 },
+} as const;
 
 /**
  * Sub atâta opacitate mesh-ul nu se mai randează deloc.
@@ -68,6 +79,8 @@ const OPACITATE_MINIMA = 0.02;
  */
 export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
   const { proiectie, camera, cutie, idTaiere, rezolutieMesh } = useScena3D();
+  const tema = useTheme();
+  const { baza, lumina } = tema === "dark" ? OPACITATE.intunecata : OPACITATE.luminoasa;
   const n = Math.max(2, Math.round(rezolutieMesh));
 
   const [x0, x1] = cutie.x;
@@ -125,8 +138,7 @@ export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
 
     fete.push({
       d: `M ${e00.x} ${e00.y} L ${e10.x} ${e10.y} L ${e11.x} ${e11.y} L ${e01.x} ${e01.y} Z`,
-      opacitate:
-        OPACITATE_BAZA + OPACITATE_LUMINA * umbrire(normalaCelulei(l00, l10, l11, l01), camera),
+      opacitate: baza + lumina * umbrire(normalaCelulei(l00, l10, l11, l01), camera),
     });
   }
 

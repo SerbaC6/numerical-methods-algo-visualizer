@@ -73,6 +73,20 @@ export function Sageata3D({
 
   return (
     <g aria-hidden="true" clipPath={`url(#${idTaiere})`}>
+      {/* Halou în culoarea cardului, sub săgeată: ea se desenează peste vale,
+          iar măsurat ajungea la 1,08:1 față de suprafața de sub ea pe tema
+          luminoasă și 1,13:1 pe cea întunecată. Vezi `Traiectorie3D`. */}
+      <line
+        x1={a.x}
+        y1={a.y}
+        x2={capat.x}
+        y2={capat.y}
+        stroke="var(--suprafata)"
+        strokeWidth={grosime + 3.5}
+        strokeLinecap="round"
+      />
+      <path d={varfulD} fill="none" stroke="var(--suprafata)" strokeWidth={3.5} />
+
       <line
         x1={a.x}
         y1={a.y}

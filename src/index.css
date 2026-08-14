@@ -83,7 +83,11 @@
   --viz-functie: var(--color-adanc);
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
-  --viz-grila: color-mix(in oklab, var(--color-ardezie) 20%, transparent);
+  /* 65 %, nu 20 %: la 20 % grila și curbele de nivel ieșeau la 1,41:1 față de
+     suprafață chiar desenate la opacitate 1 — adică practic invizibile, fiindcă
+     tokenul însuși era aproape transparent. La 65 % ies 3,82:1, pragul pe care
+     proiectul îl cere oricărui element grafic. Măsurat în `verifica-contrast.py`. */
+  --viz-grila: color-mix(in oklab, var(--color-ardezie) 65%, transparent);
   /* Intervalul de căutare. Nu poate fi albastru: paranteza lui stă exact peste
      curbă (`--viz-functie`) și peste punctul iterației (`--viz-curent`), iar o a
      treia nuanță de albastru s-ar topi în celelalte două — pe tema întunecată
@@ -182,7 +186,8 @@
   --viz-functie: var(--color-cer);
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
-  --viz-grila: color-mix(in oklab, var(--color-cer) 22%, transparent);
+  /* Perechea întunecată a celor 65 % de mai sus: 3,39:1 față de suprafață. */
+  --viz-grila: color-mix(in oklab, var(--color-cer) 65%, transparent);
   /* Perechea întunecată a chihlimbarului de mai sus: aceeași nuanță (hue 29),
      doar ridicată în luminozitate ca să se desprindă de fundalul închis —
      5,24:1 pe fundal, 3,86:1 pe suprafață. Un pas mai domol (#D96A05, 2,95:1)
