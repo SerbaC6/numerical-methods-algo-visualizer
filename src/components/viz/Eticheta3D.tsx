@@ -1,5 +1,5 @@
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
-import type { Punct3 } from "@/lib/proiectie-3d";
+import { inCutieXY, type Punct3 } from "@/lib/proiectie-3d";
 import { culoareEticheta, type RolViz } from "@/lib/viz-roles";
 
 export type Eticheta3DProps = {
@@ -35,7 +35,12 @@ export function Eticheta3D({
   marime = 15,
   opacitate = 1,
 }: Eticheta3DProps) {
-  const { proiectie, idTaiere } = useScena3D();
+  const { proiectie, cutie, idTaiere } = useScena3D();
+
+  // Un nume ancorat în afara ferestrei scenei nu se scrie deloc: punctul lui nu
+  // se vede, deci eticheta ar pluti singură, iar după o apropiere a lupei ar fi
+  // ancorată la milioane de pixeli de cadru.
+  if (!inCutieXY(punct, cutie)) return null;
 
   const p = proiectie.laEcran(punct);
   if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return null;

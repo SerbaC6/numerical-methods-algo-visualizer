@@ -336,6 +336,120 @@ export function umbrire(normala: Punct3, cam: Camera): number {
 }
 
 /**
+ * E punctul în fereastra pe care o arată scena, adică în cutie pe x și y?
+ *
+ * **Numai x și y, nu și z.** Cutia e o fereastră către planul soluțiilor;
+ * înălțimea nu e o limită, ci o consecință — traseul e ridicat puțin peste
+ * suprafață (`Traiectorie3D`), deci un prag pe z ar tăia tocmai ce trebuie
+ * văzut.
+ */
+export function inCutieXY(p: Punct3, cutie: Cutie, toleranta = 1e-9): boolean {
+  return (
+    p.x >= cutie.x[0] - toleranta &&
+    p.x <= cutie.x[1] + toleranta &&
+    p.y >= cutie.y[0] - toleranta &&
+    p.y <= cutie.y[1] + toleranta
+  );
+}
+
+/**
+ * Bucata dintr-un segment care cade în fereastra scenei, sau `null` dacă nu
+ * cade nimic.
+ *
+ * **De ce trebuie tăiat în lume, nu la marginea SVG-ului.** Când lupa se
+ * apropie, iterațiile de la începutul rulării rămân în listă, dar ies din
+ * cutie — iar proiecția e liniară, deci nu le duce „undeva lângă", ci foarte
+ * departe: măsurat pe valea alungită, `x⁽⁰⁾` ajunge la `(−2104, −5315)` px la
+ * pasul 11 și la `(−2,6·10⁶, −4,9·10⁹)` la ultimul. Segmentul până acolo
+ * traversează toată scena și se vede ca o linie care intră din afară și nu
+ * duce nicăieri. Tăiat doar la dreptunghiul SVG-ului, el rămâne desenat — plus
+ * că browserul are de rasterizat o cale cu coordonate de ordinul miliardelor.
+ *
+ * Tăierea e **exactă**, nu o aproximare: segmentul desenat e drept în lume, iar
+ * proiecția fiind liniară, punctul de parametru `t` de pe segmentul din lume e
+ * chiar punctul de parametru `t` de pe segmentul de pe ecran. Se interpolează
+ * toate trei coordonatele cu același `t` (Liang–Barsky pe x și y).
+ */
+export function taieLaCutieXY(a: Punct3, b: Punct3, cutie: Cutie): [Punct3, Punct3] | null {
+  let t0 = 0;
+  let t1 = 1;
+
+  // (direcție, distanța până la margine) pentru cele patru laturi
+  const margini: [number, number][] = [
+    [-(b.x - a.x), a.x - cutie.x[0]],
+    [b.x - a.x, cutie.x[1] - a.x],
+    [-(b.y - a.y), a.y - cutie.y[0]],
+    [b.y - a.y, cutie.y[1] - a.y],
+  ];
+
+  for (const [p, q] of margini) {
+    if (p === 0) {
+      // Segment paralel cu latura: dacă e în afara ei, nu se vede deloc.
+      if (q < 0) return null;
+      continue;
+    }
+    const r = q / p;
+    if (p < 0) {
+      if (r > t1) return null;
+      if (r > t0) t0 = r;
+    } else {
+      if (r < t0) return null;
+      if (r < t1) t1 = r;
+    }
+  }
+
+  if (!(t1 > t0)) return null;
+
+  const la = (t: number): Punct3 => ({
+    x: a.x + (b.x - a.x) * t,
+    y: a.y + (b.y - a.y) * t,
+    z: a.z + (b.z - a.z) * t,
+  });
+
+  return [la(t0), la(t1)];
+}
+
+/**
+ * Un drum, tăiat la fereastra scenei: bucățile lui care se văd.
+ *
+ * Rezultatul e o **listă de polilinii**, nu una singură, fiindcă un drum poate
+ * ieși din fereastră și intra înapoi; unite, cele două bucăți ar fi legate
+ * printr-o linie care trece peste porțiunea tăiată — adică exact greșeala pe
+ * care tăierea o repară. Bucățile consecutive care se termină și încep în
+ * același punct se lipesc, ca `stroke-linejoin` să lucreze pe drumul întreg.
+ */
+export function poliliniiTaiate(puncte: readonly Punct3[], cutie: Cutie): Punct3[][] {
+  const bucati: Punct3[][] = [];
+  let curenta: Punct3[] | null = null;
+
+  const acelasi = (a: Punct3, b: Punct3) =>
+    Math.abs(a.x - b.x) < 1e-12 && Math.abs(a.y - b.y) < 1e-12 && Math.abs(a.z - b.z) < 1e-12;
+
+  for (let i = 0; i + 1 < puncte.length; i++) {
+    const a = puncte[i];
+    const b = puncte[i + 1];
+    if (!a || !b) continue;
+
+    const taiat = taieLaCutieXY(a, b, cutie);
+    if (!taiat) {
+      curenta = null;
+      continue;
+    }
+
+    const [de, la] = taiat;
+    const ultim = curenta?.[curenta.length - 1];
+    if (curenta && ultim && acelasi(ultim, de)) {
+      curenta.push(la);
+    } else {
+      curenta = [de, la];
+      bucati.push(curenta);
+    }
+  }
+
+  return bucati;
+}
+
+/**
  * Cât de opacă e suprafața la o elevație dată: 1 sub `ELEVATIE_ESTOMPARE`, 0 fix
  * la 90°, cu trecere netedă între ele.
  *

@@ -20,8 +20,11 @@ import {
   ELEVATIE_MINIMA,
   bazaCamerei,
   creeazaProiectie,
+  inCutieXY,
   normalizeazaCamera,
   opacitateSuprafata,
+  poliliniiTaiate,
+  taieLaCutieXY,
   ordineCelule,
   roteste,
 } from "../../src/lib/proiectie-3d.ts";
@@ -434,6 +437,84 @@ console.log("\n=== 10. Suprafața se dă la o parte exact la privirea de sus ===
     "la jumătatea trecerii e pe la jumătate",
     Math.abs(opacitateSuprafata(mijloc) - 0.5) < 1e-12,
     opacitateSuprafata(mijloc).toFixed(6),
+  );
+}
+
+console.log("\n=== 11. Tăierea drumului la fereastra scenei ===");
+{
+  // De ce contează: când lupa se apropie, iterațiile de la începutul rulării ies
+  // din cutie, iar proiecția fiind liniară ele nu ajung „undeva lângă", ci la
+  // milioane de pixeli. Segmentul până acolo traversează scena și se vede ca o
+  // linie venită din afară — bugul raportat. Tăierea trebuie să fie **exactă**:
+  // capetele tăiate trebuie să stea chiar pe segmentul original.
+  const rnd = aleator(131);
+  let peSegment = 0;
+  let inafara = 0;
+  let taiate = 0;
+
+  for (let i = 0; i < 50000; i++) {
+    const a: Punct3 = { x: rnd() * 12 - 6, y: rnd() * 12 - 6, z: rnd() * 8 - 4 };
+    const b: Punct3 = { x: rnd() * 12 - 6, y: rnd() * 12 - 6, z: rnd() * 8 - 4 };
+    const rezultat = taieLaCutieXY(a, b, CUTIE);
+    if (!rezultat) continue;
+    taiate++;
+
+    for (const p of rezultat) {
+      // Coliniaritate: (p − a) × (b − a) = 0 pe x și pe y, plus z interpolat cu
+      // același parametru.
+      const abatere = Math.abs((p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x));
+      const scara = Math.max(1, Math.abs(b.x - a.x) + Math.abs(b.y - a.y));
+      if (abatere / scara > 1e-9) peSegment++;
+      if (!inCutieXY(p, CUTIE, 1e-9)) inafara++;
+    }
+  }
+  verifica("capetele tăiate stau pe segmentul original", peSegment === 0, `${taiate} segmente`);
+  verifica("capetele tăiate sunt în cutie", inafara === 0);
+
+  // Un segment întreg înăuntru nu se atinge, unul întreg în afară dispare.
+  const inauntru = taieLaCutieXY({ x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 }, CUTIE);
+  verifica(
+    "segmentul dinăuntru rămâne neatins",
+    inauntru !== null &&
+      inauntru[0].x === 0 &&
+      inauntru[0].y === 0 &&
+      inauntru[1].x === 1 &&
+      inauntru[1].y === 1,
+  );
+  verifica(
+    "segmentul din afară dispare de tot",
+    taieLaCutieXY({ x: 20, y: 20, z: 0 }, { x: 30, y: 25, z: 1 }, CUTIE) === null,
+  );
+
+  // Un drum care iese și intră înapoi trebuie să dea DOUĂ bucăți, nu una: unite,
+  // ele ar fi legate printr-o linie exact peste porțiunea tăiată.
+  const dus: Punct3[] = [
+    { x: 0, y: 0, z: 0 },
+    { x: 50, y: 0, z: 0 },
+    { x: 50, y: 2, z: 0 },
+    { x: 0, y: 2, z: 0 },
+  ];
+  const bucati = poliliniiTaiate(dus, CUTIE);
+  verifica(
+    "ieșirea și întoarcerea dau două bucăți",
+    bucati.length === 2,
+    `${bucati.length} bucăți`,
+  );
+  verifica(
+    "toate punctele bucăților sunt în cutie",
+    bucati.every((b) => b.every((p) => inCutieXY(p, CUTIE, 1e-9))),
+  );
+
+  // Un drum care stă tot înăuntru rămâne o singură bucată, cu toate punctele.
+  const scurt: Punct3[] = [
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 1, z: 1 },
+    { x: 2, y: 2, z: 2 },
+  ];
+  const intreg = poliliniiTaiate(scurt, CUTIE);
+  verifica(
+    "drumul dinăuntru rămâne o bucată cu toate punctele",
+    intreg.length === 1 && intreg[0]!.length === scurt.length,
   );
 }
 

@@ -1,4 +1,5 @@
 import { useScena3D } from "@/components/viz/scena-3d-context";
+import { poliliniiTaiate } from "@/lib/proiectie-3d";
 import { culoareRol, type RolViz } from "@/lib/viz-roles";
 
 export type TraseuReferinta3DProps = {
@@ -31,18 +32,28 @@ export function TraseuReferinta3D({
   const { proiectie, cutie, idTaierePodea } = useScena3D();
   const z = cutie.z[0];
 
-  const bucati: string[] = [];
-  for (const punct of puncte) {
-    const p = proiectie.laEcran({ x: punct[0], y: punct[1], z });
-    if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) continue;
-    bucati.push(`${bucati.length === 0 ? "M" : "L"} ${p.x} ${p.y}`);
-  }
-  if (bucati.length < 2) return null;
+  // Tăiat la cutie ca traiectoria, nu doar la rama podelei: masca ar ascunde
+  // bucata din afară, dar coordonatele ei ar rămâne în `d` — după câteva trepte
+  // de lupă, de ordinul miliardelor de pixeli.
+  const cale = poliliniiTaiate(
+    puncte.map((p) => ({ x: p[0], y: p[1], z })),
+    cutie,
+  )
+    .map((bucata) =>
+      bucata
+        .map((p) => proiectie.laEcran(p))
+        .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+        .join(" "),
+    )
+    .join(" ");
+
+  if (cale === "") return null;
 
   return (
     <g aria-hidden="true" clipPath={`url(#${idTaierePodea})`}>
       <path
-        d={bucati.join(" ")}
+        d={cale}
         fill="none"
         stroke={culoareRol(rol)}
         strokeOpacity={opacitate}
