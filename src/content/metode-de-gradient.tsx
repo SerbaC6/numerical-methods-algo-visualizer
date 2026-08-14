@@ -204,13 +204,6 @@ export const continutMetodeDeGradient: ContinutPagina = {
               "r^{(k)} = r^{(k-1)} - t_k\\,A\\,v^{(k)}, \\qquad s_k = \\frac{\\langle r^{(k)}, r^{(k)}\\rangle}{\\langle r^{(k-1)}, r^{(k-1)}\\rangle}",
             sursa: "curs 5, §8.6",
             legenda: [{ simbol: "sₖ", sens: <>cât din direcția veche se păstrează în cea nouă</> }],
-            explicatie: (
-              <>
-                Forma simplă a lui <Mate>sₖ</Mate> e rezultatul unui calcul, nu o simplificare de
-                dragul comodității: pornind de la <Mate>−⟨v⁽ᵏ⁾, A·r⁽ᵏ⁾⟩ / ⟨v⁽ᵏ⁾, A·v⁽ᵏ⁾⟩</Mate>, se
-                ajunge la raportul pătratelor normelor a două reziduuri consecutive.
-              </>
-            ),
           },
           {
             tip: "formula",

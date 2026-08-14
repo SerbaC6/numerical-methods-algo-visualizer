@@ -4,26 +4,20 @@ import type { ContinutPagina } from "@/content/tipuri";
 /**
  * Pagina 11 — descompunerea valorilor singulare (DVS/SVD).
  *
- * **Sursă: `cursuri_MN/qr_dvs_teorie_curs8.md`, §6–§10** (definiția `A = U S Vᵀ`,
- * rangul și nucleul, construcția lui `S`, a lui `V`, a lui `U`, Gram-Schmidt și
- * rezumatul pașilor). Partea de QR (§1–§5) din același curs ține de pagina 10.
- * Nimic scris din memorie.
+ * **Sursă: `cursuri_MN/qr_dvs_teorie_curs8.md`, §6–§9** (definiția `A = U S Vᵀ`,
+ * rangul și nucleul, construcția lui `S`, a lui `V` și a lui `U`). Partea de QR
+ * (§1–§5) din același curs ține de pagina 10. Nimic scris din memorie.
  *
- * **O abatere declarată de la curs.** Cursul spune, la cazul particular al
- * matricelor simetrice, că „valorile singulare sunt chiar valorile proprii".
- * Afirmația nu ține când o valoare proprie e negativă: pentru `A = [[1,2],[2,1]]`
- * valorile proprii sunt `−1` și `3`, iar valorile singulare `3` și `1`. Ce se
- * păstrează — și ce scrie pe pagină — e concluzia corectă, care iese chiar din
- * `A² = AᵀA`: valorile singulare sunt **modulele** valorilor proprii. Cazul e
- * scris în `docs/erata-cursuri.md`.
+ * **Ce nu mai e pe pagină.** Secțiunile despre Gram-Schmidt și despre relația
+ * dintre valorile singulare și valorile proprii au fost scoase, ca teoria să
+ * rămână scurtă. Odată cu ele a plecat și singurul loc unde pagina atingea
+ * greșeala din curs („valorile singulare sunt chiar valorile proprii", falsă
+ * când o valoare proprie e negativă); cazul rămâne scris în
+ * `docs/erata-cursuri.md`, ca să nu se piardă dacă se rescrie secțiunea.
  *
- * **Două redenumiri, cifrele neatinse** (regula din CLAUDE.md: se schimbă doar
+ * **O redenumire, cifrele neatinse** (regula din CLAUDE.md: se schimbă doar
  * numele):
  *
- * - Gram-Schmidt din curs folosește `u_j` și pentru vectorii intermediari, adică
- *   exact litera coloanelor lui `U` construite la §9. Aici vectorii intermediari
- *   se numesc `w_j`, ca `uᵢ = (1/sᵢ)·A·vᵢ` să rămână singurul lucru care se
- *   cheamă `u`.
  * - Cursul scrie ordonarea valorilor proprii ca `s₁² ≥ … ≥ s_k² > s_{k+1} = … = sₙ = 0`,
  *   scăpând pătratul pe coada șirului; pe pagină apare cu pătrat peste tot, fiind
  *   vorba de valorile proprii ale lui `AᵀA`, nu de valorile singulare.
@@ -41,10 +35,7 @@ export const continutDvs: ContinutPagina = {
       <>
         Până aici, valorile proprii au cerut matrice pătratice. DVS ridică cerința: <em>orice</em>{" "}
         matrice, chiar dreptunghiulară, se scrie ca produsul dintre o matrice ortogonală, una
-        diagonală cu numere nenegative și încă una ortogonală. Numerele de pe diagonală — valorile
-        singulare — spun cât întinde matricea fiecare direcție, iar câte dintre ele sunt nenule
-        spune chiar rangul. Drumul până la ele trece printr-o matrice pătratică și simetrică,
-        construită din <Mate>A</Mate>: produsul <Mate>Aᵀ·A</Mate>.
+        diagonală cu numere nenegative și încă una ortogonală.
       </>
     ),
 
@@ -193,19 +184,6 @@ export const continutDvs: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Când A e simetrică</strong>, avem <Mate>A = Aᵀ</Mate>, deci{" "}
-                <Mate>Aᵀ·A = A²</Mate>: valorile proprii ale lui <Mate>Aᵀ·A</Mate> sunt pătratele
-                valorilor proprii ale lui <Mate>A</Mate>, iar valorile singulare sunt{" "}
-                <strong>modulele</strong> lor, <Mate>sᵢ = |λᵢ|</Mate>. Pentru o matrice simetrică cu
-                valori proprii pozitive, cele două liste coincid pur și simplu — caz luat separat
-                mai jos.
-              </>
-            ),
-          },
         ],
       },
       {
@@ -231,10 +209,7 @@ export const continutDvs: ContinutPagina = {
               <>
                 Orice matrice simetrică <Mate>M</Mate> se scrie <Mate>M = V·D·Vᵀ</Mate>, cu{" "}
                 <Mate>D</Mate> diagonală și <Mate>V</Mate> ortogonală, având drept coloane vectorii
-                proprii de normă euclidiană 1. Vectorii proprii se pot alege însă cu orice direcție
-                și orice semn, deci <Mate>V</Mate> nu e unic: aceeași matrice <Mate>A</Mate> are mai
-                multe descompuneri, toate valabile. Egalitatea <Mate>D = S²</Mate> e chiar
-                traducerea faptului că valorile proprii ale lui <Mate>Aᵀ·A</Mate> sunt nenegative.
+                proprii de normă euclidiană 1.
               </>
             ),
           },
@@ -262,138 +237,6 @@ export const continutDvs: ContinutPagina = {
               { simbol: "sᵢ", sens: <>valoare singulară nenulă: s₁ ≥ s₂ ≥ … ≥ s_k &gt; 0</> },
               { simbol: "uᵢ", sens: <>coloana i din U</> },
             ],
-            explicatie: (
-              <>
-                <Mate>A·vᵢ</Mate> e direcția în care ajunge <Mate>vᵢ</Mate> după înmulțire, iar
-                lungimea ei e chiar <Mate>sᵢ</Mate> — de aceea împărțirea la <Mate>sᵢ</Mate> o
-                readuce la 1. Formula funcționează doar pentru valorile singulare nenule; pentru
-                celelalte ar cere împărțire la zero, deci restul de <Mate>m − k</Mate> coloane
-                trebuie completat altfel.
-              </>
-            ),
-          },
-        ],
-      },
-      {
-        id: "gram-schmidt",
-        titlu: "Gram-Schmidt — completarea coloanelor rămase",
-        esenta: (
-          <>
-            Cele <Mate>m − k</Mate> coloane care lipsesc se aleg ortogonale pe cele deja construite,
-            scăzând din fiecare vector proiecțiile lui pe cele dinainte.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "\\operatorname{proj}_{w}(v) = \\frac{\\langle w, v\\rangle}{\\langle w, w\\rangle}\\,w",
-            sursa: "curs 8, §9",
-            legenda: [
-              { simbol: "⟨w, v⟩", sens: <>produsul scalar dintre w și v</> },
-              { simbol: "proj_w(v)", sens: <>partea din v care merge în direcția lui w</> },
-            ],
-            explicatie: (
-              <>
-                Proiecția e bucata pe care doi vectori o au în comun. Dacă se scade din{" "}
-                <Mate>v</Mate>, ce rămâne e perpendicular pe <Mate>w</Mate> — exact ce trebuie ca
-                matricea să iasă ortogonală.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "w_j = v_j - \\sum_{l=1}^{j-1} \\operatorname{proj}_{w_l}(v_j),\\qquad e_j = \\frac{w_j}{\\lVert w_j \\rVert}",
-            sursa: "curs 8, §9",
-            legenda: [
-              {
-                simbol: "wⱼ",
-                sens: <>vectorul j după ce i s-au scăzut proiecțiile pe cei dinainte</>,
-              },
-              { simbol: "eⱼ", sens: <>același vector, adus la lungimea 1</> },
-              { simbol: "‖wⱼ‖", sens: <>lungimea euclidiană a lui wⱼ</> },
-            ],
-            explicatie: (
-              <>
-                Procedeul merge în ordine: primul vector rămâne cum e (<Mate>w₁ = v₁</Mate>), al
-                doilea pierde partea comună cu primul, al treilea pierde părțile comune cu primii
-                doi și tot așa. Vectorii <Mate>eⱼ</Mate> formează baza ortonormată căutată, iar cu
-                ea <Mate>U</Mate> devine ortogonală.
-              </>
-            ),
-          },
-        ],
-      },
-      {
-        id: "valori-singulare-si-proprii",
-        titlu: "Valorile singulare și valorile proprii",
-        esenta: (
-          <>
-            Nu sunt același lucru, dar din DVS se citesc și valorile proprii — depinde ce formă are
-            matricea.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "text",
-            continut: (
-              <>
-                O matrice dreptunghiulară <strong>nu are valori proprii</strong> în sensul obișnuit:{" "}
-                <Mate>A·v = λ·v</Mate> nici măcar nu se poate scrie, fiindcă cele două părți ar avea
-                lungimi diferite. În schimb <Mate>Aᵀ·A</Mate> și <Mate>A·Aᵀ</Mate> sunt pătratice și
-                simetrice, deci au valori proprii — iar DVS le folosește chiar pe ele.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex: "s_i = \\sqrt{\\lambda_i\\!\\left(A^{T}A\\right)}",
-            sursa: "curs 8, §7",
-            legenda: [
-              { simbol: "λᵢ(AᵀA)", sens: <>valoarea proprie i a matricei AᵀA</> },
-              { simbol: "sᵢ", sens: <>valoarea singulară i, adică elementul Sᵢᵢ</> },
-            ],
-            explicatie: (
-              <>
-                Valorile singulare din <Mate>S</Mate> sunt exact rădăcinile valorilor proprii nenule
-                ale lui <Mate>Aᵀ·A</Mate>. Radicalul e legitim tocmai fiindcă valorile proprii ale
-                lui <Mate>Aᵀ·A</Mate> sunt nenegative.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex: "A^{T}A = V\\,S^{2}\\,V^{T},\\qquad A\\,A^{T} = U\\,S\\,S^{T}\\,U^{T}",
-            sursa: "curs 8, §6, §8, §9",
-            legenda: [
-              { simbol: "coloanele V", sens: <>vectorii proprii ai lui AᵀA (matrice n×n)</> },
-              { simbol: "coloanele U", sens: <>vectorii proprii ai lui AAᵀ (matrice m×m)</> },
-              { simbol: "S·Sᵀ", sens: <>matrice m×m, cu aceleași sᵢ² pe diagonală</> },
-            ],
-            explicatie: (
-              <>
-                Cele două matrice ortogonale nu sunt alese, ci citite: <Mate>V</Mate> are drept
-                coloane vectorii proprii ai lui <Mate>Aᵀ·A</Mate>, iar <Mate>U</Mate> pe cei ai lui{" "}
-                <Mate>A·Aᵀ</Mate>. Se vede înlocuind <Mate>A = U·S·Vᵀ</Mate> în fiecare produs:
-                factorii ortogonali din mijloc se anulează și rămâne câte o diagonalizare. De aceea
-                valorile proprii nenule ale celor două matrice sunt aceleași — sunt aceiași{" "}
-                <Mate>sᵢ²</Mate>, doar așezați în matrice de mărimi diferite.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Cazul special: A pătratică, simetrică și pozitiv semidefinită.</strong>{" "}
-                Atunci valorile proprii sunt toate <Mate>≥ 0</Mate>, deci modulul nu mai schimbă
-                nimic și valorile singulare sunt <em>chiar</em> valorile proprii,{" "}
-                <Mate>sᵢ = λᵢ</Mate>. În plus <Mate>U = V</Mate>, iar DVS coincide cu descompunerea
-                spectrală obișnuită, <Mate>A = V·D·Vᵀ</Mate>. Pentru orice altă matrice, cele două
-                descompuneri rămân lucruri diferite.
-              </>
-            ),
           },
         ],
       },
@@ -405,9 +248,9 @@ export const continutDvs: ContinutPagina = {
         descrescător, dau prin radical valorile singulare din <Mate>S</Mate>; vectorii proprii
         ortonormați ai aceleiași matrice sunt coloanele lui <Mate>V</Mate>; primele <Mate>k</Mate>{" "}
         coloane ale lui <Mate>U</Mate> ies din <Mate>uᵢ = (1/sᵢ)·A·vᵢ</Mate>, iar restul se
-        completează prin Gram-Schmidt. Ce rămâne, dacă rămâne un singur lucru: toată descompunerea
-        unei matrice oarecare se obține din valorile și vectorii proprii ai unei singure matrice
-        simetrice, <Mate>Aᵀ·A</Mate>.
+        completează cu direcții ortogonale pe ele. Ce rămâne, dacă rămâne un singur lucru: toată
+        descompunerea unei matrice oarecare se obține din valorile și vectorii proprii ai unei
+        singure matrice simetrice, <Mate>Aᵀ·A</Mate>.
       </>
     ),
   },

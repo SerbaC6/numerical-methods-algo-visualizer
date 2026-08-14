@@ -106,7 +106,7 @@ export const SISTEME: readonly SistemGata[] = [
   },
   {
     id: "curs",
-    eticheta: "Valea din curs",
+    eticheta: "Vale normală",
     // Sistemul verificat în teoria paginii; 16 pași la coborâre, 2 la Conjugat.
     valori: VALEA_DIN_CURS,
   },
