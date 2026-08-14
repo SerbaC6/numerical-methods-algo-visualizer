@@ -491,7 +491,7 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 
 | Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Manim | Text | Interactiv | Mobil | Gata |
 | --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ----- | ---- | ---------- | ----- | ---- |
-| 1   | Cramer, LU, Doolittle, Crout, Cholesky        | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 1   | LU (Cramer, Doolittle, Crout, Cholesky)       | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | n/a   | [x]  | [ ]        | [~]   | [ ]  |
 | 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -511,6 +511,20 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 20  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+
+### Modificări transversale la clipuri
+
+Ating **toate** paginile cu secțiune „Vizual", deci nu stau la niciuna dintre ele:
+
+- **Degradeul din josul cadrului a fost scos** (`Subtitrari`). Ridica textul de pe desen, dar spăla
+  și ce era desenat acolo; clipurile își țin oricum ultimul rând deasupra benzii de subtitrare
+  (nimic sub `y ≈ 905` din cele 1080), deci n-avea ce ridica. Verificat pe toate cele cinci
+  clipuri: nimic nu coboară în bandă.
+- **Buton de ecran complet** în `PlaybackClip`, cu logica în `Clip` (`usePlinEcran`). Se cere întâi
+  ecranul complet al browserului; dacă `requestFullscreen` nu există sau e refuzat — pe iPhone e
+  doar pentru `<video>` — rămâne un strat fix peste pagină, cu aceleași comenzi. Escape închide
+  amândouă variantele. Pe tot ecranul cadrul renunță la 16:9 și ia toată suprafața: SVG-ul se
+  centrează singur, fără să se deformeze.
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
@@ -802,17 +816,19 @@ Ce **nu** e verificat încă:
 
 Ce există:
 
-- **Teoria**, `src/content/dvs.tsx`, din curs8 §6–§10: factorizarea `A = U S Vᵀ` cu dimensiunile
-  ei, rangul și nucleul, construcția lui `S`, `V` și `U`, Gram-Schmidt pentru coloanele rămase și
-  o secțiune separată despre **valorile singulare față de valorile proprii** (`sᵢ = √λᵢ(AᵀA)`,
-  coloanele lui `V` = vectorii proprii ai lui `AᵀA`, ale lui `U` = ai lui `AAᵀ`, iar pentru o
-  matrice simetrică pozitiv semidefinită `sᵢ = λᵢ` și `U = V`). Verificat numeric pe
+- **Teoria**, `src/content/dvs.tsx`, din curs8 §6–§9: factorizarea `A = U S Vᵀ` cu dimensiunile
+  ei, rangul și nucleul, construcția lui `S`, a lui `V` și a lui `U`. Verificat numeric pe
   `A = [[3,1],[1,3],[1,1]]`: valorile proprii ale lui `AᵀA` ies 18 și 4, coloanele `uᵢ` ies
   ortonormate, `‖A − U S Vᵀ‖ ≈ 1e−15`.
+  **Scurtată la cerere:** secțiunea Gram-Schmidt și cea despre valorile singulare față de valorile
+  proprii au fost scoase de tot, iar intro-ul, explicația lui `D = S²` și cea a lui `uᵢ` s-au
+  tăiat la prima propoziție.
 - **Erata**, `docs/erata-cursuri.md`: cursul spune la §7 că pentru o matrice simetrică valorile
   singulare sunt chiar valorile proprii — fals când o valoare proprie e negativă
   (`A = [[1,2],[2,1]]`: valori proprii −1 și 3, valori singulare 3 și 1), și în contradicție cu
-  propria lui cerință `Sᵢᵢ ≥ 0`. Pe pagină e scrisă concluzia corectă, `sᵢ = |λᵢ|`.
+  propria lui cerință `Sᵢᵢ ≥ 0`. Concluzia corectă, `sᵢ = |λᵢ|`, era scrisă în secțiunea care a
+  plecat; pe pagină nu mai apare nici afirmația din curs, nici corectura ei, dar erata rămâne, ca
+  să nu se rescrie greșit.
 - **Clipul**, `src/components/content/AnimatiaDvs.tsx` — a patra excepție de la regula Manim (după
   paginile 6, 7 și 9), din același motiv: animația a venit gata făcută ca animație web
   (`Animatie DVS.html`) și s-a portat pe `Clip`. Culorile vin din `viz-roles.ts`, deci merge în
@@ -834,6 +850,74 @@ Ce **nu** e făcut încă:
 - [ ] **Verificare cu ochiul pe telefon real** — portretul a fost văzut doar în emulator, la 390 px,
       unde desenul e mic dar citeț (eticheta de rol a rămas intenționat necrescută, altfel
       „matricea dată" se ciocnește de rolul vecin).
+
+### Pagina 10 — `algoritmul-qr`, ce e gata și ce nu
+
+Ce există:
+
+- **Teoria**, `src/content/algoritmul-qr.tsx`, din curs8 §1–§4: forma tridiagonală și observația
+  cu `b = 0`, iterația `A⁽ⁱ⁾ = Q⁽ⁱ⁾R⁽ⁱ⁾ → A⁽ⁱ⁺¹⁾ = R⁽ⁱ⁾Q⁽ⁱ⁾` ca asemănare ortogonală, apoi QR cu
+  deplasare.
+  **Scurtată la cerere:** „Matricea de rotație" (§2) și „Construcția lui Q și R" (§3) au fost
+  înlocuite cu **un singur rând** care trimite la pagina 2 — acolo stă Givens, adică mecanismul lor
+  — iar §5, matricile nesimetrice, a plecat de tot. Verificările numerice pentru amândouă au rămas
+  scrise în comentariul fișierului.
+- **Clipul**, `src/components/content/AnimatiaAlgoritmuluiQr.tsx`. Refăcut în sesiunea asta:
+  tot scrisul a crescut (celule 100 → 110–132, cifra 27 → 30–34, titlul 46 → 54, cartonașele
+  32/24 → 38/28, formula pasului 56 → 66), evidențierea celulei s-a apăsat (umplere 16 % → 22 %,
+  contur 2,5 → 4) ca a-urile și b-urile să se delimiteze, textul din cartonașe începe cu literă
+  mare, unghiul se scrie `α` în loc de `Θ` (redenumire, cifrele neatinse — vezi comentariul din
+  fișier), iar rândul „Θ se alege ca suma să fie 0" a fost șters; explicația a rămas în subtitrare.
+  Toate matricele au urcat de la `y = 560` la `y = 500`, altfel eticheta de sub matrice se ciocnea
+  de propoziția de la `y = 905`.
+
+Ce **nu** e făcut, prin decizie:
+
+- **Secțiunea „Interactiv" nu există** (`interactiv: false` în registru): clipul duce singur toată
+  povestea.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Verificare cu ochiul pe telefon real** — clipul a fost văzut pe cadru lat, în ambele teme,
+      scenă cu scenă; portretul nu.
+
+### Pagina 1 — `factorizari-lu`, ce e gata și ce nu
+
+Ce există:
+
+- **Teoria**, `src/content/factorizari-lu.tsx`, din curs2 §3.2, §4, §5 și curs4 §2, §6, §8: regula
+  lui Cramer și costul ei, dezvoltarea Laplace, `A = LU` ieșită din eliminarea gaussiană
+  (`T_n⋯T_1 A = U`), condiția de existență pe submatricele principale, cei doi pași `Ly = b` și
+  `Ux = y` cu substituțiile lor, apoi Doolittle, Crout și Cholesky cu formulele lor. Scrisă cu
+  formule, nu cu proză — cum s-a cerut.
+- **Clipul**, `src/components/content/AnimatiaFactorizariiLu.tsx` — a cincea excepție de la regula
+  Manim (după paginile 6, 7, 9, 10 și 11), din același motiv: animația a venit gata făcută ca
+  animație web (`Animatie_LU.html`) și s-a portat pe `Clip`. Nouă scene, 68 de secunde: sistemul,
+  cei `n + 1` determinanți ai lui Cramer, arborele Laplace până la `4!`, explozia lui `n!`,
+  comparația cu `O(n³)`, despărțirea lui `A` în `L` și `U`, cele două substituții, Doolittle și, la
+  final, cele trei feluri de a fixa diagonala. Culorile vin din `viz-roles.ts` (`curent` = L,
+  `functie` = U, `interval` = costul care explodează, `solutie` = valorile aflate, `anterior` =
+  zerourile), deci merge în ambele teme; `pivot` nu apare, fiindcă în clip nu se pivotează nimic.
+- **Verificarea numerică**: `L·U = A` exact pentru `A = [[1,2,3],[2,8,11],[3,22,42]]`, cu
+  `L = [[1,0,0],[2,1,0],[3,4,1]]` și `U = [[1,2,3],[0,4,5],[0,0,13]]` (chiar factorizarea Doolittle
+  calculată de la zero); `Ly = b` cu `b = (6,21,67)` dă `y = (6,9,13)`, iar `Ux = y` dă `x = (1,1,1)`.
+  Cifrele de cost: `3! = 6`, `10! = 3.628.800`, `20! ≈ 2,4·10¹⁸`, `20³ = 8.000`, raportul `3·10¹⁴`.
+- **Erata**, `docs/erata-cursuri.md`: `u_i1 = a_i1` din curs2 §5.3 are indicii inversați — `u_i1` e
+  coloana întâi a lui `U`, iar `U` e superior triunghiulară. Corect e `u_1i = a_1i`, adică prima
+  **linie**, exact cum scrie sistemul 3×3 din aceeași secțiune și cum scrie curs4 §6.2. Cu varianta
+  tipărită, `L·U` iese `[[1,2,3],[4,8,11],[14,22,42]]`, nu `A`.
+- **O notă pentru cine editează**, în comentariul din `src/content/factorizari-lu.tsx`: cursurile dau
+  două cifre diferite pentru costul lui Cramer (`n!` per determinant în curs2 §4, `N = (n−1)(n+1)!`
+  în total în curs4 §2) — nu e o eroare, numără altceva fiecare, iar pagina le scrie pe amândouă.
+
+Ce **nu** e făcut încă:
+
+- [ ] **Matematica în `src/algorithms/factorizari-lu/`** — pagina n-are încă modul propriu; cifrele
+      clipului sunt constante fixate în componentă, cu verificarea scrisă în comentariul ei.
+- [ ] **Secțiunea „Interactiv"** — rămâne schelet tăcut, ca la orice pagină neterminată.
+- [ ] **Verificare cu ochiul pe telefon real** — clipul a fost văzut doar pe cadru lat, în ambele
+      teme. Textele desenului au fost ridicate deasupra benzii de subtitrare (nimic sub `y ≈ 840`
+      din cele 1080 ale cadrului); pe portret asta trebuie confirmat.
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
