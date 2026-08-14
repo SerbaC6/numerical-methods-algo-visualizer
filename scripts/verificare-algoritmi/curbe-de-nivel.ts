@@ -9,7 +9,7 @@
  *    nul, deci ramura separată e chiar locul unde se poate strica ceva;
  * 2. **fiecare punct al elipsei stă pe curbă**, nu doar „aproximativ" — dacă
  *    n-ar sta, desenul ar afirma tăcut că iterația a aterizat pe alt nivel
- *    decât cel calculat, iar explicația zigzagului (reziduul normal pe curbă)
+ *    decât cel calculat, iar explicația zigzag-ului (reziduul normal pe curbă)
  *    ar rămâne fără suport.
  *
  * Se rulează cu `bash scripts/verificare-algoritmi/ruleaza.sh`.

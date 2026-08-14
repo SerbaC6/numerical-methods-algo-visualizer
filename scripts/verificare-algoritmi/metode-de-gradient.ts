@@ -50,7 +50,7 @@ const cob = descendent.run({ A, b, x0: PORNIRE, tol: 1e-8, maxIteratii: 100 });
   );
 }
 
-console.log("\n=== 2. Reziduurile consecutive sunt ortogonale (zigzagul) ===");
+console.log("\n=== 2. Reziduurile consecutive sunt ortogonale (zigzag-ul) ===");
 {
   let maxim = 0;
   for (let i = 0; i + 1 < cob.pasi.length; i++) {

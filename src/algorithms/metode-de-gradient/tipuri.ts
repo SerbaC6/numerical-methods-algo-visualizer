@@ -47,7 +47,7 @@ export type PasGradient = {
   abatere: number;
   /**
    * **Numai la coborâre.** Cosinusul unghiului dintre direcția pasului acesta
-   * și cea a pasului dinainte. E chiar zigzagul: la pașii descrescători iese 0.
+   * și cea a pasului dinainte. E chiar zigzag-ul: la pașii descrescători iese 0.
    * Lipsește la prima iterație, care n-are direcție anterioară.
    */
   cosDirectii?: number;

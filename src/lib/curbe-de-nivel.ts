@@ -16,7 +16,7 @@
  *
  * Câștigul care nu se poate obține din marching squares: se poate cere **exact**
  * curba prin `x⁽ᵏ⁾` (`c = f(x⁽ᵏ⁾)`, o singură evaluare). Aia e chiar explicația
- * zigzagului — reziduul nou e normal pe curba pe care iterația tocmai a
+ * zigzag-ului — reziduul nou e normal pe curba pe care iterația tocmai a
  * aterizat, deci perpendicular pe direcția din care a venit.
  */
 
