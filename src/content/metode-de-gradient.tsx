@@ -1,3 +1,4 @@
+import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
@@ -28,11 +29,11 @@ export const continutMetodeDeGradient: ContinutPagina = {
   teorie: {
     intro: (
       <>
-        Când matricea A e <strong>simetrică și pozitiv definită</strong>, rezolvarea sistemului A·x
-        = b e același lucru cu <strong>coborârea într-o vale</strong>: se construiește o funcție f
-        al cărei gradient e chiar A·x − b, iar punctul ei de minim e chiar soluția. De aici încolo,
-        cele două metode diferă doar prin direcția în care fac pasul următor — și tocmai direcția
-        face diferența dintre zeci de pași și n pași.
+        Când matricea A e <strong>simetrică și pozitiv definită</strong>, rezolvarea sistemului{" "}
+        <Mate>A·x = b</Mate> e același lucru cu <strong>coborârea într-o vale</strong>: se
+        construiește o funcție f al cărei gradient e chiar <Mate>A·x − b</Mate>, iar punctul ei de
+        minim e chiar soluția. De aici încolo, cele două metode diferă doar prin direcția în care
+        fac pasul următor — și tocmai direcția face diferența dintre zeci de pași și n pași.
       </>
     ),
 
@@ -58,9 +59,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Funcția asta nu vine de nicăieri: gradientul ei e ∇f(x) = A·x − b, deci se anulează
-                exact în soluția sistemului. A minimiza f și a rezolva A·x = b sunt aceeași
-                problemă.
+                Funcția asta nu vine de nicăieri: gradientul ei e <Mate>∇f(x) = A·x − b</Mate>, deci
+                se anulează exact în soluția sistemului. A minimiza <Mate>f</Mate> și a rezolva{" "}
+                <Mate>A·x = b</Mate> sunt aceeași problemă.
               </>
             ),
           },
@@ -79,8 +80,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             explicatie: (
               <>
                 Cele două fețe ale aceleiași mărimi: reziduul sistemului e chiar direcția în care
-                valea coboară cel mai abrupt. În animația de mai sus, r⁽ᵏ⁾ e opusul pantei — de
-                aceea acolo, unde funcția are o singură variabilă, se scrie r⁽ᵏ⁾ = −f′(x⁽ᵏ⁾).
+                valea coboară cel mai abrupt. În animația de mai sus, <Mate>r⁽ᵏ⁾</Mate> e opusul
+                pantei — de aceea acolo, unde funcția are o singură variabilă, se scrie{" "}
+                <Mate>r⁽ᵏ⁾ = −f′(x⁽ᵏ⁾)</Mate>.
               </>
             ),
           },
@@ -108,9 +110,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Nu e un pas ghicit: e valoarea care minimizează g(α) = f(x⁽ᵏ⁾ + α·r⁽ᵏ⁾), obținută
-                punând g′(α) = 0. Se numește <em>line search</em> — cauți minimul de-a lungul
-                direcției alese, înainte să alegi altă direcție.
+                Nu e un pas ghicit: e valoarea care minimizează <Mate>g(α) = f(x⁽ᵏ⁾ + α·r⁽ᵏ⁾)</Mate>
+                , obținută punând g′(α) = 0. Se numește <em>line search</em> — cauți minimul de-a
+                lungul direcției alese, înainte să alegi altă direcție.
               </>
             ),
           },
@@ -120,9 +122,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             sursa: "curs 6, §4.1",
             explicatie: (
               <>
-                Ca să nu se recalculeze b − A·x⁽ᵏ⁾ la fiecare pas: se înmulțește la stânga cu −A
-                relația dintre două aproximări succesive. Rămâne un singur produs matrice-vector pe
-                iterație.
+                Ca să nu se recalculeze <Mate>b − A·x⁽ᵏ⁾</Mate> la fiecare pas: se înmulțește la
+                stânga cu −A relația dintre două aproximări succesive. Rămâne un singur produs
+                matrice-vector pe iterație.
               </>
             ),
           },
@@ -179,8 +181,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Pornirea e aceeași ca la coborâre: r⁽⁰⁾ = b − A·x⁽⁰⁾, iar prima direcție e chiar
-                reziduul, v⁽¹⁾ = r⁽⁰⁾. Aceleași mărimi se mai scriu și cu α, p⁽ᵏ⁾ și β⁽ᵏ⁾.
+                Pornirea e aceeași ca la coborâre: <Mate>r⁽⁰⁾ = b − A·x⁽⁰⁾</Mate>, iar prima
+                direcție e chiar reziduul, <Mate>v⁽¹⁾ = r⁽⁰⁾</Mate>. Aceleași mărimi se mai scriu și
+                cu <Mate>α</Mate>, <Mate>p⁽ᵏ⁾</Mate> și <Mate>β⁽ᵏ⁾</Mate>.
               </>
             ),
           },
@@ -192,9 +195,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             legenda: [{ simbol: "sₖ", sens: <>cât din direcția veche se păstrează în cea nouă</> }],
             explicatie: (
               <>
-                Forma simplă a lui sₖ e rezultatul unui calcul, nu o simplificare de dragul
-                comodității: pornind de la −⟨v⁽ᵏ⁾, A·r⁽ᵏ⁾⟩ / ⟨v⁽ᵏ⁾, A·v⁽ᵏ⁾⟩, se ajunge la raportul
-                pătratelor normelor a două reziduuri consecutive.
+                Forma simplă a lui <Mate>sₖ</Mate> e rezultatul unui calcul, nu o simplificare de
+                dragul comodității: pornind de la <Mate>−⟨v⁽ᵏ⁾, A·r⁽ᵏ⁾⟩ / ⟨v⁽ᵏ⁾, A·v⁽ᵏ⁾⟩</Mate>, se
+                ajunge la raportul pătratelor normelor a două reziduuri consecutive.
               </>
             ),
           },
@@ -230,10 +233,10 @@ export const continutMetodeDeGradient: ContinutPagina = {
     incheiere: (
       <>
         Animația de mai sus arată partea grea a coborârii: pasul cel mai abrupt te duce în valea de
-        lângă tine. Pe un sistem A·x = b cu A simetrică pozitiv definită valea e una singură, deci
-        capcana dispare — rămâne cealaltă problemă, viteza. Acolo se vede diferența: coborârea alege
-        de fiecare dată direcția de moment și coboară în trepte spre soluție, în timp ce direcțiile
-        conjugate țin minte pe unde s-a mers și termină în cel mult n pași.
+        lângă tine. Pe un sistem <Mate>A·x = b</Mate> cu A simetrică pozitiv definită valea e una
+        singură, deci capcana dispare — rămâne cealaltă problemă, viteza. Acolo se vede diferența:
+        coborârea alege de fiecare dată direcția de moment și coboară în trepte spre soluție, în
+        timp ce direcțiile conjugate țin minte pe unde s-a mers și termină în cel mult n pași.
       </>
     ),
   },

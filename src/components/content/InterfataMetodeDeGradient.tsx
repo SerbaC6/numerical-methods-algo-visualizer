@@ -193,7 +193,10 @@ export function InterfataMetodeDeGradient() {
             {/* Matricea are **trei** câmpuri, nu patru: simetria e ipoteza
                 metodei (curs 5, §8.1), nu o opțiune, deci `a₂₁` nu se poate
                 scrie separat. */}
-            <div className="grid grid-cols-3 gap-3 sm:col-span-2">
+            {/* Coloana din mijloc e mai lată: eticheta ei, „a₁₂ = a₂₁", e de trei
+                ori mai lungă decât celelalte două și, la corpul de 18 px, se
+                rupea pe două rânduri într-o treime egală. */}
+            <div className="grid grid-cols-[1fr_1.45fr_1fr] gap-3 sm:col-span-2">
               <NumberInput
                 eticheta="a₁₁"
                 valoare={valori.a11}
@@ -234,7 +237,10 @@ export function InterfataMetodeDeGradient() {
               />
             </div>
 
+            {/* Pe toată lățimea: în jumătate de coloană, „1e-8" plus unitatea
+                și săgețile câmpului numeric nu mai încap la corpul de 18 px. */}
             <NumberInput
+              className="sm:col-span-2"
               eticheta="Toleranța"
               valoare={valori.tol}
               onChange={seteaza("tol")}
@@ -248,6 +254,7 @@ export function InterfataMetodeDeGradient() {
               }
             />
             <NumberInput
+              className="sm:col-span-2"
               eticheta="Iterații maxime"
               valoare={valori.maxIteratii}
               onChange={seteaza("maxIteratii")}

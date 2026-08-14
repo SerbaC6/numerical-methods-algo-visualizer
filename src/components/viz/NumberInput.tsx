@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { Notatie } from "@/components/viz/Notatie";
+import { areNotatie } from "@/lib/notatie";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +33,18 @@ export type NumberInputProps = {
  * de aici e al nostru, ca afișarea să nu depindă de unde se răzgândește motorul.
  */
 const PRAG_STIINTIFIC = 1e-3;
+
+/**
+ * E eticheta un simbol matematic, sau un cuvânt?
+ *
+ * Simbolurile („a₁₁", „x₁⁽⁰⁾", „α") se scriu mono, ca cifrele din ele să se
+ * alinieze și indicii să se citească. Cuvintele nu: „Toleranța" în JetBrains
+ * Mono arată ca o scăpare. Criteriul e cel mai simplu care le separă: are
+ * exponenți sau indici, ori e un singur cuvânt foarte scurt.
+ */
+function esteSimbol(eticheta: string): boolean {
+  return areNotatie(eticheta) || (!/\s/.test(eticheta) && eticheta.length <= 4);
+}
 
 /** Ce scrie în câmp pentru o valoare venită din afară (preset, „Resetează"). */
 function afiseaza(valoare: number | ""): string {
@@ -84,7 +97,11 @@ export function NumberInput({
 
   return (
     <div className={cn("grid gap-2", className)}>
-      <Label htmlFor={id} className="text-base">
+      {/* Mono **doar** când eticheta e un simbol („a₁₁", „x₁⁽⁰⁾"), nu când e un
+          cuvânt („Toleranța", „Iterații maxime"): un cuvânt scris mono arată ca
+          o eroare de stil. Simbolurile se scriu și mai mare, ca indicii să se
+          vadă. */}
+      <Label htmlFor={id} className={cn("text-lg", esteSimbol(eticheta) && "font-mono")}>
         <Notatie>{eticheta}</Notatie>
       </Label>
       <div className="relative">
@@ -92,7 +109,13 @@ export function NumberInput({
           id={id}
           type="number"
           inputMode="decimal"
-          className={cn("tinta-atingere font-mono", unitate && "pr-14")}
+          className={cn(
+            // `md:text-lg`, nu doar `text-lg`: `Input` din shadcn are `md:text-sm`
+            // în clasa lui de bază, care altfel câștigă de la breakpoint în sus
+            // și lăsa cifrele la 14 px pe desktop.
+            "tinta-atingere font-mono text-lg md:text-lg",
+            unitate && "pr-14",
+          )}
           value={text}
           min={min}
           max={max}

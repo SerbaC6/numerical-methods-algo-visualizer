@@ -4,8 +4,7 @@ import {
   areNotatie,
   bucatiNotatie,
   COBORARE_JOS,
-  PROPORTIE_MICA_DESEN,
-  PROPORTIE_MICA_TEXT,
+  PROPORTIE_MICA,
   RIDICARE_SUS,
   type BucataNotatie,
 } from "@/lib/notatie";
@@ -51,7 +50,7 @@ const CLASA_SUS = "relative -top-[0.42em] align-baseline leading-[0]";
 const CLASA_JOS = "relative top-[0.2em] align-baseline leading-[0]";
 
 /** Mărimea vine din constantă, nu dintr-o clasă: Tailwind cere valori statice. */
-const CORP_MIC = { fontSize: `${PROPORTIE_MICA_TEXT}em` };
+const CORP_MIC = { fontSize: `${PROPORTIE_MICA}em` };
 
 function elementHtml({ text, nivel }: BucataNotatie) {
   if (nivel === "sus")
@@ -99,7 +98,7 @@ export function NotatieSVG({ text, marime }: { text: string; marime: number }) {
       <tspan
         key={i}
         dy={dy}
-        fontSize={bucata.nivel === "normal" ? undefined : marime * PROPORTIE_MICA_DESEN}
+        fontSize={bucata.nivel === "normal" ? undefined : marime * PROPORTIE_MICA}
       >
         {bucata.text}
       </tspan>
@@ -107,4 +106,29 @@ export function NotatieSVG({ text, marime }: { text: string; marime: number }) {
   });
 
   return <>{tspanuri}</>;
+}
+
+/**
+ * Matematica scăpată prin text: `−⟨v⁽ᵏ⁾, A·r⁽ᵏ⁾⟩ / ⟨v⁽ᵏ⁾, A·v⁽ᵏ⁾⟩`, în mijlocul
+ * unei propoziții.
+ *
+ * **Nu e același lucru cu o formulă încadrată.** Aceea e subiectul blocului ei
+ * și are ramă, spațiu și corp mare. Asta stă între cuvinte, iar până acum se
+ * scria ca text obișnuit — adică se pierdea în propoziție și, pe deasupra, își
+ * lua exponenții din fontul de sistem, fiindcă `Notatie` nu ajungea până aici.
+ *
+ * Primește amândouă lucrurile: fontul mono, care o desparte de proză fără să
+ * strige, și un corp puțin mai mare decât textul din jur — mono la aceeași
+ * măsură pare mai mic, iar aici tocmai lizibilitatea e problema.
+ *
+ * Nu primește `white-space: nowrap`: o expresie lungă ar ieși din coloană pe
+ * telefon, iar o formulă ruptă la un spațiu se citește oricum mai bine decât una
+ * care deversează.
+ */
+export function Mate({ children }: { children: string }) {
+  return (
+    <span className="font-mono text-[1.12em]">
+      <Notatie>{children}</Notatie>
+    </span>
+  );
 }
