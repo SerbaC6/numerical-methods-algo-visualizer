@@ -53,12 +53,12 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 | `sisteme_liniare_metode_iterative_MN_curs5.md` | puncte fixe, Jacobi, Gauss-Seidel, SOR, gradient conjugat, preconditionare                  | 5, 7        |
 | `ecuatii_neliniare_MN_curs6.md`                | bisectie, Newton, secanta, ordin de convergenta, gradient descendent/conjugat               | 6, 7        |
 | `valori_vectori_proprii_teorie_curs7.md`       | asemanare, Jordan, Schur, Rayleigh, metoda puterii, puterea inversa, deflatie, PageRank     | 8, 9        |
-| `qr_dvs_teorie_curs8.md`                       | algoritmul QR, rotatii, QR cu deplasare, DVS/SVD                                            | 10          |
-| `interpolare_spline_bezier_teorie_curs09.md`   | Lagrange, Neville, diferente divizate, Newton, Hermite, Runge, spline, Bezier, de Casteljau | 11, 12      |
-| `cmmp_rationale_fft_teorie_curs10.md`          | CMMP liniar/polinomial, spatii prehilbertiene, Pade, FFT                                    | 13, 14      |
-| `derivare-integrare-numerica_curs11.md`        | derivare numerica, Newton-Cotes, trapeze, Simpson                                           | 15, 16      |
-| `romberg-cuadraturi-gaussiene_curs12.md`       | Richardson, Romberg, cuadraturi adaptive, cuadraturi Gaussiene                              | 17, 18      |
-| `ode-runge-kutta_curs13.md`                    | problema Cauchy, Lipschitz, Euler, Taylor, Runge-Kutta, metode multipas                     | 19          |
+| `qr_dvs_teorie_curs8.md`                       | algoritmul QR, rotatii, QR cu deplasare, DVS/SVD                                            | 10, 11      |
+| `interpolare_spline_bezier_teorie_curs09.md`   | Lagrange, Neville, diferente divizate, Newton, Hermite, Runge, spline, Bezier, de Casteljau | 12, 13      |
+| `cmmp_rationale_fft_teorie_curs10.md`          | CMMP liniar/polinomial, spatii prehilbertiene, Pade, FFT                                    | 14, 15      |
+| `derivare-integrare-numerica_curs11.md`        | derivare numerica, Newton-Cotes, trapeze, Simpson                                           | 16, 17      |
+| `romberg-cuadraturi-gaussiene_curs12.md`       | Richardson, Romberg, cuadraturi adaptive, cuadraturi Gaussiene                              | 18, 19      |
+| `ode-runge-kutta_curs13.md`                    | problema Cauchy, Lipschitz, Euler, Taylor, Runge-Kutta, metode multipas                     | 20          |
 
 ## Lista Algoritmi
 
@@ -67,8 +67,10 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 > **Împărțirea pe pagini s-a rupt mai fin.** Cinci metode care stăteau la coada altei pagini au
 > primit pagină proprie, ca fiecare să fie de sine stătătoare: algoritmul Thomas (era pe pagina
 > eliminărilor gaussiene), PageRank (era pe pagina metodelor puterii), FFT (era peste CMMP),
-> Newton-Cotes (era peste derivarea numerică) și integrarea Romberg (era peste cuadraturi).
-> Așa se ajunge de la 14 la **19 pagini**; celelalte au rămas exact cum erau. Lista de mai jos e
+> Newton-Cotes (era peste derivarea numerică) și integrarea Romberg (era peste cuadraturi). Apoi
+> QR și DVS, care stăteau împreună pe pagina 10, s-au despărțit la rândul lor: sunt două
+> descompuneri diferite, cu scopuri diferite.
+> Așa se ajunge de la 14 la **20 de pagini**; celelalte au rămas exact cum erau. Lista de mai jos e
 > sursa, iar `src/algorithms/registry.ts` o urmează — dacă se schimbă, se schimbă întâi aici.
 
 ### Prima pagina: LU, Dolittle, Crout, Cramer.
@@ -115,43 +117,47 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 - Fa Algoritmul PageRank, normalizand pe linii atunci cand prezinti matricea Stochastica. Aici, trebuie doar sa faci animatie pentru fiecare pas in parte.
 - Leaga pagina de cea a Metodelor Puterii: PageRank-ul e vectorul propriu pentru `λ = 1` al matricei Google, deci exact metoda puterii, pe un graf de linkuri.
 
-### A zecea pagina: QR si DVS
+### A zecea pagina: Algoritmul QR
 
-- Prezinta cele doua metode prin animatii pe matrici. Vorbeste si despre Q si R si explica ce sunt. Explica prin animatii importanta matricei ortogonale.
+- Prezinta algoritmul QR prin animatii pe matrici. Vorbeste despre Q si R si explica ce sunt. Explica prin animatii importanta matricei ortogonale. Arata cum descreste subdiagonala pana cand valorile proprii se citesc de pe diagonala, apoi ce grabeste deplasarea (shift).
 
-### A 11-a pagina: Polinomul Lagrange, Polinomul Neville, Functia Runge, Interpolari Spline
+### A 11-a pagina: Descompunerea Valorilor Singulare (DVS)
+
+- Prezinta DVS prin animatii pe matrici: cum se descompune orice matrice, chiar si dreptunghiulara, in `U`, `S` si `V^T`. Explica de unde vin valorile singulare (din valorile proprii ale lui `A^T A`) si cum se completeaza coloanele lui `U` prin Gram-Schmidt.
+
+### A 12-a pagina: Polinomul Lagrange, Polinomul Neville, Functia Runge, Interpolari Spline
 
 - interfete interactive pentru fiecare metoda in parte, sa explici trecerea de la Polinomul Lagrange si Neville la Spline, folosind functia Runge. Vreau sa faci sub forma de axa, prezentarea unei functii pe care utilizatorul sa o introduca, cu un design cat mai usor de inteles. Vreau de asemenea ca animatiile din interfata grafica sa aiba un flow, sa se miste frumos, nu greoi.
 
-### A 12-a pagina: Curbe Bezier, Algoritmul lui de Casteljau
+### A 13-a pagina: Curbe Bezier, Algoritmul lui de Casteljau
 
 - explici importanta curbelor Bezier, faptul ca vin in ajutorul spline-urilor (adica curbelor Hermite) si rezolva efortul computational al acestora cu ajutorul polinoamelor Bernstein. Apoi, prezinta algorimtul lui de Casteljau printr-o interfata grafica, unde vom forma curbe Bezier de toate tipurile (fa un box in care utilizator poate sa aleaga daca realizeaza curbele in plan 2D sau 3D).
 
-### A 13-a pagina: Aproximare CMMP
+### A 14-a pagina: Aproximare CMMP
 
 - explici grafic aproximarea CMMP, cu acea dreapta, pe un grafic oarecare si o functie oarecare.
 
-### A 14-a pagina: Fast Fourier Transformation
+### A 15-a pagina: Fast Fourier Transformation
 
 - vreau sa explici Fast-Fourier Transformation, printr-o animatie.
 
-### A 15-a pagina: Derivarea numerica
+### A 16-a pagina: Derivarea numerica
 
 - atat animatii, cat si interfete grafice pe partea de aprofundare, pentru metodele de derivare. Vreau sa le faci sub forma de grafic, sub forma unor functii si sa aduci la viata pozele date.
 
-### A 16-a pagina: Integrarea numerica. Metodele Newton-Cotes.
+### A 17-a pagina: Integrarea numerica. Metodele Newton-Cotes.
 
 - atat animatii, cat si interfete grafice pe partea de aprofundare, pentru metodele de integrare numerica(simpson si trapeze simple/compuse). Vreau sa le faci sub forma de grafic, sub forma unor functii si sa aduci la viata pozele date.
 
-### A 17-a pagina: Integrarea Romberg
+### A 18-a pagina: Integrarea Romberg
 
 - animatii pe o matrice pentru Integrarea Romberg, cu extrapolarea Richardson de la care porneste.
 
-### A 18-a pagina: Quadraturi Adaptive, Integrare Gaussiana
+### A 19-a pagina: Quadraturi Adaptive, Integrare Gaussiana
 
 - Quadraturile Adaptive si Integrarea Gaussiana asemanator cu ce ai facut la a 13-a pagina, interval si functie.
 
-### A 19-a pagina: ODE
+### A 20-a pagina: ODE
 
 - Aici vreau sa explici ODE prin grafic, sa explici cum se leaga de problema Cauchy, sa explici Euler si sa enunti faptul ca e buna deoarece are nevoie de un singur punct de start. Pentru referinta, te poti uita la pozele puse.
 

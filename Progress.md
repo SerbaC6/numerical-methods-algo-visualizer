@@ -11,8 +11,9 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 
 **Decizii deschise:**
 
-- [x] ~~**Lista celor ~15 metode numerice**~~ → ~~**14 pagini tematice**~~ → **19 pagini tematice**
-      (cinci metode care stăteau la coada altei pagini au primit pagină proprie), stabilite în
+- [x] ~~**Lista celor ~15 metode numerice**~~ → ~~**14 pagini tematice**~~ → ~~**19 pagini tematice**~~ →
+      **20 de pagini tematice** (cinci metode care stăteau la coada altei pagini au primit pagină
+      proprie, iar QR și DVS s-au despărțit la rândul lor), stabilite în
       [`Plan.md`](./Plan.md), secțiunea „Lista Algoritmi"; detaliate în tabelul din Faza 7
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
 - [x] ~~Font monospace pentru formule și tabele numerice~~ → **JetBrains Mono** (cifre tabulare,
@@ -303,7 +304,7 @@ nu doar galeria de componente.
 **Obiectiv:** navigație completă și pagina de cuprins funcțională, chiar dacă algoritmii lipsesc.
 
 > Făcut: `HashRouter` + rutele, layout-ul (`SiteLayout`, `Header`, `Footer`, `Container`,
-> `PageHeader`, `Logo`), registrul paginilor, cuprinsul pe trei secțiuni, căutarea din
+> `PageHeader`, `Logo`), registrul paginilor, cuprinsul pe secțiuni, căutarea din
 > header, scheletul paginii de algoritm și 404. Tema implicită a trecut pe **luminoasă**.
 > Rămân: meniul mobil, TOC, `/despre` și `/contact`, manifest, verificările de conformitate.
 
@@ -324,9 +325,9 @@ nu doar galeria de componente.
   - [x] Panou split-flap în hero (`TextFlippingBoard`, din registry-ul Aceternity): 16 coloane × 4 rânduri, 5 mesaje care se rotesc din 5 în 5 secunde, rotire rapidă (`duration={0.6}`). Adaptat: culori doar din paletă (panoul e întunecat în ambele teme), alfabet cu Ă/Â/Î/Ș/Ț, `prefers-reduced-motion` → literele apar fără rotire, textul întreg într-un `sr-only`. **Costă `motion` (~41 kB gzip)**, încărcat amânat (`lazy`), deci nu ține în loc textul din hero — de reevaluat față de bugetul din Faza 9
   - [x] ~~Cuprins pe pagina principală (bandă cu pastile → arbore cu toate paginile → arbore doar cu secțiunile, în hero)~~ → **scos de tot**: navigarea se face din căutarea din header și din cardurile de mai jos. Titlurile de secțiune au rămas cu `id` (`sectiune-…`) și `scroll-mt-24`, deci o eventuală revenire la scurtături e ieftină
   - [x] Registru central de algoritmi (`src/algorithms/registry.ts`) — sursa unică de adevăr
-  - [x] ~~Grilă grupată pe capitole~~ → ~~o singură grilă~~ → **trei secțiuni**: „Metode liniare", „Metode neliniare", „Interpolare, integrare și ODE". Cele 5 capitole rămân (supratitlul paginii de metodă), dar se grupează în secțiuni prin `CAPITOLE[…].sectiune`
+  - [x] ~~Grilă grupată pe capitole~~ → ~~o singură grilă~~ → ~~trei secțiuni~~ → **patru secțiuni**: „Metode liniare", „Valori proprii și valori singulare", „Metode neliniare", „Interpolare, integrare și ODE". Cele 6 capitole rămân (supratitlul paginii de metodă), dar se grupează în secțiuni prin `CAPITOLE[…].sectiune`. Ultima s-a desprins din „Metode liniare", care ajunsese la 9 pagini: acolo au plecat paginile 8–11 (metodele puterii, PageRank, QR, DVS), în timp ce pagina 2 (norme și ortogonalitate) a rămas, cu capitolul redenumit „Norme și ortogonalitate"
   - [x] ~~Căutare instant în cuprins~~ → **căutarea a urcat în header**, ca listă derulantă care duce direct pe pagina metodei (`src/lib/cautare.ts` + `CautareMetode`); caută în titlu, descriere, metode și capitol, fără diacritice
-  - [x] ~~Filtre: capitol~~ → **scoase**: cu trei secțiuni vizibile pe pagină, filtrele nu mai aveau ce filtra. Filtrul pe dificultate — abandonat
+  - [x] ~~Filtre: capitol~~ → **scoase**: cu secțiunile vizibile pe pagină, filtrele nu mai aveau ce filtra. Filtrul pe dificultate — abandonat
   - [x] ~~Stare „în lucru" pe carduri~~ → **scoasă**, odată cu numărul paginii, eticheta capitolului, dificultatea și pastilele metodelor: cardul e doar titlu + descriere + „Deschide"
   - [x] La fel pe pagina de metodă: ~~Callout-ul „Pagină în lucru" cu cursul-sursă~~ → **scos**; rămân doar `Skeleton`-urile, ca placeholder tăcut. Cursul-sursă se citește din `registry.ts` și din tabelul Fazei 7
   - [x] Stare goală pentru căutare fără rezultate (acum în lista derulantă)
@@ -477,7 +478,7 @@ nu doar galeria de componente.
 
 ## Faza 7 — Implementarea metodelor numerice
 
-**Obiectiv:** 19 pagini tematice, fiecare la calitatea paginii-pilot.
+**Obiectiv:** 20 de pagini tematice, fiecare la calitatea paginii-pilot.
 
 ### Lista paginilor _(sursa: `Plan.md`, secțiunea „Lista Algoritmi")_
 
@@ -499,16 +500,17 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | n/a   | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | n/a   | [x]  | [ ]        | [~]   | [ ]  |
-| 10  | QR și DVS                                     | `qr-si-dvs`                        | curs8, curs3 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 11  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 12  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | plan complex | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 17  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 18  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 19  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice      | [ ]     | n/a   | [x]  | n/a        | [~]   | [ ]  |
+| 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | n/a   | [x]  | n/a        | [~]   | [ ]  |
+| 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 15  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | plan complex | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 17  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 20  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
@@ -558,7 +560,7 @@ Ce **nu** e verificat încă:
 - [ ] `prefers-reduced-motion` pe interfața asta — codul îl respectă prin `MotionConfig` și prin
       `useDomeniuAnimat`, dar n-a fost văzut rulând cu setarea pornită.
 
-- [x] ~~Completează tabelul~~ — cele 19 pagini sunt fixate din `Plan.md`
+- [x] ~~Completează tabelul~~ — cele 20 de pagini sunt fixate din `Plan.md`
 - [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)
 - [ ] Deschide câte un issue GitHub pentru fiecare pagină, cu checklist-ul de mai jos
 - [ ] Pentru fiecare pagină: citește **întâi** cursul sursă din `cursuri_MN/`, apoi scrie
@@ -795,6 +797,43 @@ Ce **nu** e verificat încă:
 
 - [ ] **Verificare cu ochiul pe telefon real** — ca la paginile 6 și 7, portretul și peisajul n-au
       fost văzute pe un dispozitiv.
+
+### Pagina 11 — `dvs`, ce e gata și ce nu
+
+Ce există:
+
+- **Teoria**, `src/content/dvs.tsx`, din curs8 §6–§10: factorizarea `A = U S Vᵀ` cu dimensiunile
+  ei, rangul și nucleul, construcția lui `S`, `V` și `U`, Gram-Schmidt pentru coloanele rămase și
+  o secțiune separată despre **valorile singulare față de valorile proprii** (`sᵢ = √λᵢ(AᵀA)`,
+  coloanele lui `V` = vectorii proprii ai lui `AᵀA`, ale lui `U` = ai lui `AAᵀ`, iar pentru o
+  matrice simetrică pozitiv semidefinită `sᵢ = λᵢ` și `U = V`). Verificat numeric pe
+  `A = [[3,1],[1,3],[1,1]]`: valorile proprii ale lui `AᵀA` ies 18 și 4, coloanele `uᵢ` ies
+  ortonormate, `‖A − U S Vᵀ‖ ≈ 1e−15`.
+- **Erata**, `docs/erata-cursuri.md`: cursul spune la §7 că pentru o matrice simetrică valorile
+  singulare sunt chiar valorile proprii — fals când o valoare proprie e negativă
+  (`A = [[1,2],[2,1]]`: valori proprii −1 și 3, valori singulare 3 și 1), și în contradicție cu
+  propria lui cerință `Sᵢᵢ ≥ 0`. Pe pagină e scrisă concluzia corectă, `sᵢ = |λᵢ|`.
+- **Clipul**, `src/components/content/AnimatiaDvs.tsx` — a patra excepție de la regula Manim (după
+  paginile 6, 7 și 9), din același motiv: animația a venit gata făcută ca animație web
+  (`Animatie DVS.html`) și s-a portat pe `Clip`. Culorile vin din `viz-roles.ts`, deci merge în
+  ambele teme, iar textele desenului folosesc `culoareEticheta`, nu culoarea de desen — safirul lui
+  `Vᵀ` ar da 2,86:1 ca literă pe suprafața temei întunecate. Geometria nu e aleasă din ochi: e DVS-ul
+  exact al matricei `A = [[1, 2], [0, 1]]` — `s = (1+√2, √2−1)`, `V = rot(67,5°)`, `U = rot(22,5°)`,
+  toate verificate independent. Aceeași matrice arată și de ce valorile singulare nu sunt valorile
+  proprii: ale ei sunt amândouă 1.
+
+Ce **nu** e făcut, prin decizie:
+
+- **Secțiunea „Interactiv" nu există** (`interactiv: false` în registru). Geometria cerc → elipsă
+  se înțelege din clip, iar pagina rămâne pe clip plus teorie. Fără schelet, fără etichetă de stare.
+
+Ce **nu** e făcut încă:
+
+- [ ] **Matematica în `src/algorithms/dvs/`** — pagina n-are încă modul propriu; cifrele clipului
+      sunt constante fixate în componentă, cu verificarea scrisă în comentariul ei.
+- [ ] **Verificare cu ochiul pe telefon real** — portretul a fost văzut doar în emulator, la 390 px,
+      unde desenul e mic dar citeț (eticheta de rol a rămas intenționat necrescută, altfel
+      „matricea dată" se ciocnește de rolul vecin).
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 

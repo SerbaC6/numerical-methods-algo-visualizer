@@ -3,7 +3,7 @@
 > ⚠️ **Document de lucru, nu rezultat final.** Faza 2 e debifată în `Progress.md`: regulile de
 > mai jos sunt punctul de plecare și se schimbă odată cu paginile reale.
 
-Limba vizuală a proiectului. Deciziile de aici se aplică la toate cele 19 pagini de metode;
+Limba vizuală a proiectului. Deciziile de aici se aplică la toate cele 20 de pagini de metode;
 dacă o pagină are nevoie de altceva, se schimbă întâi documentul ăsta, apoi pagina.
 
 Pagina vie cu toate componentele: `src/pages/DesignSystem.tsx`, pe ruta `/design-system` —

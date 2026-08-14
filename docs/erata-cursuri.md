@@ -136,3 +136,75 @@ la criteriu: bisecția are nevoie de ordinul a 50 de iterații acolo unde secant
 în 4–7. Concluzia calitativă a cursului — tangenta e mai rapidă decât secanta — se verifică pe toate
 cele cinci funcții și e testată ca atare. Dacă vreodată vrem tabelul exact pe pagină, întâi trebuie
 stabilit criteriul de oprire și recalculat, nu copiat.
+
+---
+
+## curs8, §7 — valorile singulare ale unei matrice simetrice
+
+**Cursul scrie**, la cazul particular din construcția matricei `S`: dacă `A` este simetrică, atunci
+`A = Aᵀ`, deci `A² = Aᵀ·A`, „și prin urmare **valorile singulare sunt chiar valorile proprii**".
+
+Primele două egalități sunt corecte; concluzia nu ține când o valoare proprie e **negativă**.
+Valorile proprii ale lui `Aᵀ·A = A²` sunt pătratele valorilor proprii ale lui `A`, iar valoarea
+singulară e rădăcina **pozitivă** a fiecăruia — adică modulul, nu valoarea proprie.
+
+**Verificare.** Pentru `A = [[1, 2], [2, 1]]`, simetrică:
+
+| mărime           | valori    |
+| ---------------- | --------- |
+| valori proprii   | `−1`, `3` |
+| valori singulare | `3`, `1`  |
+
+`Aᵀ·A = A² = [[5, 4], [4, 5]]`, cu valorile proprii `9` și `1`; rădăcinile pozitive sunt `3` și `1`.
+Definiția cursului însuși (`Sᵢᵢ ≥ 0`, §6) exclude `−1` ca valoare singulară, deci contradicția e
+internă. Cazul cel mai scurt e `A = [−1]`: valoare proprie `−1`, valoare singulară `1`.
+
+**Ce s-a pus pe site.** Concluzia corectă, care iese pe același drum: `sᵢ = |λᵢ|`, plus observația
+că pentru o matrice simetrică cu valori proprii pozitive cele două liste coincid — adică exact
+situația în care afirmația cursului e adevărată. Restul construcției (`A = U S Vᵀ`, `D = S²`,
+`uᵢ = (1/sᵢ)·A·vᵢ`, completarea prin Gram-Schmidt) se verifică și rămâne neatinsă: pe
+`A = [[3,1],[1,3],[1,1]]`, valorile proprii ale lui `AᵀA` ies `18` și `4`, coloanele `uᵢ` ies
+ortonormate, iar `‖A − U S Vᵀ‖ ≈ 1·10⁻¹⁵`.
+
+---
+
+## curs8, §4 — deplasarea numărată de două ori
+
+**Cursul scrie**, în aceeași secțiune, două lucruri care nu pot fi adevărate deodată:
+
+```
+A^(i) − σI = Q^(i) R^(i)
+A^(i+1)    = R^(i) Q^(i) + σI
+```
+
+și, câteva rânduri mai jos: „**Atenție:** valoarea proprie finală se obține adunând **suma tuturor
+deplasărilor** aplicate până în acel moment (`λ ≈ a + Σσi`)."
+
+Fiecare, luată singură, e corectă — dar ele descriu **două convenții diferite**, iar a doua
+presupune că `σI` **nu** a fost readăugat. Cu formula tipărită, care îl readaugă la fiecare pas,
+deplasarea e deja înapoi în matrice; mai adunând-o o dată, se numără de două ori.
+
+**Verificare.** Matricea simetrică tridiagonală `a = (4, 3, 2, 1)`, `b = (1; 0,5; 0,25)`, cu
+valorile proprii `0,932366`, `1,764540`, `2,657942`, `4,645152`. Se rulează QR cu deplasare, cu
+`σi` luat din `E^(i)` exact ca în curs, până când `|bn| < 10⁻¹³` — trei pași în ambele variante:
+
+| varianta                     | `an`               | `Σσi`    | `an + Σσi`         |
+| ---------------------------- | ------------------ | -------- | ------------------ |
+| cu `+ σI` (formula tipărită) | **0,932366034738** | 2,805715 | 3,738081           |
+| fără `+ σI`                  | ≈ 0                | 0,932366 | **0,932366034738** |
+
+Pe prima linie, `an` e **exact** o valoare proprie, iar `an + Σσi = 3,738081` nu e nimic — nu e
+valoare proprie a matricei și nici măcar între două dintre ele într-un fel util. Pe a doua,
+corecția cerută de curs e chiar ce lipsește. Contradicția e deci internă, nu o greșeală de calcul:
+regula scrisă aparține variantei pe care formula de deasupra n-o folosește.
+
+**Ce s-a pus pe site.** Varianta care decurge din formula tipărită, fiindcă formula e cea pe care o
+citește studentul și cea care intră mai târziu în cod: `σI` se readaugă la fiecare pas, deci când
+`bn` ajunge ≈ 0, cifra `an` **se citește direct** ca valoare proprie. Regula `λ ≈ a + Σσi` nu apare
+pe pagină, în nicio formă. **Concluzia cursului rămâne neatinsă** — deplasarea schimbă raportul de
+convergență din `|λj+1/λj|` în `|(λj+1 − σ)/(λj − σ)|` și accelerează metoda: pe aceeași matrice,
+`|bn| < 10⁻¹²` cere **41** de pași fără deplasare și **3** cu deplasare.
+
+Scriptul de verificare: `scratchpad/verifica_qr.py` din sesiunea de lucru (calcul de unică
+folosință, ca la curs6 §3.2; tabelul de mai sus e rezultatul lui). Când pagina 10 primește modulul
+din `src/algorithms/`, verificarea se mută în `scripts/verificare-algoritmi/`, pe cod real.

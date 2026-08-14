@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
+import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmuluiQr";
+import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
@@ -15,7 +17,7 @@ import { getContinut } from "@/content";
 
 /**
  * Secțiunile din interiorul unei pagini de metodă, în ordinea din `Plan.md`.
- * A nu se confunda cu `SECTIUNI` din registru, care sunt cele trei grupuri din
+ * A nu se confunda cu `SECTIUNI` din registru, care sunt grupurile din
  * cuprins — de aici sufixul.
  *
  * Fiecare are unealta ei, fixată: „Vizual" e clipul narativ dinaintea oricărei
@@ -59,6 +61,8 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
     interactiv: InterfataMetodeDeGradient,
   },
   pagerank: { vizual: AnimatiaMatriceiPageRank },
+  "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
+  dvs: { vizual: AnimatiaDvs },
 };
 
 /**
@@ -81,8 +85,9 @@ export default function PaginaAlgoritm() {
 
   const { anterior, urmator } = getVecini(pagina.numar);
   const continut = getContinut(pagina.slug);
-  // Secțiunea din cuprins („Metode liniare", „Metode neliniare", „Interpolare,
-  // integrare și ODE") — capitolul e mai fin decât atât și nu apare în antet.
+  // Secțiunea din cuprins („Metode liniare", „Valori proprii și valori
+  // singulare", „Metode neliniare", „Interpolare, integrare și ODE") —
+  // capitolul e mai fin decât atât și nu apare în antet.
   const sectiune = CAPITOLE[pagina.capitol].sectiune;
 
   // O pagină care **nu primește** o secțiune, prin decizie, n-o are deloc — nu un

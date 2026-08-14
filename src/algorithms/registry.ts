@@ -12,13 +12,14 @@
 
 export type Dificultate = "ușor" | "mediu" | "greu";
 
-/** Cele trei grupuri din cuprins. Un capitol aparține exact unei secțiuni. */
-export type Sectiune = "liniare" | "neliniare" | "interpolare-integrare";
+/** Grupurile din cuprins. Un capitol aparține exact unei secțiuni. */
+export type Sectiune = "liniare" | "neliniare" | "valori-proprii" | "interpolare-integrare";
 
 export type Capitol =
   | "sisteme-liniare"
-  | "ortogonalitate-valori-proprii"
+  | "ortogonalitate"
   | "ecuatii-optimizare"
+  | "valori-proprii"
   | "interpolare-aproximare"
   | "integrare-ode";
 
@@ -57,11 +58,25 @@ export type IntrareAlgoritm = {
   gata: boolean;
 };
 
-/** Cele trei secțiuni ale cuprinsului, în ordinea în care apar pe pagină. */
+/**
+ * Secțiunile cuprinsului, în ordinea în care apar pe pagină.
+ *
+ * „Valori proprii și valori singulare" s-a desprins din „Metode liniare",
+ * care ajunsese să țină jumătate din site. Grupul e coerent de la sine: toate
+ * patru caută perechi vector–factor de scalare pentru o matrice (metodele
+ * puterii și PageRank iterativ, QR prin factorizări repetate), iar DVS le duce
+ * pe matrice dreptunghiulare, unde valorile proprii nu mai există.
+ *
+ * „Norme, Householder, Givens, Gram-Schmidt" **rămâne** la metode liniare: acolo
+ * ortogonalitatea e unealtă pentru rezolvat sisteme, nu scop.
+ */
 export const SECTIUNI: Record<Sectiune, { titlu: string; ordine: number }> = {
   liniare: { titlu: "Metode liniare", ordine: 1 },
-  neliniare: { titlu: "Metode neliniare", ordine: 2 },
-  "interpolare-integrare": { titlu: "Interpolare, integrare și ODE", ordine: 3 },
+  // Stă imediat după metodele liniare, adică exact unde stăteau paginile 8–11
+  // înainte să se desprindă: cine răsfoiește cuprinsul le găsește în același loc.
+  "valori-proprii": { titlu: "Valori proprii și valori singulare", ordine: 2 },
+  neliniare: { titlu: "Metode neliniare", ordine: 3 },
+  "interpolare-integrare": { titlu: "Interpolare, integrare și ODE", ordine: 4 },
 };
 
 /**
@@ -70,24 +85,29 @@ export const SECTIUNI: Record<Sectiune, { titlu: string; ordine: number }> = {
  */
 export const CAPITOLE: Record<Capitol, { titlu: string; ordine: number; sectiune: Sectiune }> = {
   "sisteme-liniare": { titlu: "Sisteme liniare", ordine: 1, sectiune: "liniare" },
-  "ortogonalitate-valori-proprii": {
-    titlu: "Ortogonalitate și valori proprii",
+  ortogonalitate: {
+    titlu: "Norme și ortogonalitate",
     ordine: 2,
     sectiune: "liniare",
   },
+  "valori-proprii": {
+    titlu: "Valori proprii și valori singulare",
+    ordine: 3,
+    sectiune: "valori-proprii",
+  },
   "ecuatii-optimizare": {
     titlu: "Ecuații neliniare și optimizare",
-    ordine: 3,
+    ordine: 4,
     sectiune: "neliniare",
   },
   "interpolare-aproximare": {
     titlu: "Interpolare și aproximare",
-    ordine: 4,
+    ordine: 5,
     sectiune: "interpolare-integrare",
   },
   "integrare-ode": {
     titlu: "Integrare și ecuații diferențiale",
-    ordine: 5,
+    ordine: 6,
     sectiune: "interpolare-integrare",
   },
 };
@@ -109,7 +129,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     slug: "norme-si-ortogonalitate",
     numar: 2,
     titlu: "Norme, Householder, Givens, Gram-Schmidt",
-    capitol: "ortogonalitate-valori-proprii",
+    capitol: "ortogonalitate",
     descriere:
       "Ce măsoară o normă, cum arată o reflexie și o rotație pe axe și cum se construiește pas cu pas o bază ortogonală.",
     metode: ["Norme vectoriale", "Norme matriceale", "Householder", "Givens", "Gram-Schmidt"],
@@ -190,7 +210,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     slug: "metodele-puterii",
     numar: 8,
     titlu: "Metodele puterii, Rayleigh, deflație",
-    capitol: "ortogonalitate-valori-proprii",
+    capitol: "valori-proprii",
     descriere:
       "Cum scoate o simplă înmulțire repetată valoarea proprie dominantă și cum ajungi la celelalte, prin puterea inversă și deflație.",
     metode: [
@@ -208,7 +228,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     slug: "pagerank",
     numar: 9,
     titlu: "Algoritmul PageRank",
-    capitol: "ortogonalitate-valori-proprii",
+    capitol: "valori-proprii",
     descriere:
       "Importanța unei pagini web ca vector propriu pentru λ = 1 al matricei Google — adică metoda puterii, aplicată pe un graf de linkuri.",
     metode: ["Matrice stocastică", "Matricea Google", "Metoda puterii", "Deflație pe blocuri"],
@@ -220,20 +240,59 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     gata: false,
   },
   {
-    slug: "qr-si-dvs",
+    slug: "algoritmul-qr",
     numar: 10,
-    titlu: "Algoritmul QR și DVS",
-    capitol: "ortogonalitate-valori-proprii",
+    titlu: "Algoritmul QR și valorile proprii",
+    capitol: "valori-proprii",
     descriere:
-      "Ce înseamnă de fapt Q și R, la ce e bună o matrice ortogonală și cum descompune DVS orice matrice.",
-    metode: ["Algoritmul QR", "QR cu deplasare", "Rotații", "DVS (SVD)"],
+      "Ce înseamnă de fapt Q și R și de ce, repetând factorizarea, matricea se apropie de o formă din care se citesc toate valorile proprii deodată.",
+    metode: [
+      "Algoritmul QR",
+      "Factorizare QR",
+      "Matrice de rotație",
+      "QR cu deplasare",
+      "Deplasare explicită",
+      "Deplasare QR dublă",
+      "Formă simetrică tridiagonală",
+      "Formă Hessenberg superioară",
+      "Householder",
+      "Valori proprii",
+    ],
     dificultate: "greu",
     cursSursa: ["qr_dvs_teorie_curs8.md", "curs3_ortogonalitate.md"],
+    // Ca la pagina 9: pagina se sprijină pe clip și pe teorie, iar interfața
+    // interactivă lipsește **prin decizie**, nu „încă". Deci secțiunea nu se
+    // pune deloc — fără schelet, fără text de așteptare.
+    interactiv: false,
+    gata: false,
+  },
+  {
+    slug: "dvs",
+    numar: 11,
+    titlu: "Descompunerea valorilor singulare (DVS)",
+    capitol: "valori-proprii",
+    descriere:
+      "Orice matrice, chiar și dreptunghiulară, se scrie ca o rotație, o întindere pe axe și încă o rotație — de unde ies valorile singulare și la ce sunt bune.",
+    metode: [
+      "DVS",
+      "SVD",
+      "Descompunerea valorilor singulare",
+      "Valori singulare",
+      "Matrice ortogonală",
+      "Rang",
+      "Nucleu",
+      "Gram-Schmidt",
+    ],
+    dificultate: "greu",
+    cursSursa: ["qr_dvs_teorie_curs8.md", "curs3_ortogonalitate.md"],
+    // Pagina se sprijină pe clip și pe teorie, prin decizie: geometria
+    // cerc → elipsă se vede din clip, iar secțiunea „Interactiv" nu se pune.
+    interactiv: false,
     gata: false,
   },
   {
     slug: "interpolare-polinomiala",
-    numar: 11,
+    numar: 12,
     titlu: "Lagrange, Neville, funcția Runge, spline",
     capitol: "interpolare-aproximare",
     descriere:
@@ -245,7 +304,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "curbe-bezier",
-    numar: 12,
+    numar: 13,
     titlu: "Curbe Bézier, algoritmul de Casteljau",
     capitol: "interpolare-aproximare",
     descriere:
@@ -257,7 +316,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "cmmp",
-    numar: 13,
+    numar: 14,
     titlu: "Aproximare CMMP și funcții raționale",
     capitol: "interpolare-aproximare",
     descriere:
@@ -276,7 +335,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "fft",
-    numar: 14,
+    numar: 15,
     titlu: "Transformata Fourier rapidă (FFT)",
     capitol: "interpolare-aproximare",
     descriere:
@@ -294,7 +353,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "derivare-numerica",
-    numar: 15,
+    numar: 16,
     titlu: "Derivare numerică",
     capitol: "integrare-ode",
     descriere:
@@ -312,7 +371,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "newton-cotes",
-    numar: 16,
+    numar: 17,
     titlu: "Newton-Cotes: trapeze și Simpson",
     capitol: "integrare-ode",
     descriere:
@@ -331,7 +390,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "romberg",
-    numar: 17,
+    numar: 18,
     titlu: "Extrapolare Richardson și integrare Romberg",
     capitol: "integrare-ode",
     descriere:
@@ -343,7 +402,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "cuadraturi-adaptive-si-gaussiene",
-    numar: 18,
+    numar: 19,
     titlu: "Cuadraturi adaptive și cuadraturi Gaussiene",
     capitol: "integrare-ode",
     descriere:
@@ -362,7 +421,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "ecuatii-diferentiale",
-    numar: 19,
+    numar: 20,
     titlu: "ODE: problema Cauchy, Euler, Runge-Kutta",
     capitol: "integrare-ode",
     descriere:
@@ -387,7 +446,7 @@ export function getAlgoritm(slug: string | undefined): IntrareAlgoritm | undefin
 }
 
 /**
- * Paginile grupate pe cele trei secțiuni, gata de afișat în cuprins: secțiunile
+ * Paginile grupate pe secțiuni, gata de afișat în cuprins: secțiunile
  * în ordinea din `SECTIUNI`, iar în interior paginile în ordinea din `Plan.md`.
  */
 export function getAlgoritmiPeSectiuni() {
@@ -408,8 +467,9 @@ export function getAlgoritmiPeSectiuni() {
  *
  * Cele două nu coincid: cuprinsul strânge paginile pe secțiuni, deci după
  * pagina 5 („Metode liniare") vine pagina 6, care e la „Metode neliniare", iar
- * după 7 se revine la „Metode liniare" cu pagina 8. E intenționat — numerotarea
- * urmează ordinea cursului, iar gruparea din cuprins e doar ajutor de răsfoit.
+ * după 7 se sare la „Valori proprii și valori singulare" cu pagina 8. E
+ * intenționat — numerotarea urmează ordinea cursului, iar gruparea din cuprins e
+ * doar ajutor de răsfoit.
  */
 export function getVecini(numar: number) {
   return {
