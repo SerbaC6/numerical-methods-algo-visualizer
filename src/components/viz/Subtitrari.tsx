@@ -37,9 +37,10 @@ export function Subtitrari({ items, className }: SubtitrariProps) {
   return (
     <div
       className={cn(
+        // Fără degrade în josul cadrului: banda de estompare spăla desenul de
+        // deasupra ei, iar clipurile își țin oricum ultimul rând deasupra
+        // subtitrării, deci nu era nimic de ridicat de pe desen.
         "pointer-events-none absolute inset-x-0 bottom-0 px-[6%] pt-16 pb-[3%]",
-        // Degradeul ridică textul de pe desen fără să taie o bandă peste el.
-        "from-fundal bg-linear-to-t from-40% to-transparent",
         className,
       )}
     >

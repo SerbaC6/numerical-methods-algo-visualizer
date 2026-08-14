@@ -140,23 +140,39 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
     return () => observator.disconnect();
   }, []);
 
+  const { plinEcran, comutaPlinEcran } = usePlinEcran(container);
+
   const stare = useMemo<StareClip>(
     () => ({ T, cue, total, ruleaza, latime }),
     [T, cue, total, ruleaza, latime],
   );
 
   return (
-    <div className={cn("flex flex-col gap-4", className)} ref={container}>
+    <div
+      className={cn(
+        "flex flex-col gap-4",
+        plinEcran && "bg-fundal fixed inset-0 z-50 justify-center p-4",
+        className,
+      )}
+      ref={container}
+    >
       <ContextClip.Provider value={stare}>
-        <figure className="m-0">
+        <figure className={cn("m-0", plinEcran && "flex min-h-0 flex-1 items-center")}>
           {/* `@container`: textele din desen și din subtitrări se scalează după
               lățimea cadrului, nu după cea a ferestrei — altfel pe telefon, în
-              peisaj, ar fi ilizibile. */}
+              peisaj, ar fi ilizibile.
+
+              Pe tot ecranul, cadrul renunță la 16:9 și ia toată suprafața: SVG-ul
+              dinăuntru are `preserveAspectRatio` implicit, deci desenul rămâne
+              nedeformat și doar se centrează, pe același fundal ca pagina. */}
           <div
             ref={cadru}
             role="img"
             aria-label={descriere}
-            className="border-bordura bg-fundal shadow-jos @container relative aspect-video w-full overflow-hidden rounded-xl border"
+            className={cn(
+              "border-bordura bg-fundal shadow-jos @container relative w-full overflow-hidden rounded-xl border",
+              plinEcran ? "h-full" : "aspect-video",
+            )}
           >
             {children}
           </div>
@@ -174,9 +190,66 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
           atins.current = true;
           setViteza(v);
         }}
+        plinEcran={plinEcran}
+        onPlinEcran={comutaPlinEcran}
       />
     </div>
   );
+}
+
+/**
+ * Clipul pe tot ecranul, cu comenzile lui cu tot.
+ *
+ * Se cere întâi ecranul complet al browserului; dacă nu se poate — pe iPhone,
+ * `requestFullscreen` nu există pentru elemente obișnuite, doar pentru `<video>`
+ * — rămâne varianta din CSS, un strat fix peste pagină. De aceea starea e ținută
+ * aici, nu citită din `document.fullscreenElement`: altfel butonul n-ar face
+ * nimic exact pe telefoanele unde e cel mai util.
+ */
+function usePlinEcran(element: React.RefObject<HTMLElement | null>) {
+  const [plinEcran, setPlinEcran] = useState(false);
+
+  // Ieșirea din ecranul complet al browserului (Escape, gestul de sistem) nu
+  // trece prin butonul nostru, deci starea se sincronizează de la eveniment.
+  useEffect(() => {
+    const asculta = () => {
+      if (!document.fullscreenElement) setPlinEcran(false);
+    };
+    document.addEventListener("fullscreenchange", asculta);
+    return () => document.removeEventListener("fullscreenchange", asculta);
+  }, []);
+
+  const iesi = useCallback(() => {
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+    setPlinEcran(false);
+  }, []);
+
+  // Escape închide și varianta din CSS, unde browserul n-are ce să închidă.
+  useEffect(() => {
+    if (!plinEcran) return;
+    const asculta = (e: KeyboardEvent) => {
+      if (e.key === "Escape") iesi();
+    };
+    window.addEventListener("keydown", asculta);
+    return () => window.removeEventListener("keydown", asculta);
+  }, [plinEcran, iesi]);
+
+  const comutaPlinEcran = useCallback(() => {
+    if (plinEcran) {
+      iesi();
+      return;
+    }
+    setPlinEcran(true);
+    const el = element.current;
+    if (!el) return;
+    try {
+      void el.requestFullscreen().catch(() => undefined);
+    } catch {
+      // Rămâne stratul din CSS.
+    }
+  }, [plinEcran, iesi, element]);
+
+  return { plinEcran, comutaPlinEcran };
 }
 
 /** `prefers-reduced-motion: reduce`, urmărit și după prima randare. */

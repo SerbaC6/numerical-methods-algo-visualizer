@@ -1,4 +1,4 @@
-import { Pause, Play, RotateCcw } from "lucide-react";
+import { Maximize, Minimize, Pause, Play, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -15,6 +15,9 @@ export type PlaybackClipProps = {
   onTimp: (secunda: number) => void;
   onRuleazaChange: (ruleaza: boolean) => void;
   onVitezaChange: (viteza: Viteza) => void;
+  /** Clipul e pe tot ecranul acum? Butonul apare doar dacă vine și `onPlinEcran`. */
+  plinEcran?: boolean;
+  onPlinEcran?: () => void;
   className?: string;
 };
 
@@ -39,6 +42,8 @@ export function PlaybackClip({
   onTimp,
   onRuleazaChange,
   onVitezaChange,
+  plinEcran = false,
+  onPlinEcran,
   className,
 }: PlaybackClipProps) {
   const pozitie = Math.min(Math.max(timp, 0), total);
@@ -107,6 +112,19 @@ export function PlaybackClip({
           </Button>
         ))}
       </div>
+
+      {onPlinEcran && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="tinta-atingere"
+          aria-label={plinEcran ? "Ieși din ecranul complet" : "Pe tot ecranul"}
+          aria-pressed={plinEcran}
+          onClick={onPlinEcran}
+        >
+          {plinEcran ? <Minimize aria-hidden="true" /> : <Maximize aria-hidden="true" />}
+        </Button>
+      )}
     </div>
   );
 }
