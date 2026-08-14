@@ -180,7 +180,7 @@ export const continutMetodeDeGradient: ContinutPagina = {
             explicatie: (
               <>
                 Pornirea e aceeași ca la coborâre: r⁽⁰⁾ = b − A·x⁽⁰⁾, iar prima direcție e chiar
-                reziduul, v⁽¹⁾ = r⁽⁰⁾. Cursul 6 scrie aceleași mărimi cu α, p⁽ᵏ⁾ și β⁽ᵏ⁾.
+                reziduul, v⁽¹⁾ = r⁽⁰⁾. Aceleași mărimi se mai scriu și cu α, p⁽ᵏ⁾ și β⁽ᵏ⁾.
               </>
             ),
           },

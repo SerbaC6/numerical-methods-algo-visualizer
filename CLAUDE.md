@@ -48,6 +48,21 @@ Inspirația pentru animații și interfețe poate veni de oriunde — formulele 
 Fiecare interfață interactivă trebuie să aibă legendă și să facă paralela explicită
 formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
 
+**Nicio trimitere la curs în interfață.** Pe site nu se scrie niciodată „curs6 §4.2", „curs 5, §8.4",
+„Algorithm 4", „Figura 1 din laborator" sau orice altă indicație de unde vine o formulă. Nici în
+teorie, nici în legendă, nici în explicația unui pas, nici în descrierea unei coloane de tabel, nici
+în callout-uri. Regula nu are excepții și nu se negociază per pagină.
+
+Motivul: cine citește pagina nu are cursul deschis lângă el, iar o paranteză cu numărul secțiunii nu
+îi spune nimic — îl trimite altundeva în loc să-i explice aici. Afirmația trebuie să se susțină
+singură. Dacă nu se susține fără trimitere, textul e prea scurt, nu insuficient citat.
+
+**Trasabilitatea rămâne, dar în cod.** Câmpurile `sursa` (din `src/content/`) și `meta.sursa` /
+`cursSursa` (din `src/algorithms/`) sunt **obligatorii** și se completează în continuare: ele nu se
+randează nicăieri și există exclusiv pentru cine editează, ca regula „formulele vin din `cursuri_MN/`"
+să poată fi verificată mai târziu fără să recitești tot cursul. La fel, comentariile din cod pot și
+trebuie să citeze secțiunea. Granița e simplă: **în cod, da; pe ecran, niciodată.**
+
 **Fără secțiune „cum se folosește".** Nu se scrie lista de pași de folosire (`pasi` din `Legend`) și
 nici textele mărunte de sub titlul panoului de parametri sau sub câmpuri („alege funcția din
 curs…"). Interfața se explică singură prin legendă, etichetele controalelor și formula pasului

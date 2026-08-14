@@ -725,7 +725,7 @@ export default function DesignSystem() {
 
       <Sectiune
         titlu="Matricea"
-        descriere="Eliminare Gaussiană pe exemplul din curs (curs4, §4.3). Scopul e să facem zerouri sub diagonală, ca sistemul să se rezolve de jos în sus. Liniile sunt L₁–L₃, coloanele C₁–C₃, iar ultima coloană, b, e partea din dreapta a egalului."
+        descriere="Eliminare Gaussiană pe un exemplu. Scopul e să facem zerouri sub diagonală, ca sistemul să se rezolve de jos în sus. Liniile sunt L₁–L₃, coloanele C₁–C₃, iar ultima coloană, b, e partea din dreapta a egalului."
       >
         <div className="space-y-4">
           <Legend
@@ -879,12 +879,11 @@ export default function DesignSystem() {
 
           <Callout tip="nota" titlu="Aceleași straturi, alt desen">
             Graficul de mai jos folosește exact aceleași piese, dar pentru altceva: aria de sub
-            curbă, aproximată cu un trapez. Formula e cea din curs (<code>curs11</code>, „Formula
-            trapezelor"): <code>T = h/2·[f(a) + f(b)]</code>, cu <code>h = b − a</code>. Pe{" "}
-            <code>[2,2 ; 3]</code> funcția e pozitivă peste tot, deci figura desenată chiar e o
-            arie. Iese <code>T = {trapez.aproximare.toFixed(4)}</code>, față de valoarea exactă{" "}
-            <code>6,2336</code> — trapezul supraevaluează, fiindcă funcția e convexă aici și curba
-            stă sub coardă.
+            curbă, aproximată cu un trapez. Formula trapezelor: <code>T = h/2·[f(a) + f(b)]</code>,
+            cu <code>h = b − a</code>. Pe <code>[2,2 ; 3]</code> funcția e pozitivă peste tot, deci
+            figura desenată chiar e o arie. Iese <code>T = {trapez.aproximare.toFixed(4)}</code>,
+            față de valoarea exactă <code>6,2336</code> — trapezul supraevaluează, fiindcă funcția e
+            convexă aici și curba stă sub coardă.
           </Callout>
 
           <div className="bg-suprafata border-bordura shadow-jos rounded-xl border p-4">

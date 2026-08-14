@@ -339,7 +339,7 @@ export function InterfataMetodeDeGradient() {
               descriere:
                 idMetoda === "descendent"
                   ? "Zero la fiecare pas: fiecare direcție e perpendiculară pe cea dinainte — de aici zigzagul"
-                  : "Zero la fiecare pas: direcțiile sunt A-conjugate (curs 5, §8.4)",
+                  : "Zero la fiecare pas: direcțiile sunt A-conjugate — de aici numărul mic de pași",
             },
             {
               cheie: "abatere",
@@ -426,7 +426,7 @@ function incheiere(idMetoda: IdMetoda, rezultat: RezultatGradient, kappa: number
   if (idMetoda === "conjugat") {
     return (
       `${pasi} ${pasi === 1 ? "pas" : "pași"} — și n-ar fi putut fi mai mulți: pentru un sistem de dimensiune n, ` +
-      `direcțiile A-conjugate ating soluția exactă în cel mult n pași (curs 5, §8.4), aici n = 2. ` +
+      `direcțiile A-conjugate ating soluția exactă în cel mult n pași, aici n = 2. ` +
       `${forma}, dar numărul de pași nu depinde de el.`
     );
   }
