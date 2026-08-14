@@ -15,6 +15,14 @@ export type IterationTableProps = {
   randuri: Record<string, React.ReactNode>[];
   /** Iterația evidențiată — de obicei pasul curent din `PlaybackBar`. */
   randCurent?: number;
+  /**
+   * Ce număr poartă primul rând. Implicit 0, adică indexul din tablou.
+   *
+   * Există fiindcă nu toate metodele numără la fel: la unele, primul rând e
+   * „pasul 0" (starea de pornire), la altele e **iterația 1**, cum o numără
+   * cursul. Numărul afișat trebuie să fie cel din formulă, nu cel din memorie.
+   */
+  primaIteratie?: number;
   /** Dacă e dat, se poate sări la o iterație dând clic pe rând. */
   onAlegeRand?: (index: number) => void;
   titlu?: string;
@@ -31,6 +39,7 @@ export function IterationTable({
   coloane,
   randuri,
   randCurent,
+  primaIteratie = 0,
   onAlegeRand,
   titlu = "Iterații",
   className,
@@ -91,7 +100,7 @@ export function IterationTable({
                       curent ? "text-text font-bold" : "text-text-slab font-normal",
                     )}
                   >
-                    {i}
+                    {i + primaIteratie}
                   </th>
                   {coloane.map((c) => (
                     <td

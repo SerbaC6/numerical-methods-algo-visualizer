@@ -35,6 +35,9 @@ export type ValoriSistem = {
   b1: number;
   b2: number;
   b3: number;
+  x01: number;
+  x02: number;
+  x03: number;
   omega: number;
   tol: number;
   maxIteratii: number;
@@ -54,6 +57,9 @@ const DOMINANT: ValoriSistem = {
   b1: 1,
   b2: 4,
   b3: 6,
+  x01: 0,
+  x02: 0,
+  x03: 0,
   omega: 1,
   tol: 1e-8,
   maxIteratii: 60,
@@ -73,6 +79,42 @@ const JACOBI_BLOCAT: ValoriSistem = {
   b1: 4,
   b2: 4,
   b3: 4,
+  x01: 0,
+  x02: 0,
+  x03: 0,
+  omega: 1,
+  tol: 1e-8,
+  maxIteratii: 60,
+};
+
+/**
+ * Primul sistem, cu liniile 1 și 2 schimbate între ele.
+ *
+ * **Nu e un exemplu nou**: sunt exact aceleași trei ecuații, scrise în altă
+ * ordine, deci soluția e neschimbată — `(0,845178; 1,342640; −0,738579)`. Doar
+ * că acum diagonala are `1`, `−5`, `−9` în loc de `10`, `4`, `−9`, dominanța
+ * diagonală se pierde, iar amândouă metodele **diverg**: `ρ(Jacobi) = 3,0709`
+ * și `ρ(Gauss-Seidel) = 7,3516`.
+ *
+ * E cel mai scurt drum către ideea că metodele iterative nu depind doar de
+ * sistem, ci de **felul în care e scris**.
+ */
+const ALTA_ORDINE: ValoriSistem = {
+  a11: 1,
+  a12: 4,
+  a13: 3,
+  a21: 10,
+  a22: -5,
+  a23: 1,
+  a31: 4,
+  a32: -3,
+  a33: -9,
+  b1: 4,
+  b2: 1,
+  b3: 6,
+  x01: 0,
+  x02: 0,
+  x03: 0,
   omega: 1,
   tol: 1e-8,
   maxIteratii: 60,
@@ -90,4 +132,5 @@ export const SISTEM_IMPLICIT: ValoriSistem = DOMINANT;
 export const SISTEME: readonly { id: string; eticheta: string; valori: ValoriSistem }[] = [
   { id: "dominant", eticheta: "Dominant diagonal", valori: DOMINANT },
   { id: "blocat", eticheta: "Jacobi se blochează", valori: JACOBI_BLOCAT },
+  { id: "alta-ordine", eticheta: "Aceleași ecuații, altă ordine", valori: ALTA_ORDINE },
 ] as const;

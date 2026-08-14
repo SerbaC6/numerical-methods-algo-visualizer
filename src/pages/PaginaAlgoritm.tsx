@@ -7,6 +7,7 @@ import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmulu
 import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
+import { InterfataMetodeIterative } from "@/components/content/InterfataMetodeIterative";
 import { AnimatiaMetodelorIterative } from "@/components/content/AnimatiaMetodelorIterative";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
@@ -65,7 +66,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
     vizual: AnimatieCoborarePeGradient,
     interactiv: InterfataMetodeDeGradient,
   },
-  "metode-iterative": { vizual: AnimatiaMetodelorIterative },
+  "metode-iterative": { vizual: AnimatiaMetodelorIterative, interactiv: InterfataMetodeIterative },
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },

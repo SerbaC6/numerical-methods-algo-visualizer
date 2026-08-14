@@ -522,7 +522,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [ ]        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -597,13 +597,26 @@ Ce există:
   paginii 9. Exponenții din capul coloanelor se desenează ca `tspan` ridicat, nu cu `⁽ᵏ⁺¹⁾` —
   fonturile proiectului n-au glifele acelea.
 
+- **Interfața interactivă**, `src/components/content/InterfataMetodeIterative.tsx`, cu
+  `GraficConvergenta` alături. Are **două derulări**: bara de jos merge pe iterații, butoanele de
+  linie merg înăuntrul unei iterații — acolo unde Jacobi și Gauss-Seidel chiar diferă. Matricea
+  `[A|b]` și cele două coloane de valori sunt amândouă `MatrixGrid`, deci tipografia e aceeași ca
+  peste tot; starea celulei spune **de unde vine cifra**, nu doar ce cifră e. Graficul arată toate
+  trei metodele deodată, pe scară logaritmică: acolo „se înmulțește cu ρ" devine pantă constantă,
+  iar o metodă blocată se vede ca linie orizontală.
+- **Fără câmpuri pentru cei nouă coeficienți**, prin decizie: matricea se schimbă din cele trei
+  sisteme gata alese, iar reglajele sunt cele care schimbă povestea — pornirea, `ω`, toleranța,
+  numărul de iterații. Al treilea sistem e primul cu două linii schimbate între ele: aceleași
+  ecuații, aceeași soluție, dar `ρ(J) = 3,07` și `ρ(GS) = 7,35`, deci amândouă diverg.
+- **`IterationTable` a primit `primaIteratie`** (implicit 0, deci nimic nu se schimbă în altă
+  parte): aici prima iterație trebuie să scrie 1, cum o numără cursul.
+
 Ce **nu** e făcut încă:
 
-- [ ] **Interfața interactivă**: matrice + cursor pentru `ω` + al doilea desen, cu eroarea pe
-      iterații.
 - [ ] **Verificare cu ochiul pe telefon real.** Clipul a fost văzut pe cadru lat, scenă cu scenă,
       pe tema întunecată; scenele 5 și 6 au fost verificate prin conținutul desenat, nu cu ochiul
-      (browserul refuza capturile), iar tema luminoasă și portretul n-au fost văzute încă.
+      (browserul refuza capturile). Interfața a fost verificată pe cadru lat, pe tema întunecată,
+      cu două dintre cele trei sisteme. Tema luminoasă și portretul n-au fost văzute încă.
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
