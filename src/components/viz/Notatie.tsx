@@ -4,7 +4,8 @@ import {
   areNotatie,
   bucatiNotatie,
   COBORARE_JOS,
-  PROPORTIE_MICA,
+  PROPORTIE_MICA_DESEN,
+  PROPORTIE_MICA_TEXT,
   RIDICARE_SUS,
   type BucataNotatie,
 } from "@/lib/notatie";
@@ -46,12 +47,25 @@ export function Notatie({ children }: { children: string }) {
  * `position: relative` și `line-height: 0`, ca rândul să rămână de înălțimea
  * lui normală.
  */
-const CLASA_SUS = "relative -top-[0.42em] align-baseline text-[0.72em] leading-[0]";
-const CLASA_JOS = "relative top-[0.2em] align-baseline text-[0.72em] leading-[0]";
+const CLASA_SUS = "relative -top-[0.42em] align-baseline leading-[0]";
+const CLASA_JOS = "relative top-[0.2em] align-baseline leading-[0]";
+
+/** Mărimea vine din constantă, nu dintr-o clasă: Tailwind cere valori statice. */
+const CORP_MIC = { fontSize: `${PROPORTIE_MICA_TEXT}em` };
 
 function elementHtml({ text, nivel }: BucataNotatie) {
-  if (nivel === "sus") return <sup className={CLASA_SUS}>{text}</sup>;
-  if (nivel === "jos") return <sub className={CLASA_JOS}>{text}</sub>;
+  if (nivel === "sus")
+    return (
+      <sup className={CLASA_SUS} style={CORP_MIC}>
+        {text}
+      </sup>
+    );
+  if (nivel === "jos")
+    return (
+      <sub className={CLASA_JOS} style={CORP_MIC}>
+        {text}
+      </sub>
+    );
   return text;
 }
 
@@ -85,7 +99,7 @@ export function NotatieSVG({ text, marime }: { text: string; marime: number }) {
       <tspan
         key={i}
         dy={dy}
-        fontSize={bucata.nivel === "normal" ? undefined : marime * PROPORTIE_MICA}
+        fontSize={bucata.nivel === "normal" ? undefined : marime * PROPORTIE_MICA_DESEN}
       >
         {bucata.text}
       </tspan>

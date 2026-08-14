@@ -133,14 +133,22 @@ export function areNotatie(text: string): boolean {
 }
 
 /**
- * Cât de mic e scrisul ridicat sau coborât, față de corpul din jur, și cât de
- * mult se deplasează pe verticală.
+ * Cât de mic e scrisul ridicat sau coborât, față de corpul din jur.
  *
- * Valorile sunt cele obișnuite ale tipografiei digitale: exponentul urcă
- * aproximativ o treime din corp, indicele coboară puțin mai puțin (are sub el
- * doar linia de bază, nu și accentele).
+ * **Două valori, fiindcă sunt două situații.** Într-un paragraf, exponentul e un
+ * amănunt: `x⁽ᵏ⁾` se citește ca un cuvânt, iar dacă `(k)` se apropie de corpul
+ * literei începe să rupă rândul în bucăți. Acolo 0,62.
+ *
+ * Pe desen, aceleași litere stau singure, mici, peste un mesh și peste curbe de
+ * nivel. Un exponent la 0,62 dintr-un corp de 19 px ar ajunge la 12 px pe un
+ * fundal aglomerat. Acolo rămâne 0,72.
+ *
+ * Deplasarea pe verticală e comună: exponentul urcă aproximativ o treime din
+ * corp, indicele coboară puțin mai puțin (are sub el doar linia de bază, nu și
+ * accentele).
  */
-export const PROPORTIE_MICA = 0.72;
+export const PROPORTIE_MICA_TEXT = 0.62;
+export const PROPORTIE_MICA_DESEN = 0.72;
 
 /**
  * Cât de gros e conturul de sub o etichetă scrisă peste desen.

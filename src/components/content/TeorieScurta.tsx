@@ -20,7 +20,7 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
             înmulțesc cu valoarea de mai jos și ies ~28px pe ecran lat. */}
         <FormulaBlock
           latex={bloc.latex}
-          className="rounded-none border-0 bg-transparent px-5 py-6 text-[1.4rem] sm:text-[1.5rem]"
+          className="rounded-none border-0 bg-transparent px-5 py-6 text-[1.6rem] sm:text-[1.75rem]"
         />
 
         {/* Legenda literelor. Despărțită de formulă printr-o linie, nu printr-o

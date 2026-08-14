@@ -300,6 +300,10 @@ export function InterfataMetodeDeGradient() {
               latex={pas.latexPas}
               eticheta="Pasul acesta, cu numerele în formulă"
               evidentiaza={pas.evidentiaza}
+              // De când propoziția pasului nu se mai arată, formula asta duce
+              // singură explicația — deci se citește de la distanța de la care
+              // te uiți la desen, nu de la cea a unui text de corp.
+              className="text-[1.25rem] sm:text-[1.4rem]"
             />
           )}
         </>
