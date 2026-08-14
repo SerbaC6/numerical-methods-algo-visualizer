@@ -24,18 +24,34 @@ import {
 export function Notatie({ children }: { children: string }) {
   if (!areNotatie(children)) return <>{children}</>;
 
+  // Un singur `<span>` în jurul tuturor bucăților, nu un fragment. Motivul e
+  // măsurat: etichetele din `NumberInput` sunt `flex ... gap-2`, iar un fragment
+  // le dădea patru copii, deci flexbox punea 8 px între literă și indicele ei —
+  // „a₁₂ = a₂₁" ieșea „a 12 = 21", rupt pe două rânduri.
   return (
-    <>
+    <span>
       {bucatiNotatie(children).map((bucata, i) => (
         <Fragment key={i}>{elementHtml(bucata)}</Fragment>
       ))}
-    </>
+    </span>
   );
 }
 
+/**
+ * `<sup>` și `<sub>` se stilizează explicit, nu se lasă pe seama browserului.
+ *
+ * Implicit ele au `vertical-align: super/sub`, care **mărește înălțimea
+ * rândului**: o etichetă ca „a₁₂ = a₂₁" ajungea să se rupă în două rânduri, cu
+ * semnul egal deasupra literei. Rețeta e cea din normalize.css — deplasare din
+ * `position: relative` și `line-height: 0`, ca rândul să rămână de înălțimea
+ * lui normală.
+ */
+const CLASA_SUS = "relative -top-[0.42em] align-baseline text-[0.72em] leading-[0]";
+const CLASA_JOS = "relative top-[0.2em] align-baseline text-[0.72em] leading-[0]";
+
 function elementHtml({ text, nivel }: BucataNotatie) {
-  if (nivel === "sus") return <sup>{text}</sup>;
-  if (nivel === "jos") return <sub>{text}</sub>;
+  if (nivel === "sus") return <sup className={CLASA_SUS}>{text}</sup>;
+  if (nivel === "jos") return <sub className={CLASA_JOS}>{text}</sub>;
   return text;
 }
 
