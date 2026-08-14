@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
@@ -6,6 +8,13 @@ import type { ContinutPagina } from "@/content/tipuri";
  *
  * **Sursa: `cursuri_MN/qr_dvs_teorie_curs8.md`, §1–§5.** Nimic scris din
  * memorie. §6–§10 (DVS) sunt pagina 11 și nu apar aici.
+ *
+ * **Ce nu mai e pe pagină.** Secțiunile „Matricea de rotație" (§2) și
+ * „Construcția lui Q și R" (§3) au fost scoase, ca teoria să rămână scurtă: în
+ * locul lor a rămas un rând care trimite la pagina 2, unde stă oricum Givens,
+ * adică mecanismul lor. La fel a plecat și §5, matricile nesimetrice.
+ * Verificările numerice de mai jos rămân scrise pentru amândouă, ca reintrarea
+ * lor să nu ceară recalcularea de la zero.
  *
  * **Verificat numeric, separat de aplicație**, pe matricea simetrică
  * tridiagonală `a = (4, 3, 2, 1)`, `b = (1; 0,5; 0,25)`, cu valorile proprii
@@ -73,9 +82,7 @@ export const continutAlgoritmulQr: ContinutPagina = {
             explicatie: (
               <>
                 Forma cerută la intrare. O matrice simetrică oarecare ajunge aici prin metoda
-                Householder, printr-o transformare de asemănare — adică una care{" "}
-                <strong>nu schimbă valorile proprii</strong>, doar felul în care sunt așezate
-                cifrele.
+                Householder, printr-o transformare de asemănare.
               </>
             ),
           },
@@ -128,8 +135,7 @@ export const continutAlgoritmulQr: ContinutPagina = {
             explicatie: (
               <>
                 Toată iterația e în inversarea ordinii: se descompune <Mate>A⁽ⁱ⁾ = Q⁽ⁱ⁾·R⁽ⁱ⁾</Mate>,
-                iar matricea următoare e produsul acelorași doi factori, luați invers. Nimic altceva
-                nu se schimbă de la un pas la altul.
+                iar matricea următoare e produsul acelorași doi factori, luați invers.
               </>
             ),
           },
@@ -144,95 +150,23 @@ export const continutAlgoritmulQr: ContinutPagina = {
                 din prima relație iese <Mate>R⁽ⁱ⁾ = Q⁽ⁱ⁾ᵀ·A⁽ⁱ⁾</Mate>, deci pasul e o{" "}
                 <strong>transformare de asemănare ortogonală</strong>. De aici trei garanții
                 deodată: <Mate>A⁽ⁱ⁺¹⁾</Mate> rămâne simetrică, rămâne tridiagonală și are exact
-                aceleași valori proprii ca <Mate>A</Mate>. Prin inducție, șirul tinde la o matrice
-                diagonală — iar pe diagonala ei stau valorile proprii căutate.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "matrice-de-rotatie",
-        titlu: "Matricea de rotație",
-        esenta: (
-          <>
-            Singura unealtă din care se construiesc <Mate>Q</Mate> și <Mate>R</Mate>: o matrice care
-            diferă de identitate în cel mult patru locuri.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "p_{ii} = p_{jj} = \\cos\\Theta, \\qquad p_{ij} = -p_{ji} = \\sin\\Theta, \\qquad i \\neq j",
-            sursa: "curs 8, §2",
-            legenda: [
-              { simbol: "P", sens: <>matricea de rotație; în rest, identică cu identitatea</> },
-              { simbol: "Θ", sens: <>unghiul rotației — singurul lucru de ales</> },
-              { simbol: "i, j", sens: <>cele două linii (și coloane) pe care le atinge</> },
-            ],
-            explicatie: (
-              <>
-                Din definiție ies trei proprietăți. <Mate>P</Mate> e <strong>ortogonală</strong> —{" "}
-                <Mate>P·Pᵀ = I</Mate>; produsul <Mate>P·A</Mate> schimbă doar liniile <Mate>i</Mate>{" "}
-                și <Mate>j</Mate>, iar <Mate>A·P</Mate> doar coloanele <Mate>i</Mate> și{" "}
-                <Mate>j</Mate>. A patra e cea care face algoritmul posibil: pentru orice{" "}
-                <Mate>{"i ≠ j"}</Mate>, unghiul <Mate>Θ</Mate> se poate alege astfel încât elementul{" "}
-                <Mate>(P·A)ᵢⱼ</Mate> să se anuleze.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "constructia-q-r",
-        titlu: "Construcția lui Q și R",
-        esenta: (
-          <>
-            Câte o rotație pentru fiecare element de pe subdiagonală: ce rămâne după toate e{" "}
-            <Mate>R</Mate>, iar transpusele lor înmulțite dau <Mate>Q</Mate>.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "\\sin\\Theta_2 = \\frac{b_2}{\\sqrt{b_2^2 + a_1^2}}, \\qquad \\cos\\Theta_2 = \\frac{a_1}{\\sqrt{b_2^2 + a_1^2}}",
-            sursa: "curs 8, §3",
-            legenda: [
-              { simbol: "Θ₂", sens: <>unghiul primei rotații, P₂</> },
-              { simbol: "a₁, b₂", sens: <>colțul din stânga-sus al matricei curente</> },
-            ],
-            explicatie: (
-              <>
-                Prima rotație, aleasă exact cât să stingă elementul de sub <Mate>a₁</Mate>: în{" "}
-                <Mate>P₂·A⁽¹⁾</Mate>, elementul din poziția <Mate>(2,1)</Mate> devine{" "}
-                <Mate>(−sinΘ₂)·a₁ + (cosΘ₂)·b₂ = 0</Mate>. Înmulțirea atinge liniile 1 și 2, dar
-                matricea fiind tridiagonală, singurul element care se poate umple în afara benzii e
-                cel din poziția <Mate>(1,3)</Mate>.
+                aceleași valori proprii ca <Mate>A</Mate>.
               </>
             ),
           },
           {
-            tip: "formula",
-            latex:
-              "R^{(1)} = P_n P_{n-1} \\cdots P_2\\, A^{(1)}, \\qquad Q^{(1)} = P_2^{T} P_3^{T} \\cdots P_n^{T}",
-            sursa: "curs 8, §3",
-            legenda: [
-              { simbol: "Pₖ", sens: <>rotația care anulează elementul din poziția (k, k−1)</> },
-            ],
-            explicatie: (
+            tip: "text",
+            continut: (
               <>
-                Rotațiile se aplică de la stânga, una pentru fiecare element de pe subdiagonală;
-                când se termină, sub diagonală nu mai e nimic, adică rezultatul e chiar{" "}
-                <Mate>R⁽¹⁾</Mate>. Amândouă verificările cerute ies din faptul că fiecare{" "}
-                <Mate>Pₖ</Mate> e ortogonală: produsul <Mate>Q⁽¹⁾·R⁽¹⁾</Mate> se telescopează înapoi
-                la <Mate>A⁽¹⁾</Mate>, iar <Mate>Q⁽¹⁾ᵀ·Q⁽¹⁾ = I</Mate>. Efectul secundar al pasului
-                general — elementul <Mate>(k−1, k+1)</Mate> devine nenul — e chiar motivul pentru
-                care banda se închide la loc la înmulțirea următoare, iar forma tridiagonală
-                supraviețuiește iterației.
+                Factorizarea <Mate>A⁽ⁱ⁾ = Q⁽ⁱ⁾·R⁽ⁱ⁾</Mate> se face din rotații plane, câte una
+                pentru fiecare element de pe subdiagonală: mecanismul din spate e cel de la{" "}
+                <Link
+                  className="text-accent-slab underline underline-offset-4"
+                  to="/algoritm/norme-si-ortogonalitate"
+                >
+                  Givens
+                </Link>
+                .
               </>
             ),
           },
@@ -310,56 +244,9 @@ export const continutAlgoritmulQr: ContinutPagina = {
               <>
                 De aici se ia deplasarea, alta la fiecare pas: <Mate>σᵢ</Mate> e valoarea proprie a
                 acestei matrice de ordinul doi cea mai apropiată de <Mate>aₙ⁽ⁱ⁾</Mate>. Alegerea o
-                grăbește anume pe <Mate>bₙ</Mate>, care ajunge la zero înaintea celorlalte; atunci{" "}
+                grăbește pe <Mate>bₙ</Mate>, care ajunge la zero înaintea celorlalte; atunci{" "}
                 <Mate>aₙ</Mate> e o valoare proprie, se taie ultima linie și ultima coloană, și se
                 reia procedeul pe matricea rămasă, până se epuizează spectrul.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "matrici-nesimetrice",
-        titlu: "Matrici nesimetrice",
-        esenta: (
-          <>
-            Fără simetrie, Householder nu mai poate coborî până la tridiagonală; se oprește o
-            treaptă mai sus, la forma Hessenberg.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "H = \\begin{pmatrix} a_{11} & a_{12} & \\cdots & a_{1n} \\\\ a_{21} & a_{22} & \\cdots & a_{2n} \\\\ & a_{32} & \\ddots & \\vdots \\\\ & & a_{n,n-1} & a_{nn} \\end{pmatrix}",
-            sursa: "curs 8, §5",
-            legenda: [
-              { simbol: "H", sens: <>forma Hessenberg superioară</> },
-              { simbol: "a₂₁, a₃₂, …", sens: <>subdiagonala, singura parte de sub diagonală</> },
-            ],
-            explicatie: (
-              <>
-                O matrice superior triunghiulară plus o subdiagonală nenulă. Iterația QR o păstrează
-                în formă, exact cum păstra tridiagonala în cazul simetric.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "\\begin{aligned} H^{(1)} - \\sigma_1 I &= Q^{(1)} R^{(1)}, & H^{(2)} &= R^{(1)} Q^{(1)} + \\sigma_1 I \\\\ H^{(2)} - \\sigma_2 I &= Q^{(2)} R^{(2)}, & H^{(3)} &= R^{(2)} Q^{(2)} + \\sigma_2 I \\end{aligned}",
-            sursa: "curs 8, §5",
-            legenda: [
-              { simbol: "σ₁, σ₂", sens: <>două deplasări, numere complex conjugate</> },
-              { simbol: "H⁽¹⁾, H⁽²⁾…", sens: <>matrici reale, Hessenberg superioare</> },
-            ],
-            explicatie: (
-              <>
-                Deplasarea QR dublă. Fără simetrie pot apărea valori proprii{" "}
-                <strong>distincte, dar de același modul</strong> — perechi complex conjugate —, iar
-                pe ele o singură deplasare reală nu are ce separa: raportul rămâne 1. Două deplasări
-                complex conjugate, aplicate una după alta, lasă în urmă matrici tot reale.
               </>
             ),
           },

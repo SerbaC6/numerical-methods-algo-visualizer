@@ -2,6 +2,7 @@ import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
 import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
+import { continutFactorizariLu } from "@/content/factorizari-lu";
 import { continutFft } from "@/content/fft";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
 import { continutPagerank } from "@/content/pagerank";
@@ -19,6 +20,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "algoritmul-qr": continutAlgoritmulQr,
   "ecuatii-neliniare": continutEcuatiiNeliniare,
   "eliminare-gaussiana": continutEliminareGaussiana,
+  "factorizari-lu": continutFactorizariLu,
   fft: continutFft,
   "metode-de-gradient": continutMetodeDeGradient,
   pagerank: continutPagerank,

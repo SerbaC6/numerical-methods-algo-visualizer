@@ -503,7 +503,7 @@ scene Python, nu se randează fișiere video. Clipul din secțiunea „Vizual" s
 animație web pe ceas propriu (`Clip` din `src/components/viz/`, cu `src/lib/compozitie.ts`), și tot
 ce se vede e o funcție pură de timpul clipului.
 
-Motivele, măsurate pe paginile 7, 9, 10 și 11, care au primit deja clip scris în cod: culorile vin
+Motivele, măsurate pe paginile 1, 3, 7, 9, 10 și 11, care au primit deja clip scris în cod: culorile vin
 din `viz-roles.ts`, deci clipul se vede corect în **ambele teme** (un mp4 are un singur fundal);
 cifrele vin din `src/algorithms/`, deci desenul și textul nu se pot contrazice; textul rămâne text,
 deci se citește cu cititorul de ecran și nu se pixelează; `prefers-reduced-motion` e respectat cu
@@ -545,6 +545,12 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
 - **pagina 15** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
   set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
+
+**Clipuri portate dintr-o animație web gata făcută.** Pagina 1 (`factorizari-lu`) a primit clipul
+din `Animatie_LU.html`, rescris ca `AnimatiaFactorizariiLu`; pagina 3 (`eliminare-gaussiana`), pe al
+ei din `Eliminare Gaussiana.html`. Portarea nu schimbă nicio condiție: clipul rulează tot pe ceasul
+lui (`Clip`) și nu primește parametrii utilizatorului — exemplul desenat e fix (la pagina 1,
+factorizarea Doolittle exactă a matricei `A = [[1,2,3],[2,8,11],[3,22,42]]`).
 
 **Singura pagină cu clip care nu e scris în cod:**
 

@@ -168,6 +168,46 @@ ortonormate, iar `‖A − U S Vᵀ‖ ≈ 1·10⁻¹⁵`.
 
 ---
 
+## curs2, §5.3 — prima linie a lui `U` la Doolittle
+
+**Cursul scrie**, în lista de formule generale ale metodei Doolittle:
+
+```
+u_i1 = a_i1,   i = 1..n
+l_i1 = a_i1 / u_11,   i = 2..n
+```
+
+Prima linie e greșită: indicii sunt inversați. `u_i1` e **coloana** întâi a lui `U`, iar `U` e
+superior triunghiulară — `u_21` și `u_31` trebuie să fie 0, nu `a_21` și `a_31`. Corect e
+`u_1i = a_1i`: prima **linie** a lui `U` copiază prima linie a lui `A`.
+
+Cel mai probabil e o copiere din tiparul metodei Crout de deasupra (§5.2), unde `l_i1 = a_i1` chiar
+e o coloană și e corect așa.
+
+**Contradicție internă, în aceeași secțiune.** Sistemul 3×3 scris de curs cu două rânduri mai sus
+dă exact forma corectă: `u11 = a11`, `u12 = a12`, `u13 = a13` — prima linie. La fel scrie și
+curs4 §6.2: `u_1i = a_1i, i = 1 : n`.
+
+**Verificare.** Pe `A = [[1,2,3],[2,8,11],[3,22,42]]`, aplicând algoritmul Doolittle în cele două
+citiri:
+
+| citirea                       | `U`                          | `U` superior triunghiulară? | `L·U = A`? |
+| ----------------------------- | ---------------------------- | --------------------------- | ---------- |
+| `u_1i = a_1i` (corectă)       | `[[1,2,3],[0,4,5],[0,0,13]]` | da                          | **da**     |
+| `u_i1 = a_i1` (cum e tipărit) | `[[1,2,3],[2,4,5],[3,0,13]]` | **nu**                      | **nu**     |
+
+Cu varianta tipărită, produsul iese `[[1,2,3],[4,8,11],[14,22,42]]` — prima coloană e stricată încă
+de la al doilea element.
+
+**Ce s-a pus pe site.** Forma corectă, `u_1i = a_1i`, care e și cea din curs4 §6.2 — deci nu e o
+„corectură" a noastră, ci celălalt loc din aceleași cursuri unde formula e scrisă bine. Restul
+formulelor Doolittle (`l_ij` cu `1/u_jj`, `u_ij` fără împărțire), plus Crout și Cholesky, se verifică
+și rămân neatinse. **Concluzia cursului rămâne neatinsă**: Doolittle e factorizarea cu `l_ii = 1`,
+iar exemplul de pe pagina 1 e chiar ea, cu `L = [[1,0,0],[2,1,0],[3,4,1]]` și
+`U = [[1,2,3],[0,4,5],[0,0,13]]`, `Ly = b` dând `y = (6,9,13)` și `Ux = y` dând `x = (1,1,1)`.
+
+---
+
 ## curs8, §4 — deplasarea numărată de două ori
 
 **Cursul scrie**, în aceeași secțiune, două lucruri care nu pot fi adevărate deodată:

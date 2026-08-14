@@ -61,7 +61,7 @@ export type IntrareAlgoritm = {
 /**
  * Secțiunile cuprinsului, în ordinea în care apar pe pagină.
  *
- * „Valori proprii și valori singulare" s-a desprins din „Metode liniare",
+ * „Vectori și valori proprii" s-a desprins din „Metode liniare",
  * care ajunsese să țină jumătate din site. Grupul e coerent de la sine: toate
  * patru caută perechi vector–factor de scalare pentru o matrice (metodele
  * puterii și PageRank iterativ, QR prin factorizări repetate), iar DVS le duce
@@ -74,7 +74,7 @@ export const SECTIUNI: Record<Sectiune, { titlu: string; ordine: number }> = {
   liniare: { titlu: "Metode liniare", ordine: 1 },
   // Stă imediat după metodele liniare, adică exact unde stăteau paginile 8–11
   // înainte să se desprindă: cine răsfoiește cuprinsul le găsește în același loc.
-  "valori-proprii": { titlu: "Valori proprii și valori singulare", ordine: 2 },
+  "valori-proprii": { titlu: "Vectori și valori proprii", ordine: 2 },
   neliniare: { titlu: "Metode neliniare", ordine: 3 },
   "interpolare-integrare": { titlu: "Interpolare, integrare și ODE", ordine: 4 },
 };
@@ -116,7 +116,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "factorizari-lu",
     numar: 1,
-    titlu: "Cramer, LU, Doolittle, Crout, Cholesky",
+    titlu: "LU",
     capitol: "sisteme-liniare",
     descriere:
       "De ce Cramer devine imposibil pe matrici mari și cum spargerea în L și U rezolvă același sistem cu mult mai puțină muncă.",
@@ -470,7 +470,7 @@ export function getAlgoritmiPeSectiuni() {
  *
  * Cele două nu coincid: cuprinsul strânge paginile pe secțiuni, deci după
  * pagina 5 („Metode liniare") vine pagina 6, care e la „Metode neliniare", iar
- * după 7 se sare la „Valori proprii și valori singulare" cu pagina 8. E
+ * după 7 se sare la „Vectori și valori proprii" cu pagina 8. E
  * intenționat — numerotarea urmează ordinea cursului, iar gruparea din cuprins e
  * doar ajutor de răsfoit.
  */

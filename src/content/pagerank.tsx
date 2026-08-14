@@ -27,10 +27,9 @@ export const continutPagerank: ContinutPagina = {
     intro: (
       <>
         Întrebarea din spatele PageRank e „cât de importantă e o pagină web", iar răspunsul e o
-        <strong> valoare proprie</strong>. Se pornește de la un navigator care urmează link-uri la
-        întâmplare: importanța unei pagini e proporția din timp pe care el o petrece pe ea.
-        Proporția asta nu se mai schimbă de la un click la altul — și tocmai „nu se mai schimbă"
-        înseamnă vector propriu pentru λ = 1.
+        valoare din <strong>vectorul propriu</strong> al rețelei de link-uri. Se pornește de la un
+        navigator care urmează link-uri la întâmplare: importanța unei pagini e proporția din timp
+        pe care el o petrece pe ea pe termen lung.
       </>
     ),
 
@@ -55,13 +54,6 @@ export const continutPagerank: ContinutPagina = {
               { simbol: "aᵢⱼ", sens: <>1 dacă pagina i are link către pagina j</> },
               { simbol: "linia i", sens: <>toate link-urile care pleacă din pagina i</> },
             ],
-            explicatie: (
-              <>
-                Matricea de adiacență a exemplului din curs: P1 → &#123;P2, P3&#125;, P2 →
-                &#123;P3&#125;, P3 → &#123;P1, P4&#125;, P4 → &#123;P2&#125;. Se citește pe linii:
-                linia i spune încotro se poate pleca de pe pagina i.
-              </>
-            ),
           },
           {
             tip: "formula",
@@ -74,11 +66,9 @@ export const continutPagerank: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Cursul cere două lucruri deodată: normalizarea după numărul de link-uri de
-                <strong> ieșire</strong> și coloane care însumează 1. Link-urile de ieșire ale unei
-                pagini stau pe <strong>linia</strong> ei, deci împărțirea se face pe linii — iar
-                transpunerea e chiar pasul care mută cerința de pe linii pe coloane. Coloana j a lui
-                M spune unde ajunge cine e acum pe pagina j.
+                Link-urile care pleacă din pagina i stau pe <strong>linia</strong> i, deci
+                împărțirea se face pe linii. Transpunerea le mută pe coloane: coloana j spune unde
+                ajunge cine e acum pe pagina j.
               </>
             ),
           },
@@ -184,10 +174,7 @@ export const continutPagerank: ContinutPagina = {
     incheiere: (
       <>
         Ce rămâne, dacă rămâne un singur lucru: PageRank-ul nu e o formulă separată, ci{" "}
-        <strong>metoda puterii aplicată matricei Google</strong>. Viteza cu care se așază ponderile
-        e dată de raportul dintre a doua valoare proprie a lui <Mate>G</Mate> și prima; pentru{" "}
-        <Mate>d = 0,85</Mate> pe exemplul din curs, raportul e ≈ 0,74, iar apropierea nu e monotonă
-        — de la un pas la altul, o pondere poate și să se depărteze.
+        <strong>metoda puterii aplicată matricei Google</strong>.
       </>
     ),
   },

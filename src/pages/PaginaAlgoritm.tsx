@@ -6,6 +6,7 @@ import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registr
 import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmuluiQr";
 import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
+import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
@@ -56,6 +57,7 @@ const SECTIUNI_PAGINA = [
  * Aici o pagină e un rând; ce lipsește din rând rămâne schelet tăcut.
  */
 const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: ComponentType }> = {
+  "factorizari-lu": { vizual: AnimatiaFactorizariiLu },
   "ecuatii-neliniare": { interactiv: InterfataEcuatiiNeliniare },
   "eliminare-gaussiana": { vizual: AnimatiaEliminariiGaussiene },
   "metode-de-gradient": {

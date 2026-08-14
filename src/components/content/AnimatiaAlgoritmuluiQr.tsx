@@ -81,10 +81,17 @@ const IDENTITATE = [
   ["0", "0", "0", "1"],
 ];
 
-/** `p₁₁ = p₂₂ = cosΘ`, `p₁₂ = −p₂₁ = sinΘ` — convenția de semn e cea din curs. */
+/**
+ * `p₁₁ = p₂₂ = cosα`, `p₁₂ = −p₂₁ = sinα` — convenția de semn e cea din curs.
+ *
+ * **O redenumire, cifrele neatinse** (regula din CLAUDE.md): cursul scrie
+ * unghiul `Θ`, clipul îl scrie `α`. Litera grecească mare se citea prost la
+ * dimensiunea cerută aici, mai ales lipită de `sin` și `cos`; nimic altceva nu
+ * se schimbă.
+ */
 const P2_RANDURI = [
-  ["cosΘ", "sinΘ", "0", "0"],
-  ["−sinΘ", "cosΘ", "0", "0"],
+  ["cosα", "sinα", "0", "0"],
+  ["−sinα", "cosα", "0", "0"],
   ["0", "0", "1", "0"],
   ["0", "0", "0", "1"],
 ];
@@ -200,7 +207,7 @@ function Matrice({
   stari = {},
   opacitate,
   latura = 100,
-  corp = 27,
+  corp = 40,
   nume,
   eticheta,
   scara = 1,
@@ -211,7 +218,7 @@ function Matrice({
   const inaltime = randuri.length * latura + (randuri.length - 1) * SPATIU;
   const stanga = -latime / 2;
   const sus = -inaltime / 2;
-  const bratul = 18;
+  const bratul = 22;
 
   const celule = randuri.flatMap((rand, r) =>
     rand.map((text, c) => {
@@ -230,9 +237,9 @@ function Matrice({
               width={latura}
               height={latura}
               rx={10}
-              fill={`color-mix(in oklab, ${culoareRol(stare.inel ?? rol)} ${(16 * aprins).toFixed(1)}%, transparent)`}
+              fill={`color-mix(in oklab, ${culoareRol(stare.inel ?? rol)} ${(22 * aprins).toFixed(1)}%, transparent)`}
               stroke={culoareRol(stare.inel ?? rol)}
-              strokeWidth={2.5 * aprins}
+              strokeWidth={4 * aprins}
             />
           )}
           <text
@@ -241,7 +248,7 @@ function Matrice({
             textAnchor="middle"
             dominantBaseline="central"
             fill={culoareEticheta(rol)}
-            style={{ font: `600 ${corp * Math.min(st, 1.5)}px var(--font-mono)` }}
+            style={{ font: `600 ${corp * Math.min(st, 1.4)}px var(--font-mono)` }}
           >
             {text}
           </text>
@@ -254,12 +261,12 @@ function Matrice({
     <g transform={`translate(${x}, ${y}) scale(${scara})`} opacity={opacitate}>
       {/* Parantezele. Desenate cu linii, nu cu un font: la 1920 de unități, o
           paranteză tipografică s-ar subția până la dispariție. */}
-      <g stroke="var(--text)" strokeWidth={5} fill="none" strokeLinecap="square">
+      <g stroke="var(--text)" strokeWidth={6} fill="none" strokeLinecap="square">
         <path
-          d={`M ${stanga - 26 + bratul} ${sus - 16} H ${stanga - 26} V ${sus + inaltime + 16} H ${stanga - 26 + bratul}`}
+          d={`M ${stanga - 16 + bratul} ${sus - 9} H ${stanga - 16} V ${sus + inaltime + 9} H ${stanga - 16 + bratul}`}
         />
         <path
-          d={`M ${stanga + latime + 26 - bratul} ${sus - 16} H ${stanga + latime + 26} V ${sus + inaltime + 16} H ${stanga + latime + 26 - bratul}`}
+          d={`M ${stanga + latime + 16 - bratul} ${sus - 9} H ${stanga + latime + 16} V ${sus + inaltime + 9} H ${stanga + latime + 16 - bratul}`}
         />
       </g>
 
@@ -272,7 +279,7 @@ function Matrice({
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text)"
-          style={{ font: `800 ${34 * Math.min(st, 1.5)}px var(--font-sans)` }}
+          style={{ font: `800 ${40 * Math.min(st, 1.4)}px var(--font-sans)` }}
         >
           {nume}
         </text>
@@ -284,7 +291,7 @@ function Matrice({
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text-slab)"
-          style={{ font: `600 ${23 * Math.min(st, 1.6)}px var(--font-sans)` }}
+          style={{ font: `600 ${28 * Math.min(st, 1.5)}px var(--font-sans)` }}
         >
           {eticheta}
         </text>
@@ -302,7 +309,7 @@ function Antet({ opacitate, numar, titlu, st }: OpAntet) {
         y={84}
         fill={culoareEticheta("curent")}
         style={{
-          font: `700 ${22 * Math.min(st, 1.5)}px var(--font-mono)`,
+          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
           letterSpacing: "0.16em",
         }}
       >
@@ -312,7 +319,7 @@ function Antet({ opacitate, numar, titlu, st }: OpAntet) {
         x={120}
         y={144}
         fill="var(--text)"
-        style={{ font: `800 ${46 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{ font: `800 ${54 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
         {titlu}
       </text>
@@ -357,11 +364,11 @@ function Card({
       {rol && <rect width={6} height={inaltime} rx={3} fill={culoareRol(rol)} />}
       <text
         x={32}
-        y={inaltime / 2 - 22}
+        y={inaltime / 2 - 26}
         dominantBaseline="central"
         fill={rol ? culoareEticheta(rol) : "var(--text)"}
         style={{
-          font: `700 ${32 * Math.min(st, 1.4)}px var(--font-mono)`,
+          font: `700 ${38 * Math.min(st, 1.3)}px var(--font-mono)`,
           letterSpacing: "0.05em",
         }}
       >
@@ -369,10 +376,10 @@ function Card({
       </text>
       <text
         x={32}
-        y={inaltime / 2 + 28}
+        y={inaltime / 2 + 32}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${24 * Math.min(st, 1.5)}px var(--font-sans)` }}
+        style={{ font: `600 ${28 * Math.min(st, 1.4)}px var(--font-sans)` }}
       >
         {text}
       </text>
@@ -397,7 +404,7 @@ function Concluzie({
       textAnchor="middle"
       opacity={opacitate}
       fill="var(--text)"
-      style={{ font: `700 ${34 * Math.min(st, 1.3)}px var(--font-sans)` }}
+      style={{ font: `700 ${40 * Math.min(st, 1.25)}px var(--font-sans)` }}
     >
       {copii}
     </text>
@@ -461,7 +468,6 @@ function Desen() {
     stariColoana[`${j},0`] = { aprins: aAlege, inel: ROL_B };
   }
   const oProdus = oInmultire * intra(T, R_INMULTIRE + 2.2, 0.5);
-  const oAlegereUnghi = oInmultire * intra(T, R_INMULTIRE + 4.0, 0.6);
 
   const oRezultat = felie(T, R_REZULTAT, R_FINAL);
   const aStins = accent(T, R_REZULTAT + 0.5, 1.6);
@@ -482,9 +488,9 @@ function Desen() {
   const S = cue.Asemanare;
   const oPas = felie(T, S, cue.Convergenta);
   const proprietati = [
-    { text: "rămâne simetrică", la: S + 1.5 },
-    { text: "rămâne tridiagonală", la: S + 2.2 },
-    { text: "aceleași valori proprii", la: S + 2.9 },
+    { text: "Rămâne simetrică", la: S + 1.5 },
+    { text: "Rămâne tridiagonală", la: S + 2.2 },
+    { text: "Aceleași valori proprii", la: S + 2.9 },
   ];
 
   /* ── 5 · convergența ── */
@@ -522,46 +528,47 @@ function Desen() {
       {/* ═══ 1 · matricea de start ═══ */}
       <Antet opacitate={oObs} numar="1" titlu="Matricea de start" st={st} />
       <Matrice
-        x={animeaza({ dela: 760, la: 700, start: O, sfarsit: O + 1.6 })(T)}
-        y={560}
+        x={animeaza({ dela: 700, la: 640, start: O, sfarsit: O + 1.6 })(T)}
+        y={500}
         randuri={A_RANDURI}
         stari={stariObs}
         opacitate={oObs}
         latura={104}
+        corp={46}
         scara={0.92 + 0.08 * oObs}
-        eticheta="simetrică tridiagonală"
+        eticheta="Simetrică tridiagonală"
         st={st}
       />
       <g opacity={oObs * oDefinitii}>
         <Card
-          x={1180}
-          y={360}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={352}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, O + 0.9, 0.5)}
           rol={ROL_A}
           simbol="a₁ a₂ a₃ a₄"
-          text="elementele de pe diagonală"
+          text="Elementele de pe diagonală"
           st={st}
         />
         <Card
-          x={1180}
-          y={512}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={520}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, O + 3.6, 0.5)}
           rol={ROL_B}
           simbol="b₂ b₃ b₄"
-          text="vecinii diagonalei, la stânga și la dreapta"
+          text="Vecinii diagonalei, stânga și dreapta"
           st={st}
         />
       </g>
       <g opacity={oObs * oImplicatii}>
         <Card
-          x={1180}
-          y={380}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={372}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, O + 6.3, 0.5)}
           rol={ROL_B}
           simbol="b₂ = 0"
@@ -569,10 +576,10 @@ function Desen() {
           st={st}
         />
         <Card
-          x={1180}
-          y={532}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={540}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, O + 7.5, 0.5)}
           rol={ROL_B}
           simbol="b₄ = 0"
@@ -598,140 +605,130 @@ function Desen() {
       {/* 2a — ce este P₂ */}
       <Matrice
         x={960}
-        y={560}
+        y={500}
         randuri={rotita ? P2_RANDURI : IDENTITATE}
         stari={stariP}
         opacitate={oCeEste}
-        latura={112}
-        corp={26}
+        latura={116}
+        corp={34}
         nume="P₂"
-        eticheta={rotita ? "identitatea, cu patru elemente schimbate" : "matricea identitate"}
+        eticheta={rotita ? "Identitatea, cu patru elemente schimbate" : "Matricea identitate"}
         st={st}
       />
 
       {/* 2b — ce face înmulțirea */}
       <Matrice
-        x={420}
-        y={560}
+        x={400}
+        y={500}
         randuri={P2_RANDURI}
         stari={stariLinie}
         opacitate={oInmultire}
-        latura={94}
-        corp={22}
+        latura={106}
+        corp={30}
         nume="P₂"
-        eticheta="linia 2"
+        eticheta="Linia 2"
         st={st}
       />
       <text
-        x={730}
-        y={560}
+        x={716}
+        y={500}
         textAnchor="middle"
         dominantBaseline="central"
         opacity={oInmultire}
         fill="var(--text-slab)"
-        style={{ font: `600 ${44 * Math.min(st, 1.4)}px var(--font-mono)` }}
+        style={{ font: `600 ${52 * Math.min(st, 1.3)}px var(--font-mono)` }}
       >
         ·
       </text>
       <Matrice
         x={1010}
-        y={560}
+        y={500}
         randuri={A_RANDURI}
         stari={stariColoana}
         opacitate={oInmultire}
-        latura={94}
-        corp={24}
+        latura={106}
+        corp={36}
         nume="A"
-        eticheta="coloana 1"
+        eticheta="Coloana 1"
         st={st}
       />
       <g opacity={oProdus}>
         <text
-          x={1310}
-          y={560}
+          x={1330}
+          y={500}
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text-slab)"
-          style={{ font: `600 ${44 * Math.min(st, 1.4)}px var(--font-mono)` }}
+          style={{ font: `600 ${52 * Math.min(st, 1.3)}px var(--font-mono)` }}
         >
           →
         </text>
         <rect
-          x={1380}
-          y={470}
-          width={420}
-          height={190}
-          rx={14}
+          x={1418}
+          y={418}
+          width={466}
+          height={164}
+          rx={16}
           fill="var(--suprafata)"
           stroke={culoareRol(ROL_B)}
           strokeWidth={3}
         />
         <text
-          x={1590}
-          y={512}
+          x={1651}
+          y={468}
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text-slab)"
-          style={{ font: `600 ${21 * Math.min(st, 1.5)}px var(--font-sans)` }}
+          style={{ font: `600 ${25 * Math.min(st, 1.4)}px var(--font-sans)` }}
         >
-          noul element (2,1)
+          Noul element (2,1)
         </text>
         <text
-          x={1590}
-          y={566}
+          x={1651}
+          y={530}
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text)"
-          style={{ font: `700 ${30 * Math.min(st, 1.4)}px var(--font-mono)` }}
+          style={{ font: `700 ${32 * Math.min(st, 1.25)}px var(--font-mono)` }}
         >
-          −sinΘ · a₁ + cosΘ · b₂
-        </text>
-        <text
-          x={1590}
-          y={622}
-          textAnchor="middle"
-          dominantBaseline="central"
-          opacity={oAlegereUnghi}
-          fill="var(--text-slab)"
-          style={{ font: `600 ${21 * Math.min(st, 1.5)}px var(--font-sans)` }}
-        >
-          Θ se alege ca suma să fie 0
+          −sinα · a₁ + cosα · b₂
         </text>
       </g>
 
       {/* 2c — ce rămâne */}
       <Matrice
-        x={700}
-        y={560}
+        x={640}
+        y={500}
         randuri={P2A_RANDURI}
         stari={stariRezultat}
         opacitate={oRezultat}
         latura={104}
+        corp={46}
         nume="P₂A"
-        eticheta="aproape tridiagonală"
+        eticheta="Aproape tridiagonală"
         st={st}
       />
       <g opacity={oRezultat}>
         <Card
-          x={1180}
-          y={420}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={412}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, R_REZULTAT + 0.5, 0.45)}
           rol={ROL_STINS}
           simbol="(2,1) = 0"
-          text="b₂ de sub diagonală a fost eliminat"
+          text="Elementul de sub diagonală a dispărut"
           st={st}
         />
         <Card
-          x={1180}
-          y={572}
-          latime={620}
-          inaltime={124}
+          x={1140}
+          y={580}
+          latime={680}
+          inaltime={140}
           opacitate={intra(T, R_REZULTAT + 2.0, 0.45)}
           rol={ROL_NOU}
           simbol="(1,3) ≠ 0"
-          text="apare un element nou, deasupra diagonalei"
+          text="Apare un element nou, deasupra diagonalei"
           st={st}
         />
       </g>
@@ -739,54 +736,54 @@ function Desen() {
       {/* ═══ 3 · factorizarea ═══ */}
       <Antet opacitate={oFact} numar="3" titlu="Factorizarea A = QR" st={st} />
       <Matrice
-        x={392}
-        y={560}
+        x={350}
+        y={500}
         randuri={A_RANDURI}
         opacitate={oFact}
         nume="A"
-        eticheta="tridiagonală"
+        eticheta="Tridiagonală"
         st={st}
       />
       <text
-        x={690}
-        y={560}
+        x={645}
+        y={500}
         textAnchor="middle"
         dominantBaseline="central"
         opacity={Math.min(oFact, oQ)}
         fill="var(--text-slab)"
-        style={{ font: `600 ${44 * Math.min(st, 1.4)}px var(--font-mono)` }}
+        style={{ font: `600 ${52 * Math.min(st, 1.3)}px var(--font-mono)` }}
       >
         =
       </text>
       <Matrice
-        x={960}
-        y={560}
+        x={940}
+        y={500}
         randuri={Q_RANDURI}
         opacitate={oQ}
-        corp={24}
+        corp={40}
         nume="Q"
-        eticheta="ortogonală"
+        eticheta="Ortogonală"
         st={st}
       />
       <text
-        x={1244}
-        y={560}
+        x={1235}
+        y={500}
         textAnchor="middle"
         dominantBaseline="central"
         opacity={oR}
         fill="var(--text-slab)"
-        style={{ font: `600 ${44 * Math.min(st, 1.4)}px var(--font-mono)` }}
+        style={{ font: `600 ${52 * Math.min(st, 1.3)}px var(--font-mono)` }}
       >
         ·
       </text>
       <Matrice
-        x={1528}
-        y={560}
+        x={1530}
+        y={500}
         randuri={R_RANDURI}
         opacitate={oR}
-        corp={24}
+        corp={40}
         nume="R"
-        eticheta="superior triunghiulară"
+        eticheta="Superior triunghiulară"
         st={st}
       />
       <Concluzie
@@ -799,13 +796,13 @@ function Desen() {
       <Antet opacitate={oPas} numar="4" titlu="Pasul iterației" st={st} />
       <text
         x={W / 2}
-        y={500}
+        y={470}
         textAnchor="middle"
         dominantBaseline="central"
         opacity={oPas}
         fill="var(--text)"
         style={{
-          font: `700 ${56 * Math.min(st, 1.25)}px var(--font-mono)`,
+          font: `700 ${66 * Math.min(st, 1.2)}px var(--font-mono)`,
           letterSpacing: "-0.03em",
         }}
       >
@@ -814,27 +811,27 @@ function Desen() {
       <g opacity={oPas}>
         {proprietati.map((p, i) => {
           const o = intra(T, p.la, 0.45);
-          const lat = 430;
+          const lat = 476;
           const x = W / 2 + (i - 1) * (lat + 28) - lat / 2;
           return (
             <g key={p.text} opacity={o} transform={`translate(0, ${(1 - o) * 14})`}>
               <rect
                 x={x}
-                y={640}
+                y={618}
                 width={lat}
-                height={86}
-                rx={43}
+                height={98}
+                rx={49}
                 fill="var(--suprafata)"
                 stroke="var(--bordura)"
                 strokeWidth={2}
               />
               <text
                 x={x + lat / 2}
-                y={684}
+                y={667}
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill="var(--text)"
-                style={{ font: `600 ${26 * Math.min(st, 1.4)}px var(--font-sans)` }}
+                style={{ font: `600 ${30 * Math.min(st, 1.3)}px var(--font-sans)` }}
               >
                 <tspan fill={culoareEticheta(ROL_STINS)}>✓ </tspan>
                 {p.text}
@@ -847,12 +844,13 @@ function Desen() {
       {/* ═══ 5 · convergența ═══ */}
       <Antet opacitate={oConv} numar="5" titlu="Convergența" st={st} />
       <Matrice
-        x={780}
-        y={560}
+        x={700}
+        y={500}
         randuri={randuriConv}
         stari={stariConv}
         opacitate={oConv}
         latura={104}
+        corp={46}
         eticheta="A⁽ⁱ⁾ a devenit diagonală"
         st={st}
       />
@@ -860,14 +858,14 @@ function Desen() {
         {["λ₁", "λ₂", "λ₃", "λ₄"].map((l, i) => (
           <Card
             key={l}
-            x={1250}
-            y={340 + i * 122}
-            latime={540}
-            inaltime={98}
+            x={1240}
+            y={326 + i * 128}
+            latime={580}
+            inaltime={112}
             opacitate={intra(T, V + 1.9 + i * 0.28, 0.4)}
             rol={ROL_STINS}
             simbol={l}
-            text={`valoare proprie ${i + 1}`}
+            text={`Valoarea proprie ${i + 1}`}
             st={st}
           />
         ))}
@@ -901,16 +899,16 @@ const SUBTITRARI = [
   { la: CUE.Rotatii + 0.3, text: "Pornim de la matricea identitate." },
   {
     la: CUE.Rotatii + 1.8,
-    text: "P₂ schimbă doar patru elemente, în liniile 1 și 2: cosΘ, sinΘ, −sinΘ, cosΘ.",
+    text: "P₂ schimbă doar patru elemente, în liniile 1 și 2: cosα, sinα, −sinα, cosα.",
   },
   {
     la: CUE.Rotatii + 4.5,
     text: "Înmulțim P₂ cu A: fiecare element nou este o linie a lui P₂ ori o coloană a lui A.",
   },
-  { la: CUE.Rotatii + 7.4, text: "Elementul (2,1) iese −sinΘ·a₁ + cosΘ·b₂." },
+  { la: CUE.Rotatii + 7.4, text: "Elementul (2,1) iese −sinα·a₁ + cosα·b₂." },
   {
     la: CUE.Rotatii + 9.8,
-    text: "Unghiul Θ se alege exact astfel încât acest element să devină 0.",
+    text: "Unghiul α se alege exact astfel încât acest element să devină 0.",
   },
   {
     la: CUE.Rotatii + 12.0,
@@ -955,7 +953,7 @@ export function AnimatiaAlgoritmuluiQr() {
         "simetrică tridiagonală, cu a₁…a₄ pe diagonală și b₂…b₄ vecine, și de la observația că un b " +
         "nul face din a-ul de lângă el o valoare proprie. Urmează rotația Givens P₂ — identitatea cu " +
         "patru elemente schimbate —, înmulțirea P₂·A din care iese noul element (2,1) egal cu " +
-        "−sinΘ·a₁ + cosΘ·b₂, și unghiul ales exact cât să-l anuleze; în locul lui apare un element " +
+        "−sinα·a₁ + cosα·b₂, și unghiul ales exact cât să-l anuleze; în locul lui apare un element " +
         "nou deasupra diagonalei. Din toate rotațiile se obțin Q ortogonală și R superior " +
         "triunghiulară, iar înmulțite în ordine inversă dau pasul următor, care păstrează simetria, " +
         "banda tridiagonală și valorile proprii. La final b-urile se sting și pe diagonală rămân " +
