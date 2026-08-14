@@ -544,6 +544,12 @@ atare. Aceleași două condiții: rulează pe ceasul lui (`Clip`) și nu primeș
 utilizatorului — transformarea desenată e fixă, DVS-ul exact al matricei `A = [[1, 2], [0, 1]]`.
 Pagina **nu primește** secțiune „Interactiv": geometria cerc → elipsă se înțelege din clip.
 
+**Excepția 6: pagina 1** (`factorizari-lu`) — la fel ca paginile 7, 9, 10 și 11: secțiunea „Vizual"
+există, dar clipul e **scris în cod** (`AnimatiaFactorizariiLu`), fiindcă a venit gata făcut ca
+animație web (`Animatie_LU.html`) și s-a portat ca atare. Aceleași două condiții: rulează pe ceasul
+lui (`Clip`) și nu primește parametrii utilizatorului — exemplul desenat e fix, factorizarea
+Doolittle exactă a matricei `A = [[1,2,3],[2,8,11],[3,22,42]]`.
+
 **Excepția 1: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
 Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
 doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,
