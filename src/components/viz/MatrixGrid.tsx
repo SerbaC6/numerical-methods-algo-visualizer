@@ -28,6 +28,12 @@ export type MatrixGridProps = {
   /** Rezumatul textual al matricei. Dacă lipsește, se compune automat. */
   descriere?: string;
   formateaza?: (x: number) => string;
+  /**
+   * Cât de mari sunt cifrele. `normal` e mărimea de tabel, bună când matricea
+   * stă lângă mult text; `mare` e pentru când matricea **e** subiectul zonei și
+   * are loc — altfel arată ca o notă de subsol lângă o formulă de 20 px.
+   */
+  corp?: "normal" | "mare";
   className?: string;
 };
 
@@ -148,6 +154,7 @@ export function MatrixGrid({
   titlu,
   descriere,
   formateaza = formatImplicit,
+  corp = "normal",
   className,
 }: MatrixGridProps) {
   const areEtichetaColoane = etichetaColoane !== undefined;
@@ -207,7 +214,10 @@ export function MatrixGrid({
           accesibilitate; rolurile o pun la loc.
         */}
         <div
-          className="grid w-max items-stretch gap-1 font-mono text-sm tabular-nums"
+          className={cn(
+            "grid w-max items-stretch gap-1 font-mono tabular-nums",
+            corp === "mare" ? "gap-1.5 text-lg" : "text-sm",
+          )}
           style={{ gridTemplateColumns: sabloanColoane }}
         >
           <Paranteza parte="stanga" coloana={colParantezaStanga} linii={liniiDate} />

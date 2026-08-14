@@ -76,16 +76,16 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
  */
 export function TeorieScurta({ continut }: { continut: TeorieScurtaContinut }) {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10">
       <p className="text-text text-xl leading-relaxed">{continut.intro}</p>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {continut.metode.map((metoda) => (
           <article
             key={metoda.id}
             id={metoda.id}
             aria-labelledby={`titlu-${metoda.id}`}
-            className="bg-suprafata border-bordura shadow-jos flex scroll-mt-20 flex-col gap-4 rounded-xl border p-6"
+            className="bg-suprafata border-bordura shadow-jos flex scroll-mt-20 flex-col gap-6 rounded-xl border p-6 sm:p-8"
           >
             <header className="flex flex-col gap-2">
               <h3 id={`titlu-${metoda.id}`} className="text-sectiune font-bold">
@@ -98,7 +98,7 @@ export function TeorieScurta({ continut }: { continut: TeorieScurtaContinut }) {
               </p>
             </header>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               {metoda.blocuri.map((bloc, i) => (
                 <Bloc key={i} bloc={bloc} />
               ))}

@@ -135,7 +135,9 @@ export default function PaginaAlgoritm() {
         {/* Fără anunț de „pagină în lucru”: scheletele de mai jos țin locul
             conținutului în tăcere. Cursul-sursă e în `registry.ts` și în
             tabelul din Faza 7 din `Progress.md`. */}
-        <div className="flex flex-col gap-8">
+        {/* Secțiunile stau depărtate: pe paginile pline (clip, teorie, interfață)
+            respirația dintre ele e singurul lucru care le ține separate vizual. */}
+        <div className="flex flex-col gap-14">
           {sectiuni.map((s) => {
             // Secțiunea are conținut? Îl arătăm. Dacă nu, rămâne scheletul —
             // fără nicio etichetă care să spună că lipsește ceva.
@@ -154,11 +156,11 @@ export default function PaginaAlgoritm() {
                   {s.titlu}
                 </h2>
                 {scris ? (
-                  <div className="mt-4">
+                  <div className="mt-6">
                     <TeorieScurta continut={scris} />
                   </div>
                 ) : Piesa ? (
-                  <div className="mt-4">
+                  <div className="mt-6">
                     <Piesa />
                   </div>
                 ) : (

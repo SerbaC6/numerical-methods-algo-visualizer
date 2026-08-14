@@ -597,7 +597,10 @@ Ce există:
   fonturile proiectului n-au glifele acelea.
 
 - **Interfața interactivă**, `src/components/content/InterfataMetodeIterative.tsx`, cu
-  `GraficConvergenta` alături. Are **două derulări**: bara de jos merge pe iterații, butoanele de
+  `GraficConvergenta` alături. **Fără tabel de iterații**, scos la cerere: pe o pagină care are deja
+  clip, teorie, matrice, formulă și grafic, șaizeci de rânduri de cifre erau blocul care încărca
+  fără să adauge — graficul spune același lucru dintr-o privire, iar cifrele exacte se citesc din
+  vectorul pasului curent. Are **două derulări**: bara de jos merge pe iterații, butoanele de
   linie merg înăuntrul unei iterații — acolo unde Jacobi și Gauss-Seidel chiar diferă. Matricea
   `[A|b]` și cele două coloane de valori sunt amândouă `MatrixGrid`, deci tipografia e aceeași ca
   peste tot; starea celulei spune **de unde vine cifra**, nu doar ce cifră e. Graficul arată toate

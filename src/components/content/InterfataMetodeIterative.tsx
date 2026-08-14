@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
-import { IterationTable } from "@/components/viz/IterationTable";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { MatrixGrid, type StareCelula } from "@/components/viz/MatrixGrid";
 import { Notatie } from "@/components/viz/Notatie";
@@ -20,7 +19,7 @@ import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
 import { StepExplanation } from "@/components/viz/StepExplanation";
 import { useDerulare } from "@/hooks/use-derulare";
-import { stiintific, zecimale } from "@/lib/numere";
+import { zecimale } from "@/lib/numere";
 
 const METODE = [
   { id: "jacobi", titlu: "Jacobi", modul: jacobi },
@@ -165,7 +164,7 @@ export function InterfataMetodeIterative() {
     : [];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <Legend elemente={LEGENDA} />
 
       <Tabs
@@ -186,13 +185,14 @@ export function InterfataMetodeIterative() {
 
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,26%,380px)]">
-          <div className="flex min-w-0 flex-col gap-6 p-4 sm:p-5">
+          <div className="flex min-w-0 flex-col gap-10 p-6 sm:p-8">
             {pas ? (
               <>
-                <div className="flex flex-wrap items-start gap-8">
+                <div className="flex flex-wrap items-start gap-10 sm:gap-14">
                   <MatrixGrid
                     valori={valoriMatrice}
                     titlu="A | b"
+                    corp="mare"
                     separatorColoana={2}
                     linieActiva={linieCurenta}
                     descriere={`Sistemul, cu linia ${linieCurenta + 1} în lucru.`}
@@ -201,6 +201,7 @@ export function InterfataMetodeIterative() {
                     valori={valoriVectori}
                     stari={stariVectori}
                     titlu="Vectorul x"
+                    corp="mare"
                     etichetaColoane={["vechi", "nou"]}
                     etichetaLinii={["x₁", "x₂", "x₃"]}
                     linieActiva={linieCurenta}
@@ -406,28 +407,6 @@ export function InterfataMetodeIterative() {
         toleranta={tol}
         iteratiaCurenta={derulare.pas}
       />
-
-      {rezultat.pasi.length > 0 && (
-        <IterationTable
-          coloane={[
-            { cheie: "x", titlu: "x⁽ᵏ⁾", descriere: "Vectorul de la sfârșitul baleiajului" },
-            { cheie: "eroare", titlu: "‖Δx‖∞", descriere: "Criteriul de oprire" },
-            {
-              cheie: "abatere",
-              titlu: "‖x⁽ᵏ⁾ − x*‖∞",
-              descriere: "Distanța până la soluția exactă, calculată separat",
-            },
-          ]}
-          randuri={rezultat.pasi.map((p) => ({
-            x: `(${p.x.map((v) => zecimale(v, 4)).join("; ")})`,
-            eroare: stiintific(p.eroare, 2),
-            abatere: stiintific(p.abatere, 2),
-          }))}
-          randCurent={derulare.pas}
-          primaIteratie={1}
-          onAlegeRand={derulare.setPas}
-        />
-      )}
     </div>
   );
 }
@@ -442,10 +421,9 @@ export function InterfataMetodeIterative() {
 const LEGENDA: ElementLegenda[] = [
   {
     rol: "curent",
-    eticheta: "valorile pe care le citește linia curentă",
+    eticheta: "valorile citite de linia curentă",
     forma: "celula",
-    explicatie:
-      "La Jacobi vin toate din coloana veche; la Gauss-Seidel, cele de deasupra sunt deja rescrise.",
+    explicatie: "La Gauss-Seidel, cele de deasupra diagonalei sunt deja rescrise.",
   },
   { rol: "anterior", eticheta: "valori neatinse de linia curentă", forma: "celula" },
   { rol: "interval", eticheta: "linia pe care se lucrează", forma: "zona" },
