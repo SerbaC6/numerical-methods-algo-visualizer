@@ -191,7 +191,9 @@ export const continutMetodeIterative: ContinutPagina = {
                 Dominanța diagonală e o condiție <strong>suficientă, dar nu necesară</strong>: dacă
                 e îndeplinită, metodele converg din orice pornire; dacă nu e, ele încă pot să
                 conveargă — sau nu. Se verifică dintr-o privire, spre deosebire de <Mate>ρ(G)</Mate>
-                , care cere valorile proprii.
+                , care cere valorile proprii. Inegalitatea e strictă: pe primul sistem al paginii,
+                linia a doua stă exact la egalitate, deci condiția nu e îndeplinită — și totuși
+                amândouă metodele converg.
               </>
             ),
           },
@@ -307,13 +309,13 @@ export const continutMetodeIterative: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                <strong>Merită schimbul?</strong> De obicei da, și se vede pe cifre. Pe sistemul
-                dominant diagonal al paginii, Jacobi are <Mate>ρ = 0,6072</Mate> și termină în 33 de
-                iterații, iar Gauss-Seidel <Mate>ρ = 0,4082</Mate> și 23. Pe al doilea sistem,
-                diferența nu mai e de viteză, ci de existență: <Mate>ρ(Jacobi) = 1</Mate> exact,
-                deci eroarea nu se micșorează niciodată — vectorul oscilează la nesfârșit —, în timp
-                ce Gauss-Seidel ajunge la soluție în 20 de iterații. <strong>Nu e o regulă</strong>:
-                există sisteme pe care Jacobi converge și Gauss-Seidel nu.
+                <strong>Merită schimbul?</strong> De obicei da, și se vede pe cifre. Pe primul
+                sistem al paginii, Jacobi are <Mate>ρ = 0,6072</Mate> și termină în 33 de iterații,
+                iar Gauss-Seidel <Mate>ρ = 0,4082</Mate> și 23. Pe al doilea sistem, diferența nu
+                mai e de viteză, ci de existență: <Mate>ρ(Jacobi) = 1</Mate> exact, deci eroarea nu
+                se micșorează niciodată — vectorul oscilează la nesfârșit —, în timp ce Gauss-Seidel
+                ajunge la soluție în 20 de iterații. <strong>Nu e o regulă</strong>: există sisteme
+                pe care Jacobi converge și Gauss-Seidel nu.
               </>
             ),
           },

@@ -614,8 +614,9 @@ Ce **nu** e făcut încă:
 
 - [ ] **Verificare cu ochiul pe telefon real.** Clipul a fost văzut pe cadru lat, scenă cu scenă,
       pe tema întunecată; scenele 5 și 6 au fost verificate prin conținutul desenat, nu cu ochiul
-      (browserul refuza capturile). Interfața a fost verificată pe cadru lat, pe tema întunecată,
-      cu două dintre cele trei sisteme. Tema luminoasă și portretul n-au fost văzute încă.
+      (browserul refuza capturile). Interfața a fost văzută pe cadru lat, în **ambele teme**, cu
+      toate trei sistemele și cu `ω` schimbat — la `ω = 0,935` iese `ρ = 0,3912` și 22 de iterații,
+      adică exact cifrele din verificarea numerică. Portretul n-a fost văzut încă.
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 

@@ -7,11 +7,15 @@
  * cap. Sunt și cele două cazuri de care are nevoie pagina, exact în ordinea în
  * care trebuie citite:
  *
- * 1. **Sistemul care merge.** Dominant diagonal (cu excepția liniei a doua, unde
- *    e egalitate), cu `ρ(Jacobi) = 0,6072` și `ρ(Gauss-Seidel) = 0,4082`, deci
- *    ilustrează afirmația din §5.1: când amândouă converg, Gauss-Seidel e mai
- *    rapid. Măsurat de la `x⁰ = 0`, la toleranța `10⁻⁸`: **33** de iterații
- *    Jacobi, **23** Gauss-Seidel.
+ * 1. **Sistemul pe care merg amândouă**, cu `ρ(Jacobi) = 0,6072` și
+ *    `ρ(Gauss-Seidel) = 0,4082`: măsurat de la `x⁰ = 0`, la toleranța `10⁻⁸`,
+ *    ies **33** de iterații Jacobi și **23** Gauss-Seidel.
+ *
+ *    Atenție la etichetă: diagonala domină **strict** doar pe liniile 1 și 3, pe
+ *    a doua fiind egalitate (`|4| = |1| + |3|`). Deci sistemul **nu** îndeplinește
+ *    condiția suficientă de convergență — și converge oricum. E chiar dovada că
+ *    dominanța diagonală e suficientă, nu necesară, motiv pentru care butonul lui
+ *    nu se numește „dominant diagonal".
  * 2. **Sistemul care blochează Jacobi.** Aici `ρ(Jacobi) = 1` exact — vectorul
  *    oscilează la nesfârșit între `(0, 0, 0)` și `(2, 2, 2)` —, în timp ce
  *    Gauss-Seidel ajunge la soluția `(1, 1, 1)` în **20** de iterații, cu
@@ -130,7 +134,7 @@ const ALTA_ORDINE: ValoriSistem = {
 export const SISTEM_IMPLICIT: ValoriSistem = DOMINANT;
 
 export const SISTEME: readonly { id: string; eticheta: string; valori: ValoriSistem }[] = [
-  { id: "dominant", eticheta: "Dominant diagonal", valori: DOMINANT },
+  { id: "dominant", eticheta: "Amândouă converg", valori: DOMINANT },
   { id: "blocat", eticheta: "Jacobi se blochează", valori: JACOBI_BLOCAT },
   { id: "alta-ordine", eticheta: "Aceleași ecuații, altă ordine", valori: ALTA_ORDINE },
 ] as const;
