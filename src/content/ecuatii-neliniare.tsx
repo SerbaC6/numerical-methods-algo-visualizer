@@ -1,3 +1,4 @@
+import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
@@ -48,8 +49,8 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Condiția de pornire e f(a)·f(b) &lt; 0: semne opuse la capete înseamnă că o funcție
-                continuă trece prin zero între ele.
+                Condiția de pornire e <Mate>{"f(a)·f(b) < 0"}</Mate>: semne opuse la capete înseamnă
+                că o funcție continuă trece prin zero între ele.
               </>
             ),
           },
@@ -76,7 +77,11 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
       {
         id: "puncte-fixe",
         titlu: "Puncte fixe",
-        esenta: <>Rescrie ecuația ca „x = g(x)" și aplică g la nesfârșit.</>,
+        esenta: (
+          <>
+            Rescrie ecuația ca <Mate>x = g(x)</Mate> și aplică <Mate>g</Mate> la nesfârșit.
+          </>
+        ),
         blocuri: [
           {
             tip: "formula",
@@ -85,15 +90,20 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
             legenda: [
               {
                 simbol: "g",
-                sens: <>funcția de iterație, obținută rescriind ecuația ca x = g(x)</>,
+                sens: (
+                  <>
+                    funcția de iterație, obținută rescriind ecuația ca <Mate>x = g(x)</Mate>
+                  </>
+                ),
               },
               { simbol: "pₙ₋₁", sens: <>valoarea de la pasul anterior</> },
               { simbol: "pₙ", sens: <>valoarea nouă, adică g aplicată celei anterioare</> },
             ],
             explicatie: (
               <>
-                Converge doar dacă g strânge distanțele, adică dacă |g′(x)| &lt; k &lt; 1 pe tot
-                intervalul. Atunci punctul fix e unic și se ajunge la el din orice punct de pornire.
+                Converge doar dacă <Mate>g</Mate> strânge distanțele, adică dacă{" "}
+                <Mate>{"|g′(x)| < k < 1"}</Mate> pe tot intervalul. Atunci punctul fix e unic și se
+                ajunge la el din orice punct de pornire.
               </>
             ),
           },

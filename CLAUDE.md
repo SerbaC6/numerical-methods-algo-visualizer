@@ -48,6 +48,35 @@ Inspirația pentru animații și interfețe poate veni de oriunde — formulele 
 Fiecare interfață interactivă trebuie să aibă legendă și să facă paralela explicită
 formulă ↔ animație (ce parte din formulă corespunde cărui element vizual).
 
+### Matematica din proză se scrie cu `Mate`, nu ca text obișnuit
+
+Orice simbol sau expresie care apare **în mijlocul unei propoziții** —
+`A·x = b`, `r⁽ᵏ⁾`, `−⟨v⁽ᵏ⁾, A·r⁽ᵏ⁾⟩ / ⟨v⁽ᵏ⁾, A·v⁽ᵏ⁾⟩`, `|g′(x)| < k < 1` — se înfășoară în
+[`Mate`](./src/components/viz/Notatie.tsx). Regula se aplică la **„Teoria pe scurt" de pe orice
+pagină**, la explicațiile din legende, la callout-uri și la câmpul `sens` al literelor.
+
+Ce face `Mate`, și de ce fiecare bucată:
+
+- **font mono** — desparte formula de proză fără să strige; e aceeași convenție ca la valorile
+  numerice și la tabelele de iterații;
+- **1,12 em** — mono la aceeași măsură cu textul din jur _pare_ mai mic, iar aici tocmai
+  lizibilitatea era problema;
+- **trece prin `Notatie`** — altfel exponenții și indicii cad pe fontul de sistem. Fonturile
+  proiectului conțin **trei** din cele 38 de caractere de exponent/indice folosite (`¹`, `²`, `³`, și
+  alea doar fiindcă sunt în Latin-1); restul, inclusiv `⁽ ⁾ ⁰ ᵏ ₁ ₂`, nu există în ele. Măsurat cu
+  fontTools pe toate fișierele din `public/fonts/`.
+
+**Nu se folosește pentru formula care e subiectul blocului.** Aceea rămâne `FormulaBlock`, cu ramă,
+spațiu și corp mare. `Mate` e pentru ce curge printre cuvinte. Regula practică: dacă propoziția se
+poate citi fără formulă, formula e inline; dacă formula e ce trebuie reținut, e încadrată.
+
+**Nici pentru cuvinte.** Etichetele care sunt cuvinte („Toleranța", „Iterații maxime") rămân în
+Nunito Sans — un cuvânt scris mono arată ca o scăpare. `NumberInput` decide singur, cu `esteSimbol()`.
+
+Când mărești ceva, verifică ce se rupe: la trecerea asta, `Input` din shadcn a ținut cifrele la 14 px
+(are `md:text-sm` în clasa de bază), „1e-8" plus unitatea n-a mai încăput în jumătate de coloană, iar
+„a₁₂ = a₂₁" s-a rupt pe două rânduri. Toate trei s-au văzut abia în browser, nu în cod.
+
 **Nicio trimitere la curs în interfață.** Pe site nu se scrie niciodată „curs6 §4.2", „curs 5, §8.4",
 „Algorithm 4", „Figura 1 din laborator" sau orice altă indicație de unde vine o formulă. Nici în
 teorie, nici în legendă, nici în explicația unui pas, nici în descrierea unei coloane de tabel, nici

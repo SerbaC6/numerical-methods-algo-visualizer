@@ -54,7 +54,14 @@ export const continutMetodeDeGradient: ContinutPagina = {
             sursa: "curs 6, §4",
             legenda: [
               { simbol: "A", sens: <>matricea sistemului, simetrică și pozitiv definită</> },
-              { simbol: "b", sens: <>termenul liber al sistemului A·x = b</> },
+              {
+                simbol: "b",
+                sens: (
+                  <>
+                    termenul liber al sistemului <Mate>A·x = b</Mate>
+                  </>
+                ),
+              },
               { simbol: "x", sens: <>vectorul necunoscut, adică punctul de pe „vale"</> },
             ],
             explicatie: (
@@ -72,7 +79,11 @@ export const continutMetodeDeGradient: ContinutPagina = {
             legenda: [
               {
                 simbol: "r⁽ᵏ⁾",
-                sens: <>reziduul: cât îi mai lipsește lui x⁽ᵏ⁾ ca să verifice sistemul</>,
+                sens: (
+                  <>
+                    reziduul: cât îi mai lipsește lui <Mate>x⁽ᵏ⁾</Mate> ca să verifice sistemul
+                  </>
+                ),
               },
               { simbol: "x⁽ᵏ⁾", sens: <>aproximarea de la pasul k</> },
               { simbol: "−∇f", sens: <>direcția de scădere maximă a funcției</> },
@@ -229,15 +240,5 @@ export const continutMetodeDeGradient: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Animația de mai sus arată partea grea a coborârii: pasul cel mai abrupt te duce în valea de
-        lângă tine. Pe un sistem <Mate>A·x = b</Mate> cu A simetrică pozitiv definită valea e una
-        singură, deci capcana dispare — rămâne cealaltă problemă, viteza. Acolo se vede diferența:
-        coborârea alege de fiecare dată direcția de moment și coboară în trepte spre soluție, în
-        timp ce direcțiile conjugate țin minte pe unde s-a mers și termină în cel mult n pași.
-      </>
-    ),
   },
 };

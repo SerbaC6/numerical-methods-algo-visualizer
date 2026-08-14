@@ -1,3 +1,4 @@
+import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
@@ -172,7 +173,7 @@ export const continutPagerank: ContinutPagina = {
                 Ultima linie a algoritmului, și singura care schimbă norma: până aici v a fost ținut
                 de lungime 1, iar acum se împarte la suma componentelor. Abia după pasul ăsta
                 cifrele se pot citi ca procente — de aceea ponderile desenate sub noduri sunt tot
-                timpul raportul v/‖v‖₁, nu v însuși.
+                timpul raportul <Mate>v/‖v‖₁</Mate>, nu <Mate>v</Mate> însuși.
               </>
             ),
           },
@@ -184,9 +185,9 @@ export const continutPagerank: ContinutPagina = {
       <>
         Ce rămâne, dacă rămâne un singur lucru: PageRank-ul nu e o formulă separată, ci{" "}
         <strong>metoda puterii aplicată matricei Google</strong>. Viteza cu care se așază ponderile
-        e dată de raportul dintre a doua valoare proprie a lui G și prima; pentru d = 0,85 pe
-        exemplul din curs, raportul e ≈ 0,74, iar apropierea nu e monotonă — de la un pas la altul,
-        o pondere poate și să se depărteze.
+        e dată de raportul dintre a doua valoare proprie a lui <Mate>G</Mate> și prima; pentru{" "}
+        <Mate>d = 0,85</Mate> pe exemplul din curs, raportul e ≈ 0,74, iar apropierea nu e monotonă
+        — de la un pas la altul, o pondere poate și să se depărteze.
       </>
     ),
   },
