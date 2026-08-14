@@ -533,7 +533,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 14  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 15  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
-| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 17  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -552,6 +552,38 @@ Ating **toate** paginile cu secțiune „Vizual", deci nu stau la niciuna dintre
   doar pentru `<video>` — rămâne un strat fix peste pagină, cu aceleași comenzi. Escape închide
   amândouă variantele. Pe tot ecranul cadrul renunță la 16:9 și ia toată suprafața: SVG-ul se
   centrează singur, fără să se deformeze.
+
+### Pagina 16 — `derivare-numerica`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/derivare-numerica/`: cele patru formule pentru derivata întâi
+  plus cea pentru derivata a doua, fiecare cu nodurile, coeficienții și termenul de eroare din curs
+  (`formule.ts`), și baleierea după `h` cu eroarea **măsurată**, nu mărginită (`eroare.ts`).
+  Nu are `run(params)` cu pași, fiindcă aici nu există iterație: ce se schimbă e `h`.
+- **Verificarea numerică**, `scripts/verificare-algoritmi/derivare-numerica.ts`, pe modulele reale:
+  fiecare formulă are `Σcₖ = 0` și e exactă pe polinoamele de grad ≤ ordinul ei; ordinul erorii e
+  **măsurat ca pantă** pe log-log (`1,0045`, `0,9953`, `2,0000`, `1,9949`); formula înapoi e chiar
+  cea înainte cu `h` schimbat de semn, la `0` diferență; iar capcana din finalul cursului e
+  reprodusă: pe `sin` în `0,6`, formula înainte coboară la `7,6·10⁻⁹` la `h ≈ 1,2·10⁻⁸` și urcă
+  înapoi la `3,8·10⁻³` la `h = 10⁻¹⁴`. `h` optim măsurat cade lângă cel teoretic (`1,2` față de
+  `1,5·10⁻⁸`; `5,6` față de `6,9·10⁻⁶`).
+- **Teoria**, `src/content/derivare-numerica.tsx`: definiția și formula two-point cu eroarea ei,
+  formula generală cu `n+1` puncte, cele două formule cu trei puncte, derivata a doua și — cel mai
+  important — inegalitatea `ε/h + h²M/6`, cu locul unde e minimul.
+- **Clipul**, `AnimatiaDerivarii`: secanta care se rotește peste tangentă, formula simetrică și, la
+  final, curba erorii în formă de V. **Funcția clipului e cubica**, nu o parabolă: pe polinoame de
+  grad ≤ 2 formulele cu trei puncte sunt exacte, iar scena a treia ar fi arătat o eroare de `10⁻¹⁶`
+  și o curbă fără pantă — exact ce trebuia văzut ar fi dispărut.
+- **Interfața**, `InterfataDerivareNumerica`, cu `GraficEroareH` alături: două desene legate de
+  același cursor — sus geometria (tangenta adevărată punctată, dreapta metodei plină, nodurile
+  marcate), jos eroarea pe log-log. Cursorul mută **exponentul** lui `h`, nu valoarea: altfel tot
+  ce contează s-ar înghesui în ultimul pixel de lângă zero.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Verificare cu ochiul pe telefon real.** Pe cadru lat, în tema întunecată, clipul și
+      interfața au fost văzute scenă cu scenă; tema luminoasă și portretul, nu.
 
 ### Pagina 2 — `norme-si-ortogonalitate`, ce e gata și ce nu
 

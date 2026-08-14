@@ -1,3 +1,4 @@
+import { continutDerivareNumerica } from "@/content/derivare-numerica";
 import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
@@ -18,6 +19,7 @@ import type { ContinutPagina } from "@/content/tipuri";
  * tăcut. Nicio etichetă de „în lucru" nu ajunge în interfață (vezi CLAUDE.md).
  */
 const CONTINUT: Partial<Record<string, ContinutPagina>> = {
+  "derivare-numerica": continutDerivareNumerica,
   dvs: continutDvs,
   "algoritmul-qr": continutAlgoritmulQr,
   "ecuatii-neliniare": continutEcuatiiNeliniare,
