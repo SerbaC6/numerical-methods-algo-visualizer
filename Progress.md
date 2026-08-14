@@ -689,25 +689,59 @@ numai la apropierea lupei, adică exact acolo unde nu se uitase nimeni:
    privitor au un colț comun și fiecare își punea acolo eticheta capătului. Cel de pe colț se
    împinge acum de-a lungul muchiei lui.
 
+**A doua sesiune de citit pagina cu ochiul.** Cererile au venit de la utilizator, iar patru dintre
+ele au dus la descoperiri mai mari decât enunțul:
+
+- **Fonturile proiectului nu conțin exponenții și indicii.** Măsurat cu fontTools pe toate cele
+  patru fișiere din `public/fonts/`: din cele 38 de caractere folosite în `src/`, există **trei** —
+  `¹`, `²`, `³`, și alea doar fiindcă sunt în Latin-1. `⁽ ⁾ ⁰ ᵏ ₁ ₂` cădeau pe fonturi de sistem,
+  alese separat pentru fiecare caracter. `src/lib/notatie.ts` le traduce în ASCII plus nivel, iar
+  `Notatie`/`NotatieSVG`/`Mate` le pun în `<sup>`/`<sub>` sau într-un `<tspan>` deplasat. Textele din
+  cod rămân scrise `"x⁽ᵏ⁾"`. Prinde paginile 6, 7 și 9, prin piesele comune.
+- **Liniile nu se puteau repara din opacitate**: `--viz-grila` era el însuși un amestec de 20–22 %,
+  deci chiar la opacitate 1 ajungea la 1,41:1. A urcat la 65 % → 3,82:1 și 3,39:1, deci s-au întărit
+  și grilele din `Plot`, pe paginile 6 și 9.
+- **Valea înghițea tot ce se desena peste ea și tot ce era sub ea.** Pe tema luminoasă traseul ieșea
+  la 1,31:1 și săgeata la 1,08:1; pe cea întunecată, curba de nivel văzută **prin** suprafață ajungea
+  la 1,00:1 — adică exact culoarea din jur. Suprafața are acum 16–38 % pe amândouă temele, iar
+  liniile de peste ea își iau lizibilitatea din **halou**, nu din contrastul cu valea.
+- **Trei linii se încurcau între ele în scenă**: umbra de pe podea apare acum doar când privirea se
+  ridică (se aprinde exact cât se stinge suprafața); săgeata pasului nu mai stă peste ultimul segment
+  al traseului, fiindcă traseul se oprește cu un segment mai devreme; iar traseul urmează suprafața,
+  eșantionat în 16 bucăți pe segment, în loc s-o taie printr-o coardă care pe o vale convexă trecea
+  vizibil prin aer.
+- **Pagina pornește acum pe valea alungită**, nu pe cea din curs: acolo `κ = 1,94`, elipsele au
+  semiaxele în raport 1,39 și cotul arată blând, adică pagina se deschidea exact pe cazul în care
+  afirmația ei nu se citește de pe desen. Valea din curs rămâne preset, cu cifrele neatinse.
+- Restul, direct: legenda a urcat deasupra taburilor și s-a scurtat; titlul „Ce se întâmplă acum" a
+  plecat, iar propoziția pasului a rămas doar pentru cititorul de ecran; numerele de pe podea au fost
+  scoase; comutatorul de comparație a fost scos, cu tot cu stratul lui; „zigzaghează" a devenit
+  „coboară"; numele metodelor se scriu cu majusculă; toleranța se afișează într-un singur format.
+
+> **Două goluri declarate, ambele cerute explicit.** Scoțând numerele de pe podea, apropierea lupei
+> nu se mai vede din nimic — pe o pătratică desenul e auto-similar. Iar conturul văii pe tema
+> luminoasă a rămas sub 3:1, ales dinadins în favoarea liniilor de peste ea.
+
+**Reguli noi, scrise în [`CLAUDE.md`](./CLAUDE.md):** nicio trimitere la curs în interfață
+(`curs6 §4.2`, `Algorithm 4`) — trasabilitatea rămâne în câmpurile `sursa`, care nu se randează; și
+matematica din proză se scrie cu `Mate`, nu ca text obișnuit, la „Teoria pe scurt" de pe **orice**
+pagină.
+
+> **Decis: mențiunile generice la curs rămân.** „Valea din curs", „Cursul o spune direct", „exemplul
+> din curs", plus footerul și pagina Termeni. Regula acoperă doar citările cu număr de secțiune —
+> alea trimit cititorul altundeva; astea spun doar de unde vine materia.
+
 Ce **nu** e verificat încă:
 
-- [ ] **Trecerea vizuală completă** — cele trei preseturi × cele două metode, comparația pornită și
-      oprită, ambele teme. Văzute cu ochiul până acum: tema **întunecată** la unghiul implicit și la
-      90° (harta de nivel se vede întreagă, suprafața dispare), preseturile și rândul de legendă al
-      comparației. Restul a rămas nefăcut fiindcă aplicația nu mai compila — pagina 9 era în lucru
-      în același working tree.
-- [ ] **Întrebarea deschisă din plan**, nedecisă fiindcă cere ochiul: dacă punctatul estompat al
-      metodei de referință se confundă cu umbra metodei curente, **se întreabă** înainte să se
-      atingă paleta.
-- [ ] **Numerele de pe podea la apropiere mare** ajung de 12 caractere (0,0909090843) și două dintre
-      ele se ating. E singurul simptom rămas din ce se vedea la ultimii pași. Plafonarea lupei a fost
-      propusă și **respinsă ca inutilă**: criteriul „oprim când elipsa nu se mai vede curbată" nu se
-      declanșează niciodată, fiindcă elipsa e curbată la orice adâncime — dispărea din aritmetică,
-      nu din geometrie (vezi punctul 4). Dacă se plafonează totuși, trebuie alt criteriu.
-- [ ] **Verificare cu ochiul pe telefon real** — portretul și peisajul au fost măsurate în browser
-      la 390 px, dar nu văzute pe un dispozitiv.
-- [ ] `prefers-reduced-motion` pe interfața asta — codul îl respectă prin `MotionConfig` și prin
-      `useDomeniuAnimat`, dar n-a fost văzut rulând cu setarea pornită.
+- [x] ~~Verificare cu ochiul pe telefon real~~ → **verificată de utilizator**: merge.
+- [x] ~~Trecerea vizuală completă~~ → făcută, în ambele teme, cu fereastra focalizată.
+- [ ] **Punctatul metodei de referință** — întrebarea a devenit fără obiect: comutatorul de
+      comparație a fost scos cu totul.
+- [ ] `prefers-reduced-motion` — codul îl respectă în trei locuri (`MotionConfig reducedMotion="user"`
+      din `main.tsx`, `useDomeniuAnimat`, media query-ul din `index.css`), dar n-a fost **văzut**
+      rulând cu setarea pornită. De aici nu se poate emula: uneltele de browser nu expun
+      `Emulation.setEmulatedMedia`, iar singura cale ar fi o modificare temporară în cod
+      (`reducedMotion="always"`), care cere fereastra în față ca să se poată și măsura.
 
 **Performanța: măsurată, e în regulă** — și cifrele de dinainte erau greșite. Cu fereastra chiar
 focalizată, scena stă la 60 fps, iar un salt între pași costă o secundă la 29–39 fps; clicul e 0–1 ms
