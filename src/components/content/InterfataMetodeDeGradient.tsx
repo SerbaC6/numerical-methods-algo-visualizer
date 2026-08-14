@@ -384,19 +384,24 @@ export function InterfataMetodeDeGradient() {
 /**
  * Legenda scenei.
  *
- * Explicația de la „curba atinsă" nu e decor: fără ea desenul ar afirma tăcut
- * ceva fals. Unghiul drept dintre doi pași consecutivi se citește drept **numai**
- * din privirea de sus — la unghiul implicit, un unghi real de 90° se vede ca
- * 122°.
+ * Două dintre explicații nu sunt descriere, ci **corecții**: fără ele desenul ar
+ * afirma tăcut câte ceva fals.
  *
- * A existat și o a doua avertizare, la vale: înălțimea e scalată altfel decât
- * planul (n-are cum altfel, sunt unități diferite), deci panta desenată nu e cea
- * reală. A fost **scoasă la cerere**, ca legenda să fie mai scurtă. Precizarea nu
- * mai apare nicăieri pe site — dacă vreodată cineva se întreabă de ce valea pare
- * mai abruptă decât e, aici e răspunsul.
+ * - Înălțimea e scalată altfel decât planul — n-are cum altfel, sunt unități
+ *   diferite — deci panta văzută nu e panta reală.
+ * - Unghiul drept dintre doi pași consecutivi se citește drept **numai** din
+ *   privirea de sus: la unghiul implicit, un unghi real de 90° se vede ca 122°.
+ *
+ * Restul rândurilor n-au explicație, și e în regulă: numesc ce se vede. Când se
+ * scurtează legenda, astea două se scurtează, nu se scot.
  */
 const LEGENDA: ElementLegenda[] = [
-  { rol: "functie", eticheta: "valea funcției", forma: "zona" },
+  {
+    rol: "functie",
+    eticheta: "valea funcției",
+    forma: "zona",
+    explicatie: "Înălțimea are altă scară decât planul, deci panta desenată nu e cea reală.",
+  },
   {
     rol: "grila",
     eticheta: "curbele de nivel",
