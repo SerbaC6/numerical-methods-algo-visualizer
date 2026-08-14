@@ -128,11 +128,11 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "norme-si-ortogonalitate",
     numar: 2,
-    titlu: "Norme, Householder, Givens, Gram-Schmidt",
+    titlu: "Householder și Givens",
     capitol: "ortogonalitate",
     descriere:
-      "Ce măsoară o normă, cum arată o reflexie și o rotație pe axe și cum se construiește pas cu pas o bază ortogonală.",
-    metode: ["Norme vectoriale", "Norme matriceale", "Householder", "Givens", "Gram-Schmidt"],
+      "Două feluri de a face zerouri fără să strici lungimile: o oglindă aleasă anume și o rotație în planul a două linii.",
+    metode: ["Householder", "Givens", "Reflexii", "Rotații plane", "Descompunerea QR"],
     dificultate: "mediu",
     cursSursa: ["curs3_ortogonalitate.md", "MN_curs2_lab2_matrici.md"],
     gata: false,

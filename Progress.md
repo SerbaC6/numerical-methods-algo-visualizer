@@ -519,7 +519,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Clip | Text | Interactiv | Mobil | Gata |
 | --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ---- | ---- | ---------- | ----- | ---- |
 | 1   | LU (Cramer, Doolittle, Crout, Cholesky)       | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
-| 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 2   | Householder și Givens                         | `norme-si-ortogonalitate`          | curs3, curs2 | plan vectori | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
@@ -552,6 +552,50 @@ Ating **toate** paginile cu secțiune „Vizual", deci nu stau la niciuna dintre
   doar pentru `<video>` — rămâne un strat fix peste pagină, cu aceleași comenzi. Escape închide
   amândouă variantele. Pe tot ecranul cadrul renunță la 16:9 și ia toată suprafața: SVG-ul se
   centrează singur, fără să se deformeze.
+
+### Pagina 2 — `norme-si-ortogonalitate`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/norme-si-ortogonalitate/`: reflectorul
+  `P = I − 2ddᵀ/(dᵀd)` cu alegerea `d = v + sign(v₁)‖v‖e₁`, rotația `c = x/r`, `s = −y/r`, matricea
+  Givens ca identitate cu patru elemente schimbate, triangularizarea `A = QR` cu fiecare dintre ele
+  și **cazul plan**, cel din interfață. Un singur tip de pas pentru amândouă, fiindcă diferă în două
+  locuri: cât anulează un pas și cum se construiește transformarea.
+- **Verificarea numerică**, `scripts/verificare-algoritmi/ortogonalitate.ts`, pe modulele reale:
+  reflectorul e simetric, ortogonal, cu `det = −1`; exemplul din curs3 §6.5 iese element cu element
+  (`d = (5,1,2)`, `H₁`, `A₂`, `A₃`); rotația e ortogonală și atinge cel mult patru elemente;
+  `Q·R = A` și `QᵀQ = I` pe exemple **și pe 200 de matrice generate aleator** (abatere maximă
+  `2·10⁻¹⁵`); iar semnul lui `d` e măsurat, nu enunțat — pe `v = (1, 10⁻¹⁰, 0)` alegerea din curs
+  ține `‖d‖ = 2`, cea opusă o prăbușește la `10⁻¹⁰`.
+- **Erata**, `docs/erata-cursuri.md`: exemplul QR cu Givens din curs3 §7.4 e greșit aritmetic de la
+  a doua rotație — `A₃(2,3)` iese `−3`, nu `0` cum e tipărit, iar `A₄` se strică odată cu el.
+  Verificat pe fracții. Formulele, structura lui `G` și concluzia rămân neatinse; pagina folosește
+  cifrele corecte, iar testul care le ține e ținut ca test care trebuie să pice.
+- **Teoria**, `src/content/norme-si-ortogonalitate.tsx`: de ce transformări ortogonale, reflexia cu
+  cele trei proprietăți ale ei, alegerea semnului și anularea catastrofală, rotația fără unghi și
+  comparația dintre ele (câte transformări, ce se câștigă din paralelizare și din matricele rare).
+- **Două clipuri**, `AnimatiaHouseholder` și `AnimatiaGivens`, puse unul sub altul de
+  `VizualOrtogonalitate`. E singura pagină cu două clipuri: un singur clip ar fi trebuit să comute
+  de la o oglindă la o rotație la mijloc, adică exact unde se pierde firul.
+- **Interfața**, `InterfataOrtogonalitate`: **același plan** pentru amândouă metode, cu vectorul
+  tras cu mouse-ul sau cu degetul. Comparația e chiar poanta, deci două interfețe separate ar fi
+  ratat-o. Desenul (`PlanOrtogonal`) e **împărțit cu clipurile**, ca transformarea să arate la fel
+  peste tot; lungimea vectorului e limitată la jumătate din raza planului, fiindcă `d` poate ajunge
+  la `2‖v‖` și se desenează la scara lui adevărată.
+
+Ce **nu** e pe pagină, prin decizie:
+
+- **Normele** (curs3 §1) și **Gram-Schmidt** (§4), scoase la cerere. Odată cu ele s-a schimbat și
+  titlul paginii, din „Norme, Householder, Givens, Gram-Schmidt" în „Householder și Givens": un
+  titlu care promite patru subiecte și livrează două e chiar felul de nepotrivire pe care proiectul
+  n-o acceptă. `Plan.md` păstrează descrierea inițială a paginii.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Verificare cu ochiul pe telefon real**, mai ales tragerea vectorului cu degetul. Interfața
+      are `touch-none` pe desen, ca degetul să tragă vectorul în loc să deruleze pagina, dar asta
+      n-a fost încă probată pe un dispozitiv.
 
 ### Pagina 5 — `metode-iterative`, ce e gata și ce nu
 

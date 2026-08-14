@@ -381,3 +381,53 @@ nicio formă.
 
 Verificarea e ținută ca **test care trebuie să pice**:
 `scripts/verificare-algoritmi/metode-iterative.ts`, secțiunea 7.
+
+---
+
+## curs3, §7.4 — exemplul QR cu Givens, greșit de la a doua rotație
+
+**Cursul scrie**, după a doua rotație:
+
+```
+G2 = [4/5 3/5 0; −3/5 4/5 0; 0 0 1]
+A3 = G2·A2 = [5 2 4; 0 1 0; 0 −1 −2]
+```
+
+și, după a treia:
+
+```
+A4 = G3·A3 = [5 2 4; 0 sqrt(2) 0; 0 0 −sqrt(2)]
+```
+
+**Verificare, pe fracții** (fără virgulă mobilă, ca să nu rămână dubii). Cu
+`A2 = [[4,1,5],[3,2,0],[0,−1,−2]]` — care e corectă, la fel ca `G2` — linia a doua a produsului e:
+
+```
+(−3/5)·[4, 1, 5] + (4/5)·[3, 2, 0] = [−12/5 + 12/5,  −3/5 + 8/5,  −15/5 + 0] = [0, 1, −3]
+```
+
+Deci `A3(2,3) = −3`, nu `0`. Restul lui `A3` e corect.
+
+Greșeala se propagă: a treia rotație, aplicată pe `A3` **corect**, dă
+
+|              | corect           | tipărit în curs |
+| ------------ | ---------------- | --------------- |
+| `A4` linia 2 | `[0, √2, −√2/2]` | `[0, √2, 0]`    |
+| `A4` linia 3 | `[0, 0, −5√2/2]` | `[0, 0, −√2]`   |
+
+Chiar și pornind de la `A3`-ul tipărit, `A4(2,3)` ar ieși `+√2`, nu `0` — deci a doua abatere nu se
+explică prin prima.
+
+**Ce s-a pus pe site.** Cifrele corecte. **Concluzia cursului rămâne neatinsă**: `R` iese superior
+triunghiulară, `Q = G₁ᵀG₂ᵀG₃ᵀ` e ortogonală, iar `Q·R = A` — verificat la `4·10⁻¹⁶`. Nici formulele
+lui `c` și `s`, nici structura lui `G`, nici numărul de rotații nu se schimbă: greșeala e strict în
+aritmetica exemplului.
+
+Verificarea e ținută ca **test care trebuie să pice** dacă cineva „repară" cifrele înapoi:
+`scripts/verificare-algoritmi/ortogonalitate.ts`, secțiunea 4.
+
+**O notă care nu e greșeală, dar încurcă la fel de tare.** Aceeași secțiune folosește două convenții
+de litere pentru aceeași matrice: §7.4 pune `s` pe poziția `(i, j)` cu `i` = linia care se anulează,
+iar Algorithm 2 pune `−A(j,i)/r` pe `(j, i)` cu `j` = linia care se anulează. Sunt aceeași matrice
+cu literele schimbate între ele. Pe site se folosește o singură convenție, iar în cod linia care se
+anulează se numește peste tot `linie`.
