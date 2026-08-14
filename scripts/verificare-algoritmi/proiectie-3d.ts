@@ -24,7 +24,7 @@ import {
   normalizeazaCamera,
   opacitateSuprafata,
   poliliniiTaiate,
-  taieLaCutieXY,
+  taieLaCutie,
   ordineCelule,
   roteste,
 } from "../../src/lib/proiectie-3d.ts";
@@ -455,7 +455,7 @@ console.log("\n=== 11. Tăierea drumului la fereastra scenei ===");
   for (let i = 0; i < 50000; i++) {
     const a: Punct3 = { x: rnd() * 12 - 6, y: rnd() * 12 - 6, z: rnd() * 8 - 4 };
     const b: Punct3 = { x: rnd() * 12 - 6, y: rnd() * 12 - 6, z: rnd() * 8 - 4 };
-    const rezultat = taieLaCutieXY(a, b, CUTIE);
+    const rezultat = taieLaCutie(a, b, CUTIE);
     if (!rezultat) continue;
     taiate++;
 
@@ -472,7 +472,7 @@ console.log("\n=== 11. Tăierea drumului la fereastra scenei ===");
   verifica("capetele tăiate sunt în cutie", inafara === 0);
 
   // Un segment întreg înăuntru nu se atinge, unul întreg în afară dispare.
-  const inauntru = taieLaCutieXY({ x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 }, CUTIE);
+  const inauntru = taieLaCutie({ x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 }, CUTIE);
   verifica(
     "segmentul dinăuntru rămâne neatins",
     inauntru !== null &&
@@ -483,8 +483,29 @@ console.log("\n=== 11. Tăierea drumului la fereastra scenei ===");
   );
   verifica(
     "segmentul din afară dispare de tot",
-    taieLaCutieXY({ x: 20, y: 20, z: 0 }, { x: 30, y: 25, z: 1 }, CUTIE) === null,
+    taieLaCutie({ x: 20, y: 20, z: 0 }, { x: 30, y: 25, z: 1 }, CUTIE) === null,
   );
+
+  // Tăierea pe **z**, adăugată după ce s-a văzut pe ecran: un `x⁽⁰⁾` rămas în
+  // afara cadrului după o apropiere a lupei are `f` uriaș, iar segmentul până la
+  // el urca vertical prin aer, pe lângă o suprafață care nu ajunge acolo.
+  {
+    const inalt = taieLaCutie({ x: 0, y: 1, z: 0 }, { x: 0, y: 1, z: 400 }, CUTIE);
+    verifica(
+      "segmentul care iese prin tavan se taie la tavan",
+      inalt !== null && Math.abs(inalt[1].z - CUTIE.z[1]) < 1e-9,
+      inalt ? `z tăiat la ${inalt[1].z}` : "tăiat de tot",
+    );
+    const cuMarja = taieLaCutie({ x: 0, y: 1, z: 0 }, { x: 0, y: 1, z: 400 }, CUTIE, 0.5);
+    verifica(
+      "marja ridică tavanul exact cu cât i se cere",
+      cuMarja !== null && Math.abs(cuMarja[1].z - (CUTIE.z[1] + 0.5)) < 1e-9,
+    );
+    verifica(
+      "segmentul de deasupra cutiei dispare de tot",
+      taieLaCutie({ x: 0, y: 1, z: 100 }, { x: 1, y: 2, z: 200 }, CUTIE) === null,
+    );
+  }
 
   // Un drum care iese și intră înapoi trebuie să dea DOUĂ bucăți, nu una: unite,
   // ele ar fi legate printr-o linie exact peste porțiunea tăiată.

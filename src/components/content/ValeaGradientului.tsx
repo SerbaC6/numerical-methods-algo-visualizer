@@ -253,11 +253,17 @@ export function ValeaGradientului({
       {/* Curba prin punctul curent, apăsată: pe ea aterizează pasul, și
           perpendicular pe ea pleacă următorul. */}
       <CurbeDeNivel3D curbe={curbaCurenta} rol="interval" opacitate={0.95} grosime={2} />
-      <Traiectorie3D puncte={drum} pasCurent={indiceDrum} strat="umbra" />
+      <Traiectorie3D puncte={drum} pasCurent={indiceDrum} strat="umbra" cuUltimulSegment={false} />
 
       <Suprafata3D inaltime={inaltime} />
 
-      <Traiectorie3D puncte={drum} pasCurent={indiceDrum} strat="traseu" />
+      <Traiectorie3D
+        puncte={drum}
+        pasCurent={indiceDrum}
+        strat="traseu"
+        cuUltimulSegment={false}
+        inaltimea={inaltime}
+      />
       {pas && coadaSageata && varfSageata && (
         <Sageata3D
           de={coadaSageata}

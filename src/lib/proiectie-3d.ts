@@ -382,18 +382,37 @@ export function inCutieXY(p: Punct3, cutie: Cutie, toleranta = 1e-9): boolean {
  * Tăierea e **exactă**, nu o aproximare: segmentul desenat e drept în lume, iar
  * proiecția fiind liniară, punctul de parametru `t` de pe segmentul din lume e
  * chiar punctul de parametru `t` de pe segmentul de pe ecran. Se interpolează
- * toate trei coordonatele cu același `t` (Liang–Barsky pe x și y).
+ * toate trei coordonatele cu același `t` (Liang–Barsky pe cele șase fețe).
+ *
+ * **Se taie și pe z, nu doar în plan.** Prima versiune tăia numai x și y, iar
+ * capătul tăiat păstra `z`-ul interpolat — care departe de vale e uriaș, fiindcă
+ * `f` crește pătratic. Rezultatul se vedea: după o apropiere a lupei, din
+ * punctul curent pornea o linie subțire vertical în sus, spre un `x⁽⁰⁾` rămas
+ * cu înălțimea lui de dinainte, prin aer, pe lângă o suprafață care nu mai
+ * ajunge până acolo.
  */
-export function taieLaCutieXY(a: Punct3, b: Punct3, cutie: Cutie): [Punct3, Punct3] | null {
+export function taieLaCutie(
+  a: Punct3,
+  b: Punct3,
+  cutie: Cutie,
+  marjaZ = 0,
+): [Punct3, Punct3] | null {
   let t0 = 0;
   let t1 = 1;
 
-  // (direcție, distanța până la margine) pentru cele patru laturi
+  // Tavanul se ridică cu `marjaZ`, fiindcă drumul e desenat puțin **peste**
+  // suprafață (`RIDICARE` din `Traiectorie3D`) și altfel s-ar tăia exact în
+  // vârfurile cutiei, unde suprafața atinge deja `z[1]`.
+  const zSus = cutie.z[1] + marjaZ;
+
+  // (direcție, distanța până la margine) pentru cele șase fețe
   const margini: [number, number][] = [
     [-(b.x - a.x), a.x - cutie.x[0]],
     [b.x - a.x, cutie.x[1] - a.x],
     [-(b.y - a.y), a.y - cutie.y[0]],
     [b.y - a.y, cutie.y[1] - a.y],
+    [-(b.z - a.z), a.z - cutie.z[0]],
+    [b.z - a.z, zSus - a.z],
   ];
 
   for (const [p, q] of margini) {
@@ -432,7 +451,7 @@ export function taieLaCutieXY(a: Punct3, b: Punct3, cutie: Cutie): [Punct3, Punc
  * care tăierea o repară. Bucățile consecutive care se termină și încep în
  * același punct se lipesc, ca `stroke-linejoin` să lucreze pe drumul întreg.
  */
-export function poliliniiTaiate(puncte: readonly Punct3[], cutie: Cutie): Punct3[][] {
+export function poliliniiTaiate(puncte: readonly Punct3[], cutie: Cutie, marjaZ = 0): Punct3[][] {
   const bucati: Punct3[][] = [];
   let curenta: Punct3[] | null = null;
 
@@ -444,7 +463,7 @@ export function poliliniiTaiate(puncte: readonly Punct3[], cutie: Cutie): Punct3
     const b = puncte[i + 1];
     if (!a || !b) continue;
 
-    const taiat = taieLaCutieXY(a, b, cutie);
+    const taiat = taieLaCutie(a, b, cutie, marjaZ);
     if (!taiat) {
       curenta = null;
       continue;
