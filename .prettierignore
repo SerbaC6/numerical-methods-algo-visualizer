@@ -13,3 +13,6 @@ cursuri_MN
 # generat (React UMD + Babel + fonturi, într-o singură linie de 1,1 MB): se
 # păstrează exact cum a venit, nu se formatează și nu ajunge în build.
 Coborare pe gradient.html
+
+# Idem, pentru clipul paginii 9.
+Matricea PageRank.html

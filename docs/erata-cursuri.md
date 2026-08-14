@@ -13,6 +13,48 @@ site-ul spune altceva trebuie să găsească aici de ce.
 
 ---
 
+## curs7, §10 — matricea stocastică din exemplul PageRank
+
+**Cursul cere trei lucruri deodată**, în paragraful „Construcția matricei":
+
+1. element nenul pentru `Pi → Pj`;
+2. **fiecare coloană însumează 1**;
+3. **se normalizează după numărul de link-uri de ieșire**.
+
+Primele două se verifică pe matricea tipărită. **A treia nu.** Pentru exemplul cursului
+(`P1→{P2,P3}`, `P2→{P3}`, `P3→{P1,P4}`, `P4→{P2}`), matricea `M` tipărită împarte fiecare coloană la
+numărul de link-uri care **intră** în pagina aceea, nu care ies din ea: e chiar `A` normalizată pe
+coloane. Cea cerută de regula scrisă e transpusa lui `A` normalizat pe **linii** — link-urile de
+ieșire ale unei pagini stau pe linia ei în `A`.
+
+|                     | `M` tipărit în curs       | `M` după regula scrisă (link-uri de ieșire) |
+| ------------------- | ------------------------- | ------------------------------------------- |
+| linia 1             | `0  ½  ½  0`              | `0  0  ½  0`                                |
+| linia 2             | `0  0  ½  0`              | `½  0  0  1`                                |
+| linia 3             | `1  0  0  1`              | `½  1  0  0`                                |
+| linia 4             | `0  ½  0  0`              | `0  0  ½  0`                                |
+| PageRank (`d=0,85`) | `.2878 .2020 .3869 .1233` | `.1867 .2755 .3511 .1867`                   |
+| clasament           | P3, P1, P2, P4            | **P3, P2, P1 = P4**                         |
+
+**Nu e o diferență cosmetică: se schimbă clasamentul.** Cu matricea tipărită, `P1` iese a doua; cu
+cea construită după regula scrisă, `P1` și `P4` sunt egale **exact** și împart locul 3.
+
+**Verificare.** `(I − G)v = 0` cu `Σvᵢ = 1` și `d = 17/20`, rezolvat pe fracții, independent de
+iterație, dă `v = (1429, 2109, 2687, 1429)/7654`, cu `G·v = v` exact. Metoda puterii de pe pagină
+ajunge la aceleași cifre în 44 de iterații la `tol = 10⁻⁶`. Ambele drumuri, plus cifrele matricei
+tipărite din tabelul de mai sus, sunt teste în `scripts/verificare-algoritmi/pagerank.ts`; testul
+care ține erata pe loc e cel care cere ca matricea tipărită să **difere** de cea construită — dacă
+cineva „repară" construcția înapoi la cifrele din curs, verificarea pică.
+
+**Ce s-a pus pe site.** Regula scrisă a cursului, aplicată pas cu pas: `A` pe linii → împărțirea
+fiecărei linii la numărul ei de link-uri → transpunerea → `G = d·M + ((1−d)/N)·ONES(N)`.
+Transpunerea e chiar pasul care mută cerința „sumă 1" de pe linii pe coloane, deci se arată ca atare,
+nu se ascunde. **Concluzia cursului rămâne neatinsă**: PageRank-ul e vectorul propriu al lui `G`
+pentru `λ = 1`, care e și valoare proprie dominantă, deci se obține cu metoda puterii. Doar cifrele
+exemplului sunt recalculate.
+
+---
+
 ## curs6, §3.2 — derivata a doua a funcției de iterație a lui Newton
 
 **Cursul scrie:**

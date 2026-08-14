@@ -27,21 +27,11 @@ export const RETEA_DIN_CURS: Retea = {
   ],
 };
 
-/** Copie independentă a rețelei din curs — pentru butonul „Resetează". */
+/** Copie independentă a rețelei din curs, ca apelantul să nu strice originalul. */
 export function reteaDinCurs(): Retea {
   return {
     nume: [...RETEA_DIN_CURS.nume],
     linkuri: RETEA_DIN_CURS.linkuri.map((linie) => [...linie]),
-  };
-}
-
-/** Rețeaua cu link-ul `(i, j)` comutat. Diagonala nu se comută niciodată. */
-export function comutaLink(retea: Retea, i: number, j: number): Retea {
-  return {
-    nume: [...retea.nume],
-    linkuri: retea.linkuri.map((linie, l) =>
-      linie.map((are, c) => (l === i && c === j && i !== j ? !are : are)),
-    ),
   };
 }
 

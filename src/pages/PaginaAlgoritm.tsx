@@ -3,10 +3,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
+import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
-import { InterfataPageRank } from "@/components/content/InterfataPageRank";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -58,7 +58,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
     vizual: AnimatieCoborarePeGradient,
     interactiv: InterfataMetodeDeGradient,
   },
-  pagerank: { interactiv: InterfataPageRank },
+  pagerank: { vizual: AnimatiaMatriceiPageRank },
 };
 
 /**

@@ -112,6 +112,19 @@ PERECHI = [
     # rămână limpede sub cifra închisă și să nu se confunde cu celula-pivot.
     ("luminos: text principal / bandă interval 20%", "#262B40", "#F2E3D6", 4.5),
     ("luminos: pivot plin / bandă interval 20%", "#C43314", "#F2E3D6", 3.0),
+    # ── Graful din clipul paginii 9 ──────────────────────────────────────────
+    # Conturul nodului și muchia sunt elemente grafice (prag 3:1), desenate cu
+    # `--viz-functie` peste suprafața cardului.
+    ("luminos: contur de nod (funcție) / suprafață", "#06457F", "#FFFFFF", 3.0),
+    ("întunecat: contur de nod (funcție) / suprafață", "#A8C4EC", "#33415F", 3.0),
+    # De ce graful NU se desenează cu safir: ca element grafic pe suprafața temei
+    # întunecate, safirul rămâne sub prag. Test care TREBUIE să pice — dacă trece
+    # vreodată, s-a schimbat suprafața, nu regula.
+    ("întunecat: safir ca muchie de graf (interzis)", "#0474C4", "#33415F", 3.0),
+    # Celula plină din clip: safirul la 16 % peste suprafață, cu cifra peste ea.
+    # Compus (oklab): #DBE9F7 pe temă luminoasă, #32496E pe cea întunecată.
+    ("luminos: text principal / celulă plină din clip", "#262B40", "#DBE9F7", 4.5),
+    ("întunecat: text principal / celulă plină din clip", "#EEF3FB", "#32496E", 4.5),
 ]
 
 for desc, fg, bg, prag in PERECHI:

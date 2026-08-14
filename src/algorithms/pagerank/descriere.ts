@@ -8,7 +8,7 @@
  */
 
 import { zecimale } from "@/lib/numere";
-import type { LocClasament, Matrice, PasPageRank } from "@/algorithms/pagerank/tipuri";
+import type { LocClasament, Matrice } from "@/algorithms/pagerank/tipuri";
 
 /** `0.5` → `\tfrac{1}{2}` când numărul e o fracție simplă, altfel zecimale scurte. */
 export function celulaLatex(x: number): string {
@@ -50,23 +50,4 @@ export function clasamentText(clasament: LocClasament[]): string {
   return grupe
     .map((grupa) => `${grupa.map((l) => l.nume).join(" = ")} (${procent(grupa[0]!.scor)})`)
     .join(" > ");
-}
-
-/** Propoziția citită de cititorul de ecran: ce arată graful la pasul curent. */
-export function descrieScena(pas: PasPageRank | undefined, total: number, nume: string[]): string {
-  if (!pas) return "Nu s-a calculat încă niciun pas.";
-
-  const antet = `Pasul ${pas.index} din ${total}.`;
-
-  if (!pas.distributie) return `${antet} ${pas.explicatie}`;
-
-  const ponderi = pas.distributie
-    .map((x, i) => `${nume[i] ?? `P${i + 1}`} ${procent(x, 2)}`)
-    .join(", ");
-  const eroare =
-    pas.eroare === undefined
-      ? ""
-      : ` Față de iterația dinainte, vectorul s-a mișcat cu ${zecimale(pas.eroare, 6)}.`;
-
-  return `${antet} ${pas.explicatie} Ponderile desenate sub noduri sunt: ${ponderi}.${eroare}`;
 }

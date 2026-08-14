@@ -29,26 +29,6 @@ export type MatrixGridProps = {
   descriere?: string;
   formateaza?: (x: number) => string;
   className?: string;
-  /**
-   * Dacă e dat, fiecare celulă devine **comutator**: cifra se randează într-un
-   * `<button>` cu `aria-pressed`, apăsat cât timp valoarea celulei e nenulă.
-   *
-   * De aici se comută link-urile paginii 9: clic în `A` la poziția `(i, j)` face
-   * să apară săgeata `Pi → Pj` în graf. Componenta nu știe ce înseamnă comutarea
-   * — doar anunță poziția; matricea nouă o construiește pagina.
-   */
-  onCelula?: (linie: number, coloana: number) => void;
-  /**
-   * Care celule nu se pot comuta. Pe pagina 9 e diagonala: o pagină nu are link
-   * către ea însăși. Fără `onCelula` nu are efect.
-   */
-  celulaDezactivata?: (linie: number, coloana: number) => boolean;
-  /**
-   * Numele citit al comutatorului. Implicit se compune din etichetele de linie
-   * și de coloană, dar o pagină îl poate scrie mai bine („link de la P1 la P2");
-   * cifra singură n-ar spune nimic cu voce tare.
-   */
-  numeCelula?: (linie: number, coloana: number) => string;
 };
 
 /**
@@ -169,9 +149,6 @@ export function MatrixGrid({
   descriere,
   formateaza = formatImplicit,
   className,
-  onCelula,
-  celulaDezactivata,
-  numeCelula,
 }: MatrixGridProps) {
   const areEtichetaColoane = etichetaColoane !== undefined;
   const areEtichetaLinii = etichetaLinii !== undefined;
@@ -303,20 +280,6 @@ export function MatrixGrid({
                     const stare = stari?.[i]?.[j] ?? "normala";
                     const peLinieActiva = i === linieActiva;
                     const peColoanaActiva = j === coloanaActiva;
-                    const dezactivata = celulaDezactivata?.(i, j) ?? false;
-                    const comutabila = onCelula !== undefined && !dezactivata;
-
-                    const continut =
-                      valoare === null ? (
-                        <>
-                          <span aria-hidden="true" className="text-text-slab opacity-40">
-                            ·
-                          </span>
-                          <span className="sr-only">gol</span>
-                        </>
-                      ) : (
-                        formateaza(valoare)
-                      );
 
                     return (
                       <td
@@ -328,10 +291,7 @@ export function MatrixGrid({
                         data-stare={stare}
                         style={{ gridColumn: colDate(j), gridRow: primaLinieDate + i }}
                         className={cn(
-                          "duration-mediu ease-standard min-w-11 rounded-md border-2 text-center transition-colors",
-                          // Cu buton, spațiul îl ține butonul, ca toată suprafața
-                          // celulei să fie zonă de clic, nu doar cifra din mijloc.
-                          comutabila ? "p-0" : "px-2 py-1.5",
+                          "duration-mediu ease-standard min-w-11 rounded-md border-2 px-2 py-1.5 text-center transition-colors",
                           // Linia/coloana activă stau dedesubt, ca fundal; starea
                           // celulei se desenează peste ele, deci nu se pierde.
                           // `/20` fiindcă `--viz-interval` e culoare plină:
@@ -344,24 +304,15 @@ export function MatrixGrid({
                         {ETICHETA_STARE[stare] && (
                           <span className="sr-only">{ETICHETA_STARE[stare]} </span>
                         )}
-                        {comutabila ? (
-                          <button
-                            type="button"
-                            // `aria-pressed` spune starea comutatorului, iar
-                            // numele lui spune ce comută: cifra singură („0")
-                            // n-ar însemna nimic citită cu voce tare.
-                            aria-pressed={valoare !== null && valoare !== 0}
-                            aria-label={
-                              numeCelula?.(i, j) ??
-                              `${etichetaLinii?.[i] ?? `linia ${i + 1}`}, ${etichetaColoane?.[j] ?? `coloana ${j + 1}`}`
-                            }
-                            onClick={() => onCelula?.(i, j)}
-                            className="focus-visible:ring-ring/50 hover:bg-viz-interval/20 duration-rapid ease-standard w-full cursor-pointer rounded-[0.3rem] px-2 py-1.5 transition-colors focus-visible:ring-[3px] focus-visible:outline-none"
-                          >
-                            {continut}
-                          </button>
+                        {valoare === null ? (
+                          <>
+                            <span aria-hidden="true" className="text-text-slab opacity-40">
+                              ·
+                            </span>
+                            <span className="sr-only">gol</span>
+                          </>
                         ) : (
-                          continut
+                          formateaza(valoare)
                         )}
                       </td>
                     );

@@ -477,6 +477,12 @@ rămâne Manim; aici clipul a venit gata făcut ca animație web și s-a portat 
 ținut minte, dacă se mai repetă: un clip scris în cod **nu** capătă voie să facă și treaba
 interfeței interactive — se oprește și se derulează, dar nu primește parametrii utilizatorului.
 
+**Excepția 3: pagina 9** (`pagerank`) — la fel ca pagina 7: secțiunea „Vizual" există, dar clipul e
+**scris în cod** (`AnimatiaMatriceiPageRank`), fiindcă a venit gata făcut ca animație web și s-a
+portat ca atare. Aceleași două condiții: rulează pe ceasul lui (`Clip`), iar cifrele vin din
+`src/algorithms/pagerank/`, ca desenul și textul să nu poată spune lucruri diferite. `d` e fixat —
+un clip nu primește parametrii utilizatorului.
+
 **Excepția 1: pagina 6** (`ecuatii-neliniare`) — **fără clip Manim**, doar interfața interactivă.
 Bisecția se înțelege trăgând de capetele intervalului, iar un film ar arăta exact ce face interfața,
 doar că fără să-l poți opri. Pe pagina aceea secțiunea „Vizual" **nu există**: nu se pune schelet,

@@ -108,7 +108,7 @@ export function run(p: ParametriPageRank): RezultatPageRank {
     explicatie:
       "Se scrie rețeaua ca matrice: pe linia i stau link-urile care pleacă din pagina i, " +
       "deci a[i][j] = 1 se citește: pagina i trimite către pagina j. " +
-      `Din fiecare pagină pleacă ${grade.map((g, i) => `${nume[i] ?? `P${i + 1}`}: ${g}`).join(", ")} link-uri.`,
+      `Câte link-uri pleacă din fiecare: ${grade.map((g, i) => `${nume[i] ?? `P${i + 1}`} — ${g}`).join(", ")}.`,
     latexPas: `\\htmlId{pr-A}{A} = ${matriceLatex(A)}`,
     evidentiaza: ["pr-A"],
   });

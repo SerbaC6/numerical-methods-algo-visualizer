@@ -498,7 +498,7 @@ Coloana **Manim** e clipul din secțiunea „Vizual"; coloana **Interactiv** e i
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a   | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | n/a   | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
-| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
+| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | n/a   | [x]  | [ ]        | [~]   | [ ]  |
 | 10  | QR și DVS                                     | `qr-si-dvs`                        | curs8, curs3 | matrice      | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 11  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
 | 12  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]   | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -682,6 +682,51 @@ Ce **nu** e verificat încă:
       dinaintea acestei sesiuni, deci nu e o regresie. Pagina rămâne vie (arborele de
       accesibilitate și JS-ul răspund), doar rasterizarea celor ~1 000 de `<path>` nu se termină la
       timp. Verificările vizuale de aici s-au făcut pe bucăți și prin măsurători din DOM.
+
+### Pagina 9 — `pagerank`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/pagerank/` (`tipuri.ts`, `retea.ts`, `putere.ts`,
+  `descriere.ts`): construcția `A → S → M = Sᵀ → G` și algoritmul din curs7 §10, literă cu literă
+  (normalizarea cu norma 2 în buclă, norma 1 abia la linia 10). Clasamentul tratează **egalitățile**:
+  `P1` și `P4` primesc amândouă locul 3.
+- **Verificarea numerică**, `scripts/verificare-algoritmi/pagerank.ts`, pe modulele reale: coloanele
+  lui `M` și `G` însumează 1, iar `(I − G)v = 0` rezolvat independent prin eliminare dă
+  `v = (1429, 2109, 2687, 1429)/7654`, adică exact ce scoate metoda puterii în 44 de iterații la
+  `tol = 1e-6`. Viteza măsurată pe șirul erorilor (media geometrică 0,737) se potrivește cu
+  `|λ₂|/|λ₁| = 0,7361`, iar convergența **oscilează** — șase iterații în care eroarea crește — deci
+  niciun text nu promite scădere la fiecare pas.
+- **Erata**, `docs/erata-cursuri.md`: matricea `M` tipărită în exemplul cursului nu e normalizarea
+  după link-urile de **ieșire**, cum cere tot cursul, ci după cele care intră — iar clasamentul
+  diferă (`P3, P1, P2, P4` tipărit vs. `P3, P2, P1 = P4` corect). Diferența e ținută ca **test care
+  trebuie să pice**, ca să nu fie „reparată" înapoi.
+- **Geometria grafului**, `src/lib/graf-orientat.ts` (noduri pe cerc, muchii Bézier cu îndoire
+  perpendiculară, vârf de săgeată tăiat la conturul nodului), cu verificarea ei în
+  `scripts/verificare-algoritmi/graf-orientat.ts`: capetele stau pe contur la sub 0,05 px, perechea
+  reciprocă `P1 ↔ P3` se desparte pe toată lungimea, iar porțiunea desenată cade pe curba întreagă.
+- **Teoria**, `src/content/pagerank.tsx`, din curs7 §10: matricea stocastică, `M·R = R`, matricea
+  Google și metoda puterii, plus de ce apare transpusa.
+- **Clipul**, `src/components/content/AnimatiaMatriceiPageRank.tsx` — a treia excepție de la regula
+  Manim (după paginile 6 și 7), din același motiv: animația a venit gata făcută ca animație web
+  (`Matricea PageRank.html`) și s-a portat pe `Clip`. Toate cifrele vin din
+  `src/algorithms/pagerank/`, culorile din `viz-roles.ts` (deci merge în ambele teme, spre deosebire
+  de originalul pe fundal alb), iar scena matricei a fost **rescrisă pe linii plus transpunere**, ca
+  să spună aceeași poveste ca teoria de sub ea. `d` e fixat la 0,85: un clip nu primește parametrii
+  utilizatorului.
+
+Ce **nu** e făcut, prin decizie:
+
+- **Secțiunea „Interactiv" nu există.** A fost construită (graf interactiv, comutarea link-urilor
+  din matricea `A`, slider pentru `d`) și **scoasă la cerere**, cu tot cu piesele ei: `Graf`,
+  `GrafMuchii`, `GrafNoduri`, `graf-context`, `RetauaDePagini`, `InterfataPageRank` și extinderea de
+  celule apăsabile din `MatrixGrid`. Pe pagină rămâne scheletul neutru, fără nicio etichetă de
+  stare. `src/lib/graf-orientat.ts` a rămas — îl folosește clipul.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Verificare cu ochiul pe telefon real** — ca la paginile 6 și 7, portretul și peisajul n-au
+      fost văzute pe un dispozitiv.
 
 ### Checklist-template per metodă _(copiază-l pentru fiecare)_
 
