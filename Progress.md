@@ -522,7 +522,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 2   | Norme, Householder, Givens, Gram-Schmidt      | `norme-si-ortogonalitate`          | curs3, curs2 | axă + joc    | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [ ]  | [x]  | [ ]        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [ ]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
 | 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
@@ -587,12 +587,23 @@ Ce există:
   cel care blochează Jacobi (problema 4). Cifrele lor (33/23/22 de iterații, `ω` optim 0,935 —
   **subunitar**, deci suprarelaxarea strică acolo) sunt măsurate, nu alese din ochi.
 
+- **Clipul**, `src/components/content/AnimatiaMetodelorIterative.tsx` — a șaptea excepție de la
+  regula Manim, dar din alt motiv decât celelalte: aici nu s-a portat o animație gata făcută, ci
+  diferența dintre metode **este** ce valori se citesc, iar asta se arată cu săgeți care apar și
+  dispar peste aceleași cifre. Șase scene, 62 de secunde: sistemul, ce face o linie, un baleiaj
+  Jacobi (două coloane, cea veche înghețată), același baleiaj Gauss-Seidel (săgeata proaspătă se
+  întoarce în coloana nouă), comparația pe raze spectrale și `ω` pe un cursor de la 0 la 2.
+  Cifrele **nu sunt transcrise**: se calculează la încărcare, cu modulele reale, ca la clipul
+  paginii 9. Exponenții din capul coloanelor se desenează ca `tspan` ridicat, nu cu `⁽ᵏ⁺¹⁾` —
+  fonturile proiectului n-au glifele acelea.
+
 Ce **nu** e făcut încă:
 
-- [ ] **Clipul** din secțiunea „Vizual" — cel care arată de ce Gauss-Seidel nu e Jacobi.
 - [ ] **Interfața interactivă**: matrice + cursor pentru `ω` + al doilea desen, cu eroarea pe
       iterații.
-- [ ] **Verificare cu ochiul pe telefon real.**
+- [ ] **Verificare cu ochiul pe telefon real.** Clipul a fost văzut pe cadru lat, scenă cu scenă,
+      pe tema întunecată; scenele 5 și 6 au fost verificate prin conținutul desenat, nu cu ochiul
+      (browserul refuza capturile), iar tema luminoasă și portretul n-au fost văzute încă.
 
 ### Pagina 6 — `ecuatii-neliniare`, ce e gata și ce nu
 
