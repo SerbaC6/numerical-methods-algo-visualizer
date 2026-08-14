@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
 import { Separator } from "@/components/ui/separator";
 import { GITHUB_URL } from "@/content/contact";
+import { cn } from "@/lib/utils";
 
 const AN = new Date().getFullYear();
 
@@ -34,10 +35,15 @@ const SECTIUNI_CUPRINS = Object.entries(SECTIUNI)
  *
  * A treia coloană ține paginile de sine stătătoare (contact, termeni,
  * confidențialitate) și legătura către codul sursă.
+ *
+ * `spatiuSus` reglează distanța față de conținutul de deasupra. Paginile de
+ * algoritm se termină cu navigația între metode (săgețile „înapoi/înainte"),
+ * care e ea însăși un element de navigație: lăsată la distanța largă, plutea
+ * singură între pagină și subsol. Acolo se cere `"stramt"`.
  */
-export function Footer() {
+export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }) {
   return (
-    <footer className="border-bordura mt-20 border-t">
+    <footer className={cn("border-bordura border-t", spatiuSus === "stramt" ? "mt-10" : "mt-20")}>
       <Container className="py-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           <div className="lg:col-span-2">

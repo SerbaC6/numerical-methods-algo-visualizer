@@ -121,7 +121,9 @@ export default function PaginaAlgoritm() {
         ]}
       />
 
-      <Container className="pb-8">
+      {/* Fără spațiu jos: navigația între metode e ultima piesă, iar distanța
+          până la subsol o dă subsolul însuși (`spatiuSus="stramt"`). */}
+      <Container>
         {/* Fără anunț de „pagină în lucru”: scheletele de mai jos țin locul
             conținutului în tăcere. Cursul-sursă e în `registry.ts` și în
             tabelul din Faza 7 din `Progress.md`. */}

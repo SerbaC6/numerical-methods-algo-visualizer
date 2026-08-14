@@ -1,8 +1,16 @@
+import { useLocation } from "react-router";
+
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 
 /** Scheletul comun al tuturor paginilor: skip link, header, conținut, footer. */
 export function SiteLayout({ children }: { children: React.ReactNode }) {
+  // Paginile de algoritm se termină cu săgețile către metoda anterioară și cea
+  // următoare; subsolul se apropie de ele, ca navigația să nu rămână suspendată
+  // în gol. Ruta e singurul loc de unde se poate ști: pagina și subsolul sunt
+  // frați, deci nu se pot înțelege printr-o variabilă moștenită.
+  const esteAlgoritm = useLocation().pathname.startsWith("/algoritm/");
+
   return (
     <div className="flex min-h-dvh flex-col">
       <a
@@ -18,7 +26,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <Footer />
+      <Footer spatiuSus={esteAlgoritm ? "stramt" : "larg"} />
     </div>
   );
 }
