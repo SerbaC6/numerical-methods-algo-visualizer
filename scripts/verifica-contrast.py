@@ -97,28 +97,21 @@ PERECHI = [
     ("luminos: interval (chihlimbar) / fundal", "#BE7434", "#F7F9FD", 3.0),
     ("luminos: interval (chihlimbar) / suprafață", "#BE7434", "#FFFFFF", 3.0),
     # ── Suprafața văii din scena 3D (pagina 7) ───────────────────────────────
-    # Relieful vine din opacitatea unui singur rol (`--viz-functie`) — vezi
-    # `Suprafata3D`. Fața cea mai umbrită e cazul cel mai slab și nu e undeva în
-    # mijlocul mesh-ului: lumina stă lipită de cameră, deci cele mai umbrite fețe
-    # sunt tocmai cele razante, adică **conturul** văii.
+    # Valea e **fundal**, nu subiect: peste ea se desenează traseul, săgeata și
+    # punctele, iar sub ea stau podeaua și curbele de nivel — harta din care se
+    # citește unghiul dintre doi pași. De aceea opacitatea e 16–38 % pe amândouă
+    # temele, nu 60–100 % ca la început.
     #
-    # Pe tema ÎNTUNECATĂ valea e pata deschisă de pe un fundal închis, deci
-    # conturul trece: 60 % #A8C4EC peste #33415F dă #7990B4.
-    ("întunecat: valea la 60% / suprafață", "#7990B4", "#33415F", 3.0),
-    #
-    # Pe tema LUMINOASĂ valea e exact invers — pata cea mai închisă, pe alb — și
-    # atunci ea înghite tot ce se desenează peste ea. Cele două cerințe nu se pot
-    # împăca dintr-o singură opacitate; măsurat, cu valea la 60 % conturul trece
-    # (3,40:1) dar săgeata pasului peste ea cade la 1,08:1, iar la 12 % e invers.
-    # S-a ales lizibilitatea liniilor: valea coboară la 16–38 % și devine fundal,
-    # iar liniile își iau contrastul din halou, nu din ea. Conturul văii rămâne
-    # deci sub 3:1 pe tema luminoasă — gol declarat, nu scăpare.
-    ("luminos: valea la 16% / suprafață — sub prag, ales dinadins", "#D7E1EB", "#FFFFFF", 1.2),
-    ("luminos: valea la 38% / suprafață", "#A0B8CE", "#FFFFFF", 1.8),
-    # Ce câștigă în schimb: liniile de peste vale. Cea mai slabă e săgeata
-    # pasului; înainte 1,08:1, acum peste vale la 38 %.
+    # Ce se vede PESTE vale (tema luminoasă, unde valea e închisă):
     ("luminos: săgeata pasului / valea la 38%", "#BE7434", "#A0B8CE", 1.5),
-    #
+    # Ce se vede PRIN vale (tema întunecată, unde valea e deschisă): curba de
+    # nivel curentă, portocalie, pe podea. La 100 % opacitate ieșea 1,00:1 —
+    # adică dispărea complet.
+    ("întunecat: curba curentă prin valea la 16%", "#E98A34", "#4A5B7B", 2.5),
+    ("întunecat: curba curentă prin valea la 38%", "#DA9760", "#617497", 1.8),
+    # Vechile valori, ținute ca teste care TREBUIE să pice.
+    ("luminos: valea la 60% — înghite liniile (interzis)", "#BE7434", "#6A8FB2", 1.5),
+    ("întunecat: curba prin valea opacă (interzis)", "#A8C4EC", "#A8C4EC", 1.8),
     # ── Liniile de pe podea ──────────────────────────────────────────────────
     # `--viz-grila` a urcat de la 20–22 % la 65 %: la 20 % grila și curbele de
     # nivel ieșeau la 1,41:1 și 1,49:1 chiar desenate la opacitate 1, fiindcă

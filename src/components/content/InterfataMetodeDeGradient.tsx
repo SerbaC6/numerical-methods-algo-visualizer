@@ -60,17 +60,16 @@ const CAMPURI: readonly Camp[] = [
  * `src/algorithms/metode-de-gradient/`; desenul, din `ValeaGradientului`.
  * Componenta asta doar leagă controalele de rulare și alege ce pas se arată.
  *
- * Metoda se alege din taburi, iar drumul ei e singurul desenat întreg: două
- * trasee deopotrivă de apăsate s-ar suprapune tocmai în porțiunea care contează,
- * ultimele iterații de lângă fundul văii. Paralela cerută de `Plan.md` se face
- * altfel, la cerere: drumul celeilalte metode se poate aprinde **plat pe podea,
- * punctat**, deci se compară fără să se încurce.
+ * Metoda se alege din taburi și se vede **una singură** odată: două trasee peste
+ * aceeași vale s-ar suprapune tocmai în porțiunea care contează, ultimele
+ * iterații de lângă fundul văii. A existat un comutator care aprindea drumul
+ * celeilalte metode, punctat pe podea; a fost scos la cerere. Paralela cerută de
+ * `Plan.md` rămâne în text — în teoria paginii și în propoziția de încheiere,
+ * care spune câți pași a luat fiecare metodă și de ce.
  */
 export function InterfataMetodeDeGradient() {
   const [idMetoda, setIdMetoda] = useState<IdMetoda>("descendent");
   const [valori, setValori] = useState<Valori>({ ...IMPLICIT });
-  /** Paralela: drumul celeilalte metode, peste aceeași vale. Stinsă implicit. */
-  const [cuComparatie, setCuComparatie] = useState(false);
 
   const seteaza = (camp: Camp) => (v: number | "") =>
     setValori((stare) => ({ ...stare, [camp]: v }));
@@ -103,17 +102,10 @@ export function InterfataMetodeDeGradient() {
   const b = useMemo<Vec2>(() => [b1, b2], [b1, b2]);
   const x0 = useMemo<Vec2>(() => [x01, x02], [x01, x02]);
 
-  // Amândouă metodele se rulează mereu: `run()` e pură și ieftină (cel mult
-  // câteva zeci de pași pe o matrice 2×2), iar comparația trebuie să poată fi
-  // pornită fără să se recalculeze nimic.
-  const amandoua = useMemo(() => {
+  const rezultat = useMemo<RezultatGradient>(() => {
     const parametri = { A, b, x0, tol, maxIteratii };
-    return { descendent: descendent.run(parametri), conjugat: conjugat.run(parametri) };
-  }, [A, b, x0, tol, maxIteratii]);
-
-  const rezultat: RezultatGradient = amandoua[idMetoda];
-  const rezultatCelalalt: RezultatGradient =
-    amandoua[idMetoda === "descendent" ? "conjugat" : "descendent"];
+    return idMetoda === "descendent" ? descendent.run(parametri) : conjugat.run(parametri);
+  }, [idMetoda, A, b, x0, tol, maxIteratii]);
 
   const derulare = useDerulare(rezultat.pasi.length);
   const pas = rezultat.pasi[derulare.pas];
@@ -122,33 +114,13 @@ export function InterfataMetodeDeGradient() {
   const kappa = rezultat.conditionare ?? conditionare(A);
   const numeMetoda = idMetoda === "descendent" ? descendent.meta.titlu : conjugat.meta.titlu;
 
-  // Comparația se poate arăta doar dacă cealaltă metodă chiar a produs un drum:
-  // pe un sistem pe care ea eșuează n-ar fi nimic de desenat.
-  const areComparatie = rezultatCelalalt.pasi.length > 0;
-  const aratComparatia = cuComparatie && areComparatie;
-  const numeCelalalt = idMetoda === "descendent" ? "gradientul Conjugat" : "coborârea pe gradient";
-
   return (
     <div className="flex flex-col gap-6">
       {/* Legenda stă înaintea **alegerii metodei**, nu doar înaintea desenului:
           ce înseamnă fiecare culoare e același lucru la amândouă metodele, deci
           se citește o dată, înainte de orice. Rândul comparației apare doar cât
           timp e pornită — legenda descrie ce e pe ecran, nu ce ar putea fi. */}
-      <Legend
-        elemente={
-          aratComparatia
-            ? [
-                ...LEGENDA,
-                {
-                  rol: "anterior",
-                  eticheta: `drumul întreg al celeilalte metode — ${numeCelalalt}`,
-                  forma: "linie-punctata",
-                  explicatie: "Desenat plat pe podea, de la pornire până la soluție.",
-                },
-              ]
-            : LEGENDA
-        }
-      />
+      <Legend elemente={LEGENDA} />
 
       <Tabs value={idMetoda} onValueChange={(v) => setIdMetoda(v as IdMetoda)}>
         <TabsList className="w-full">
@@ -173,7 +145,6 @@ export function InterfataMetodeDeGradient() {
                 A={A}
                 b={b}
                 pasi={rezultat.pasi}
-                pasiReferinta={aratComparatia ? rezultatCelalalt.pasi : undefined}
                 pasCurent={derulare.pas}
                 solutie={rezultat.solutie}
                 descriere={descrieScena(pas, rezultat.pasi.length, rezultat.solutie)}
@@ -218,22 +189,6 @@ export function InterfataMetodeDeGradient() {
                 );
               })}
             </div>
-
-            {/* Paralela cerută de `Plan.md`: până acum cele două metode se
-                comparau doar schimbând tabul, adică din memorie. Fără `Switch`
-                în `src/components/ui/` — un buton cu `aria-pressed` face
-                același lucru, fără dependență nouă. */}
-            {areComparatie && (
-              <Button
-                variant={aratComparatia ? "default" : "outline"}
-                size="sm"
-                className="tinta-atingere w-full sm:col-span-2"
-                aria-pressed={aratComparatia}
-                onClick={() => setCuComparatie((stare) => !stare)}
-              >
-                {`Arată și ${numeCelalalt}`}
-              </Button>
-            )}
 
             {/* Matricea are **trei** câmpuri, nu patru: simetria e ipoteza
                 metodei (curs 5, §8.1), nu o opțiune, deci `a₂₁` nu se poate

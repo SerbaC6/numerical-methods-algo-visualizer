@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 
-import { useTheme } from "@/hooks/use-theme";
-
 import { useScena3D } from "@/components/viz/scena-3d-context";
 import {
   normalaCelulei,
@@ -20,29 +18,28 @@ export type Suprafata3DProps = {
 };
 
 /**
- * Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el —
- * **altfel pe fiecare temă**, fiindcă valea joacă roluri opuse.
+ * Cât de opac e patrulaterul cel mai umbrit și cât adaugă lumina peste el.
  *
- * Pe tema **întunecată** valea e `--color-cer`, adică pata cea mai deschisă de
- * pe un fundal închis. Acolo 0,60–1,00 e corect: conturul iese la 3,13:1, peste
- * pragul de 3:1 al unui element grafic.
+ * **Aceleași valori pe amândouă temele, și e o decizie, nu o scăpare.** Valea e
+ * fundal, nu subiect: peste ea se desenează traseul, săgeata și punctele, iar
+ * sub ea stau podeaua și curbele de nivel — adică tocmai harta din care se
+ * citește unghiul dintre doi pași.
  *
- * Pe tema **luminoasă** valea e `--color-adanc`, deci exact invers: pata cea
- * mai închisă, pe alb. La 0,60–1,00 ea înghițea tot ce se desena peste ea —
- * măsurat, traseul ajungea la 1,31:1, iterația curentă la 1,44:1, iar săgeata
- * pasului la **1,08:1**, adică invizibilă. Aici valea trebuie să fie fundal,
- * nu subiect.
+ * Măsurat, cu suprafața opacă nu se vedea nici ce e peste, nici ce e sub ea:
  *
- * Cele două cerințe nu se pot împăca dintr-o singură opacitate: la 0,60
- * conturul trece (3,40:1) dar liniile pică (1,08:1), iar la 0,12 liniile trec
- * (2,98:1) și conturul pică (1,23:1). Compromisul e împărțit — valea coboară la
- * o spoială, iar liniile își capătă lizibilitatea din **halou**, nu din
- * contrastul cu ea (vezi `Traiectorie3D` și `Sageata3D`).
+ * | ce se compară                                     | la 60–100 %   | la 16–38 % |
+ * | ------------------------------------------------- | ------------- | ---------- |
+ * | săgeata pasului / vale (luminoasă)                | 1,08:1        | 1,79:1     |
+ * | curba de nivel văzută prin vale (întunecată)      | 1,45:1 → 1,00 | 2,80–3,35  |
+ *
+ * Ultima linie e cea care a decis: pe tema întunecată, cercul portocaliu al
+ * curbei curente dispărea complet sub mesh.
+ *
+ * Costul, declarat: conturul văii scade sub 3:1 față de card. Silueta se citește
+ * atunci din grila podelei și din curbele de nivel, care au acum 3,82:1 și
+ * 3,39:1 — nu din umplere.
  */
-const OPACITATE = {
-  intunecata: { baza: 0.6, lumina: 0.4 },
-  luminoasa: { baza: 0.16, lumina: 0.22 },
-} as const;
+const OPACITATE = { baza: 0.16, lumina: 0.22 } as const;
 
 /**
  * Sub atâta opacitate mesh-ul nu se mai randează deloc.
@@ -79,8 +76,6 @@ const OPACITATE_MINIMA = 0.02;
  */
 export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
   const { proiectie, camera, cutie, idTaiere, rezolutieMesh } = useScena3D();
-  const tema = useTheme();
-  const { baza, lumina } = tema === "dark" ? OPACITATE.intunecata : OPACITATE.luminoasa;
   const n = Math.max(2, Math.round(rezolutieMesh));
 
   const [x0, x1] = cutie.x;
@@ -138,7 +133,8 @@ export function Suprafata3D({ inaltime, rol = "functie" }: Suprafata3DProps) {
 
     fete.push({
       d: `M ${e00.x} ${e00.y} L ${e10.x} ${e10.y} L ${e11.x} ${e11.y} L ${e01.x} ${e01.y} Z`,
-      opacitate: baza + lumina * umbrire(normalaCelulei(l00, l10, l11, l01), camera),
+      opacitate:
+        OPACITATE.baza + OPACITATE.lumina * umbrire(normalaCelulei(l00, l10, l11, l01), camera),
     });
   }
 

@@ -9,7 +9,6 @@ import { Sageata3D } from "@/components/viz/Sageata3D";
 import { Scena3D } from "@/components/viz/Scena3D";
 import { Suprafata3D } from "@/components/viz/Suprafata3D";
 import { Traiectorie3D } from "@/components/viz/Traiectorie3D";
-import { TraseuReferinta3D } from "@/components/viz/TraseuReferinta3D";
 import {
   centrul,
   elipsaRaza,
@@ -28,12 +27,6 @@ export type ValeaGradientuluiProps = {
   b: Vec2;
   /** Pașii metodei alese, gata calculați în `src/algorithms/metode-de-gradient/`. */
   pasi: readonly PasGradient[];
-  /**
-   * Pașii **celeilalte** metode, pentru paralelă. Se desenează întregi, punctat
-   * și plat pe podea — comparația e între drumuri, nu între poziții la același
-   * număr de pas (metodele nici n-au același număr de pași).
-   */
-  pasiReferinta?: readonly PasGradient[];
   pasCurent: number;
   /** `x* = A⁻¹b`, fundul văii. */
   solutie: Vec2 | null;
@@ -84,7 +77,6 @@ export function ValeaGradientului({
   A,
   b,
   pasi,
-  pasiReferinta,
   pasCurent,
   solutie,
   descriere,
@@ -110,31 +102,15 @@ export function ValeaGradientului({
   );
   const inaltime = useMemo(() => (x: number, y: number) => h([x, y]), [h]);
 
-  /**
-   * Toate punctele pe care desenul trebuie să le cuprindă: drumul, fundul văii
-   * și — când e cerut — drumul celeilalte metode, ca traseul de referință să
-   * încapă întreg la pornire.
-   */
+  /** Toate punctele pe care desenul trebuie să le cuprindă: drumul și fundul văii. */
   const puncteImportante = useMemo<Vec2[]>(() => {
     const lista: Vec2[] = [];
     const prim = pasi[0];
     if (prim) lista.push(prim.xAnterior);
     for (const p of pasi) lista.push(p.x);
     if (solutie) lista.push(solutie);
-    if (pasiReferinta) {
-      const primReferinta = pasiReferinta[0];
-      if (primReferinta) lista.push(primReferinta.xAnterior);
-      for (const p of pasiReferinta) lista.push(p.x);
-    }
     return lista;
-  }, [pasi, pasiReferinta, solutie]);
-
-  /** Drumul celeilalte metode, în planul soluțiilor. */
-  const traseuReferinta = useMemo<Vec2[]>(() => {
-    if (!pasiReferinta || pasiReferinta.length === 0) return [];
-    const prim = pasiReferinta[0];
-    return prim ? [prim.xAnterior, ...pasiReferinta.map((p) => p.x)] : [];
-  }, [pasiReferinta]);
+  }, [pasi, solutie]);
 
   /** Baza scenei: pătratul care cuprinde tot drumul și fundul văii. */
   const baza = useMemo(() => bazaPatrata(puncteImportante), [puncteImportante]);
@@ -245,9 +221,6 @@ export function ValeaGradientului({
       className={className}
     >
       {/* Ordinea de mai jos e ordinea de pictare, de la fund spre privitor. */}
-      {/* Drumul celeilalte metode stă sub tot: e termenul de comparație, nu
-          subiectul desenului. */}
-      {traseuReferinta.length >= 2 && <TraseuReferinta3D puncte={traseuReferinta} />}
       <Podea3D diviziuni={6} />
       <CurbeDeNivel3D curbe={curbeFundal} rol="grila" opacitate={0.5} />
       {/* Curba prin punctul curent, apăsată: pe ea aterizează pasul, și

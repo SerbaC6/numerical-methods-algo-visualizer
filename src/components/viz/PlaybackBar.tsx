@@ -51,6 +51,15 @@ export function PlaybackBar({
 }: PlaybackBarProps) {
   const ultimul = Math.max(totalPasi - 1, 0);
   const gol = totalPasi === 0;
+  /**
+   * Cu un singur pas nu e nimic de derulat, deci redarea se stinge.
+   *
+   * Nu e un caz teoretic: pe „valea rotundă" a paginii 7, κ = 1, direcția cea
+   * mai abruptă arată chiar spre soluție și metoda termină din primul pas. Un
+   * buton de redare activ care nu face nimic se citește ca defect, nu ca
+   * rezultat.
+   */
+  const unSingurPas = totalPasi === 1;
 
   return (
     <div
@@ -94,7 +103,7 @@ export function PlaybackBar({
             className="tinta-atingere"
             aria-label={ruleaza ? "Pauză" : "Pornește"}
             aria-pressed={ruleaza}
-            disabled={gol}
+            disabled={gol || unSingurPas}
             onClick={() => onRuleazaChange(!ruleaza)}
           >
             {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
