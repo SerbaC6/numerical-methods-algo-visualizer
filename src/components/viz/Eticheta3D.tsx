@@ -1,4 +1,5 @@
 import { NotatieSVG } from "@/components/viz/Notatie";
+import { HALOU_ETICHETA } from "@/lib/notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
 import { inCutieXY, type Punct3 } from "@/lib/proiectie-3d";
 import { culoareEticheta, type RolViz } from "@/lib/viz-roles";
@@ -62,7 +63,7 @@ export function Eticheta3D({
         // Contur în culoarea suprafeței, desenat sub literă: numele rămâne
         // lizibil și peste mesh, și peste curbele de nivel.
         stroke="var(--suprafata)"
-        strokeWidth={5}
+        strokeWidth={marime * HALOU_ETICHETA}
         paintOrder="stroke"
       >
         <NotatieSVG text={text} marime={marime} />

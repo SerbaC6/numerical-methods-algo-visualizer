@@ -141,5 +141,16 @@ export function areNotatie(text: string): boolean {
  * doar linia de bază, nu și accentele).
  */
 export const PROPORTIE_MICA = 0.72;
+
+/**
+ * Cât de gros e conturul de sub o etichetă scrisă peste desen.
+ *
+ * **Proporțional cu litera, nu fix.** Conturul e un halou: se desenează sub
+ * glif (`paintOrder="stroke"`) ca numele să se citească și peste mesh, și peste
+ * curbele de nivel. Cu o valoare fixă de 5 px sub o literă de 17–19 px, jumătate
+ * din grosime iese în afara conturului literei și o îngroașă — arăta ca text
+ * aldin, deși `font-weight` e 400. La 0,16 din corp rămâne halou, nu îngroșare.
+ */
+export const HALOU_ETICHETA = 0.16;
 export const RIDICARE_SUS = 0.36;
 export const COBORARE_JOS = 0.2;

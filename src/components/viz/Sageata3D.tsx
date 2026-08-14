@@ -1,4 +1,5 @@
 import { NotatieSVG } from "@/components/viz/Notatie";
+import { HALOU_ETICHETA } from "@/lib/notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
 import type { Punct3 } from "@/lib/proiectie-3d";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
@@ -112,7 +113,7 @@ export function Sageata3D({
           fill={culoareEticheta(rol)}
           fillOpacity={opacitate}
           stroke="var(--suprafata)"
-          strokeWidth={5}
+          strokeWidth={MARIME_ETICHETA * HALOU_ETICHETA}
           paintOrder="stroke"
         >
           <NotatieSVG text={eticheta} marime={MARIME_ETICHETA} />

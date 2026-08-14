@@ -280,7 +280,7 @@ export function InterfataMetodeDeGradient() {
             </div>
 
             <NumberInput
-              eticheta="Toleranța pentru ‖r‖"
+              eticheta="Toleranța"
               valoare={valori.tol}
               onChange={seteaza("tol")}
               min={1e-14}
@@ -321,12 +321,22 @@ export function InterfataMetodeDeGradient() {
             onVitezaChange={derulare.setViteza}
           />
 
-          <StepExplanation
-            explicatie={pas?.explicatie && <Notatie>{pas.explicatie}</Notatie>}
-            pas={derulare.pas}
-            totalPasi={rezultat.pasi.length}
-            ruleaza={derulare.ruleaza}
-          />
+          {/* Propoziția pasului nu se mai arată: formula de mai jos, cu
+              numerele puse în ea, spune același lucru mai scurt. Rămâne totuși
+              montată, **doar pentru cititorul de ecran** — ea e regiunea
+              `aria-live` care anunță fiecare pas; fără ea, cine nu vede desenul
+              n-ar mai afla că s-a schimbat ceva. */}
+          {/* `sr-only` pe un **înveliș**, nu pe componentă: pusă direct pe ea,
+              utilitara se bate cu `p-5` din interiorul componentei (ordinea din
+              CSS decide, nu cea din atribut) și secțiunea rămânea de 50 px. */}
+          <div className="sr-only">
+            <StepExplanation
+              explicatie={pas?.explicatie}
+              pas={derulare.pas}
+              totalPasi={rezultat.pasi.length}
+              ruleaza={derulare.ruleaza}
+            />
+          </div>
 
           {/* Paralela formulă ↔ desen: partea aprinsă din formulă e chiar
               elementul desenat — direcția săgeții, lungimea ei, vârful. */}

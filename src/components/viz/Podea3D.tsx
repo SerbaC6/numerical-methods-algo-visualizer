@@ -1,4 +1,5 @@
 import { NotatieSVG } from "@/components/viz/Notatie";
+import { HALOU_ETICHETA } from "@/lib/notatie";
 import { deplasareRadiala, useScena3D } from "@/components/viz/scena-3d-context";
 import type { Ecran, Punct3 } from "@/lib/proiectie-3d";
 import { culoareRol } from "@/lib/viz-roles";
@@ -101,7 +102,7 @@ export function Podea3D({ diviziuni = 6, numeX = "x₁", numeY = "x₂" }: Podea
               dy="0.32em"
               textAnchor={d.ancora}
               stroke="var(--suprafata)"
-              strokeWidth={4}
+              strokeWidth={MARIME_NUME_AXA * HALOU_ETICHETA}
               paintOrder="stroke"
             >
               <NotatieSVG text={e.text} marime={MARIME_NUME_AXA} />

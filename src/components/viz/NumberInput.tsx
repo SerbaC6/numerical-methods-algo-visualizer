@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { Notatie } from "@/components/viz/Notatie";
 
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,23 @@ export type NumberInputProps = {
 };
 
 /**
+ * Sub atâta, numărul se scrie în notație științifică.
+ *
+ * **JavaScript are propriul prag, și e prea jos.** `String(1e-8)` dă „1e-8", dar
+ * `String(1e-4)` dă „0.0001" — deci două preseturi ale aceleiași pagini afișau
+ * toleranța în două formate, iar cel zecimal se și tăia în câmpul îngust. Pragul
+ * de aici e al nostru, ca afișarea să nu depindă de unde se răzgândește motorul.
+ */
+const PRAG_STIINTIFIC = 1e-3;
+
+/** Ce scrie în câmp pentru o valoare venită din afară (preset, „Resetează"). */
+function afiseaza(valoare: number | ""): string {
+  if (valoare === "") return "";
+  if (valoare !== 0 && Math.abs(valoare) < PRAG_STIINTIFIC) return valoare.toExponential();
+  return String(valoare);
+}
+
+/**
  * Câmp numeric cu etichetă, validare și mesaj de eroare.
  * Eroarea e legată de input prin `aria-describedby`, ca să o citească
  * și cititoarele de ecran, nu doar ochiul.
@@ -45,6 +62,26 @@ export function NumberInput({
   const idMesaj = `${id}-mesaj`;
   const mesaj = eroare ?? ajutor;
 
+  /**
+   * Textul din câmp e ținut separat de numărul din stare.
+   *
+   * Fără asta, formatarea ar lupta cu tastarea: cine scrie „0.0005" trece prin
+   * „0.", „0.00", iar câmpul i-ar rescrie textul sub degete. Se resincronizează
+   * **doar** când valoarea din afară chiar diferă de ce s-a tastat — adică la un
+   * preset sau la „Resetează".
+   */
+  const [text, setText] = useState(() => afiseaza(valoare));
+
+  useEffect(() => {
+    const dinText = text.trim() === "" ? "" : Number(text);
+    if (dinText === valoare) return;
+    if (typeof dinText === "number" && typeof valoare === "number" && dinText === valoare) return;
+    setText(afiseaza(valoare));
+    // `text` lipsește dinadins din dependențe: efectul reacționează la valoarea
+    // venită din afară, nu la fiecare tastă.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valoare]);
+
   return (
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={id} className="text-base">
@@ -56,7 +93,7 @@ export function NumberInput({
           type="number"
           inputMode="decimal"
           className={cn("tinta-atingere font-mono", unitate && "pr-14")}
-          value={valoare}
+          value={text}
           min={min}
           max={max}
           step={pas}
@@ -65,7 +102,8 @@ export function NumberInput({
           aria-describedby={mesaj ? idMesaj : undefined}
           onChange={(e) => {
             const brut = e.target.value;
-            onChange(brut === "" ? "" : Number(brut));
+            setText(brut);
+            onChange(brut.trim() === "" ? "" : Number(brut));
           }}
         />
         {unitate && (
