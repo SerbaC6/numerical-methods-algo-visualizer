@@ -3,6 +3,7 @@ import { NavLink } from "react-router";
 import { CautareMetode } from "@/components/layout/CautareMetode";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
+import { ProgresDerulare } from "@/components/layout/ProgresDerulare";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 /**
@@ -34,6 +35,9 @@ export function Header() {
           <ThemeToggle />
         </div>
       </Container>
+
+      {/* Stă peste linia de jos a antetului, ca să nu mai adauge un rând. */}
+      <ProgresDerulare />
     </header>
   );
 }
