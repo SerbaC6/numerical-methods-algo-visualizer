@@ -384,25 +384,24 @@ export function InterfataMetodeDeGradient() {
 /**
  * Legenda scenei.
  *
- * Ultimele două explicații nu sunt decor: fără ele desenul ar afirma tăcut două
- * lucruri false. Înălțimea e scalată altfel decât planul (n-are cum altfel: sunt
- * unități diferite), deci panta văzută nu e panta reală; iar unghiul drept
- * dintre doi pași consecutivi se citește drept **numai** din privirea de sus —
- * la unghiul implicit, un unghi real de 90° se vede ca 55°.
+ * Explicația de la „curba atinsă" nu e decor: fără ea desenul ar afirma tăcut
+ * ceva fals. Unghiul drept dintre doi pași consecutivi se citește drept **numai**
+ * din privirea de sus — la unghiul implicit, un unghi real de 90° se vede ca
+ * 122°.
+ *
+ * A existat și o a doua avertizare, la vale: înălțimea e scalată altfel decât
+ * planul (n-are cum altfel, sunt unități diferite), deci panta desenată nu e cea
+ * reală. A fost **scoasă la cerere**, ca legenda să fie mai scurtă. Precizarea nu
+ * mai apare nicăieri pe site — dacă vreodată cineva se întreabă de ce valea pare
+ * mai abruptă decât e, aici e răspunsul.
  */
 const LEGENDA: ElementLegenda[] = [
-  {
-    rol: "functie",
-    eticheta: "valea funcției f(x) = ½·xᵀAx − bᵀx",
-    forma: "zona",
-    explicatie:
-      "Înălțimea e scalată separat de plan, ca valea să încapă în cadru — panta desenată nu e panta reală.",
-  },
+  { rol: "functie", eticheta: "valea funcției", forma: "zona" },
   {
     rol: "grila",
-    eticheta: "curbele de nivel, pe podea",
+    eticheta: "curbele de nivel",
     forma: "linie",
-    explicatie: "Locurile în care f ia aceeași valoare. Pentru A pozitiv definită sunt elipse.",
+    explicatie: "Unde f ia aceeași valoare.",
   },
   {
     rol: "interval",
@@ -411,9 +410,9 @@ const LEGENDA: ElementLegenda[] = [
     explicatie:
       "Pasul următor pleacă perpendicular pe curba asta. Unghiul dintre doi pași se citește corect abia din privirea de sus.",
   },
-  { rol: "anterior", eticheta: "iterațiile de până acum și umbra lor pe podea", forma: "punct" },
+  { rol: "anterior", eticheta: "iterațiile de până acum", forma: "punct" },
   { rol: "curent", eticheta: "iterația curentă", forma: "punct" },
-  { rol: "solutie", eticheta: "x*, fundul văii — soluția sistemului", forma: "punct" },
+  { rol: "solutie", eticheta: "x*(fundul văii) — soluția sistemului", forma: "punct" },
 ];
 
 /** Câmpul gol înseamnă „încă tastez", nu zero. */
