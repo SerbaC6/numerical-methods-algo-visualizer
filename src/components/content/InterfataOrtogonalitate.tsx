@@ -32,7 +32,13 @@ type IdMetoda = (typeof METODE)[number]["id"];
 const LATURA = 640;
 const RAZA_VECTOR = 2.3;
 const RAZA = 2 * RAZA_VECTOR;
-const SCARA = LATURA / 2 / RAZA;
+/**
+ * Loc lăsat în afara lui `RAZA`, în unități matematice. Fără el, `d` la lungime
+ * maximă ajungea **exact** pe marginea desenului, iar numele lui, scris dincolo
+ * de vârf, cădea în afara cadrului: la cerc mărit la maximum, `d` dispărea.
+ */
+const MARGINE = 1.15;
+const SCARA = LATURA / 2 / (RAZA + MARGINE);
 const CENTRU: Vector2 = [LATURA / 2, LATURA / 2];
 
 /**
@@ -102,6 +108,16 @@ export function InterfataOrtogonalitate() {
   return (
     <div className="flex flex-col gap-10">
       <Legend elemente={esteHh ? LEGENDA_HH : LEGENDA_GV} />
+
+      {/* Imediat sub legendă, nu la capătul paginii: e cheia de citire a
+          desenului, deci trebuie citită **înainte** de a trage de vector. */}
+      <Callout tip="retine" titlu="Ce se vede trăgând">
+        <Notatie>
+          {esteHh
+            ? "Oricât ai muta vectorul, imaginea lui rămâne pe axă, la aceeași distanță de origine ca el — asta înseamnă că transformarea păstrează norma. Când v traversează axa verticală, semnul lui v₁ se schimbă și oglinda sare dintr-o parte în alta: e chiar alegerea de semn care ține d departe de zero."
+            : "Oricât ai muta vectorul, imaginea lui cade pe semiaxa pozitivă, la r = ‖v‖. Cosinusul și sinusul se citesc direct din componente, fără să treacă vreodată printr-un unghi — cel afișat e doar pentru ochi."}
+        </Notatie>
+      </Callout>
 
       <Tabs value={idMetoda} onValueChange={(x) => setIdMetoda(x as IdMetoda)}>
         <TabsList className="w-full">
@@ -200,13 +216,21 @@ export function InterfataOrtogonalitate() {
               />
             </div>
 
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 sm:col-span-2">
+            {/* Fiecare cifră în chenarul ei: într-o listă simplă, cele patru
+                valori se citeau ca un paragraf, iar „d" și „P·v" — amândouă
+                perechi în paranteze — se amestecau. */}
+            <dl className="grid gap-2 sm:col-span-2">
               {perechi(idMetoda, reflexie, rotatie).map(([cheie, valoare]) => (
-                <div key={cheie} className="contents">
+                <div
+                  key={cheie}
+                  className="border-bordura bg-fundal/40 flex items-baseline justify-between gap-3 rounded-lg border px-3 py-2"
+                >
                   <dt className="text-text-slab font-mono text-base">
                     <Notatie>{cheie}</Notatie>
                   </dt>
-                  <dd className="text-text font-mono text-base tabular-nums">{valoare}</dd>
+                  <dd className="text-text m-0 font-mono text-base font-semibold tabular-nums">
+                    {valoare}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -224,14 +248,6 @@ export function InterfataOrtogonalitate() {
         evidentiaza={esteHh ? ["ort-d", "ort-imagine"] : ["ort-c", "ort-s", "ort-imagine"]}
         className="text-[1.15rem] sm:text-[1.3rem]"
       />
-
-      <Callout tip="retine" titlu={esteHh ? "Ce se vede trăgând" : "Ce se vede trăgând"}>
-        <Notatie>
-          {esteHh
-            ? "Oricât ai muta vectorul, imaginea lui rămâne pe axă, la aceeași distanță de origine ca el — asta înseamnă că transformarea păstrează norma. Când v traversează axa verticală, semnul lui v₁ se schimbă și oglinda sare dintr-o parte în alta: e chiar alegerea de semn care ține d departe de zero."
-            : "Oricât ai muta vectorul, imaginea lui cade pe semiaxa pozitivă, la r = ‖v‖. Cosinusul și sinusul se citesc direct din componente, fără să treacă vreodată printr-un unghi — cel afișat e doar pentru ochi."}
-        </Notatie>
-      </Callout>
     </div>
   );
 }

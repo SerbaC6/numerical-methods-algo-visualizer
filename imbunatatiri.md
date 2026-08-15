@@ -63,7 +63,7 @@ Regula practică e chiar asta: Householder pentru matrice pline, Givens pentru m
 
 
 La nivel de interfata grafica:
-Pe Householder:
+✅ Pe Householder:
 - daca maresc cercul la maxim nu se mai vede d
 - P * v nu se vede fiindca sta direct pe axa
 - pune intr-un chenar fiecare valoare, cat da
@@ -77,7 +77,8 @@ Oricât ai muta vectorul, imaginea lui rămâne pe axă, la aceeași distanță 
 Pune partea asta sub legenda
 
 Pe Givens:
-- verifica daca cercul e ous bine, in cadranul 1 mie imi da cu -, s-ar putea sa fi inversat cercul
+- ✅ verifica daca cercul e ous bine, in cadranul 1 mie imi da cu -, s-ar putea sa fi inversat cercul
+  (verificat: cercul e corect, iar minusul e corect — vezi nota de mai jos)
 
 
 # Jacobi, Gauss-Seidel, SOR:

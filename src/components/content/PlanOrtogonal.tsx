@@ -199,6 +199,7 @@ export function PlanOrtogonal({
         const unghi = Math.atan2(y - cy, x - cx);
         const culoare = culoareRol(s.rol);
         const lungime = Math.hypot(x - cx, y - cy);
+        const corpEticheta = 32 * Math.min(st, 1.4);
 
         return (
           <g key={i}>
@@ -215,16 +216,22 @@ export function PlanOrtogonal({
             {lungime > 30 && <VarfSageata la={[x, y]} unghi={unghi} culoare={culoare} />}
             {/* Eticheta stă dincolo de vârf, pe direcția săgeții — dar un vector
                 culcat pe axă și-ar scrie numele **peste** linia axei, unde nu se
-                mai citește („±‖v‖·e₁", „P·v"). Când săgeata e aproape
-                orizontală, numele se ridică deasupra ei. */}
+                mai citește („±‖v‖", „P·v", „G·v"). Când săgeata e aproape
+                orizontală, numele se ridică deasupra ei, cu un rând întreg:
+                ridicarea se ia din corpul literei, nu dintr-o constantă, ca să
+                nu sară prea sus pe un desen mic și să atingă eticheta vecină. */}
             {s.eticheta && (
               <text
                 x={x + Math.cos(unghi) * 42}
-                y={y + Math.sin(unghi) * 42 - (Math.abs(Math.sin(unghi)) < 0.3 ? 56 : 0)}
+                y={
+                  y +
+                  Math.sin(unghi) * 42 -
+                  (Math.abs(Math.sin(unghi)) < 0.3 ? corpEticheta * 1.05 : 0)
+                }
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill={culoareEticheta(s.rol)}
-                style={{ font: `700 ${32 * Math.min(st, 1.4)}px var(--font-mono)` }}
+                style={{ font: `700 ${corpEticheta}px var(--font-mono)` }}
               >
                 {s.eticheta}
               </text>
