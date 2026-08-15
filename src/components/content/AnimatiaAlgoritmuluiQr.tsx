@@ -83,16 +83,17 @@ const IDENTITATE = [
 ];
 
 /**
- * `p₁₁ = p₂₂ = cosα`, `p₁₂ = −p₂₁ = sinα` — convenția de semn e cea din curs.
+ * `p₁₁ = p₂₂ = cosθ`, `p₁₂ = −p₂₁ = sinθ` — convenția de semn e cea din curs.
  *
  * **O redenumire, cifrele neatinse** (regula din CLAUDE.md): cursul scrie
- * unghiul `Θ`, clipul îl scrie `α`. Litera grecească mare se citea prost la
- * dimensiunea cerută aici, mai ales lipită de `sin` și `cos`; nimic altceva nu
- * se schimbă.
+ * unghiul cu literă mare, `Θ`. Fonturile proiectului n-au niciun caracter
+ * grecesc, deci litera vine oricum dintr-un font de sistem — iar acolo `Θ` e un
+ * oval cu bară, care într-o matrice plină de `0` și `1` se citește ca zero
+ * („cos0"). Litera mică se desparte de cifre; unghiul e același.
  */
 const P2_RANDURI = [
-  ["cosα", "sinα", "0", "0"],
-  ["−sinα", "cosα", "0", "0"],
+  ["cosθ", "sinθ", "0", "0"],
+  ["−sinθ", "cosθ", "0", "0"],
   ["0", "0", "1", "0"],
   ["0", "0", "0", "1"],
 ];
@@ -292,7 +293,7 @@ function Matrice({
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text-slab)"
-          style={{ font: `600 ${28 * Math.min(st, 1.5)}px var(--font-sans)` }}
+          style={{ font: `600 ${34 * Math.min(st, 1.4)}px var(--font-sans)` }}
         >
           {eticheta}
         </text>
@@ -596,7 +597,7 @@ function Desen() {
 
       {/* 2a — ce este P₂ */}
       <Matrice
-        x={960}
+        x={700}
         y={500}
         randuri={rotita ? P2_RANDURI : IDENTITATE}
         stari={stariP}
@@ -605,6 +606,19 @@ function Desen() {
         corp={34}
         nume="P₂"
         eticheta={rotita ? "Identitatea, cu patru elemente schimbate" : "Matricea identitate"}
+        st={st}
+      />
+      {/* De unde îi vine indicele. Fără cartonașul ăsta, „P₂" arată ca o
+          numerotare oarecare, iar tot restul momentului atârnă de el. */}
+      <Card
+        x={1220}
+        y={426}
+        latime={620}
+        inaltime={148}
+        opacitate={oCeEste * intra(T, R0 + 2.6, 0.5)}
+        rol={ROL_B}
+        simbol="b₂ → P₂"
+        text="Indicele arată ce element se șterge"
         st={st}
       />
 
@@ -671,7 +685,7 @@ function Desen() {
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text-slab)"
-          style={{ font: `600 ${25 * Math.min(st, 1.4)}px var(--font-sans)` }}
+          style={{ font: `600 ${30 * Math.min(st, 1.35)}px var(--font-sans)` }}
         >
           Noul element (2,1)
         </text>
@@ -683,7 +697,7 @@ function Desen() {
           fill="var(--text)"
           style={{ font: `700 ${32 * Math.min(st, 1.25)}px var(--font-mono)` }}
         >
-          −sinα · a₁ + cosα · b₂
+          −sinθ · a₁ + cosθ · b₂
         </text>
       </g>
 
@@ -891,16 +905,16 @@ const SUBTITRARI = [
   { la: CUE.Rotatii + 0.3, text: "Pornim de la matricea identitate." },
   {
     la: CUE.Rotatii + 1.8,
-    text: "P₂ schimbă doar patru elemente, în liniile 1 și 2: cosα, sinα, −sinα, cosα.",
+    text: "P₂ schimbă doar patru elemente, în liniile 1 și 2: cosθ, sinθ, −sinθ, cosθ.",
   },
   {
     la: CUE.Rotatii + 4.5,
     text: "Înmulțim P₂ cu A: fiecare element nou este o linie a lui P₂ ori o coloană a lui A.",
   },
-  { la: CUE.Rotatii + 7.4, text: "Elementul (2,1) iese −sinα·a₁ + cosα·b₂." },
+  { la: CUE.Rotatii + 7.4, text: "Elementul (2,1) iese −sinθ·a₁ + cosθ·b₂." },
   {
     la: CUE.Rotatii + 9.8,
-    text: "Unghiul α se alege exact astfel încât acest element să devină 0.",
+    text: "Unghiul θ se alege exact astfel încât acest element să devină 0.",
   },
   {
     la: CUE.Rotatii + 12.0,
@@ -945,7 +959,7 @@ export function AnimatiaAlgoritmuluiQr() {
         "simetrică tridiagonală, cu a₁…a₄ pe diagonală și b₂…b₄ vecine, și de la observația că un b " +
         "nul face din a-ul de lângă el o valoare proprie. Urmează rotația Givens P₂ — identitatea cu " +
         "patru elemente schimbate —, înmulțirea P₂·A din care iese noul element (2,1) egal cu " +
-        "−sinα·a₁ + cosα·b₂, și unghiul ales exact cât să-l anuleze; în locul lui apare un element " +
+        "−sinθ·a₁ + cosθ·b₂, și unghiul ales exact cât să-l anuleze; în locul lui apare un element " +
         "nou deasupra diagonalei. Din toate rotațiile se obțin Q ortogonală și R superior " +
         "triunghiulară, iar înmulțite în ordine inversă dau pasul următor, care păstrează simetria, " +
         "banda tridiagonală și valorile proprii. La final b-urile se sting și pe diagonală rămân " +

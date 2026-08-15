@@ -86,30 +86,6 @@ export const continutAlgoritmulQr: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "formula",
-            latex:
-              "\\begin{aligned} b_2 = 0 &\\;\\Longrightarrow\\; a_1 \\text{ este valoare proprie} \\\\ b_n = 0 &\\;\\Longrightarrow\\; a_n \\text{ este valoare proprie} \\end{aligned}",
-            sursa: "curs 8, §1",
-            explicatie: (
-              <>
-                Aici e toată strategia metodei: nu se caută valorile proprii, ci se{" "}
-                <strong>strâng spre zero</strong> capetele subdiagonalei, <Mate>b₂</Mate> și{" "}
-                <Mate>bₙ</Mate>, până când cifra de lângă ele devine citibilă ca valoare proprie.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                Dacă un <Mate>bⱼ</Mate> din mijloc se anulează, cu <Mate>{"2 < j < n"}</Mate>,
-                matricea se rupe și problema se sparge în două mai mici — una de dimensiune{" "}
-                <Mate>j − 1</Mate> și una de dimensiune <Mate>n − j + 1</Mate> — cărora li se aplică
-                QR separat.
-              </>
-            ),
-          },
         ],
       },
 

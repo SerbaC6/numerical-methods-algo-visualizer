@@ -14,9 +14,9 @@
 Pașii, în ordine: se calculează AT·A; valorile ei proprii, ordonate descrescător, dau prin radical valorile singulare din S; vectorii proprii ortonormați ai aceleiași matrice sunt coloanele lui V; primele k coloane ale lui U ies din ui = (1/si)·A·vi, iar restul se completează cu direcții ortogonale pe ele. Ce rămâne, dacă rămâne un singur lucru: toată descompunerea unei matrice oarecare se obține din valorile și vectorii proprii ai unei singure matrice simetrice, AT·A.
 
 # la QR:
-1. Refa IN ANIMATIE scrisul din casutele de text, de sub explicarea parametriilor, ar trebui sa ma uit cu lupa ca sa il vad(toate scrisurile pentru explicatie, vreau sa fie mai mari). De asemenea, explica ca P2 vine de la b2, de la modul in care luam rotatia Givens astfel incat sa scapam de elementul b2 de sub diagonala principala(scrie pe scurt, nu incarca prea mult imaginea).
-2. Schimba inapoi in teta din alfa in animatie sinusurile si cosinusurile
-3. Scoate acest text: 
+1. ✅ Refa IN ANIMATIE scrisul din casutele de text, de sub explicarea parametriilor, ar trebui sa ma uit cu lupa ca sa il vad(toate scrisurile pentru explicatie, vreau sa fie mai mari). De asemenea, explica ca P2 vine de la b2, de la modul in care luam rotatia Givens astfel incat sa scapam de elementul b2 de sub diagonala principala(scrie pe scurt, nu incarca prea mult imaginea).
+2. ✅ Schimba inapoi in teta din alfa in animatie sinusurile si cosinusurile
+3. ✅ Scoate acest text: 
 "Aici e toată strategia metodei: nu se caută valorile proprii, ci se strâng spre zero capetele subdiagonalei, b2 și bn, până când cifra de lângă ele devine citibilă ca valoare proprie.
 Dacă un bj din mijloc se anulează, cu 2 < j < n, matricea se rupe și problema se sparge în două mai mici — una de dimensiune j − 1 și una de dimensiune n − j + 1 — cărora li se aplică QR separat.", cu tot cu b2 = 0 => .... si ce e scris in acel chenar pe lanaga asta
 
