@@ -1,11 +1,19 @@
 import { useMemo, useState } from "react";
 
-import { baleiazaH } from "@/algorithms/derivare-numerica/eroare";
-import { FORMULE, getFormula, noduriConcrete } from "@/algorithms/derivare-numerica/formule";
-import { FUNCTII, getFunctie } from "@/algorithms/functii";
+import {
+  FUNCTII_DERIVARE,
+  getFunctieDerivare,
+} from "@/algorithms/derivare-numerica/functii-derivare";
+import { getFormula, noduriConcrete } from "@/algorithms/derivare-numerica/formule";
 import { Callout } from "@/components/content/Callout";
-import { GraficEroareH } from "@/components/content/GraficEroareH";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
@@ -20,8 +28,19 @@ import { PlotPunct } from "@/components/viz/PlotPunct";
 import { esantioneaza, sparge } from "@/lib/plot-esantionare";
 import { stiintific, zecimale } from "@/lib/numere";
 
-/** Doar formulele pentru derivata întâi: pe grafic, panta e pantă. */
-const FORMULE_PANTA = FORMULE.filter((f) => f.ordin === 1);
+/**
+ * Cele trei formule de pantă care se pot alege.
+ *
+ * „Înainte" și „înapoi" sunt **aceeași formulă cu `h` schimbat de semn**, cum
+ * spune și cursul, deci pe ecran nu stau ca două alegeri diferite: fila se
+ * numește „Două puncte", iar desenul folosește varianta înainte. Cine schimbă
+ * semnul lui `h` obține cealaltă.
+ */
+const FILE_FORMULE = [
+  { id: "inainte", eticheta: "Două puncte" },
+  { id: "mijloc", eticheta: "Trei puncte, mijloc" },
+  { id: "capat", eticheta: "Trei puncte, capăt" },
+] as const;
 
 /** `h` se alege pe scară logaritmică: exponentul, nu valoarea. */
 const EXPONENT_MIN = -12;
@@ -30,32 +49,35 @@ const EXPONENT_MAX = 0;
 /**
  * Interfața interactivă a paginii 16.
  *
- * **Două desene, aceeași poveste.** Sus, geometria: secanta care se apropie de
- * tangentă când `h` scade. Jos, consecința numerică: eroarea în funcție de `h`,
- * pe log-log, cu forma ei de V. Primul desen explică de ce metoda funcționează,
- * al doilea de ce nu funcționează oricât de bine — iar cursorul lui `h` le
- * mișcă pe amândouă deodată, ceea ce e chiar legătura dintre ele.
+ * **Ce se vede.** Secanta formulei, dusă prin punctul de lucru, alături de
+ * tangenta adevărată. Diferența de înclinare dintre ele **e** eroarea, iar
+ * cursorul lui `h` o strânge sau o lărgește sub ochi.
  *
- * **De ce cursorul merge pe exponent.** `h` interesant e între `10⁰` și `10⁻¹²`;
- * pe o scară liniară, tot ce contează s-ar înghesui în ultimul pixel de lângă
- * zero. Cursorul mută **exponentul**, deci fiecare milimetru înseamnă același
- * lucru: o fracțiune de ordin de mărime.
+ * **De ce funcțiile astea.** Sunt alese ca să separe formulele, nu la
+ * întâmplare: pe o dreaptă toate sunt exacte, pe o parabolă mijlocul e exact
+ * iar cele două puncte greșesc cu exact `h`, pe cubică greșesc amândouă dar cu
+ * ordine diferite. Vezi
+ * [`functii-derivare.ts`](../../algorithms/derivare-numerica/functii-derivare.ts).
  *
- * Matematica nu stă aici: formulele și baleierea după `h` vin din
- * `src/algorithms/derivare-numerica/`, funcțiile din `functii.ts`.
+ * **De ce cursorul merge pe exponent.** `h` interesant e între `10⁰` și
+ * `10⁻¹²`; pe o scară liniară, tot ce contează s-ar înghesui în ultimul pixel
+ * de lângă zero. Cursorul mută **exponentul**, deci fiecare milimetru înseamnă
+ * același lucru: o fracțiune de ordin de mărime.
+ *
+ * Matematica nu stă aici: formulele vin din `src/algorithms/derivare-numerica/`.
  */
 export function InterfataDerivareNumerica() {
-  const [idFunctie, setIdFunctie] = useState("cosinus");
-  const [idFormula, setIdFormula] = useState("inainte");
-  const [x0, setX0] = useState<number | "">(0.6);
-  const [exponent, setExponent] = useState(-0.4);
+  const [idFunctie, setIdFunctie] = useState("parabola");
+  const [idFormula, setIdFormula] = useState<string>("inainte");
+  const [x0, setX0] = useState<number | "">(1);
+  const [exponent, setExponent] = useState(-1);
 
-  const functie = getFunctie(idFunctie);
+  const functie = getFunctieDerivare(idFunctie);
   const formula = getFormula(idFormula);
   const h = 10 ** exponent;
-  const punct = typeof x0 === "number" && Number.isFinite(x0) ? x0 : 0.6;
+  const punct = typeof x0 === "number" && Number.isFinite(x0) ? x0 : functie.x0;
 
-  const exact = functie.fDerivat(punct);
+  const exact = functie.fPrim(punct);
   const aproximare = formula.aproximeaza(functie.f, punct, h);
   const eroare = Math.abs(aproximare - exact);
 
@@ -84,28 +106,22 @@ export function InterfataDerivareNumerica() {
     return [min - margine, max + margine];
   }, [segmente]);
 
-  /** Curbele de eroare: toate formulele de pantă, pe același sistem. */
-  const curbe = useMemo(
-    () =>
-      FORMULE_PANTA.map((f) => ({
-        id: f.id,
-        curba: baleiazaH(f, functie.f, punct, functie.fDerivat(punct), {
-          hMax: 1,
-          hMin: 1e-13,
-          puncteDeDecada: 10,
-        }),
-        eticheta: f.eticheta,
-      })),
-    [functie, punct],
-  );
+  const schimbaFunctia = (id: string) => {
+    setIdFunctie(id);
+    setX0(getFunctieDerivare(id).x0);
+  };
 
   return (
     <div className="flex flex-col gap-10">
       <Legend elemente={LEGENDA} />
 
+      <Callout tip="retine" titlu={`Pe ${functie.eticheta}`}>
+        <Notatie>{functie.ceArata}</Notatie>
+      </Callout>
+
       <Tabs value={idFormula} onValueChange={setIdFormula}>
         <TabsList className="w-full">
-          {FORMULE_PANTA.map((f) => (
+          {FILE_FORMULE.map((f) => (
             <TabsTrigger key={f.id} value={f.id} className="flex-1">
               {f.eticheta}
             </TabsTrigger>
@@ -169,7 +185,9 @@ export function InterfataDerivareNumerica() {
                 onValueChange={([v]) => setExponent(v ?? 0)}
               />
               <div className="flex flex-wrap gap-2">
-                {[-0.4, -1, -2, -4, -8, -12].map((e) => (
+                {/* Exponenți întregi: cu -0,6 în listă, primul buton scria tot „10⁻¹",
+                    fiindcă eticheta rotunjește. */}
+                {[-1, -2, -3, -4, -8, -12].map((e) => (
                   <Button
                     key={e}
                     size="sm"
@@ -187,25 +205,33 @@ export function InterfataDerivareNumerica() {
 
           <ControlPanel
             onReset={() => {
-              setX0(0.6);
-              setExponent(-0.4);
+              setX0(functie.x0);
+              setExponent(-1);
             }}
             incorporat
             className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
           >
-            <div className="flex flex-wrap gap-2 sm:col-span-2">
-              {FUNCTII.map((f) => (
-                <Button
-                  key={f.id}
-                  size="sm"
-                  variant={f.id === idFunctie ? "default" : "outline"}
-                  className="tinta-atingere font-mono"
-                  aria-pressed={f.id === idFunctie}
-                  onClick={() => setIdFunctie(f.id)}
+            {/* Dintr-o listă, nu dintr-un șir de butoane: butoanele se rupeau pe
+                trei rânduri și cereau citite toate ca să alegi unul. */}
+            <div className="grid gap-2 sm:col-span-2">
+              <label className="text-base font-medium" htmlFor="alegere-functie-derivare">
+                Funcția
+              </label>
+              <Select value={idFunctie} onValueChange={schimbaFunctia}>
+                <SelectTrigger
+                  id="alegere-functie-derivare"
+                  className="tinta-atingere w-full font-mono text-base"
                 >
-                  {f.eticheta}
-                </Button>
-              ))}
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {FUNCTII_DERIVARE.map((f) => (
+                    <SelectItem key={f.id} value={f.id} className="font-mono">
+                      f(x) = {f.eticheta}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <NumberInput
@@ -216,17 +242,25 @@ export function InterfataDerivareNumerica() {
               pas={0.1}
             />
 
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 sm:col-span-2">
+            {/* Fiecare cifră în chenarul ei: într-o listă simplă, „exact" și
+                „aproximare" — două numere cu opt zecimale — se citeau ca un
+                singur bloc, tocmai unde diferența dintre ele e subiectul. */}
+            <dl className="grid gap-2 sm:col-span-2">
               {[
                 ["f′(x₀) exact", zecimale(exact, 8)],
                 ["aproximare", zecimale(aproximare, 8)],
-                ["eroare", stiintific(eroare, 2)],
+                ["eroare", eroare === 0 ? "0 — exact" : stiintific(eroare, 2)],
               ].map(([cheie, valoare]) => (
-                <div key={cheie} className="contents">
+                <div
+                  key={cheie}
+                  className="border-bordura bg-fundal/40 flex items-baseline justify-between gap-3 rounded-lg border px-3 py-2"
+                >
                   <dt className="text-text-slab font-mono text-base">
                     <Notatie>{cheie ?? ""}</Notatie>
                   </dt>
-                  <dd className="text-text font-mono text-base tabular-nums">{valoare}</dd>
+                  <dd className="text-text m-0 font-mono text-base font-semibold tabular-nums">
+                    {valoare}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -240,14 +274,6 @@ export function InterfataDerivareNumerica() {
         evidentiaza={["der-h"]}
         className="text-[1.15rem] sm:text-[1.3rem]"
       />
-
-      <GraficEroareH curbe={curbe} idSelectat={idFormula} hCurent={h} />
-
-      <Callout tip="retine" titlu="Ce se vede trăgând de cursor">
-        <Notatie>
-          {concluzie(formula.ordinEroare, curbe.find((c) => c.id === idFormula)?.curba.hOptim)}
-        </Notatie>
-      </Callout>
     </div>
   );
 }
@@ -300,18 +326,5 @@ function descrieDesenul(
     `Graficul lui ${eticheta} în jurul lui x₀ = ${zecimale(x0, 3)}, cu pasul h = ${stiintific(h, 2)}. ` +
     `Dreapta metodei are panta ${zecimale(aproximare, 6)}, tangenta adevărată ${zecimale(exact, 6)}; ` +
     `diferența dintre ele e ${stiintific(Math.abs(aproximare - exact), 2)}.`
-  );
-}
-
-function concluzie(ordinEroare: number, hOptim: number | undefined): string {
-  const salt = ordinEroare === 1 ? "se înjumătățește" : "se împarte la patru";
-  const unde = hOptim
-    ? ` Cel mai bun pas pentru formula asta e pe la ${hOptim.toExponential(0)}; sub el, eroarea urcă la loc.`
-    : "";
-  return (
-    `Trăgând cursorul spre stânga, cele două drepte se despart: pasul e prea mare, iar panta ` +
-    `calculată n-are cum să fie cea din punct. Spre dreapta se suprapun, iar eroarea ${salt} ` +
-    `la fiecare înjumătățire a pasului — până la un punct.${unde} De acolo încolo, scăderea ` +
-    `f(x₀+h) − f(x₀) se face între numere aproape egale, iar cifrele care rămân sunt zgomot.`
   );
 }

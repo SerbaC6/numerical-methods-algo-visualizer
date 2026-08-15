@@ -544,6 +544,8 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
 
 **Pagini fără clip, prin decizie** — nu „încă nu au":
 
+- **pagina 16** (`derivare-numerica`) — clipul a fost construit și **scos la cerere**; pagina
+  rămâne cu interfața interactivă, unde pasul se trage cu mâna.
 - **pagina 6** (`ecuatii-neliniare`) — doar interfața interactivă. Bisecția se înțelege trăgând de
   capetele intervalului, iar un film ar arăta exact ce face interfața, doar că fără să-l poți opri.
   Secțiunea „Vizual" **nu există** acolo: fără schelet, fără text de așteptare — vezi regula despre

@@ -110,9 +110,9 @@ La animatie:
 
 # Derivare numerica:
 De scos:
-- ANIMATIA TOTAL
-- Graficul acela cu eroarea din Interactiv
-LA TEXT:
+- ✅ ANIMATIA TOTAL
+- ✅ Graficul acela cu eroarea din Interactiv
+LA TEXT: ✅
 - Din cele șase formule care ies din calcul rămân doar două distincte: înlocuind h cu −h, celelalte se transformă una într-alta. Pentru derivata a doua se procedează identic și iese f″(x0) ≈ [f(x0−h) − 2f(x0) + f(x0+h)] / h2, cu eroarea −(h2/12)·f(4)(ξ). 
 - Toată pagina e despre ce înseamnă „destul de mic" — fiindcă, spre deosebire de ce ne-am aștepta, mai mic nu înseamnă mai bun.
  de la paragraful de inceput
@@ -121,9 +121,9 @@ LA TEXT:
 
 DE SCHIMBAT:
 - La interactiv:
-- Vreau valorile de la parametrii sa fie in chenare, functiile sa nu fie asa imprastiate, sa le aleg eu dintr-un drop-down
-- Restrange Doua puncte inainte si inapoi doar in doua puncte, simplu. Poti alege ca reprezentare, doua puncte inainte, dar scrie sus doar "Doua puncte"
-- Lucreaza mult pe functii, daca lasam asa nu se intelege nimic, eu nu inteleg nimic din exemplele tale. Vino cu ceva mai bun si care sa arate mai bine diferenta intre ele
+- ✅ Vreau valorile de la parametrii sa fie in chenare, functiile sa nu fie asa imprastiate, sa le aleg eu dintr-un drop-down
+- ✅ Restrange Doua puncte inainte si inapoi doar in doua puncte, simplu. Poti alege ca reprezentare, doua puncte inainte, dar scrie sus doar "Doua puncte"
+- ✅ Lucreaza mult pe functii, daca lasam asa nu se intelege nimic, eu nu inteleg nimic din exemplele tale. Vino cu ceva mai bun si care sa arate mai bine diferenta intre ele
 
 
 

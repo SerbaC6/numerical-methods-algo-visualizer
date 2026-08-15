@@ -376,6 +376,8 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     ],
     dificultate: "ușor",
     cursSursa: ["derivare-integrare-numerica_curs11.md"],
+    // Clipul a fost construit și scos la cerere; pagina rămâne cu interfața.
+    clip: false,
     gata: false,
   },
   {
