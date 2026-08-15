@@ -96,13 +96,16 @@ De scos:
 De schimbat: 
 - ✅ Fa acel tabel cu formule mai spatiat si mai mare, scrie metoda cu M mare
 La animatie:
-- Verifica daca matricea din exemplu respecta conditia de dominant diagonala
-- De verificat corectitudinea sagetilor
-- De scris corect si frumos semnele (de exemplu x^(0) are niste spatii in plus)
-- Transforma zecimalele in fractii
-- Schimba subtitrarea "Coloana din stanga nu se schimba tot baleiajul" cu ceva mai consecvent, nu se intelege ce ai vrut sa zici
-- Partea cu "Eroarea se inmulteste cu p la fiecare pas" poti sa o scoti si sa faci mai frumos desenata acea pagina, cam in stilul animatiei de la LU, cand vorbeam de Cramer vs LU
-- la SOR, aeriseste pagina, sunt prea inghesuite acolo, nu prea se intelege nimic. De asemenea, fa si mai frumoasa animatia. Fa un fade-in, fa un efect
+- ✅ Verifica daca matricea din exemplu respecta conditia de dominant diagonala
+  (verificat: e cea din curs, §10 problema 3; dominanta e slabă, nu strictă —
+  linia 2 are |4| = 1 + 3. Ambele metode converg oricum: ρ = 0,6072 și 0,4082.
+  Animația nu afirma nicăieri dominanța, deci nu era nimic greșit pe ecran.)
+- ✅ De verificat corectitudinea sagetilor
+- ✅ De scris corect si frumos semnele (de exemplu x^(0) are niste spatii in plus)
+- ✅ Transforma zecimalele in fractii
+- ✅ Schimba subtitrarea "Coloana din stanga nu se schimba tot baleiajul" cu ceva mai consecvent, nu se intelege ce ai vrut sa zici
+- ✅ Partea cu "Eroarea se inmulteste cu p la fiecare pas" poti sa o scoti si sa faci mai frumos desenata acea pagina, cam in stilul animatiei de la LU, cand vorbeam de Cramer vs LU
+- ✅ la SOR, aeriseste pagina, sunt prea inghesuite acolo, nu prea se intelege nimic. De asemenea, fa si mai frumoasa animatia. Fa un fade-in, fa un efect
 
 
 # Derivare numerica:
