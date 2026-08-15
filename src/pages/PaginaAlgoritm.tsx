@@ -9,7 +9,6 @@ import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
 import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
-import { InterfataMetodeIterative } from "@/components/content/InterfataMetodeIterative";
 import { AnimatiaDerivarii } from "@/components/content/AnimatiaDerivarii";
 import { InterfataDerivareNumerica } from "@/components/content/InterfataDerivareNumerica";
 import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonalitate";
@@ -71,7 +70,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
     vizual: AnimatieCoborarePeGradient,
     interactiv: InterfataMetodeDeGradient,
   },
-  "metode-iterative": { vizual: AnimatiaMetodelorIterative, interactiv: InterfataMetodeIterative },
+  "metode-iterative": { vizual: AnimatiaMetodelorIterative },
   "norme-si-ortogonalitate": { interactiv: InterfataOrtogonalitate },
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },

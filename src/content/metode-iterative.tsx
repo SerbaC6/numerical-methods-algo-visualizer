@@ -106,94 +106,21 @@ export const continutMetodeIterative: ContinutPagina = {
           {
             tip: "formula",
             latex:
-              "\\begin{array}{cc}\n" +
-              "A = \\begin{pmatrix}2&1&1\\\\1&2&1\\\\1&1&2\\end{pmatrix} & D = \\begin{pmatrix}2&0&0\\\\0&2&0\\\\0&0&2\\end{pmatrix} \\\\[10pt]\n" +
-              "L = \\begin{pmatrix}0&0&0\\\\-1&0&0\\\\-1&-1&0\\end{pmatrix} & U = \\begin{pmatrix}0&-1&-1\\\\0&0&-1\\\\0&0&0\\end{pmatrix}\n" +
+              // `\arraystretch` și spațiile din jurul celulelor sunt singurul
+              // fel în care un tabel KaTeX capătă aer: fără ele, cele patru
+              // rânduri se lipesc și liniile verticale par să taie textul.
+              "\\def\\arraystretch{1.9}\\Large\n" +
+              "\\begin{array}{l|c|c}\n" +
+              "\\;\\text{Metodă}\\;\\; & \\;\\; M \\;\\; & \\;\\; N \\; \\\\\\hline\n" +
+              "\\;\\text{Jacobi}\\;\\; & \\;\\; D \\;\\; & \\;\\; L + U \\; \\\\\n" +
+              "\\;\\text{Gauss-Seidel}\\;\\; & \\;\\; D - L \\;\\; & \\;\\; U \\; \\\\\n" +
+              "\\;\\text{SOR}\\;\\; & \\;\\; D - \\omega L \\;\\; & \\;\\; (1-\\omega)D + \\omega U \\;\n" +
               "\\end{array}",
-            sursa: "curs 5, §3.2 (partiționarea) pe sistemul din §10, problema 4",
-            explicatie: (
-              <>
-                Aceeași despărțire, pe un sistem concret. Se verifică dintr-o privire:{" "}
-                <Mate>D − L − U</Mate> pune fiecare element înapoi de unde a venit, cu semnul lui
-                original.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "\\begin{array}{l|c|c}\n\\text{metodă} & M & N \\\\\\hline\n\\text{Jacobi} & D & L + U \\\\\n\\text{Gauss-Seidel} & D - L & U \\\\\n\\text{SOR} & D - \\omega L & (1-\\omega)D + \\omega U\n\\end{array}",
             sursa: "curs 5, §3.2",
             explicatie: (
               <>
                 Tot ce urmează pe pagină e cuprins în tabelul ăsta. Restul secțiunilor spun ce
                 înseamnă fiecare rând când îl scrii pe linii, cu numere.
-              </>
-            ),
-          },
-        ],
-      },
-      {
-        id: "convergenta",
-        titlu: "Când converge și cât de repede",
-        esenta: (
-          <>
-            Un singur număr decide: raza spectrală a lui <Mate>G</Mate>. Sub 1 metoda converge,
-            peste 1 diverge, iar cât de mult sub 1 spune cât de repede.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex: "e^{(k)} = x - x^{(k)} = G\\,e^{(k-1)} = G^{k}\\,e^{(0)}",
-            sursa: "curs 5, §3.1",
-            legenda: [
-              { simbol: "e⁽ᵏ⁾", sens: <>eroarea după k pași: cât mai e până la soluție</> },
-              { simbol: "e⁽⁰⁾", sens: <>eroarea de pornire, dată de ghicirea inițială</> },
-            ],
-            explicatie: (
-              <>
-                Scăzând <Mate>x = G·x + c</Mate> din <Mate>x⁽ᵏ⁾ = G·x⁽ᵏ⁻¹⁾ + c</Mate>, vectorul{" "}
-                <Mate>c</Mate> dispare: eroarea nu face altceva decât să fie înmulțită cu{" "}
-                <Mate>G</Mate> la fiecare pas. Deci convergența nu depinde nici de <Mate>b</Mate>,
-                nici de pornire — doar de <Mate>G</Mate>.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex: "\\rho(G) = \\max_i |\\lambda_i(G)| < 1",
-            sursa: "curs 5, §3.1",
-            legenda: [
-              { simbol: "λᵢ(G)", sens: <>valorile proprii ale matricei de iterație</> },
-              { simbol: "ρ(G)", sens: <>raza spectrală: cea mai mare dintre ele, în modul</> },
-            ],
-            explicatie: (
-              <>
-                Condiția e și necesară, și suficientă: <Mate>Gᵏ → 0</Mate> exact atunci când toate
-                valorile proprii sunt subunitare în modul. Practic, <Mate>ρ(G)</Mate> e factorul cu
-                care se micșorează eroarea la fiecare pas: cu <Mate>ρ = 0,4</Mate>, după zece pași
-                mai rămâne din ea cam a zecea-miia parte, iar cu <Mate>ρ = 0,99</Mate> aceeași
-                reducere cere peste 900 de pași.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex: "|a_{ii}| > \\sum_{j \\neq i} |a_{ij}|, \\qquad i = 1, \\dots, n",
-            sursa: "curs 5, §1",
-            legenda: [
-              { simbol: "aᵢᵢ", sens: <>elementul de pe diagonală al liniei i</> },
-              { simbol: "Σ|aᵢⱼ|", sens: <>cât cântăresc, la un loc, ceilalți din linie</> },
-            ],
-            explicatie: (
-              <>
-                Dominanța diagonală e o condiție <strong>suficientă, dar nu necesară</strong>: dacă
-                e îndeplinită, metodele converg din orice pornire; dacă nu e, ele încă pot să
-                conveargă — sau nu. Se verifică dintr-o privire, spre deosebire de <Mate>ρ(G)</Mate>
-                , care cere valorile proprii. Inegalitatea e strictă: pe primul sistem al paginii,
-                linia a doua stă exact la egalitate, deci condiția nu e îndeplinită — și totuși
-                amândouă metodele converg.
               </>
             ),
           },
@@ -305,20 +232,6 @@ export const continutMetodeIterative: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Merită schimbul?</strong> De obicei da, și se vede pe cifre. Pe primul
-                sistem al paginii, Jacobi are <Mate>ρ = 0,6072</Mate> și termină în 33 de iterații,
-                iar Gauss-Seidel <Mate>ρ = 0,4082</Mate> și 23. Pe al doilea sistem, diferența nu
-                mai e de viteză, ci de existență: <Mate>ρ(Jacobi) = 1</Mate> exact, deci eroarea nu
-                se micșorează niciodată — vectorul oscilează la nesfârșit —, în timp ce Gauss-Seidel
-                ajunge la soluție în 20 de iterații. <strong>Nu e o regulă</strong>: există sisteme
-                pe care Jacobi converge și Gauss-Seidel nu.
-              </>
-            ),
-          },
         ],
       },
       {
@@ -384,61 +297,6 @@ export const continutMetodeIterative: ContinutPagina = {
                 puțin <Mate>|ω − 1|</Mate>. Între ele, <Mate>1 &lt; ω &lt; 2</Mate> înseamnă
                 suprarelaxare, <Mate>ω &lt; 1</Mate> subrelaxare. Dacă matricea e simetrică și
                 pozitiv definită, orice <Mate>ω</Mate> din <Mate>(0, 2)</Mate> converge.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Cât de bun e ω optim nu se poate calcula.</strong> Se caută încercând, iar
-                pe cele două sisteme ale paginii răspunsul e chiar diferit ca semn: pe cel dominant
-                diagonal, cel mai bun <Mate>ω</Mate> e <strong>subunitar</strong> — 0,935, adică
-                subrelaxare —, iar suprarelaxarea strică lucrurile până la divergență, pe la{" "}
-                <Mate>ω ≈ 1,47</Mate>. Pe al doilea, cel mai bun e 1,08, deci suprarelaxare.
-                Câștigul pe sisteme mici e de o iterație-două; el crește cu dimensiunea sistemului,
-                și de aceea metoda se folosește când ai de rezolvat multe sisteme cu aceeași
-                matrice: cauți <Mate>ω</Mate> o dată și îl refolosești.
-              </>
-            ),
-          },
-        ],
-      },
-      {
-        id: "oprire",
-        titlu: "Când se oprește",
-        esenta: (
-          <>
-            Soluția exactă nu se cunoaște, deci nu se poate măsura cât de departe ești de ea. Se
-            măsoară altceva: cât de mult s-a mișcat vectorul la ultimul pas.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "\\left\\lVert x^{(k)} - x^{(k-1)} \\right\\rVert_{\\infty} = \\max_i \\left| x_i^{(k)} - x_i^{(k-1)} \\right| < \\varepsilon",
-            sursa: "curs 5, §1.1, §7",
-            legenda: [
-              { simbol: "ε", sens: <>toleranța: sub cât se consideră că vectorul a stat pe loc</> },
-              { simbol: "‖·‖∞", sens: <>cea mai mare schimbare dintre toate componentele</> },
-            ],
-            explicatie: (
-              <>
-                Se poate măsura și cu suma modulelor, și cu norma euclidiană, și relativ — împărțind
-                la componentele soluției. Cea de aici e cea mai severă dintre variantele absolute:
-                cere ca <em>fiecare</em> componentă să se fi liniștit, nu doar media lor.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                A doua condiție de oprire e <strong>numărul maxim de iterații</strong>, și nu e o
-                formalitate: e singura care garantează că algoritmul se termină și când metoda
-                diverge sau se blochează, cazuri în care prima condiție n-ar fi îndeplinită
-                niciodată.
               </>
             ),
           },

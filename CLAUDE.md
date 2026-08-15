@@ -431,8 +431,6 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Etapa 2 — pagini medii (cer o primitivă nouă fiecare)
 
-- [ ] **Pagina 5 — `metode-iterative`** (Jacobi, Gauss-Seidel, SOR). `MatrixGrid` + al doilea desen,
-      de convergență (eroarea pe iterații). Două vizualizări sincronizate pe același `steps[]`.
 - [ ] **Pagina 18 — `romberg`** (extrapolare Richardson, tabloul Romberg). `MatrixGrid`
       triunghiular, umplut coloană cu coloană. O singură primitivă — pagina s-a ușurat când
       cuadraturile au plecat de pe ea.
@@ -562,6 +560,8 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
 - **pagina 15** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
   set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
+- **pagina 5** (`metode-iterative`) — interfața a fost construită și **scoasă la cerere**; pe
+  pagină rămâne clipul (`AnimatiaMetodelorIterative`).
 - **pagina 1** (`factorizari-lu`) — **scoasă la cerere**. Rămâne clipul
   (`AnimatiaFactorizariiLu`), pe factorizarea Doolittle exactă a matricei
   `A = [[1,2,3],[2,8,11],[3,22,42]]`. Se potrivea oricum cu cerința din `Plan.md` de a nu

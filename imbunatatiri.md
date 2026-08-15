@@ -83,8 +83,8 @@ Pe Givens:
 
 # Jacobi, Gauss-Seidel, SOR:
 De scos:
-- Toata interfata grafica
-- La text:
+- ✅ Toata interfata grafica
+- ✅ La text:
 1. partea cu aratarea matricii pe exemplu A, D, L, U
 2. Aceeași despărțire, pe un sistem concret. Se verifică dintr-o privire: D − L − U pune fiecare element înapoi de unde a venit, cu semnul lui original.
 3. Tot box-ul cu "Când converge și cât de repede"
@@ -94,7 +94,7 @@ De scos:
 
 
 De schimbat: 
-- Fa acel tabel cu formule mai spatiat si mai mare, scrie metoda cu M mare
+- ✅ Fa acel tabel cu formule mai spatiat si mai mare, scrie metoda cu M mare
 La animatie:
 - Verifica daca matricea din exemplu respecta conditia de dominant diagonala
 - De verificat corectitudinea sagetilor

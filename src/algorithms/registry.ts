@@ -180,6 +180,8 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Jacobi", "Gauss-Seidel", "SOR", "Convergență"],
     dificultate: "mediu",
     cursSursa: ["sisteme_liniare_metode_iterative_MN_curs5.md"],
+    // Interfața a fost construită și scoasă la cerere; pe pagină rămâne clipul.
+    interactiv: false,
     gata: false,
   },
   {
