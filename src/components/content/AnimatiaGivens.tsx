@@ -181,31 +181,6 @@ function Cartonas({
   );
 }
 
-function Concluzie({
-  opacitate,
-  copii,
-  st,
-}: {
-  opacitate: number;
-  copii: React.ReactNode;
-  st: number;
-}) {
-  return (
-    // 866, nu 912: sub ea începe banda subtitrărilor, iar cele două propoziții
-    // ajungeau lipite, ca un singur paragraf citit din două locuri.
-    <text
-      x={W / 2}
-      y={866}
-      textAnchor="middle"
-      opacity={opacitate}
-      fill="var(--text)"
-      style={{ font: `700 ${38 * Math.min(st, 1.25)}px var(--font-sans)` }}
-    >
-      {copii}
-    </text>
-  );
-}
-
 /**
  * Matricea desenată, cu evidențierea pe **linii**: aici asta e ideea, nu
  * celulele — o rotație atinge exact două linii și lasă restul neatins.
@@ -464,11 +439,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oRot * oFaraUnghi}
-        st={st}
-        copii="Unghiul nu se calculează niciodată — cosinusul și sinusul ies direct din x și y."
-      />
 
       {/* ═══ 2 · matricea ═══ */}
       <Antet opacitate={oMat} titlu="Matricea de rotație" st={st} />
@@ -532,16 +502,6 @@ function Desen() {
             : ""}
         </text>
       </g>
-      <Concluzie
-        opacitate={oEx * intra(T, E + 11.4, 0.5)}
-        st={st}
-        copii={
-          <>
-            Prima rotație are <tspan fill={culoareEticheta(ROL_IMAGINE)}>cos θ = 0</tspan>: schimbă
-            liniile între ele, atât.
-          </>
-        }
-      />
 
       {/* ═══ 4 · față în față ═══ */}
       <Antet opacitate={oFata} titlu="Față de oglindă" st={st} />
@@ -587,11 +547,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oFata * intra(T, F + 7.0, 0.5)}
-        st={st}
-        copii="Householder pentru matrice pline, Givens pentru matrice rare."
-      />
     </svg>
   );
 }
@@ -606,7 +561,7 @@ const SUBTITRARI = [
   },
   {
     la: CUE.Rotatia + 5.6,
-    text: "Din condiția ca a doua componentă să fie zero ies direct cos θ și sin θ.",
+    text: "Unghiul nu se calculează niciodată: din condiția ca a doua componentă să fie zero ies direct cos θ și sin θ.",
   },
   {
     la: CUE.Matricea + 0.4,

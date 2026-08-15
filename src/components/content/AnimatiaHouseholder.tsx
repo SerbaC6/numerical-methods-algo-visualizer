@@ -164,31 +164,6 @@ function Cartonas({
   );
 }
 
-function Concluzie({
-  opacitate,
-  copii,
-  st,
-}: {
-  opacitate: number;
-  copii: React.ReactNode;
-  st: number;
-}) {
-  return (
-    // 866, nu 912: sub ea începe banda subtitrărilor, iar cele două propoziții
-    // ajungeau lipite, ca un singur paragraf citit din două locuri.
-    <text
-      x={W / 2}
-      y={866}
-      textAnchor="middle"
-      opacity={opacitate}
-      fill="var(--text)"
-      style={{ font: `700 ${38 * Math.min(st, 1.25)}px var(--font-sans)` }}
-    >
-      {copii}
-    </text>
-  );
-}
-
 /** Matricea desenată, pentru scenele cu exemplul 3×3. */
 function Matrice({
   x,
@@ -390,11 +365,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oTinta * intra(T, A + 6.4, 0.5)}
-        st={st}
-        copii="O transformare care păstrează lungimea nu poate duce vectorul oriunde."
-      />
 
       {/* ═══ 2 · oglinda ═══ */}
       <Antet opacitate={oOglinda} titlu="Oglinda" st={st} />
@@ -446,16 +416,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oOglinda * oFormula}
-        st={st}
-        copii={
-          <>
-            <tspan fill={culoareEticheta(ROL_D)}>d = v + sign(v₁)·‖v‖·e₁</tspan> — vectorul, plus
-            norma lui pusă pe prima poziție.
-          </>
-        }
-      />
 
       {/* ═══ 3 · semnul ═══ */}
       <Antet opacitate={oSemn} titlu="De ce semnul acela" st={st} />
@@ -506,11 +466,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oSemn * oPrabusire}
-        st={st}
-        copii="Semnul se alege ca v și reflexia lui să fie depărtate."
-      />
 
       {/* ═══ 4 · coloana ═══ */}
       <Antet opacitate={oColoana} titlu="O reflexie, o coloană" st={st} />
@@ -544,17 +499,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oColoana * intra(T, C + 6.4, 0.5)}
-        st={st}
-        copii={
-          <>
-            Prima coloană are norma {zecimale(PAS_1?.norma ?? 0, 0)}, deci ajunge în{" "}
-            <tspan fill={culoareEticheta(ROL_IMAGINE)}>(−3; 0; 0)</tspan> — două zerouri dintr-o
-            înmulțire.
-          </>
-        }
-      />
 
       {/* ═══ 5 · final ═══ */}
       <Antet opacitate={oFinal} titlu="Încă una, și gata" st={st} />
@@ -581,11 +525,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oFinal * intra(T, F + 3.4, 0.5)}
-        st={st}
-        copii="Două reflexii pentru o matrice 3×3 — una pentru fiecare coloană de sub diagonală."
-      />
     </svg>
   );
 }
@@ -604,18 +543,31 @@ const SUBTITRARI = [
     la: CUE.Oglinda + 1.6,
     text: "Direcția de reflexie e d — normala oglinzii, nu oglinda însăși.",
   },
+  {
+    la: CUE.Oglinda + 3.2,
+    text: "d = v + sign(v₁)·‖v‖·e₁ — vectorul, plus norma lui pusă pe prima poziție.",
+  },
   { la: CUE.Oglinda + 5.6, text: "Vectorul trece dincolo de oglindă și aterizează pe axă." },
   { la: CUE.Semnul + 0.4, text: "Din cele două oglinzi, una e mult mai bună decât cealaltă." },
   {
     la: CUE.Semnul + 3.8,
     text: "Când v e lipit de axă, semnul opus dă un d aproape nul — oglinda ajunge definită de zgomot.",
   },
+  { la: CUE.Semnul + 6.2, text: "Semnul se alege ca v și reflexia lui să fie depărtate." },
   {
     la: CUE.Coloana + 0.4,
     text: "Aceeași reflexie, dar în trei dimensiuni, pe o coloană de matrice.",
   },
   { la: CUE.Coloana + 4.4, text: "O singură înmulțire, și toată coloana de sub diagonală e zero." },
+  {
+    la: CUE.Coloana + 6.4,
+    text: `Prima coloană are norma ${zecimale(PAS_1?.norma ?? 0, 0)}, deci ajunge în (−3; 0; 0) — două zerouri dintr-o înmulțire.`,
+  },
   { la: CUE.Final + 0.4, text: "A doua reflexie curăță coloana a doua, iar matricea devine R." },
+  {
+    la: CUE.Final + 3.4,
+    text: "Două reflexii pentru o matrice 3×3 — una pentru fiecare coloană de sub diagonală.",
+  },
   { la: TOTAL - 3.0, text: "Produsul reflexiilor, luat invers, e chiar Q." },
 ] as const;
 

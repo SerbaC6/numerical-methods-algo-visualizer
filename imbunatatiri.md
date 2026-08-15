@@ -126,6 +126,9 @@ DE SCHIMBAT:
 - ✅ Lucreaza mult pe functii, daca lasam asa nu se intelege nimic, eu nu inteleg nimic din exemplele tale. Vino cu ceva mai bun si care sa arate mai bine diferenta intre ele
 
 
+Incepe 
+
+
 
 
 

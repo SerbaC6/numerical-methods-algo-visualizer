@@ -382,28 +382,6 @@ function Card({
 }
 
 /** Propoziția lată de sub desen — concluzia momentului. */
-function Concluzie({
-  opacitate,
-  copii,
-  st,
-}: {
-  opacitate: number;
-  copii: React.ReactNode;
-  st: number;
-}) {
-  return (
-    <text
-      x={W / 2}
-      y={905}
-      textAnchor="middle"
-      opacity={opacitate}
-      fill="var(--text)"
-      style={{ font: `700 ${40 * Math.min(st, 1.25)}px var(--font-sans)` }}
-    >
-      {copii}
-    </text>
-  );
-}
 
 /* ───────────────────────── desenul întreg ───────────────────────── */
 
@@ -438,7 +416,6 @@ function Desen() {
 
   const oDefinitii = felie(T, O, O + 6.1) * intra(T, O + 0.8, 0.5);
   const oImplicatii = felie(T, O + 6.1, cue.Rotatii) * intra(T, O + 6.1);
-  const oTinta = felie(T, O, O + 6.0) * intra(T, O + 0.5, 0.6);
 
   /* ── 2 · rotațiile Givens, în trei momente ── */
   const R0 = cue.Rotatii;
@@ -476,7 +453,6 @@ function Desen() {
   const oFact = felie(T, F, cue.Asemanare);
   const oQ = oFact * intra(T, F + 0.6, 0.4);
   const oR = oFact * intra(T, F + 1.3, 0.4);
-  const oDeCe = oFact * intra(T, F + 2.9, 0.55);
 
   /* ── 4 · pasul iterației ── */
   const S = cue.Asemanare;
@@ -492,7 +468,6 @@ function Desen() {
   const oConv = felie(T, V, TOTAL + 1);
   const stingere = clamp((T - V - 0.6) / 1.8, 0, 1);
   const citire = clamp((T - V - 2.0) / 1.8, 0, 1);
-  const oScop = intra(T, V + 4.3, 0.5);
   const vecin = (indice: string) =>
     stingere > 0.66 ? "0" : (stingere > 0.33 ? "ε" : "b") + indice;
   const randuriConv = [
@@ -581,17 +556,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oObs * oTinta}
-        st={st}
-        copii={
-          <>
-            Unde vrem să ajungem:{" "}
-            <tspan fill={culoareEticheta(ROL_STINS)}>matricea diagonală</tspan>, cu valorile proprii
-            pe diagonală.
-          </>
-        }
-      />
 
       {/* ═══ 2 · rotațiile Givens ═══ */}
       <Antet opacitate={oRot} titlu="Rotațiile Givens" st={st} />
@@ -793,11 +757,6 @@ function Desen() {
         eticheta="Superior triunghiulară"
         st={st}
       />
-      <Concluzie
-        opacitate={oDeCe}
-        st={st}
-        copii="Din Q și R construim pasul următor, fără să schimbăm valorile proprii."
-      />
 
       {/* ═══ 4 · pasul iterației ═══ */}
       <Antet opacitate={oPas} titlu="Pasul iterației" st={st} />
@@ -877,16 +836,6 @@ function Desen() {
           />
         ))}
       </g>
-      <Concluzie
-        opacitate={oConv * oScop}
-        st={st}
-        copii={
-          <>
-            Scopul: matricea diagonală cu{" "}
-            <tspan fill={culoareEticheta(ROL_STINS)}>toate valorile proprii</tspan> ale lui A.
-          </>
-        }
-      />
     </svg>
   );
 }
@@ -902,6 +851,10 @@ const SUBTITRARI = [
   {
     la: CUE.Observatie + 6.4,
     text: "Când un b devine 0, a-ul de lângă el este o valoare proprie.",
+  },
+  {
+    la: CUE.Observatie + 8.2,
+    text: "Unde vrem să ajungem: matricea diagonală, cu valorile proprii pe diagonală.",
   },
   { la: CUE.Rotatii + 0.3, text: "Pornim de la matricea identitate." },
   {
@@ -926,6 +879,10 @@ const SUBTITRARI = [
     text: "Repetăm cu P₃ … Pₙ — din aceste rotații se obțin Q și R.",
   },
   { la: CUE.Factorizare + 0.4, text: "Q este ortogonală, R este superior triunghiulară." },
+  {
+    la: CUE.Factorizare + 3.2,
+    text: "Din Q și R construim pasul următor, fără să schimbăm valorile proprii.",
+  },
   {
     la: CUE.Asemanare + 0.4,
     text: "Înmulțite în ordine inversă, R·Q păstrează valorile proprii și micșorează b-urile.",

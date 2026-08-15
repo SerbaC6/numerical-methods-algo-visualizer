@@ -351,32 +351,6 @@ function Card({
   );
 }
 
-/** Propoziția lată de sub desen — concluzia momentului. */
-function Concluzie({
-  opacitate,
-  copii,
-  st,
-}: {
-  opacitate: number;
-  copii: React.ReactNode;
-  st: number;
-}) {
-  return (
-    <text
-      x={W / 2}
-      // 866, nu 905: sub ea începe banda subtitrărilor, iar cele două propoziții
-      // ajungeau lipite, ca un singur paragraf citit din două locuri.
-      y={866}
-      textAnchor="middle"
-      opacity={opacitate}
-      fill="var(--text)"
-      style={{ font: `700 ${40 * Math.min(st, 1.25)}px var(--font-sans)` }}
-    >
-      {copii}
-    </text>
-  );
-}
-
 /**
  * Săgeata care arată de unde se citește o valoare.
  *
@@ -535,11 +509,6 @@ function Desen() {
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oSistem * intra(T, S + 6.2, 0.5)}
-        st={st}
-        copii="Nu rezolvăm sistemul dintr-o dată — îl îmbunătățim de fiecare dată."
-      />
 
       {/* ═══ 2 · o singură linie ═══ */}
       <Antet opacitate={oLinie} titlu="Ce face o linie" st={st} />
@@ -579,11 +548,6 @@ function Desen() {
           x₁ = {cifra(PAS_JACOBI?.componente[0]?.valoareNoua ?? 0)}
         </text>
       </g>
-      <Concluzie
-        opacitate={oLinie * intra(T, L + 6.4, 0.5)}
-        st={st}
-        copii="Linia i răspunde pentru necunoscuta i. Întrebarea e de unde ia celelalte două."
-      />
 
       {/* ═══ 3 · Jacobi ═══ */}
       <Antet opacitate={oJacobi} titlu="Jacobi" st={st} />
@@ -597,17 +561,6 @@ function Desen() {
         pasPeLinie={PAS_PE_LINIE}
         st={st}
       />
-      <Concluzie
-        opacitate={oJacobi * intra(T, J + 10.4, 0.5)}
-        st={st}
-        copii={
-          <>
-            Toate cele trei linii citesc din{" "}
-            <tspan fill={culoareEticheta(ROL_VECHI)}>același vector, înghețat</tspan> — deci se pot
-            calcula în același timp.
-          </>
-        }
-      />
 
       {/* ═══ 4 · Gauss-Seidel ═══ */}
       <Antet opacitate={oGs} titlu="Gauss-Seidel" st={st} />
@@ -620,16 +573,6 @@ function Desen() {
         start={G + 1.2}
         pasPeLinie={PAS_PE_LINIE}
         st={st}
-      />
-      <Concluzie
-        opacitate={oGs * intra(T, G + 10.4, 0.5)}
-        st={st}
-        copii={
-          <>
-            Valoarea scrisă e citită <tspan fill={culoareEticheta(ROL_PROASPAT)}>imediat</tspan> de
-            linia următoare. Aceeași formulă, alt vector sub ea.
-          </>
-        }
       />
 
       {/* ═══ 5 · comparația ═══ */}
@@ -699,11 +642,6 @@ function Desen() {
           );
         })}
       </g>
-      <Concluzie
-        opacitate={oComparatie * intra(T, C + 4.4, 0.5)}
-        st={st}
-        copii="Nu e o regulă generală — dar când amândouă merg, Gauss-Seidel ajunge primul."
-      />
 
       {/* ═══ 6 · ω ═══ */}
       <Antet opacitate={oOmega} titlu="Suprarelaxare" st={st} />
@@ -735,11 +673,6 @@ function Desen() {
         </text>
       </g>
       <CursorOmega opacitate={oOmega * intra(T, O + 1.4, 0.5)} omega={omegaCurent} st={st} />
-      <Concluzie
-        opacitate={oOmega * intra(T, O + 7.0, 0.5)}
-        st={st}
-        copii="ω = 1 e chiar Gauss-Seidel. Cel mai bun ω nu se calculează — se caută."
-      />
     </svg>
   );
 }
@@ -1113,6 +1046,10 @@ const SUBTITRARI = [
     text: "Metodele iterative nu îl rezolvă: pornesc de la o ghicire și o corectează.",
   },
   {
+    la: CUE.Sistem + 6.2,
+    text: "Nu rezolvăm sistemul dintr-o dată — îl îmbunătățim de fiecare dată.",
+  },
+  {
     la: CUE.Linia + 0.4,
     text: "Fiecare linie e rezolvată pentru necunoscuta care îi stă pe diagonală.",
   },
@@ -1120,10 +1057,18 @@ const SUBTITRARI = [
     la: CUE.Linia + 4.6,
     text: "Cu x⁽⁰⁾ = 0, prima linie dă x₁ = 1/10. Celelalte două valori vin din vectorul curent.",
   },
+  {
+    la: CUE.Linia + 6.8,
+    text: "Linia i răspunde pentru necunoscuta i. Întrebarea e de unde ia celelalte două.",
+  },
   { la: CUE.Jacobi + 0.4, text: "Jacobi ține vectorul vechi înghețat și scrie într-unul nou." },
   {
     la: CUE.Jacobi + 6.0,
     text: "Ordinea liniilor nu contează: rezultatul e același oricum le-ai lua.",
+  },
+  {
+    la: CUE.Jacobi + 10.4,
+    text: "Toate trei citesc din același vector înghețat — deci se pot calcula în același timp.",
   },
   { la: CUE.GaussSeidel + 0.4, text: "Gauss-Seidel scrie peste vectorul din care citește." },
   {
@@ -1131,10 +1076,19 @@ const SUBTITRARI = [
     text: "Linia a doua folosește deja valoarea proaspătă a lui x₁ — asta e toată diferența.",
   },
   {
+    la: CUE.GaussSeidel + 10.4,
+    text: "Aceeași formulă, alt vector sub ea.",
+  },
+  {
     la: CUE.Comparatie + 0.4,
     text: "Raza spectrală spune cu cât se micșorează eroarea la fiecare pas.",
   },
+  {
+    la: CUE.Comparatie + 4.4,
+    text: "Nu e o regulă generală — dar când amândouă merg, Gauss-Seidel ajunge primul.",
+  },
   { la: CUE.Omega + 0.4, text: "SOR înmulțește corecția cu ω înainte s-o adauge." },
+  { la: CUE.Omega + 7.0, text: "Cel mai bun ω nu se calculează — se caută." },
   { la: TOTAL - 3.2, text: "Sub 1 temperează, peste 1 amplifică, iar la 1 e chiar Gauss-Seidel." },
 ] as const;
 
