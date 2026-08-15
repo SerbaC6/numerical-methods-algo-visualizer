@@ -2,12 +2,12 @@ import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
- * Pagina 16 — derivare numerică.
+ * Pagina 15 — derivare numerică.
  *
  * **Sursă: `cursuri_MN/derivare-integrare-numerica_curs11.md`**, partea de
  * derivare: formula two-point, formula generală cu `n+1` puncte, cele două
  * formule cu 3 puncte, derivata a doua în punct de mijloc și observația despre
- * eroarea de rotunjire. Partea de integrare (Newton-Cotes) e pagina 17.
+ * eroarea de rotunjire. Partea de integrare (Newton-Cotes) e pagina 16.
  * Nimic scris din memorie.
  *
  * **Verificat numeric, separat de aplicație**

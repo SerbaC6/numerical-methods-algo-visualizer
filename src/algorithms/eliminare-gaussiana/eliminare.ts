@@ -150,42 +150,9 @@ export function determinantDinU(U: Matrice): number {
   return U.reduce((produs, linie, i) => produs * (linie[i] ?? 0), 1);
 }
 
-/**
- * Linia aleasă de pivotarea parțială la pasul `p`: cel mai mare element în modul
- * din coloana `p`, de la linia `p` în jos.
+/*
+ * Selecția pivotului nu mai stă aici. Cele trei strategii — parțială, scalată,
+ * totală — au ajuns în `pivotare.ts`, împreună cu permutările pe care le cer:
+ * separate, ele s-ar fi depărtat de eliminarea pe care o conduc, iar interfața
+ * are nevoie și de **scorurile** comparate, nu doar de linia câștigătoare.
  */
-export function liniaPivotuluiPartial(A: Matrice, p: number): number {
-  let ales = p;
-  let maxim = Math.abs(A[p]?.[p] ?? 0);
-  for (let i = p + 1; i < A.length; i++) {
-    const valoare = Math.abs(A[i]?.[p] ?? 0);
-    if (valoare > maxim) {
-      maxim = valoare;
-      ales = i;
-    }
-  }
-  return ales;
-}
-
-/**
- * Linia aleasă de pivotarea parțială cu pivot scalat: se compară rapoartele
- * `|aᵢₚ| / sᵢ`, unde `sᵢ` e cel mai mare element în modul de pe linia `i`, luat
- * doar pe partea de coeficienți.
- */
-export function liniaPivotuluiScalat(A: Matrice, p: number, coeficienti: number): number {
-  let ales = p;
-  let maxim = -1;
-  for (let i = p; i < A.length; i++) {
-    const linie = A[i];
-    if (!linie) continue;
-    let s = 0;
-    for (let j = p; j < coeficienti; j++) s = Math.max(s, Math.abs(linie[j] ?? 0));
-    if (s === 0) throw new Error(`Linia ${i + 1} e nulă: matricea este singulară.`);
-    const raport = Math.abs(linie[p] ?? 0) / s;
-    if (raport > maxim) {
-      maxim = raport;
-      ales = i;
-    }
-  }
-  return ales;
-}

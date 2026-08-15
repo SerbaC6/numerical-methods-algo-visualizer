@@ -11,12 +11,14 @@ import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
 import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
+import { AnimatiaThomas } from "@/components/content/AnimatiaThomas";
 import { InterfataDerivareNumerica } from "@/components/content/InterfataDerivareNumerica";
 import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonalitate";
 import { AnimatiaMetodelorIterative } from "@/components/content/AnimatiaMetodelorIterative";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
+import { InterfataEliminareGaussiana } from "@/components/content/InterfataEliminareGaussiana";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { VideoFft } from "@/components/content/VideoFft";
@@ -66,7 +68,11 @@ const SECTIUNI_PAGINA = [
 const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: ComponentType }> = {
   "factorizari-lu": { vizual: AnimatiaFactorizariiLu },
   "ecuatii-neliniare": { interactiv: InterfataEcuatiiNeliniare },
-  "eliminare-gaussiana": { vizual: AnimatiaEliminariiGaussiene },
+  "eliminare-gaussiana": {
+    vizual: AnimatiaEliminariiGaussiene,
+    interactiv: InterfataEliminareGaussiana,
+  },
+  "algoritmul-thomas": { vizual: AnimatiaThomas },
   "metode-de-gradient": {
     vizual: AnimatieCoborarePeGradient,
     interactiv: InterfataMetodeDeGradient,
@@ -173,24 +179,40 @@ export default function PaginaAlgoritm() {
                   ? piese?.vizual
                   : undefined;
 
+            // Clipul nu are titlu scris deasupra: „Vizual" numea o secțiune al
+            // cărei conținut se prezintă singur, iar cuvântul ședea între titlul
+            // paginii și desen fără să adauge nimic. Numele rămâne doar pentru
+            // cititorul de ecran, prin `aria-label`, ca secțiunea să nu ajungă
+            // anonimă în lista de repere.
+            const cuTitlu = s.id !== "vizual";
+
             return (
-              <section key={s.id} aria-labelledby={`sectiune-${s.id}`}>
-                <h2 id={`sectiune-${s.id}`} className="text-sectiune font-bold">
-                  {s.titlu}
-                </h2>
+              <section
+                key={s.id}
+                {...(cuTitlu
+                  ? { "aria-labelledby": `sectiune-${s.id}` }
+                  : { "aria-label": s.titlu })}
+              >
+                {cuTitlu && (
+                  <h2 id={`sectiune-${s.id}`} className="text-sectiune font-bold">
+                    {s.titlu}
+                  </h2>
+                )}
                 {scris ? (
                   <div className="mt-6">
                     <TeorieScurta continut={scris} dupaMetoda={CLIPURI_IN_TEORIE[pagina.slug]} />
                   </div>
                 ) : Piesa ? (
-                  <div className="mt-6">
+                  <div className={cuTitlu ? "mt-6" : undefined}>
                     <Piesa />
                   </div>
-                ) : (
+                ) : cuTitlu ? (
                   <>
                     <p className="text-text-slab mt-1 text-sm">{s.descriere}</p>
                     <Skeleton className="mt-3 h-48 w-full" />
                   </>
+                ) : (
+                  <Skeleton className="h-48 w-full" />
                 )}
               </section>
             );

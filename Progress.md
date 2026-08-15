@@ -12,8 +12,9 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
 **Decizii deschise:**
 
 - [x] ~~**Lista celor ~15 metode numerice**~~ → ~~**14 pagini tematice**~~ → ~~**19 pagini tematice**~~ →
-      **20 de pagini tematice** (cinci metode care stăteau la coada altei pagini au primit pagină
-      proprie, iar QR și DVS s-au despărțit la rândul lor), stabilite în
+      ~~**20 de pagini tematice**~~ → **18 pagini tematice** (cinci metode care stăteau la coada altei
+      pagini au primit pagină proprie, iar QR și DVS s-au despărțit la rândul lor; apoi CMMP și
+      Romberg au ieșit cu totul), stabilite în
       [`Plan.md`](./Plan.md), secțiunea „Lista Algoritmi"; detaliate în tabelul din Faza 7
 - [x] ~~Fonturi și temă~~ → paleta **„Sapphire nightfall whisper"** + **Nunito Sans** (vezi [`README.md`](./README.md#design))
 - [x] ~~Font monospace pentru formule și tabele numerice~~ → **JetBrains Mono** (cifre tabulare,
@@ -252,9 +253,9 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
       iterația curentă din desen. Demonstrație live în `/design-system`, legată de `PlaybackBar`
 - [x] `MatrixGrid` — matricea desenată, cu stări per celulă (`normala`, `curent`, `calculat`,
       `pivot`, `zero`), plus linie/coloană activă și separator pentru matricea extinsă `[A|b]`
-      (notație din `curs4`, §4.3). Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 17**. Desenează **o
+      (notație din `curs4`, §4.3). Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 11**. Desenează **o
       singură** matrice — compunerea `A = L·U` e treaba paginii. `valori` acceptă `null` pentru
-      celule care încă nu există (L la LU, jumătatea goală la Romberg): un zero calculat și o
+      celule care încă nu există (de pildă L la LU): un zero calculat și o
       celulă necompletată sunt lucruri diferite. Culoarea nu e singurul semnal — pivotul e singura
       celulă plină. Accesibilitate: `<caption>` cu rezumat care spune unde e pivotul și pe ce linie
       se lucrează, plus starea fiecărei celule rostită ca text ascuns („pivot, 2")
@@ -500,7 +501,7 @@ arată corect în ambele teme și cu `prefers-reduced-motion` pornit.
 
 ## Faza 7 — Implementarea metodelor numerice
 
-**Obiectiv:** 20 de pagini tematice, fiecare la calitatea paginii-pilot.
+**Obiectiv:** 18 pagini tematice, fiecare la calitatea paginii-pilot.
 
 ### Lista paginilor _(sursa: `Plan.md`, secțiunea „Lista Algoritmi")_
 
@@ -512,7 +513,7 @@ Coloana **Clip** e clipul din secțiunea „Vizual", scris în cod (nu Manim —
 **Interactiv** e interfața cu `motion`. `n/a` înseamnă că pagina **nu primește** piesa aceea, prin
 decizie — nu că e de făcut mai târziu.
 
-Singura pagină al cărei clip **nu** e scris în cod e 15 (`fft`): acolo secțiunea „Vizual" e un clip
+Singura pagină al cărei clip **nu** e scris în cod e 14 (`fft`): acolo secțiunea „Vizual" e un clip
 găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu restanță — vezi
 `CLAUDE.md`.
 
@@ -520,8 +521,8 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ---- | ---- | ---------- | ----- | ---- |
 | 1   | LU (Cramer, Doolittle, Crout, Cholesky)       | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
 | 2   | Householder și Givens                         | `norme-si-ortogonalitate`          | curs3, curs2 | plan vectori | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
+| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [x]     | [x]  | [x]  | n/a        | [ ]   | [ ]  |
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
@@ -531,13 +532,11 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
 | 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | Aproximare CMMP și funcții raționale          | `cmmp`                             | curs10       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 15  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
-| 16  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 17  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 18  | Extrapolare Richardson și integrare Romberg   | `romberg`                          | curs12       | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 19  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 20  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
+| 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 18  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 
 ### Modificări transversale la clipuri
 
@@ -572,7 +571,7 @@ Lista cerută de utilizator, luată bloc cu bloc. Ce ating **toate** paginile:
   dată, pe pagina 2).
 
 Pagini fără interfață interactivă, **prin decizie luată aici**: 1 (`factorizari-lu`) și 5
-(`metode-iterative`). Pagina 16 rămâne fără clip, tot prin decizie. Pagina 2 nu mai are secțiune
+(`metode-iterative`). Pagina 15 rămâne fără clip, tot prin decizie. Pagina 2 nu mai are secțiune
 „Vizual": clipurile ei stau în teorie, fiecare lângă transformarea lui (`CLIPURI_IN_TEORIE` din
 `PaginaAlgoritm`).
 
@@ -591,7 +590,7 @@ Verificări numerice făcute în sesiune, de reținut:
 - ordinea rotațiilor Givens pe coloană (de sus în jos față de cea a cursului) dă **același** `R` pe
   exemplul din §7.4 — de aceea `run()` primește ordinea ca parametru, iar clipul o folosește pe cea
   care se citește mai firesc;
-- pe pagina 16: `x²` cu punct de mijloc iese exact, iar cu două puncte greșește cu exact `h`; pe
+- pe pagina 15: `x²` cu punct de mijloc iese exact, iar cu două puncte greșește cu exact `h`; pe
   `x³/3`, mijlocul greșește cu `h²/3` și cele două puncte cu `x·h + h²/3`.
 
 ### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
@@ -633,7 +632,7 @@ Ce s-a reparat pe drum, în afara paginii:
   `role="slider"`. Toate cursoarele site-ului erau fără nume la cititorul de ecran. Reparat în
   `src/components/ui/slider.tsx`.
 
-### Pagina 16 — `derivare-numerica`, ce e gata și ce nu
+### Pagina 15 — `derivare-numerica`, ce e gata și ce nu
 
 Ce există:
 
@@ -825,7 +824,7 @@ Ce **nu** e verificat încă:
 - [ ] `prefers-reduced-motion` pe interfața asta — codul îl respectă prin `MotionConfig` și prin
       `useDomeniuAnimat`, dar n-a fost văzut rulând cu setarea pornită.
 
-- [x] ~~Completează tabelul~~ — cele 20 de pagini sunt fixate din `Plan.md`
+- [x] ~~Completează tabelul~~ — cele 18 pagini sunt fixate din `Plan.md`
 - [ ] Stabilește ordinea de implementare (vezi „Ordinea sugerată" mai jos)
 - [ ] Deschide câte un issue GitHub pentru fiecare pagină, cu checklist-ul de mai jos
 - [ ] Pentru fiecare pagină: citește **întâi** cursul sursă din `cursuri_MN/`, apoi scrie

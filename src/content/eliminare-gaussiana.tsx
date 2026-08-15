@@ -22,17 +22,23 @@ import type { ContinutPagina } from "@/content/tipuri";
  * repară exemplul, eroarea scăzând de la 70,6 % la 0,1 %. Pagina dă deci
  * fiecărei metode motivul ei corect; cazul e scris în `docs/erata-cursuri.md`
  * și ținut ca test.
+ *
+ * **Unde au plecat cele două exemple numerice de pivotare.** Sistemul cu `0,001`
+ * (§5.1) și cel cu `10 000` (§5.3) erau scrise aici ca formule; acum sunt
+ * presetări în `src/algorithms/eliminare-gaussiana/exemple.ts`, deci se pot
+ * rula pas cu pas în secțiunea „Interactiv", pe fiecare dintre cele trei
+ * strategii. N-au dispărut și nu s-au schimbat — s-au mutat acolo unde se
+ * înțeleg mai bine, iar teoria a rămas cu regulile de selecție, care sunt ce
+ * trebuie citit.
  */
 export const continutEliminareGaussiana: ContinutPagina = {
   teorie: {
     intro: (
       <>
-        Un sistem <Mate>A·x = b</Mate> nu se rezolvă prin determinanți: regula lui Cramer cere{" "}
-        <Mate>(n−1)(n+1)!</Mate> înmulțiri și împărțiri, adică 360 de milioane de operații pentru
-        numai zece ecuații. Eliminarea gaussiană ia alt drum, cu un cost de ordinul <Mate>n³</Mate>:
-        nu atacă sistemul direct, ci îl <strong>schimbă în altul mai simplu</strong>, cu exact
-        aceleași soluții. Ținta e forma triunghiulară, în care ultima ecuație are o singură
-        necunoscută, iar de acolo restul se citesc de jos în sus.
+        Regula lui Cramer cere <Mate>(n−1)(n+1)!</Mate> înmulțiri și împărțiri — 360 de milioane de
+        operații pentru zece ecuații. Eliminarea gaussiană costă doar <Mate>n³</Mate>: nu atacă
+        sistemul direct, ci îl <strong>schimbă în altul mai simplu</strong>, triunghiular, cu exact
+        aceleași soluții.
       </>
     ),
 
@@ -52,8 +58,7 @@ export const continutEliminareGaussiana: ContinutPagina = {
             continut: (
               <>
                 Cu <Mate>T</Mate> nesingulară, <Mate>A·x = b</Mate> și <Mate>T·A·x = T·b</Mate> au
-                exact aceleași soluții. Fiecare operație de mai jos e o astfel de înmulțire, deci
-                niciuna nu pierde și nu adaugă soluții.
+                aceleași soluții — iar fiecare operație de mai jos e o astfel de înmulțire.
               </>
             ),
           },
@@ -67,13 +72,7 @@ export const continutEliminareGaussiana: ContinutPagina = {
               { simbol: "α", sens: <>un număr nenul</> },
               { simbol: "↔", sens: <>schimbarea a două ecuații între ele</> },
             ],
-            explicatie: (
-              <>
-                Eliminarea produce zerourile, permutarea alege pivotul. Determinantul se schimbă
-                previzibil: <Mate>α</Mate>, <Mate>−1</Mate> și <Mate>1</Mate> — eliminarea e singura
-                care îl lasă neatins.
-              </>
-            ),
+            explicatie: <>Eliminarea produce zerourile, permutarea alege pivotul.</>,
           },
         ],
       },
@@ -100,9 +99,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             ],
             explicatie: (
               <>
-                <Mate>µ</Mate> nu e ales, e impus: e singurul număr care anulează{" "}
-                <Mate>aᵢₚ − µᵢₚ·aₚₚ</Mate>. Se aplică pe <strong>toată linia</strong>, termenul
-                liber inclusiv — de aceea se lucrează pe <Mate>[A|b]</Mate>.
+                <Mate>µ</Mate> nu e ales, e impus. Se aplică pe <strong>toată linia</strong>,
+                termenul liber inclusiv — de aceea se lucrează pe <Mate>[A|b]</Mate>.
               </>
             ),
           },
@@ -123,9 +121,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Aceeași operație pe linii, scrisă ca înmulțire: <Mate>Tₚ·A</Mate> e exact{" "}
-                <Mate>Lᵢ ← Lᵢ − µᵢₚ·Lₚ</Mate>. Forma matriceală arată însă ce ascunde cea pe linii —
-                la capăt există o singură matrice, cu <Mate>T·A = U</Mate>.
+                Aceeași operație pe linii, scrisă ca înmulțire — dar forma matriceală arată ce
+                ascunde cea pe linii: la capăt există o singură matrice, cu <Mate>T·A = U</Mate>.
               </>
             ),
           },
@@ -137,8 +134,7 @@ export const continutEliminareGaussiana: ContinutPagina = {
             explicatie: (
               <>
                 Rapoartele sunt <Mate>µ₂₁ = 1</Mate>, <Mate>µ₃₁ = 3</Mate>, <Mate>µ₃₂ = −1</Mate>:
-                ultimul e negativ, deci linia pivotului se <strong>adună</strong>. Pivotul pasului
-                al doilea, <Mate>−2</Mate>, e produs chiar de pasul întâi.
+                ultimul e negativ, deci linia pivotului se <strong>adună</strong>.
               </>
             ),
           },
@@ -176,8 +172,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Pentru <Mate>i = n</Mate> suma e vidă, deci <Mate>xₙ = bₙ/aₙₙ</Mate>. Costă{" "}
-                <Mate>n²</Mate>: partea scumpă e aducerea la formă triunghiulară, nu rezolvarea.
+                Pentru <Mate>i = n</Mate> suma e vidă, deci <Mate>xₙ = bₙ/aₙₙ</Mate>. Costă doar{" "}
+                <Mate>n²</Mate>: scumpă e aducerea la formă triunghiulară, nu rezolvarea.
               </>
             ),
           },
@@ -192,9 +188,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Cât timp s-au folosit numai eliminări, <Mate>det Tᵢ = 1</Mate>, deci{" "}
-                <Mate>det A = det U</Mate>. Fiecare permutare schimbă semnul, deci după pivotare se
-                numără câte au fost.
+                Cât timp s-au folosit numai eliminări, <Mate>det A = det U</Mate>; fiecare permutare
+                schimbă semnul, deci după pivotare se numără câte au fost.
               </>
             ),
           },
@@ -215,21 +210,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                Un pivot <Mate>0</Mate> oprește metoda; unul foarte mic e mai periculos, fiindcă nu
-                se vede: dă un <Mate>µ</Mate> uriaș, care amplifică erorile de rotunjire.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "\\left(\\begin{array}{cc|c} 0{,}001 & 1 & 1 \\\\ 1 & 1 & 2 \\end{array}\\right) \\;\\xrightarrow{\\;\\mu = 1000\\;}\\; \\left(\\begin{array}{cc|c} 0{,}001 & 1 & 1 \\\\ 0 & -999 & -998 \\end{array}\\right)",
-            sursa: "curs 4, §5.1",
-            explicatie: (
-              <>
-                Cu trei zecimale, sistemul ăsta iese cu o eroare de <strong>71 %</strong>, din vina
-                lui <Mate>µ = 1000</Mate>. Cu liniile schimbate între ele, aceeași aritmetică dă{" "}
-                <strong>0,1 %</strong>.
+                Un pivot <Mate>0</Mate> oprește metoda; unul foarte mic e mai periculos, fiindcă dă
+                un <Mate>µ</Mate> uriaș, care amplifică erorile de rotunjire.
               </>
             ),
           },
@@ -244,8 +226,8 @@ export const continutEliminareGaussiana: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Se caută numai <strong>sub</strong> pivot, deci o parcurgere de coloană per pas.
-                Dacă maximul în modul e <Mate>0</Mate>, coloana e nulă și matricea e singulară.
+                Se caută numai <strong>sub</strong> pivot. Dacă maximul în modul e <Mate>0</Mate>,
+                coloana e nulă și matricea e singulară.
               </>
             ),
           },
@@ -283,19 +265,6 @@ export const continutEliminareGaussiana: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "formula",
-            latex:
-              "\\left(\\begin{array}{cc|c} 1 & 10\\,000 & 10\\,000 \\\\ 1 & 0{,}0001 & 1 \\end{array}\\right)",
-            sursa: "curs 4, §5.3",
-            explicatie: (
-              <>
-                Pivotarea parțială n-are ce alege — ambele elemente sunt <Mate>1</Mate> —, deși
-                primul e mic <strong>relativ la</strong> linia lui. Rapoartele scalate,{" "}
-                <Mate>1/10 000</Mate> față de <Mate>1/1</Mate>, cer schimbarea liniilor.
-              </>
-            ),
-          },
         ],
       },
       {
@@ -330,7 +299,7 @@ export const continutEliminareGaussiana: ContinutPagina = {
             explicatie: (
               <>
                 Permutarea de coloane se aplică <strong>la dreapta</strong>, deci amestecă
-                necunoscutele, nu ecuațiile. Se rețin în <Mate>PR</Mate>: fără ele, <Mate>x</Mate>{" "}
+                necunoscutele, nu ecuațiile — și se rețin în <Mate>PR</Mate>, altfel <Mate>x</Mate>{" "}
                 rămâne în altă ordine decât sistemul scris.
               </>
             ),
@@ -340,8 +309,7 @@ export const continutEliminareGaussiana: ContinutPagina = {
             continut: (
               <>
                 Cea mai stabilă dintre cele trei, dar cere parcursă toată submatricea rămasă la
-                fiecare pas. De aceea implicita e cea parțială, iar totala rămâne pentru cazurile în
-                care chiar contează fiecare cifră.
+                fiecare pas — de aceea implicita rămâne cea parțială.
               </>
             ),
           },

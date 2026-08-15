@@ -59,7 +59,7 @@ if (import.meta.env.DEV) {
   }
 }
 
-const PAUZA_MESAJ = 5000;
+const PAUZA_MESAJ = 4250;
 
 export default function Acasa() {
   return (
@@ -133,7 +133,7 @@ function Hero() {
   );
 }
 
-/** Panoul split-flap din hero, care schimbă mesajul din 5 în 5 secunde. */
+/** Panoul split-flap din hero, care schimbă mesajul la fiecare 4,25 secunde. */
 function PanouMesaje() {
   const [index, setIndex] = useState(0);
 

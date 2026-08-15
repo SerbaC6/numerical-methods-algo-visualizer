@@ -56,10 +56,10 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 | `valori_vectori_proprii_teorie_curs7.md`       | asemanare, Jordan, Schur, Rayleigh, metoda puterii, puterea inversa, deflatie, PageRank     | 8, 9        |
 | `qr_dvs_teorie_curs8.md`                       | algoritmul QR, rotatii, QR cu deplasare, DVS/SVD                                            | 10, 11      |
 | `interpolare_spline_bezier_teorie_curs09.md`   | Lagrange, Neville, diferente divizate, Newton, Hermite, Runge, spline, Bezier, de Casteljau | 12, 13      |
-| `cmmp_rationale_fft_teorie_curs10.md`          | CMMP liniar/polinomial, spatii prehilbertiene, Pade, FFT                                    | 14, 15      |
-| `derivare-integrare-numerica_curs11.md`        | derivare numerica, Newton-Cotes, trapeze, Simpson                                           | 16, 17      |
-| `romberg-cuadraturi-gaussiene_curs12.md`       | Richardson, Romberg, cuadraturi adaptive, cuadraturi Gaussiene                              | 18, 19      |
-| `ode-runge-kutta_curs13.md`                    | problema Cauchy, Lipschitz, Euler, Taylor, Runge-Kutta, metode multipas                     | 20          |
+| `cmmp_rationale_fft_teorie_curs10.md`          | FFT                                                                                         | 14          |
+| `derivare-integrare-numerica_curs11.md`        | derivare numerica, Newton-Cotes, trapeze, Simpson                                           | 15, 16      |
+| `romberg-cuadraturi-gaussiene_curs12.md`       | cuadraturi adaptive, cuadraturi Gaussiene                                                   | 17          |
+| `ode-runge-kutta_curs13.md`                    | problema Cauchy, Lipschitz, Euler, Taylor, Runge-Kutta, metode multipas                     | 18          |
 
 ## Lista Algoritmi
 
@@ -71,7 +71,8 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 > Newton-Cotes (era peste derivarea numerică) și integrarea Romberg (era peste cuadraturi). Apoi
 > QR și DVS, care stăteau împreună pe pagina 10, s-au despărțit la rândul lor: sunt două
 > descompuneri diferite, cu scopuri diferite.
-> Așa se ajunge de la 14 la **20 de pagini**; celelalte au rămas exact cum erau. Lista de mai jos e
+> Așa s-a ajuns la 20 de pagini, iar de acolo la **18**: aproximarea CMMP și integrarea Romberg
+> au fost scoase cu totul, la cerere, cu paginile de după renumerotate. Lista de mai jos e
 > sursa, iar `src/algorithms/registry.ts` o urmează — dacă se schimbă, se schimbă întâi aici.
 
 ### Prima pagina: LU, Dolittle, Crout, Cramer.
@@ -134,31 +135,23 @@ Materia predata, transcrisa. **Singura** sursa admisa pentru formule, definitii 
 
 - explici importanta curbelor Bezier, faptul ca vin in ajutorul spline-urilor (adica curbelor Hermite) si rezolva efortul computational al acestora cu ajutorul polinoamelor Bernstein. Apoi, prezinta algorimtul lui de Casteljau printr-o interfata grafica, unde vom forma curbe Bezier de toate tipurile (fa un box in care utilizator poate sa aleaga daca realizeaza curbele in plan 2D sau 3D).
 
-### A 14-a pagina: Aproximare CMMP
-
-- explici grafic aproximarea CMMP, cu acea dreapta, pe un grafic oarecare si o functie oarecare.
-
-### A 15-a pagina: Fast Fourier Transformation
+### A 14-a pagina: Fast Fourier Transformation
 
 - vreau sa explici Fast-Fourier Transformation, printr-o animatie.
 
-### A 16-a pagina: Derivarea numerica
+### A 15-a pagina: Derivarea numerica
 
 - atat animatii, cat si interfete grafice pe partea de aprofundare, pentru metodele de derivare. Vreau sa le faci sub forma de grafic, sub forma unor functii si sa aduci la viata pozele date.
 
-### A 17-a pagina: Integrarea numerica. Metodele Newton-Cotes.
+### A 16-a pagina: Integrarea numerica. Metodele Newton-Cotes.
 
 - atat animatii, cat si interfete grafice pe partea de aprofundare, pentru metodele de integrare numerica(simpson si trapeze simple/compuse). Vreau sa le faci sub forma de grafic, sub forma unor functii si sa aduci la viata pozele date.
 
-### A 18-a pagina: Integrarea Romberg
-
-- animatii pe o matrice pentru Integrarea Romberg, cu extrapolarea Richardson de la care porneste.
-
-### A 19-a pagina: Quadraturi Adaptive, Integrare Gaussiana
+### A 17-a pagina: Quadraturi Adaptive, Integrare Gaussiana
 
 - Quadraturile Adaptive si Integrarea Gaussiana asemanator cu ce ai facut la a 13-a pagina, interval si functie.
 
-### A 20-a pagina: ODE
+### A 18-a pagina: ODE
 
 - Aici vreau sa explici ODE prin grafic, sa explici cum se leaga de problema Cauchy, sa explici Euler si sa enunti faptul ca e buna deoarece are nevoie de un singur punct de start. Pentru referinta, te poti uita la pozele puse.
 

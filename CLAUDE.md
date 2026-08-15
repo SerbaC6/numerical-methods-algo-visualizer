@@ -142,8 +142,8 @@ Math.round(proza.trim().split(/\s+/).length / sect.querySelectorAll("figure").le
 ```
 
 Valorile de la ultima trecere, ca să se vadă banda: `factorizari-lu` 16, `norme-si-ortogonalitate`
-22, `ecuatii-neliniare` 23 (etalonul), `dvs` 23, `pagerank` 24, `fft` 27, `algoritmul-qr` 29,
-`metode-iterative` 30, `metode-de-gradient` 31, `eliminare-gaussiana` 33, `derivare-numerica` 36.
+22, `ecuatii-neliniare` 23 (etalonul), `dvs` 23, `pagerank` 24, `fft` 27, `eliminare-gaussiana` 27,
+`algoritmul-qr` 29, `metode-iterative` 30, `metode-de-gradient` 31, `derivare-numerica` 36.
 Peste ~35 pagina se recitește și se taie; sub etalon nu e nimic de reparat.
 
 ### Corectitudinea matematică — zero greșeli, fără excepții
@@ -207,7 +207,7 @@ pagini vin, ce s-a amânat. În `src/` — nimic.
 ## Arhitectură
 
 Site 100% static, fără auth, fără cookies, fără tracking, fără cereri către domenii externe (de
-aceea fonturile sunt auto-găzduite în `public/fonts/`). **Singura excepție e pagina 15**, unde
+aceea fonturile sunt auto-găzduite în `public/fonts/`). **Singura excepție e pagina 14**, unde
 secțiunea „Vizual" e un clip găzduit de YouTube; și acolo nu pleacă nicio cerere până când
 vizitatorul nu apasă pe redare (vezi `VideoIncorporat`). Singura scriere în `localStorage` e
 preferința de temă (`mn-tema`). Deploy pe GitHub Pages ca _project page_ — de aici `base` din
@@ -437,13 +437,13 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 ### Etapa 0 — primitivele de bază (blochează tot restul)
 
 - [x] **`StepExplanation`** — propoziția care spune ce se întâmplă la pasul curent, lângă desen.
-      Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 20 de pagini.
+      Cea mai ieftină piesă și cea mai des folosită: intră pe toate cele 18 pagini.
 - [x] **`MatrixGrid`** — matricea desenată, cu stări per celulă (normală, evidențiată, deja
       calculată, pivot, zero). Fără sistem de coordonate, doar grilă + tranziții.
-      Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 11, 18**.
+      Necesară pe paginile **1, 3, 4, 5, 8, 9, 10, 11**.
 - [x] **`Plot`** — axe, grilă, etichete, scalare automată, eșantionarea funcției, `ResizeObserver`,
-      zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă zece pagini
-      (**6, 7, 12, 13, 14, 15, 16, 17, 19, 20**). **SVG scris de mână**, fără bibliotecă de charting —
+      zoom/pan. Cea mai grea piesă de fundație și cea de care atârnă nouă pagini
+      (**6, 7, 12, 13, 14, 15, 16, 17, 18**). **SVG scris de mână**, fără bibliotecă de charting —
       Recharts/visx/D3 sunt gândite pentru date de business și încurcă exact ce ne trebuie (o
       tangentă care apare la pasul 3, un interval care se strânge), plus 40–100 KB. Se compune din
       straturi cu nume (`PlotCurba`, `PlotPunct`, `PlotInterval`, `PlotArie`, `PlotDreapta`), iar
@@ -454,30 +454,32 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [ ] **Pagina 6 — `ecuatii-neliniare`** (puncte fixe, bisecție, Newton, secantă). `Plot` + marker
       de punct, dreaptă tangentă/secantă, interval care se strânge. Interfețe interactive, nu
       animații. E pagina-pilot naturală: cea mai mică distanță între formulă și desen.
-- [ ] **Pagina 17 — `newton-cotes`** (trapeze, Simpson, formule compuse). `Plot` + arii
+- [ ] **Pagina 16 — `newton-cotes`** (trapeze, Simpson, formule compuse). `Plot` + arii
       colorate sub curbă. Primitivă nouă: poligon/arie umplută. Fără stare iterativă complicată.
-- [ ] **Pagina 16 — `derivare-numerica`** (two-point, înainte/înapoi, formule cu 3 puncte).
+- [ ] **Pagina 15 — `derivare-numerica`** (two-point, înainte/înapoi, formule cu 3 puncte).
       `Plot` + secanta care se apropie de tangentă când scade `h`. Refolosește `PlotDreapta`,
       deci nu cere nicio primitivă nouă — cea mai ieftină pagină din listă.
-- [ ] **Pagina 14 — `cmmp`** (CMMP liniar și polinomial, Padé). `Plot` + norul de puncte și
-      dreapta de aproximare. Refolosește tot; nicio primitivă nouă.
-- [ ] **Pagina 3 — `eliminare-gaussiana`** (pivotări). `MatrixGrid` + operații pe linii.
-      Primitivă nouă: linia care se mută, se schimbă cu alta și se scalează.
-- [ ] **Pagina 4 — `algoritmul-thomas`** (sistem tridiagonal, eliminare înainte, substituție
-      înapoi). Aceeași primitivă de linii ca la pagina 3, pe o matrice cu doar trei diagonale —
-      de făcut imediat după ea, cât e proaspătă.
+- [x] **Pagina 3 — `eliminare-gaussiana`** (pivotări). `MatrixGrid` + trei taburi, câte unul
+      pentru fiecare strategie, pe **aceeași** matrice editabilă: diferența dintre GPP, GPPS și
+      GPT se vede în coloana de scoruri de lângă grilă (`|aᵢₚ|`, `|aᵢₚ|/sᵢ`, maximul submatricei),
+      fiindcă restul pașilor sunt identici la toate trei. **Primitiva nouă nu s-a făcut**: linia
+      nu se mută animat, permutarea e un pas propriu, cu ambele linii marcate. Dacă vreodată e
+      nevoie de mișcare, `src/components/viz/README.md` spune unde intră `motion`.
+- [x] **Pagina 4 — `algoritmul-thomas`** (sistem tridiagonal, eliminare înainte, substituție
+      înapoi). Portată din `Algoritmul Thomas(1).html` ca **clip scris în cod**
+      (`AnimatiaThomas`), plus teorie. **Primitiva de linii care se mută nu s-a făcut**, ca și la
+      pagina 3: liniile stau pe loc, iar pasul se vede din cifra care se schimbă în celulă și din
+      cele două linii marcate (`i − 1` sursă, `i` țintă). Fără secțiune „Interactiv", prin
+      decizie — vezi lista de mai jos.
 - [ ] **Pagina 12 — `interpolare-polinomiala`** (Lagrange, Neville, Runge, spline). `Plot` + puncte
       pe care utilizatorul le trage cu mouse-ul. Primitivă nouă: punct interactiv (drag).
 
 ### Etapa 2 — pagini medii (cer o primitivă nouă fiecare)
 
-- [ ] **Pagina 18 — `romberg`** (extrapolare Richardson, tabloul Romberg). `MatrixGrid`
-      triunghiular, umplut coloană cu coloană. O singură primitivă — pagina s-a ușurat când
-      cuadraturile au plecat de pe ea.
-- [ ] **Pagina 19 — `cuadraturi-adaptive-si-gaussiene`**. `Plot` pentru intervalul care se
+- [ ] **Pagina 17 — `cuadraturi-adaptive-si-gaussiene`**. `Plot` pentru intervalul care se
       înjumătățește la Simpson adaptiv și pentru nodurile neechidistante Gaussiene. Primitivă
       nouă: subdiviziunea recursivă desenată fără să devină o pădure de linii.
-- [ ] **Pagina 20 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
+- [ ] **Pagina 18 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
       direcții** — primitivă nouă: multe segmente scurte orientate, desenate eficient.
 - [ ] **Pagina 2 — `norme-si-ortogonalitate`** (norme, Householder, Givens, Gram-Schmidt).
       Primitive noi: vector cu vârf de săgeată, reflexie și rotație interactivă, plus **jocul**
@@ -504,10 +506,9 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [ ] **Pagina 7 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
       nouă: **curbe de nivel** (isolinii) peste o funcție de două variabile, plus traseul care
       coboară. Întâi animații explicative, apoi interfața de aprofundare.
-- [x] **Pagina 15 — `fft`**. Era **cel mai greu vizual din site** — plan complex, rădăcini ale
+- [x] **Pagina 14 — `fft`**. Era **cel mai greu vizual din site** — plan complex, rădăcini ale
       unității, schema recursivă („fluture") — și a ieșit din listă: pagina a primit un clip
       încorporat (`VideoFft`) plus teorie, fără secțiune „Interactiv". Nicio primitivă nouă.
-      (Partea ușoară a vechii pagini 11 a plecat la pagina 14, `cmmp`.)
 
 ### Decizii de luat înainte de Etapa 0
 
@@ -585,7 +586,7 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
 
 **Pagini fără clip, prin decizie** — nu „încă nu au":
 
-- **pagina 16** (`derivare-numerica`) — clipul a fost construit și **scos la cerere**; pagina
+- **pagina 15** (`derivare-numerica`) — clipul a fost construit și **scos la cerere**; pagina
   rămâne cu interfața interactivă, unde pasul se trage cu mâna.
 - **pagina 6** (`ecuatii-neliniare`) — doar interfața interactivă. Bisecția se înțelege trăgând de
   capetele intervalului, iar un film ar arăta exact ce face interfața, doar că fără să-l poți opri.
@@ -601,10 +602,13 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   Transformarea desenată e fixă: DVS-ul exact al matricei `A = [[1, 2], [0, 1]]`.
 - **pagina 9** (`pagerank`) — interfața a fost construită și **scoasă la cerere**; pe pagină rămâne
   clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
-- **pagina 15** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
+- **pagina 14** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
   set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
 - **pagina 5** (`metode-iterative`) — interfața a fost construită și **scoasă la cerere**; pe
   pagină rămâne clipul (`AnimatiaMetodelorIterative`).
+- **pagina 4** (`algoritmul-thomas`) — **cerută explicit fără interfață**. Metoda are un singur
+  drum, fără parametri de ales: clipul (`AnimatiaThomas`) îl arată în întregime, de la pasul de
+  eliminare până la substituția înapoi.
 - **pagina 1** (`factorizari-lu`) — **scoasă la cerere**. Rămâne clipul
   (`AnimatiaFactorizariiLu`), pe factorizarea Doolittle exactă a matricei
   `A = [[1,2,3],[2,8,11],[3,22,42]]`. Se potrivea oricum cu cerința din `Plan.md` de a nu
@@ -612,13 +616,14 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
 
 **Clipuri portate dintr-o animație web gata făcută.** Pagina 1 (`factorizari-lu`) a primit clipul
 din `Animatie_LU.html`, rescris ca `AnimatiaFactorizariiLu`; pagina 3 (`eliminare-gaussiana`), pe al
-ei din `Eliminare Gaussiana.html`. Portarea nu schimbă nicio condiție: clipul rulează tot pe ceasul
+ei din `Eliminare Gaussiana.html`; pagina 4 (`algoritmul-thomas`), pe al ei din
+`Algoritmul Thomas(1).html`. Portarea nu schimbă nicio condiție: clipul rulează tot pe ceasul
 lui (`Clip`) și nu primește parametrii utilizatorului — exemplul desenat e fix (la pagina 1,
 factorizarea Doolittle exactă a matricei `A = [[1,2,3],[2,8,11],[3,22,42]]`).
 
 **Singura pagină cu clip care nu e scris în cod:**
 
-- **pagina 15** (`fft`) — secțiunea „Vizual" e un clip găzduit de YouTube, pus prin
+- **pagina 14** (`fft`) — secțiunea „Vizual" e un clip găzduit de YouTube, pus prin
   `VideoIncorporat`. E o excepție **decisă**, nu un plan amânat: piesele de desen pe care le-ar cere
   (planul complex, recombinarea nivel cu nivel) nu se refolosesc nicăieri altundeva.
   `VideoIncorporat` încarcă întâi o facadă — miniatura, găzduită de site —, iar iframe-ul către

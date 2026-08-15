@@ -4,7 +4,7 @@ import { Link, type To } from "react-router";
 import { Container } from "@/components/layout/Container";
 
 export type PageHeaderProps = {
-  /** Textul de deasupra titlului (capitol, „Pagina 3 din 19" etc.). */
+  /** Textul de deasupra titlului (capitol, „Pagina 3 din 18" etc.). */
   supratitlu?: string;
   titlu: string;
   descriere?: string;

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export type StareCelula = "normala" | "curent" | "calculat" | "pivot" | "zero";
 
 export type MatrixGridProps = {
-  /** Valorile, pe linii. `null` = celulă care încă nu există (L la LU, jumătatea goală la Romberg). */
+  /** Valorile, pe linii. `null` = celulă care încă nu există (de pildă L la LU). */
   valori: (number | null)[][];
   /** Stările, paralel cu `valori`. Ce lipsește e `normala`. */
   stari?: StareCelula[][];
@@ -138,7 +138,7 @@ function descriereImplicita({
  *
  * Desenează **o singură** matrice. Compunerea (A = L·U, una lângă alta) e
  * treaba paginii — altfel componenta ar fi trebuit să știe și de layout, și
- * n-ar mai fi mers pentru tabloul triunghiular de la Romberg.
+ * n-ar mai fi mers pentru un tablou triunghiular.
  *
  * Nu conține matematică: primește valorile și stările deja calculate în
  * `src/algorithms`, ca restul componentelor din `viz/`.

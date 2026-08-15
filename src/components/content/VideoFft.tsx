@@ -2,7 +2,7 @@ import { VideoIncorporat } from "@/components/viz/VideoIncorporat";
 import miniatura from "@/assets/fft/miniatura.webp";
 
 /**
- * Pagina 15 — secțiunea „Vizual".
+ * Pagina 14 — secțiunea „Vizual".
  *
  * Singura pagină din site pe care clipul narativ nu e desenat în cod. Motivul e
  * la fel de simplu ca la celelalte excepții: ce trebuie arătat aici — planul

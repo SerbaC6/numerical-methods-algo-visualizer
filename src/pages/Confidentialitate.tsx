@@ -5,7 +5,7 @@ import { ADRESE_EMAIL, DATA_ACTUALIZARE } from "@/content/contact";
 /**
  * Politica de confidențialitate descrie site-ul **așa cum e acum**: static, fără
  * conturi, fără cookies proprii, cu o singură cerere posibilă către alt domeniu
- * — clipul de pe pagina 15, și numai dacă vizitatorul apasă pe redare. Dacă
+ * — clipul de pe pagina 14, și numai dacă vizitatorul apasă pe redare. Dacă
  * vreodată apare ceva care culege date (analytics, formular, font de la CDN),
  * textul de aici se schimbă în același commit — altfel devine o promisiune
  * falsă.

@@ -116,7 +116,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "factorizari-lu",
     numar: 1,
-    titlu: "LU",
+    titlu: "Factorizare LU",
     capitol: "sisteme-liniare",
     descriere:
       "De ce Cramer devine imposibil pe matrici mari și cum spargerea în L și U rezolvă același sistem cu mult mai puțină muncă.",
@@ -168,6 +168,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     ],
     dificultate: "ușor",
     cursSursa: ["sisteme_liniare_metode_directe_MN_curs4.md"],
+    // Fără interfață interactivă, prin decizie: metoda are un singur drum, fără
+    // parametri de ales, iar clipul îl arată în întregime — pas de eliminare,
+    // apoi substituția înapoi. Pe pagină rămân clipul și teoria.
+    interactiv: false,
     gata: false,
   },
   {
@@ -321,27 +325,8 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     gata: false,
   },
   {
-    slug: "cmmp",
-    numar: 14,
-    titlu: "Aproximare CMMP și funcții raționale",
-    capitol: "interpolare-aproximare",
-    descriere:
-      "Dreapta care trece printre punctele măsurate, nu prin ele: de ce aproximăm în loc să interpolăm și cum iese sistemul normal.",
-    metode: [
-      "CMMP liniar",
-      "CMMP polinomial",
-      "Sistem normal",
-      "Spații prehilbertiene",
-      "Padé",
-      "Cebâșev",
-    ],
-    dificultate: "greu",
-    cursSursa: ["cmmp_rationale_fft_teorie_curs10.md"],
-    gata: false,
-  },
-  {
     slug: "fft",
-    numar: 15,
+    numar: 14,
     titlu: "Transformata Fourier rapidă (FFT)",
     capitol: "interpolare-aproximare",
     descriere:
@@ -362,7 +347,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "derivare-numerica",
-    numar: 16,
+    numar: 15,
     titlu: "Derivare numerică",
     capitol: "integrare-ode",
     descriere:
@@ -382,7 +367,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "newton-cotes",
-    numar: 17,
+    numar: 16,
     titlu: "Newton-Cotes: trapeze și Simpson",
     capitol: "integrare-ode",
     descriere:
@@ -400,20 +385,8 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     gata: false,
   },
   {
-    slug: "romberg",
-    numar: 18,
-    titlu: "Extrapolare Richardson și integrare Romberg",
-    capitol: "integrare-ode",
-    descriere:
-      "Cum stoarce extrapolarea Richardson precizie dintr-un tabel de trapeze, urcând de la O(h²) la O(h⁴), O(h⁶) și mai departe.",
-    metode: ["Extrapolare Richardson", "Integrare Romberg", "Tabloul Romberg"],
-    dificultate: "mediu",
-    cursSursa: ["romberg-cuadraturi-gaussiene_curs12.md"],
-    gata: false,
-  },
-  {
     slug: "cuadraturi-adaptive-si-gaussiene",
-    numar: 19,
+    numar: 17,
     titlu: "Cuadraturi adaptive și cuadraturi Gaussiene",
     capitol: "integrare-ode",
     descriere:
@@ -432,7 +405,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   },
   {
     slug: "ecuatii-diferentiale",
-    numar: 20,
+    numar: 18,
     titlu: "ODE: problema Cauchy, Euler, Runge-Kutta",
     capitol: "integrare-ode",
     descriere:
@@ -446,7 +419,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
 
 /**
  * Câte pagini are site-ul. Se citește de aici oriunde apare cifra în text
- * („Pagina 3 din 19"), ca să nu rămână un număr scris de mână în urmă când lista
+ * („Pagina 3 din 18"), ca să nu rămână un număr scris de mână în urmă când lista
  * se mai sparge o dată.
  */
 export const NUMAR_PAGINI = ALGORITMI.length;

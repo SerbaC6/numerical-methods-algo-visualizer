@@ -2,13 +2,13 @@ import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
 /**
- * Pagina 15 — transformata Fourier rapidă (FFT).
+ * Pagina 14 — transformata Fourier rapidă (FFT).
  *
  * **Sursă: `cursuri_MN/cmmp_rationale_fft_teorie_curs10.md`, §8** — problema și
  * costul calculului direct, contextul istoric, coeficienții complecși, pasul de
  * înjumătățire, analiza complexității și structura recursivă. §1–§7 din același
- * curs (CMMP liniar și polinomial, spații prehilbertiene, Padé) țin de pagina
- * 14. Nimic scris din memorie.
+ * curs (CMMP liniar și polinomial, spații prehilbertiene, Padé) nu mai au pagină
+ * pe site și nu apar aici. Nimic scris din memorie.
  *
  * **Ce nu apare pe pagină, fiindcă nu apare în curs.** Lista e aici ca să nu se
  * „completeze" mai târziu din alte surse:
