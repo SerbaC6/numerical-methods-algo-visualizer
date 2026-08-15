@@ -4,6 +4,7 @@ import { MATRICE_GIVENS, MATRICE_HOUSEHOLDER } from "@/algorithms/norme-si-ortog
 import { PlanOrtogonal } from "@/components/content/PlanOrtogonal";
 import { Clip } from "@/components/viz/Clip";
 import { useClip } from "@/components/viz/clip-context";
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, EASING, repere, type Scena } from "@/lib/compozitie";
 import { zecimale } from "@/lib/numere";
@@ -141,7 +142,7 @@ function Cartonas({
           fill={rol ? culoareEticheta(rol) : "var(--text)"}
           style={{ font: `700 ${34 * Math.min(st, 1.3)}px var(--font-mono)` }}
         >
-          {simbol}
+          <NotatieSVG text={simbol} marime={34 * Math.min(st, 1.3)} />
         </text>
       )}
       <text

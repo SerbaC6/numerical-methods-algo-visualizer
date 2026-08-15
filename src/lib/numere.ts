@@ -71,3 +71,41 @@ const CIFRE_SUS: Record<string, string> = {
 function indiceSus(text: string): string {
   return [...text].map((c) => CIFRE_SUS[c] ?? c).join("");
 }
+
+/**
+ * Numărul scris ca fracție exactă, dacă are una scurtă: `0.975` → `„39/40"`.
+ *
+ * Există fiindcă valorile unei iterații sunt rapoarte de întregi, iar scrise cu
+ * trei zecimale arată ca niște aproximări — `„−0,947"` ascunde faptul că
+ * valoarea e chiar `−341/360`, exactă. Pe desen, unde nu încape o explicație,
+ * diferența dintre „cam atât" și „exact atât" se vede doar din formă.
+ *
+ * Reconstrucția se face cu fracții continue, cu numitorul mărginit: dacă
+ * numărul nu e un raport scurt de întregi (sau e rezultatul unor rotunjiri
+ * succesive), se întoarce `undefined` și cine cheamă scrie zecimalele.
+ */
+export function fractie(valoare: number, numitorMaxim = 999): string | undefined {
+  if (!Number.isFinite(valoare)) return undefined;
+  if (Number.isInteger(valoare)) return String(valoare).replace("-", "−");
+
+  const semn = valoare < 0 ? "−" : "";
+  let x = Math.abs(valoare);
+
+  // Fracții continue: numărătorul și numitorul se construiesc din câturile
+  // succesive, iar recurența e chiar cea a convergentelor.
+  let [n0, n1] = [1, 0];
+  let [d0, d1] = [0, 1];
+  for (let i = 0; i < 24; i++) {
+    const cat = Math.floor(x);
+    [n0, n1] = [cat * n0 + n1, n0];
+    [d0, d1] = [cat * d0 + d1, d0];
+    if (d0 > numitorMaxim) return undefined;
+    if (d0 !== 0 && Math.abs(Math.abs(valoare) - n0 / d0) < 1e-12) {
+      return d0 === 1 ? `${semn}${n0}` : `${semn}${n0}/${d0}`;
+    }
+    const rest = x - cat;
+    if (rest < 1e-15) return undefined;
+    x = 1 / rest;
+  }
+  return undefined;
+}

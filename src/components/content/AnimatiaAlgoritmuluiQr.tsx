@@ -1,5 +1,6 @@
 import { Clip } from "@/components/viz/Clip";
 import { useClip } from "@/components/viz/clip-context";
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
@@ -363,7 +364,7 @@ function Card({
           letterSpacing: "0.05em",
         }}
       >
-        {simbol}
+        <NotatieSVG text={simbol} marime={38 * Math.min(st, 1.3)} />
       </text>
       <text
         x={32}

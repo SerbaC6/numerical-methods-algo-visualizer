@@ -2,9 +2,10 @@ import * as gaussSeidel from "@/algorithms/metode-iterative/gauss-seidel";
 import * as jacobi from "@/algorithms/metode-iterative/jacobi";
 import { Clip } from "@/components/viz/Clip";
 import { useClip } from "@/components/viz/clip-context";
+import { NotatieSVG } from "@/components/viz/Notatie";
 import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
-import { zecimale } from "@/lib/numere";
+import { fractie, zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 import { marimeCareIncape } from "@/lib/tipografie-clip";
 
@@ -333,7 +334,7 @@ function Card({
           letterSpacing: "0.05em",
         }}
       >
-        {simbol}
+        <NotatieSVG text={simbol} marime={38 * Math.min(st, 1.3)} />
       </text>
       <text
         x={32}
@@ -363,7 +364,9 @@ function Concluzie({
   return (
     <text
       x={W / 2}
-      y={905}
+      // 866, nu 905: sub ea începe banda subtitrărilor, iar cele două propoziții
+      // ajungeau lipite, ca un singur paragraf citit din două locuri.
+      y={866}
       textAnchor="middle"
       opacity={opacitate}
       fill="var(--text)"
@@ -419,8 +422,21 @@ function Sageata({
 
 /* ───────────────────────── formatarea cifrelor ───────────────────────── */
 
-const cifra = (v: number) => zecimale(v, 3);
-const coeficient = (v: number) => (Number.isInteger(v) ? String(v) : zecimale(v, 2));
+/**
+ * Valorile unei iterații sunt rapoarte de întregi, deci se scriu ca fracții
+ * exacte: `1/10`, `39/40`, `−341/360`. Scrise cu trei zecimale arătau ca niște
+ * aproximări, iar diferența dintre „cam atât" și „exact atât" e chiar ce se
+ * învață aici. Când fracția n-are numitor scurt, rămân zecimalele.
+ */
+const cifra = (v: number) => fractie(v) ?? zecimale(v, 3);
+
+/** Coeficienții sistemului sunt întregi; minusul e cel tipografic, nu cratima. */
+const coeficient = (v: number) =>
+  (Number.isInteger(v) ? String(v) : zecimale(v, 2)).replace("-", "−");
+
+/** `1·x₃` se scrie `x₃`: coeficientul 1 nu spune nimic și lungește formula. */
+const termen = (v: number, nume: string) =>
+  Math.abs(v) === 1 ? `${v < 0 ? "−" : ""}${nume}` : `${coeficient(v)}·${nume}`;
 
 /** Sistemul ca matrice extinsă `[A|b]`, cu textele gata formatate. */
 const RANDURI_SISTEM = A.map((linie, i) => [...linie.map(coeficient), coeficient(B[i] ?? 0)]);
@@ -542,8 +558,8 @@ function Desen() {
         fill="var(--text)"
         style={{ font: `700 ${44 * Math.min(st, 1.2)}px var(--font-mono)` }}
       >
-        x₁ = ( {coeficient(B[0] ?? 0)} + {coeficient(-(A[0]?.[1] ?? 0))}·x₂ −{" "}
-        {coeficient(A[0]?.[2] ?? 0)}·x₃ ) / {coeficient(A[0]?.[0] ?? 0)}
+        x₁ = ( {coeficient(B[0] ?? 0)} + {termen(-(A[0]?.[1] ?? 0), "x₂")} −{" "}
+        {termen(A[0]?.[2] ?? 0, "x₃")} ) / {coeficient(A[0]?.[0] ?? 0)}
       </text>
       <g opacity={oRezultat}>
         <text
@@ -580,8 +596,9 @@ function Desen() {
         st={st}
         copii={
           <>
-            Coloana din stânga <tspan fill={culoareEticheta(ROL_VECHI)}>nu se schimbă</tspan> tot
-            baleiajul: cele trei linii se pot calcula chiar în același timp.
+            Toate cele trei linii citesc din{" "}
+            <tspan fill={culoareEticheta(ROL_VECHI)}>același vector, înghețat</tspan> — deci se pot
+            calcula în același timp.
           </>
         }
       />
@@ -612,69 +629,103 @@ function Desen() {
       {/* ═══ 5 · comparația ═══ */}
       <Antet opacitate={oComparatie} titlu="Cât se câștigă" st={st} />
       <g opacity={oComparatie}>
-        <Card
-          x={200}
-          y={360}
-          latime={700}
-          inaltime={150}
-          opacitate={intra(T, C + 0.6, 0.5)}
-          rol={ROL_VECHI}
-          simbol={`ρ = ${zecimale(RULARE_JACOBI.razaSpectrala ?? 0, 4)}`}
-          text={`Jacobi — ${RULARE_JACOBI.pasi.length} de iterații`}
-          st={st}
-        />
-        <Card
-          x={200}
-          y={540}
-          latime={700}
-          inaltime={150}
-          opacitate={intra(T, C + 2.0, 0.5)}
-          rol={ROL_PROASPAT}
-          simbol={`ρ = ${zecimale(RULARE_GS.razaSpectrala ?? 0, 4)}`}
-          text={`Gauss-Seidel — ${RULARE_GS.pasi.length} de iterații`}
-          st={st}
-        />
-        <text
-          x={1400}
-          y={420}
-          textAnchor="middle"
-          dominantBaseline="central"
-          opacity={intra(T, C + 3.4, 0.5)}
-          fill="var(--text-slab)"
-          style={{ font: `600 ${30 * Math.min(st, 1.4)}px var(--font-sans)` }}
-        >
-          Eroarea se înmulțește cu ρ
-        </text>
-        <text
-          x={1400}
-          y={490}
-          textAnchor="middle"
-          dominantBaseline="central"
-          opacity={intra(T, C + 3.4, 0.5)}
-          fill="var(--text-slab)"
-          style={{ font: `600 ${30 * Math.min(st, 1.4)}px var(--font-sans)` }}
-        >
-          la fiecare pas
-        </text>
+        {RANDURI_COMPARATIE.map((rand, i) => {
+          const la = C + 0.6 + i * 1.1;
+          const o = intra(T, la, 0.5);
+          const p = animeaza({
+            dela: 0,
+            la: 1,
+            start: la + 0.2,
+            sfarsit: la + 1.6,
+            ease: EASING.iesireCubica,
+          })(T);
+          const y = 420 + i * 190;
+          return (
+            <g key={rand.nume} opacity={o} transform={`translate(${(1 - o) * -30}, 0)`}>
+              <text
+                x={200}
+                y={y}
+                dominantBaseline="alphabetic"
+                fill={culoareEticheta(rand.rol)}
+                style={{ font: `700 ${40 * Math.min(st, 1.35)}px var(--font-sans)` }}
+              >
+                {rand.nume}
+              </text>
+              <text
+                x={1720}
+                y={y}
+                textAnchor="end"
+                dominantBaseline="alphabetic"
+                fill="var(--text-slab)"
+                style={{ font: `500 ${30 * Math.min(st, 1.4)}px var(--font-mono)` }}
+              >
+                iterații
+              </text>
+              <text
+                x={1530}
+                y={y}
+                textAnchor="end"
+                dominantBaseline="alphabetic"
+                fill="var(--text)"
+                style={{ font: `800 ${62 * Math.min(st, 1.3)}px var(--font-mono)` }}
+              >
+                {Math.round(p * rand.iteratii)}
+              </text>
+              <text
+                x={200}
+                y={y + 76}
+                dominantBaseline="alphabetic"
+                fill="var(--text-slab)"
+                style={{ font: `600 ${30 * Math.min(st, 1.4)}px var(--font-mono)` }}
+              >
+                ρ = {zecimale(rand.raza, 4)}
+              </text>
+              {/* Bara e proporțională cu numărul de iterații, nu cu ρ: iterațiile
+                  sunt ce plătește cine rulează metoda. */}
+              <Bara
+                x={200}
+                y={y + 20}
+                latime={(p * rand.iteratii * 1320) / ITERATII_MAXIME}
+                inaltime={20}
+                rol={rand.rol}
+              />
+            </g>
+          );
+        })}
       </g>
       <Concluzie
-        opacitate={oComparatie * intra(T, C + 5.2, 0.5)}
+        opacitate={oComparatie * intra(T, C + 4.4, 0.5)}
         st={st}
         copii="Nu e o regulă generală — dar când amândouă merg, Gauss-Seidel ajunge primul."
       />
 
       {/* ═══ 6 · ω ═══ */}
       <Antet opacitate={oOmega} titlu="Suprarelaxare" st={st} />
-      <g opacity={oOmega * intra(T, O + 0.4, 0.5)}>
+      {/* Formula intră de sus, cu un pas scurt: e singura mișcare din cadru
+          înainte să pornească cursorul, iar fără ea scena apărea dintr-odată. */}
+      <g
+        opacity={oOmega * intra(T, O + 0.4, 0.6)}
+        transform={`translate(0, ${(1 - intra(T, O + 0.4, 0.6)) * -26})`}
+      >
         <text
           x={W / 2}
-          y={400}
+          y={360}
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--text)"
-          style={{ font: `700 ${52 * Math.min(st, 1.2)}px var(--font-mono)` }}
+          style={{ font: `700 ${56 * Math.min(st, 1.2)}px var(--font-mono)` }}
         >
           x nou = x vechi + ω · corecție
+        </text>
+        <text
+          x={W / 2}
+          y={440}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="var(--text-slab)"
+          style={{ font: `600 ${34 * Math.min(st, 1.35)}px var(--font-sans)` }}
+        >
+          Corecția e cea de la Gauss-Seidel. Nouă e doar înmulțirea cu ω.
         </text>
       </g>
       <CursorOmega opacitate={oOmega * intra(T, O + 1.4, 0.5)} omega={omegaCurent} st={st} />
@@ -684,6 +735,66 @@ function Desen() {
         copii="ω = 1 e chiar Gauss-Seidel. Cel mai bun ω nu se calculează — se caută."
       />
     </svg>
+  );
+}
+
+/* ───────────────────────── comparația ───────────────────────── */
+
+/**
+ * Cele două metode, ca rânduri de comparat: numele, raza spectrală și câte
+ * iterații au cerut. Cifrele vin din rulările reale de mai sus, nu scrise de
+ * mână — dacă se schimbă sistemul, se schimbă și desenul.
+ */
+const RANDURI_COMPARATIE = [
+  {
+    nume: "Jacobi",
+    rol: ROL_VECHI,
+    raza: RULARE_JACOBI.razaSpectrala ?? 0,
+    iteratii: RULARE_JACOBI.pasi.length,
+  },
+  {
+    nume: "Gauss-Seidel",
+    rol: ROL_PROASPAT,
+    raza: RULARE_GS.razaSpectrala ?? 0,
+    iteratii: RULARE_GS.pasi.length,
+  },
+] as const;
+
+const ITERATII_MAXIME = Math.max(...RANDURI_COMPARATIE.map((r) => r.iteratii));
+
+/** Bara care crește sub un rând de comparație — aceeași idee ca la clipul paginii 1. */
+function Bara({
+  x,
+  y,
+  latime,
+  inaltime,
+  rol,
+}: {
+  x: number;
+  y: number;
+  latime: number;
+  inaltime: number;
+  rol: RolViz;
+}) {
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={1320}
+        height={inaltime}
+        rx={inaltime / 2}
+        fill={`color-mix(in oklab, ${culoareRol(rol)} 16%, transparent)`}
+      />
+      <rect
+        x={x}
+        y={y}
+        width={Math.max(0, latime)}
+        height={inaltime}
+        rx={inaltime / 2}
+        fill={culoareRol(rol)}
+      />
+    </g>
   );
 }
 
@@ -806,12 +917,15 @@ function Baleiaj({
         );
       })}
 
-      {/* Formula liniei curente, cu numerele în ea. */}
+      {/* Valoarea liniei curente — dar **numai după** ce a fost scrisă în
+          coloană. Altfel rândul de sub desen o anunța cât timp celula încă avea
+          semnul întrebării, adică desenul și textul spuneau lucruri diferite. */}
       <text
         x={W / 2}
-        y={840}
+        y={780}
         textAnchor="middle"
         dominantBaseline="central"
+        opacity={scrisa(linie) ? 1 : 0}
         fill="var(--text)"
         style={{ font: `700 ${34 * Math.min(st, 1.25)}px var(--font-mono)` }}
       >
@@ -853,7 +967,9 @@ function CapDeColoana({
       style={{ font: `700 ${corp}px var(--font-mono)` }}
     >
       x
-      <tspan dy={-corp * 0.34} style={{ fontSize: `${corp * 0.62}px` }}>
+      {/* `dx` negativ: fontul mono dă lui „x" o casetă întreagă, iar exponentul
+          pornea de la marginea ei — „x" și „(k)" se citeau ca două cuvinte. */}
+      <tspan dx={-corp * 0.3} dy={-corp * 0.34} style={{ fontSize: `${corp * 0.62}px` }}>
         {exponent}
       </tspan>
     </text>
@@ -862,68 +978,106 @@ function CapDeColoana({
 
 /* ───────────────────────── cursorul lui ω ───────────────────────── */
 
+/**
+ * Rigla lui ω, cu cursorul care se plimbă.
+ *
+ * Segmentul colorat pornește **din 1**, nu din 0: 1 e Gauss-Seidel, iar tot ce
+ * se vede în plus sau în minus față de el e chiar relaxarea. Cu bara umplută de
+ * la zero, cursorul la 0,6 părea „mai puțin din ceva", nu „temperat față de
+ * punctul neutru".
+ */
 function CursorOmega({ opacitate, omega, st }: { opacitate: number; omega: number; st: number }) {
-  const X0 = 460;
-  const X1 = 1460;
-  const Y = 600;
-  const pozitie = X0 + ((X1 - X0) * clamp(omega, 0, 2)) / 2;
-  const marcaj = (v: number) => X0 + ((X1 - X0) * v) / 2;
+  const X0 = 400;
+  const X1 = 1520;
+  const Y = 590;
+  const marcaj = (v: number) => X0 + ((X1 - X0) * clamp(v, 0, 2)) / 2;
+  const pozitie = marcaj(omega);
+  const neutru = marcaj(1);
 
   return (
     <g opacity={opacitate}>
-      <line x1={X0} x2={X1} y1={Y} y2={Y} stroke="var(--bordura)" strokeWidth={8} />
+      <line
+        x1={X0}
+        x2={X1}
+        y1={Y}
+        y2={Y}
+        stroke="var(--bordura)"
+        strokeWidth={10}
+        strokeLinecap="round"
+      />
+      {/* Cât s-a depărtat de Gauss-Seidel. */}
+      <line
+        x1={neutru}
+        x2={pozitie}
+        y1={Y}
+        y2={Y}
+        stroke={culoareRol(ROL_PROASPAT)}
+        strokeWidth={10}
+        strokeLinecap="round"
+      />
+
       {[0, 1, 2].map((v) => (
         <g key={v}>
           <line
             x1={marcaj(v)}
             x2={marcaj(v)}
-            y1={Y - 22}
-            y2={Y + 22}
+            y1={Y - 24}
+            y2={Y + 24}
             stroke="var(--text-slab)"
             strokeWidth={4}
           />
           <text
             x={marcaj(v)}
-            y={Y + 72}
+            y={Y + 78}
             textAnchor="middle"
             dominantBaseline="central"
             fill="var(--text-slab)"
-            style={{ font: `600 ${30 * Math.min(st, 1.4)}px var(--font-mono)` }}
+            style={{ font: `600 ${32 * Math.min(st, 1.4)}px var(--font-mono)` }}
           >
             {v}
           </text>
         </g>
       ))}
 
+      {/* Ce înseamnă fiecare jumătate — sub riglă, ca să nu se bată cu valoarea
+          lui ω, care stă deasupra cursorului. */}
       <text
         x={marcaj(0.5)}
-        y={Y - 80}
+        y={Y + 150}
         textAnchor="middle"
         dominantBaseline="central"
         fill="var(--text-slab)"
-        style={{ font: `600 ${28 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{ font: `600 ${32 * Math.min(st, 1.35)}px var(--font-sans)` }}
       >
         temperează corecția
       </text>
       <text
         x={marcaj(1.5)}
-        y={Y - 80}
+        y={Y + 150}
         textAnchor="middle"
         dominantBaseline="central"
         fill="var(--text-slab)"
-        style={{ font: `600 ${28 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{ font: `600 ${32 * Math.min(st, 1.35)}px var(--font-sans)` }}
       >
         o amplifică
       </text>
 
-      <circle cx={pozitie} cy={Y} r={26} fill={culoareRol(ROL_PROASPAT)} />
+      {/* Haloul: cursorul e singurul lucru care se mișcă în cadru, deci merită
+          să se vadă că se mișcă și când stai pe pauză. */}
+      <circle
+        cx={pozitie}
+        cy={Y}
+        r={46}
+        fill={`color-mix(in oklab, ${culoareRol(ROL_PROASPAT)} 22%, transparent)`}
+      />
+      <circle cx={pozitie} cy={Y} r={28} fill={culoareRol(ROL_PROASPAT)} />
       <text
         x={pozitie}
-        y={Y - 130}
+        y={Y - 100}
         textAnchor="middle"
         dominantBaseline="central"
         fill={culoareEticheta(ROL_PROASPAT)}
-        style={{ font: `700 ${42 * Math.min(st, 1.3)}px var(--font-mono)` }}
+        style={{ font: `700 ${46 * Math.min(st, 1.3)}px var(--font-mono)` }}
       >
         ω = {zecimale(omega, 2)}
       </text>
@@ -945,12 +1099,12 @@ const SUBTITRARI = [
   },
   {
     la: CUE.Linia + 4.6,
-    text: "Cu x⁽⁰⁾ = 0, prima linie dă x₁ = 0,100. Celelalte două valori vin din vectorul curent.",
+    text: "Cu x⁽⁰⁾ = 0, prima linie dă x₁ = 1/10. Celelalte două valori vin din vectorul curent.",
   },
   { la: CUE.Jacobi + 0.4, text: "Jacobi ține vectorul vechi înghețat și scrie într-unul nou." },
   {
     la: CUE.Jacobi + 6.0,
-    text: "Toate cele trei linii citesc din aceeași coloană, cea din iterația trecută.",
+    text: "Ordinea liniilor nu contează: rezultatul e același oricum le-ai lua.",
   },
   { la: CUE.GaussSeidel + 0.4, text: "Gauss-Seidel scrie peste vectorul din care citește." },
   {
