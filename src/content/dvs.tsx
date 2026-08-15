@@ -241,17 +241,5 @@ export const continutDvs: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Pașii, în ordine: se calculează <Mate>Aᵀ·A</Mate>; valorile ei proprii, ordonate
-        descrescător, dau prin radical valorile singulare din <Mate>S</Mate>; vectorii proprii
-        ortonormați ai aceleiași matrice sunt coloanele lui <Mate>V</Mate>; primele <Mate>k</Mate>{" "}
-        coloane ale lui <Mate>U</Mate> ies din <Mate>uᵢ = (1/sᵢ)·A·vᵢ</Mate>, iar restul se
-        completează cu direcții ortogonale pe ele. Ce rămâne, dacă rămâne un singur lucru: toată
-        descompunerea unei matrice oarecare se obține din valorile și vectorii proprii ai unei
-        singure matrice simetrice, <Mate>Aᵀ·A</Mate>.
-      </>
-    ),
   },
 };

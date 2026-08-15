@@ -170,12 +170,5 @@ export const continutPagerank: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: PageRank-ul nu e o formulă separată, ci{" "}
-        <strong>metoda puterii aplicată matricei Google</strong>.
-      </>
-    ),
   },
 };

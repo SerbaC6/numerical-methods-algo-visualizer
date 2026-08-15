@@ -8,6 +8,7 @@ import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, EASING, repere, type Scena } from "@/lib/compozitie";
 import { zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+import { marimeCareIncape } from "@/lib/tipografie-clip";
 
 /* ───────────────────────── timpul ───────────────────────── */
 
@@ -73,33 +74,12 @@ const intra = (T: number, la: number, durata = 0.45) =>
 
 /* ───────────────────────── piese ───────────────────────── */
 
-function Antet({
-  opacitate,
-  numar,
-  titlu,
-  st,
-}: {
-  opacitate: number;
-  numar: string;
-  titlu: string;
-  st: number;
-}) {
+function Antet({ opacitate, titlu, st }: { opacitate: number; titlu: string; st: number }) {
   return (
     <g opacity={opacitate}>
       <text
         x={110}
-        y={80}
-        fill={culoareEticheta("curent")}
-        style={{
-          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
-          letterSpacing: "0.16em",
-        }}
-      >
-        {numar}
-      </text>
-      <text
-        x={110}
-        y={144}
+        y={112}
         fill="var(--text)"
         style={{ font: `800 ${52 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
@@ -154,7 +134,9 @@ function Cartonas({
         y={inaltime / 2 + 30}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${26 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{
+          font: `600 ${marimeCareIncape(text, latime - 30 * 2) * Math.min(st, 1.35)}px var(--font-sans)`,
+        }}
       >
         {text}
       </text>
@@ -345,7 +327,7 @@ function Desen() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" aria-hidden="true">
       {/* ═══ 1 · rotația ═══ */}
-      <Antet opacitate={oRot} numar="1" titlu="Rotația" st={st} />
+      <Antet opacitate={oRot} titlu="Rotația" st={st} />
       <g opacity={oRot}>
         <PlanOrtogonal
           centru={[660, 500]}
@@ -411,7 +393,7 @@ function Desen() {
       />
 
       {/* ═══ 2 · matricea ═══ */}
-      <Antet opacitate={oMat} numar="2" titlu="Matricea de rotație" st={st} />
+      <Antet opacitate={oMat} titlu="Matricea de rotație" st={st} />
       <g opacity={oMat}>
         <Matrice
           x={620}
@@ -456,7 +438,7 @@ function Desen() {
       />
 
       {/* ═══ 3 · exemplul ═══ */}
-      <Antet opacitate={oEx} numar="3" titlu="Trei rotații, de jos în sus" st={st} />
+      <Antet opacitate={oEx} titlu="Trei rotații, de jos în sus" st={st} />
       <g opacity={oEx}>
         <Matrice
           x={W / 2}
@@ -494,7 +476,7 @@ function Desen() {
       />
 
       {/* ═══ 4 · față în față ═══ */}
-      <Antet opacitate={oFata} numar="4" titlu="Față de oglindă" st={st} />
+      <Antet opacitate={oFata} titlu="Față de oglindă" st={st} />
       <g opacity={oFata}>
         <Cartonas
           x={180}

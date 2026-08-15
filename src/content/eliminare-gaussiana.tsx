@@ -388,16 +388,5 @@ export const continutEliminareGaussiana: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: eliminarea gaussiană e{" "}
-        <strong>o singură operație repetată</strong> — scade din fiecare linie de dedesubt linia
-        pivotului, scalată cu <Mate>µ</Mate> —, iar cele trei pivotări nu schimbă operația, ci doar{" "}
-        <strong>cine ajunge pivot</strong>. Nu e nevoie de forma eșalon redusă pentru a rezolva un
-        sistem: e de ajuns să fie triunghiular, iar pașii în plus n-ar aduce decât erori de
-        rotunjire în plus.
-      </>
-    ),
   },
 };

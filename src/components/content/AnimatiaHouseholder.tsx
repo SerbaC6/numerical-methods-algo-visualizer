@@ -7,6 +7,7 @@ import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, EASING, repere, type Scena } from "@/lib/compozitie";
 import { zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+import { marimeCareIncape } from "@/lib/tipografie-clip";
 
 /* ───────────────────────── timpul ───────────────────────── */
 
@@ -92,33 +93,12 @@ const intra = (T: number, la: number, durata = 0.45) =>
 
 /* ───────────────────────── piese ───────────────────────── */
 
-function Antet({
-  opacitate,
-  numar,
-  titlu,
-  st,
-}: {
-  opacitate: number;
-  numar: string;
-  titlu: string;
-  st: number;
-}) {
+function Antet({ opacitate, titlu, st }: { opacitate: number; titlu: string; st: number }) {
   return (
     <g opacity={opacitate}>
       <text
         x={110}
-        y={80}
-        fill={culoareEticheta("curent")}
-        style={{
-          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
-          letterSpacing: "0.16em",
-        }}
-      >
-        {numar}
-      </text>
-      <text
-        x={110}
-        y={144}
+        y={112}
         fill="var(--text)"
         style={{ font: `800 ${52 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
@@ -173,7 +153,9 @@ function Cartonas({
         y={inaltime / 2 + 30}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${26 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{
+          font: `600 ${marimeCareIncape(text, latime - 30 * 2) * Math.min(st, 1.35)}px var(--font-sans)`,
+        }}
       >
         {text}
       </text>
@@ -374,7 +356,7 @@ function Desen() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" aria-hidden="true">
       {/* ═══ 1 · ținta ═══ */}
-      <Antet opacitate={oTinta} numar="1" titlu="Unde poate ajunge" st={st} />
+      <Antet opacitate={oTinta} titlu="Unde poate ajunge" st={st} />
       <g opacity={oTinta}>
         <PlanOrtogonal
           centru={[620, 500]}
@@ -412,7 +394,7 @@ function Desen() {
       />
 
       {/* ═══ 2 · oglinda ═══ */}
-      <Antet opacitate={oOglinda} numar="2" titlu="Oglinda" st={st} />
+      <Antet opacitate={oOglinda} titlu="Oglinda" st={st} />
       <g opacity={oOglinda}>
         <PlanOrtogonal
           centru={[620, 500]}
@@ -473,7 +455,7 @@ function Desen() {
       />
 
       {/* ═══ 3 · semnul ═══ */}
-      <Antet opacitate={oSemn} numar="3" titlu="De ce semnul acela" st={st} />
+      <Antet opacitate={oSemn} titlu="De ce semnul acela" st={st} />
       <g opacity={oSemn}>
         <PlanOrtogonal
           centru={[620, 490]}
@@ -528,7 +510,7 @@ function Desen() {
       />
 
       {/* ═══ 4 · coloana ═══ */}
-      <Antet opacitate={oColoana} numar="4" titlu="O reflexie, o coloană" st={st} />
+      <Antet opacitate={oColoana} titlu="O reflexie, o coloană" st={st} />
       <g opacity={oColoana}>
         <Matrice
           x={520}
@@ -572,7 +554,7 @@ function Desen() {
       />
 
       {/* ═══ 5 · final ═══ */}
-      <Antet opacitate={oFinal} numar="5" titlu="Încă una, și gata" st={st} />
+      <Antet opacitate={oFinal} titlu="Încă una, și gata" st={st} />
       <g opacity={oFinal}>
         <Matrice x={520} y={470} valori={PAS_2?.inainte ?? []} opacitate={1} nume="P₁·A" st={st} />
         <text

@@ -300,15 +300,5 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: amândouă rezolvă aceeași problemă —{" "}
-        <strong>fă zerouri fără să strici lungimile</strong> — și diferă prin cât mușcă dintr-o
-        dată. Oglinda ia o coloană întreagă, aleasă anume ca să nu piardă cifre; rotația ia un
-        element și nu se atinge de nimic altceva. Produsul transformărilor, luat invers, e{" "}
-        <Mate>Q</Mate>, iar ce rămâne din matrice e <Mate>R</Mate>.
-      </>
-    ),
   },
 };

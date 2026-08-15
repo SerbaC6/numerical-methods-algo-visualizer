@@ -46,11 +46,19 @@ export function Subtitrari({ items, className }: SubtitrariProps) {
     >
       <p
         aria-hidden="true"
-        className="text-text min-h-[2lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
+        // Trei rânduri rezervate, nu două: cu doar două, propoziția lungă
+        // creștea în sus și împingea desenul, adică textul se citea de jos în
+        // sus. Acum locul e rezervat de la început și rândurile se adaugă în
+        // jos, ca la orice text.
+        className="text-text min-h-[3lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
       >
-        {/* `key` pe span, nu pe `p`: așa propoziția reapare cu un fade la
-            fiecare schimbare, iar înălțimea rezervată rămâne aceeași. */}
-        <span key={indice} className="motion-safe:animate-in motion-safe:fade-in-0">
+        {/* `key` pe span, nu pe `p`: așa propoziția reapare la fiecare
+            schimbare, iar înălțimea rezervată rămâne aceeași. Intrarea vine
+            de sus în jos, în sensul citirii. */}
+        <span
+          key={indice}
+          className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-2 inline-block"
+        >
           {curenta?.text ?? ""}
         </span>
       </p>

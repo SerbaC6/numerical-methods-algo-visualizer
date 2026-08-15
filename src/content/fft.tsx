@@ -365,17 +365,5 @@ export const continutFft: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ideea care ține tot algoritmul încape într-o propoziție: doi coeficienți aflați la distanță{" "}
-        <Mate>m</Mate> unul de altul diferă doar printr-un semn care alternează cu paritatea
-        indicelui, așa că suma lor stinge termenii impari, iar diferența lor pe cei pari. Fiecare
-        dintre cele două bucăți rămase e o problemă de aceeași formă, pe jumătate de set — și de
-        aceea pasul se poate repeta până la capăt. Nimic din rezultat nu se schimbă: se schimbă doar
-        ordinea în care se adună aceleași produse. Publicat de Cooley și Tukey în 1965, procedeul e
-        numit de Gilbert Strang „cel mai important algoritm numeric al vieții noastre".
-      </>
-    ),
   },
 };

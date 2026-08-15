@@ -7,6 +7,7 @@ import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
 import { stiintific, zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+import { marimeCareIncape } from "@/lib/tipografie-clip";
 
 /* ───────────────────────── timpul ───────────────────────── */
 
@@ -96,33 +97,12 @@ const laY = (y: number) =>
 
 /* ───────────────────────── piese ───────────────────────── */
 
-function Antet({
-  opacitate,
-  numar,
-  titlu,
-  st,
-}: {
-  opacitate: number;
-  numar: string;
-  titlu: string;
-  st: number;
-}) {
+function Antet({ opacitate, titlu, st }: { opacitate: number; titlu: string; st: number }) {
   return (
     <g opacity={opacitate}>
       <text
         x={110}
-        y={80}
-        fill={culoareEticheta("curent")}
-        style={{
-          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
-          letterSpacing: "0.16em",
-        }}
-      >
-        {numar}
-      </text>
-      <text
-        x={110}
-        y={144}
+        y={112}
         fill="var(--text)"
         style={{ font: `800 ${52 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
@@ -177,7 +157,9 @@ function Cartonas({
         y={inaltime / 2 + 30}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${26 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{
+          font: `600 ${marimeCareIncape(text, latime - 30 * 2) * Math.min(st, 1.35)}px var(--font-sans)`,
+        }}
       >
         {text}
       </text>
@@ -391,7 +373,7 @@ function Desen() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" aria-hidden="true">
       {/* ═══ 1 · secanta ═══ */}
-      <Antet opacitate={oSec} numar="1" titlu="Tangentă și secantă" st={st} />
+      <Antet opacitate={oSec} titlu="Tangentă și secantă" st={st} />
       <g opacity={oSec}>
         <Grafic opacitate={1} />
         <Dreapta panta={EXACT} rol={ROL_TANGENTA} punctata opacitate={oTangenta} />
@@ -429,7 +411,7 @@ function Desen() {
       />
 
       {/* ═══ 2 · micșorarea ═══ */}
-      <Antet opacitate={oMic} numar="2" titlu="Pasul scade" st={st} />
+      <Antet opacitate={oMic} titlu="Pasul scade" st={st} />
       <g opacity={oMic}>
         <Grafic opacitate={1} />
         <Dreapta panta={EXACT} rol={ROL_TANGENTA} punctata />
@@ -465,7 +447,7 @@ function Desen() {
       />
 
       {/* ═══ 3 · simetric ═══ */}
-      <Antet opacitate={oSim} numar="3" titlu="Doi vecini, simetric" st={st} />
+      <Antet opacitate={oSim} titlu="Doi vecini, simetric" st={st} />
       <g opacity={oSim}>
         <Grafic opacitate={1} />
         <Dreapta panta={EXACT} rol={ROL_TANGENTA} punctata />
@@ -506,7 +488,7 @@ function Desen() {
       />
 
       {/* ═══ 4 · podeaua ═══ */}
-      <Antet opacitate={oPod} numar="4" titlu="Unde se strică" st={st} />
+      <Antet opacitate={oPod} titlu="Unde se strică" st={st} />
       <g opacity={oPod}>
         {/* Grila log-log, doar cât să se citească ordinele de mărime. */}
         <g stroke={culoareRol("grila")} strokeWidth={2} opacity={0.4}>

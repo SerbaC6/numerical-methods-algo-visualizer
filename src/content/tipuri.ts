@@ -54,8 +54,6 @@ export type TeorieScurtaContinut = {
   /** Paragraful de deschidere al secțiunii — problema comună tuturor metodelor. */
   intro: ReactNode;
   metode: MetodaTeorie[];
-  /** Nota de final: ce reține cititorul dacă nu reține nimic altceva. */
-  incheiere?: ReactNode;
 };
 
 export type ContinutPagina = {

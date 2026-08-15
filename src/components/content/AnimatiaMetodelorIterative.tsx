@@ -6,6 +6,7 @@ import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
 import { zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+import { marimeCareIncape } from "@/lib/tipografie-clip";
 
 /* ───────────────────────── timpul ───────────────────────── */
 
@@ -273,34 +274,13 @@ function Matrice({
   );
 }
 
-/** Antetul din colțul de sus-stânga: numărul momentului și titlul lui. */
-function Antet({
-  opacitate,
-  numar,
-  titlu,
-  st,
-}: {
-  opacitate: number;
-  numar: string;
-  titlu: string;
-  st: number;
-}) {
+/** Antetul din colțul de sus-stânga: titlul momentului. */
+function Antet({ opacitate, titlu, st }: { opacitate: number; titlu: string; st: number }) {
   return (
     <g opacity={opacitate}>
       <text
         x={120}
-        y={84}
-        fill={culoareEticheta("curent")}
-        style={{
-          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
-          letterSpacing: "0.16em",
-        }}
-      >
-        {numar}
-      </text>
-      <text
-        x={120}
-        y={148}
+        y={112}
         fill="var(--text)"
         style={{ font: `800 ${54 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
@@ -360,7 +340,9 @@ function Card({
         y={inaltime / 2 + 32}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${28 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{
+          font: `600 ${marimeCareIncape(text, latime - 32 * 2) * Math.min(st, 1.35)}px var(--font-sans)`,
+        }}
       >
         {text}
       </text>
@@ -493,7 +475,7 @@ function Desen() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" aria-hidden="true">
       {/* ═══ 1 · sistemul ═══ */}
-      <Antet opacitate={oSistem} numar="1" titlu="Sistemul" st={st} />
+      <Antet opacitate={oSistem} titlu="Sistemul" st={st} />
       <Matrice
         x={620}
         y={480}
@@ -538,7 +520,7 @@ function Desen() {
       />
 
       {/* ═══ 2 · o singură linie ═══ */}
-      <Antet opacitate={oLinie} numar="2" titlu="Ce face o linie" st={st} />
+      <Antet opacitate={oLinie} titlu="Ce face o linie" st={st} />
       <Matrice
         x={560}
         y={420}
@@ -582,7 +564,7 @@ function Desen() {
       />
 
       {/* ═══ 3 · Jacobi ═══ */}
-      <Antet opacitate={oJacobi} numar="3" titlu="Jacobi" st={st} />
+      <Antet opacitate={oJacobi} titlu="Jacobi" st={st} />
       <Baleiaj
         opacitate={oJacobi}
         pas={PAS_JACOBI}
@@ -605,7 +587,7 @@ function Desen() {
       />
 
       {/* ═══ 4 · Gauss-Seidel ═══ */}
-      <Antet opacitate={oGs} numar="4" titlu="Gauss-Seidel" st={st} />
+      <Antet opacitate={oGs} titlu="Gauss-Seidel" st={st} />
       <Baleiaj
         opacitate={oGs}
         pas={PAS_GS}
@@ -628,7 +610,7 @@ function Desen() {
       />
 
       {/* ═══ 5 · comparația ═══ */}
-      <Antet opacitate={oComparatie} numar="5" titlu="Cât se câștigă" st={st} />
+      <Antet opacitate={oComparatie} titlu="Cât se câștigă" st={st} />
       <g opacity={oComparatie}>
         <Card
           x={200}
@@ -682,7 +664,7 @@ function Desen() {
       />
 
       {/* ═══ 6 · ω ═══ */}
-      <Antet opacitate={oOmega} numar="6" titlu="Suprarelaxare" st={st} />
+      <Antet opacitate={oOmega} titlu="Suprarelaxare" st={st} />
       <g opacity={oOmega * intra(T, O + 0.4, 0.5)}>
         <text
           x={W / 2}

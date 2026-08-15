@@ -253,17 +253,5 @@ export const continutAlgoritmulQr: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: QR nu <em>calculează</em> valorile proprii, ci
-        schimbă baza de atâtea ori până când ele apar singure pe diagonală. Fiecare pas e o
-        asemănare ortogonală, deci spectrul nu se mișcă niciodată — se mișcă doar elementele din
-        afara diagonalei, care se sting. Iar deplasarea e ce face diferența dintre o metodă corectă
-        și una folosibilă: fără ea, viteza e la mâna raportului <Mate>|λⱼ₊₁/λⱼ|</Mate>, pe care nu-l
-        alegi tu; cu ea, raportul devine <Mate>|(λⱼ₊₁ − σ)/(λⱼ − σ)|</Mate>, iar <Mate>σ</Mate> e
-        singurul lucru din tot algoritmul pe care îl alegi.
-      </>
-    ),
   },
 };

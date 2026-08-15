@@ -165,13 +165,5 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Diferența se vede în cifre: acolo unde bisecția are nevoie de ordinul a <strong>50</strong>{" "}
-        de iterații, secanta și tangenta termină în <strong>4–7</strong>. Motivul e ordinul de
-        convergență — 2 pentru Newton, adică eroarea nouă e proporțională cu pătratul celei vechi.
-      </>
-    ),
   },
 };

@@ -3,6 +3,7 @@ import { useClip } from "@/components/viz/clip-context";
 import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
+import { marimeCareIncape } from "@/lib/tipografie-clip";
 
 /* ───────────────────────── timpul ───────────────────────── */
 
@@ -300,24 +301,13 @@ function Matrice({
   );
 }
 
-/** Antetul din colțul de sus-stânga: numărul momentului și titlul lui. */
-function Antet({ opacitate, numar, titlu, st }: OpAntet) {
+/** Antetul din colțul de sus-stânga: titlul momentului. */
+function Antet({ opacitate, titlu, st }: OpAntet) {
   return (
     <g opacity={opacitate}>
       <text
         x={120}
-        y={84}
-        fill={culoareEticheta("curent")}
-        style={{
-          font: `700 ${26 * Math.min(st, 1.4)}px var(--font-mono)`,
-          letterSpacing: "0.16em",
-        }}
-      >
-        {numar}
-      </text>
-      <text
-        x={120}
-        y={144}
+        y={112}
         fill="var(--text)"
         style={{ font: `800 ${54 * Math.min(st, 1.3)}px var(--font-sans)` }}
       >
@@ -327,7 +317,7 @@ function Antet({ opacitate, numar, titlu, st }: OpAntet) {
   );
 }
 
-type OpAntet = { opacitate: number; numar: string; titlu: string; st: number };
+type OpAntet = { opacitate: number; titlu: string; st: number };
 
 /** Un cartonaș din coloana din dreapta: dungă colorată, simbol, explicație. */
 function Card({
@@ -379,7 +369,9 @@ function Card({
         y={inaltime / 2 + 32}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{ font: `600 ${28 * Math.min(st, 1.4)}px var(--font-sans)` }}
+        style={{
+          font: `600 ${marimeCareIncape(text, latime - 32 * 2) * Math.min(st, 1.35)}px var(--font-sans)`,
+        }}
       >
         {text}
       </text>
@@ -526,7 +518,7 @@ function Desen() {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" aria-hidden="true">
       {/* ═══ 1 · matricea de start ═══ */}
-      <Antet opacitate={oObs} numar="1" titlu="Matricea de start" st={st} />
+      <Antet opacitate={oObs} titlu="Matricea de start" st={st} />
       <Matrice
         x={animeaza({ dela: 700, la: 640, start: O, sfarsit: O + 1.6 })(T)}
         y={500}
@@ -600,7 +592,7 @@ function Desen() {
       />
 
       {/* ═══ 2 · rotațiile Givens ═══ */}
-      <Antet opacitate={oRot} numar="2" titlu="Rotațiile Givens" st={st} />
+      <Antet opacitate={oRot} titlu="Rotațiile Givens" st={st} />
 
       {/* 2a — ce este P₂ */}
       <Matrice
@@ -734,7 +726,7 @@ function Desen() {
       </g>
 
       {/* ═══ 3 · factorizarea ═══ */}
-      <Antet opacitate={oFact} numar="3" titlu="Factorizarea A = QR" st={st} />
+      <Antet opacitate={oFact} titlu="Factorizarea A = QR" st={st} />
       <Matrice
         x={350}
         y={500}
@@ -793,7 +785,7 @@ function Desen() {
       />
 
       {/* ═══ 4 · pasul iterației ═══ */}
-      <Antet opacitate={oPas} numar="4" titlu="Pasul iterației" st={st} />
+      <Antet opacitate={oPas} titlu="Pasul iterației" st={st} />
       <text
         x={W / 2}
         y={470}
@@ -842,7 +834,7 @@ function Desen() {
       </g>
 
       {/* ═══ 5 · convergența ═══ */}
-      <Antet opacitate={oConv} numar="5" titlu="Convergența" st={st} />
+      <Antet opacitate={oConv} titlu="Convergența" st={st} />
       <Matrice
         x={700}
         y={500}

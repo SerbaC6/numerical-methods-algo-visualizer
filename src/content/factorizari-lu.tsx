@@ -333,14 +333,5 @@ export const continutFactorizariLu: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: <Mate>A = L·U</Mate> se calculează o dată, iar apoi
-        fiecare nou vector <Mate>b</Mate> costă doar două substituții, <Mate>O(n²)</Mate>. Cele trei
-        metode dau aceeași factorizare și diferă doar prin ce se fixează dinainte:{" "}
-        <Mate>lᵢᵢ = 1</Mate>, <Mate>uᵢᵢ = 1</Mate> sau <Mate>U = Lᵀ</Mate>.
-      </>
-    ),
   },
 };

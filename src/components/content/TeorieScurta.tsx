@@ -106,10 +106,6 @@ export function TeorieScurta({ continut }: { continut: TeorieScurtaContinut }) {
           </article>
         ))}
       </div>
-
-      {continut.incheiere && (
-        <p className="text-text-slab text-lg leading-relaxed">{continut.incheiere}</p>
-      )}
     </div>
   );
 }

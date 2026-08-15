@@ -100,6 +100,12 @@ bine: un rezumat de o propoziție între titlu și teorie doar amână începutu
 prop-ul `descriere` pentru paginile statice (contact, termeni, confidențialitate); `PaginaAlgoritm`
 nu i-l dă.
 
+**„Teoria pe scurt" nu se încheie cu un rezumat.** Ultima secțiune e ultima metodă; nu se adaugă
+dedesubt un paragraf de tipul „ce rămâne, dacă rămâne un singur lucru". Cine a citit teoria tocmai
+a citit-o — repovestită încă o dată, mai vag, nu adaugă nimic și îi spune că partea de dinainte
+putea fi sărită. Câmpul `incheiere` nu mai există în `TeorieScurtaContinut`, deci nici nu se poate
+strecura la loc.
+
 ### Corectitudinea matematică — zero greșeli, fără excepții
 
 **Nimic din ce ajunge sub ochii utilizatorului nu are voie să fie greșit matematic.** Nici o
@@ -526,6 +532,20 @@ vechea împărțire Manim/`motion`: e singurul lucru care ținea granița în pi
 Ce se cere de la orice clip nou: scena stă în `src/components/content/Animatia<Ceva>.tsx`, cifrele
 vin din `src/algorithms/<slug>/`, culorile din `viz-roles.ts` (etichetele cu `culoareEticheta()`),
 iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` pornit.
+
+### Regulile de scriere din clip (se aplică la toate, fără excepție)
+
+- **Momentele nu se numerotează.** Antetul unui moment e doar titlul — fără „01", „02", fără cifră
+  pe un rând separat deasupra lui. Numărul nu spune nimic despre ce urmează, iar cititorul nu are
+  ce face cu el: clipul curge oricum într-o singură direcție.
+- **Textul mărunt nu are voie să fie mărunt.** Pânza are 1920 de unități și ajunge pe ecran la
+  700–900 px, deci o explicație scrisă la 26 de unități se vede la ~11 px. Explicațiile din
+  cartonașe pornesc de la `CORP_EXPLICATIE` și se micșorează doar cât să încapă, prin
+  `marimeCareIncape()` din [`src/lib/tipografie-clip.ts`](./src/lib/tipografie-clip.ts) —
+  niciodată cu un număr scris de mână. Dacă textul iese sub minim, se **scurtează propoziția**, nu
+  se coboară corpul.
+- **Subtitrarea se citește de sus în jos.** Locul ei e rezervat de la început (`Subtitrari` ține
+  trei rânduri), iar o propoziție nouă intră de sus, nu de jos, și nu împinge desenul.
 
 **Pagini fără clip, prin decizie** — nu „încă nu au":
 

@@ -231,15 +231,5 @@ export const continutDerivareNumerica: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: în derivarea numerică sunt <strong>două</strong>{" "}
-        erori care trag în direcții opuse. Formula cu trei puncte o micșorează pe prima — de la{" "}
-        <Mate>h</Mate> la <Mate>h²</Mate>, gratis, doar din simetrie — dar n-o atinge pe a doua.
-        Ordinul mai bun nu înseamnă „putem lua <Mate>h</Mate> oricât de mic", ci „ajungem mai jos
-        înainte să dăm de podea".
-      </>
-    ),
   },
 };

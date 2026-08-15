@@ -445,17 +445,5 @@ export const continutMetodeIterative: ContinutPagina = {
         ],
       },
     ],
-
-    incheiere: (
-      <>
-        Ce rămâne, dacă rămâne un singur lucru: cele trei metode sunt{" "}
-        <strong>aceeași iterație</strong>, <Mate>x ← G·x + c</Mate>, cu trei alegeri diferite ale
-        lui <Mate>M</Mate> — iar tot ce se întâmplă mai departe e scris în <Mate>ρ(G)</Mate>. Jacobi
-        ia <Mate>M = D</Mate> și citește totul din trecut; Gauss-Seidel ia <Mate>M = D − L</Mate> și
-        folosește ce tocmai a calculat; SOR reglează cât de mult se aplică fiecare corecție.
-        Alegerea nu schimbă soluția, ci doar câți pași sunt până la ea — și, uneori, dacă se ajunge
-        acolo.
-      </>
-    ),
   },
 };
