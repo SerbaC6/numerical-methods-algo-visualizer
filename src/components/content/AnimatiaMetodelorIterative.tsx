@@ -402,15 +402,21 @@ function Sageata({
 }) {
   const [x1, y1] = dela;
   const [x2, y2] = la;
-  const mijloc = (y1 + y2) / 2;
   const culoare = culoareRol(rol);
+
+  // Traversarea pleacă **orizontal** din dreptul cifrei și ajunge tot
+  // orizontal în celulă, cu punctele de control la jumătatea distanței. Forma
+  // dinainte trăgea de un punct comun pe la mijlocul înălțimii, deci două
+  // săgeți plecate din linii diferite se strângeau într-un nod, iar vârfurile
+  // intrau pieziș în celulă, peste bordura ei.
+  const cot = Math.max(70, Math.abs(x2 - x1) * 0.45);
 
   const traseu = bucla
     ? `M ${x1} ${y1} C ${x1 + 150} ${y1}, ${x2 + 150} ${y2}, ${x2 + 24} ${y2}`
-    : `M ${x1} ${y1} C ${x1 + 70} ${y1}, ${x2 - 90} ${mijloc}, ${x2 - 24} ${y2}`;
+    : `M ${x1} ${y1} C ${x1 + cot} ${y1}, ${x2 - cot} ${y2}, ${x2 - 22} ${y2}`;
   const varf = bucla
     ? `M ${x2 + 24} ${y2} l 18 -11 M ${x2 + 24} ${y2} l 18 11`
-    : `M ${x2 - 24} ${y2} l -18 -11 M ${x2 - 24} ${y2} l -18 11`;
+    : `M ${x2 - 22} ${y2} l -18 -11 M ${x2 - 22} ${y2} l -18 11`;
 
   return (
     <g opacity={opacitate} fill="none" stroke={culoare} strokeWidth={5} strokeLinecap="round">
@@ -901,21 +907,34 @@ function Baleiaj({
       {celule(X_NOU, valoriNoi, (i) => (scrisa(i) ? ROL_SCRIS : ROL_VECHI))}
 
       {/* Săgețile: de unde citește linia curentă cele două valori de care are
-          nevoie. Aici se vede toată diferența dintre cele două metode. */}
-      {componenta?.citite.map((provenienta, j) => {
-        if (provenienta === "curenta") return null;
-        const proaspata = provenienta === "proaspata";
-        return (
-          <Sageata
-            key={j}
-            dela={[proaspata ? X_NOU + 140 : X_VECHI + 140, yLinie(j)]}
-            la={[proaspata ? X_NOU + 140 : X_NOU - 140, yLinie(linie)]}
-            opacitate={aparitie}
-            rol={proaspata ? ROL_PROASPAT : ROL_VECHI}
-            bucla={proaspata}
-          />
-        );
-      })}
+          nevoie. Aici se vede toată diferența dintre cele două metode.
+ 
+          Se desenează dintr-o listă filtrată **întâi**, nu direct din `citite`,
+          fiindcă vârfurile au nevoie să știe câte sunt: două săgeți care intră
+          în aceeași celulă și se opresc fix în același punct se încurcă una în
+          alta exact acolo unde privirea se duce. Așa fiecare primește rândul
+          ei, la câțiva zeci de unități distanță. */}
+      {(() => {
+        const surse = (componenta?.citite ?? [])
+          .map((provenienta, j) => ({ provenienta, j }))
+          .filter((c) => c.provenienta !== "curenta");
+
+        return surse.map(({ provenienta, j }, indice) => {
+          const proaspata = provenienta === "proaspata";
+          // Vârfurile se depărtează simetric în jurul mijlocului celulei-țintă.
+          const decalaj = (indice - (surse.length - 1) / 2) * 34;
+          return (
+            <Sageata
+              key={j}
+              dela={[proaspata ? X_NOU + 150 : X_VECHI + 100, yLinie(j)]}
+              la={[proaspata ? X_NOU + 150 : X_NOU - 140, yLinie(linie) + decalaj]}
+              opacitate={aparitie}
+              rol={proaspata ? ROL_PROASPAT : ROL_VECHI}
+              bucla={proaspata}
+            />
+          );
+        });
+      })()}
 
       {/* Valoarea liniei curente — dar **numai după** ce a fost scrisă în
           coloană. Altfel rândul de sub desen o anunța cât timp celula încă avea
