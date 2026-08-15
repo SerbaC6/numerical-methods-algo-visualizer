@@ -21,6 +21,9 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
 
   return (
     <figure className="m-0 flex flex-col gap-3">
+      {/* Numele variantei, deasupra casetei: două formule înrudite au nevoie de
+          ceva care să le despartă înainte de a fi citite, nu după. */}
+      {bloc.subtitlu && <p className="text-accent-slab text-lg font-bold">{bloc.subtitlu}</p>}
       {/* Formula și legenda literelor stau în **aceeași** casetă. Sunt un
           singur lucru: o formulă pe care n-o poți citi fiindcă nu știi ce e `p`
           și ce e `pₙ` nu comunică nimic. Despărțite în două cutii, ochiul le

@@ -37,6 +37,14 @@ export type BlocTeorie =
        */
       sursa: string;
       /**
+       * Numele variantei, deasupra formulei — „Punct de mijloc", „Punct final".
+       *
+       * E un **titlu**, nu o literă: delimitează două formule înrudite care
+       * altfel curg una după alta. Înainte stătea în `legenda`, adică între
+       * simboluri, unde n-avea ce căuta — nu e nimic de citit în formulă.
+       */
+      subtitlu?: string;
+      /**
        * Ce înseamnă fiecare literă. **Se completează pentru orice formulă care
        * introduce un simbol nou.** O formulă în care cititorul nu știe ce e `p`
        * și ce e `pₙ` nu comunică nimic, oricât de corectă ar fi.

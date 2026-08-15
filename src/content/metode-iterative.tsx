@@ -109,7 +109,9 @@ export const continutMetodeIterative: ContinutPagina = {
               // `\arraystretch` și spațiile din jurul celulelor sunt singurul
               // fel în care un tabel KaTeX capătă aer: fără ele, cele patru
               // rânduri se lipesc și liniile verticale par să taie textul.
-              "\\def\\arraystretch{1.9}\\Large\n" +
+              // Corpul e `\large`, nu `\Large`: tabelul ajunsese mai mare decât
+              // formulele de sub el, iar aerul îl dă oricum `\arraystretch`.
+              "\\def\\arraystretch{2}\\large\n" +
               "\\begin{array}{l|c|c}\n" +
               "\\;\\text{Metodă}\\;\\; & \\;\\; M \\;\\; & \\;\\; N \\; \\\\\\hline\n" +
               "\\;\\text{Jacobi}\\;\\; & \\;\\; D \\;\\; & \\;\\; L + U \\; \\\\\n" +

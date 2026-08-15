@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   FUNCTII_DERIVARE,
   getFunctieDerivare,
 } from "@/algorithms/derivare-numerica/functii-derivare";
 import { getFormula, noduriConcrete } from "@/algorithms/derivare-numerica/formule";
-import { Callout } from "@/components/content/Callout";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -17,7 +16,6 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
-import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { Notatie } from "@/components/viz/Notatie";
 import { NumberInput } from "@/components/viz/NumberInput";
@@ -47,6 +45,72 @@ const EXPONENT_MIN = -12;
 const EXPONENT_MAX = 0;
 
 /**
+ * Cât de repede ajunge desenul din urmă pasul cerut, în secunde.
+ *
+ * Urmărirea e exponențială, nu liniară: pornește repede și frânează la sosire,
+ * deci un salt de opt ordine de mărime (butoanele) arată ca o mișcare, nu ca o
+ * tăietură, iar tragerea de cursor rămâne lipită de deget.
+ */
+const TIMP_URMARIRE = 0.16;
+
+/**
+ * O valoare care aleargă după `tinta` în loc s-o atingă dintr-un cadru.
+ *
+ * Fără ea, schimbarea pasului **teleporta** nodurile: la fiecare apăsare de
+ * buton desenul apărea deja refăcut, iar drumul dintre cele două stări — chiar
+ * ce trebuie văzut pe pagina asta — nu exista. `prefers-reduced-motion` sare
+ * peste tot drumul, fiindcă un `requestAnimationFrame` propriu nu e acoperit
+ * nici de `MotionConfig`, nici de regula din `index.css`.
+ */
+function useUrmarire(tinta: number): number {
+  const [valoare, setValoare] = useState(tinta);
+  const curent = useRef(tinta);
+
+  useEffect(() => {
+    const sari = () => {
+      curent.current = tinta;
+      setValoare(tinta);
+    };
+
+    // Pe filă ascunsă `requestAnimationFrame` nu rulează deloc, deci urmărirea
+    // ar îngheța la jumătatea drumului. Nu e nimic de văzut acolo: se sare
+    // direct la țintă.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.hidden) {
+      sari();
+      return;
+    }
+
+    document.addEventListener("visibilitychange", sari);
+
+    let cadru = 0;
+    let anterior: number | null = null;
+    const pas = (acum: number) => {
+      // Pasul se ia din timpul scurs, nu din numărul de cadre: pe un ecran la
+      // 120 Hz urmărirea ar fi de două ori mai rapidă.
+      const dt = anterior === null ? 0 : (acum - anterior) / 1000;
+      anterior = acum;
+
+      const diferenta = tinta - curent.current;
+      if (Math.abs(diferenta) < 1e-3) {
+        sari();
+        return;
+      }
+      curent.current += diferenta * (1 - Math.exp(-dt / TIMP_URMARIRE));
+      setValoare(curent.current);
+      cadru = window.requestAnimationFrame(pas);
+    };
+
+    cadru = window.requestAnimationFrame(pas);
+    return () => {
+      window.cancelAnimationFrame(cadru);
+      document.removeEventListener("visibilitychange", sari);
+    };
+  }, [tinta]);
+
+  return valoare;
+}
+
+/**
  * Interfața interactivă a paginii 16.
  *
  * **Ce se vede.** Secanta formulei, dusă prin punctul de lucru, alături de
@@ -74,7 +138,9 @@ export function InterfataDerivareNumerica() {
 
   const functie = getFunctieDerivare(idFunctie);
   const formula = getFormula(idFormula);
-  const h = 10 ** exponent;
+  // Cursorul dă ținta; desenul o urmărește, deci nodurile **călătoresc** spre
+  // ea în loc să apară direct acolo.
+  const h = 10 ** useUrmarire(exponent);
   const punct = typeof x0 === "number" && Number.isFinite(x0) ? x0 : functie.x0;
 
   const exact = functie.fPrim(punct);
@@ -83,8 +149,15 @@ export function InterfataDerivareNumerica() {
 
   const noduri = noduriConcrete(formula, functie.f, punct, h);
 
-  /* Domeniul desenului: în jurul lui x₀, destul cât să se vadă și nodurile. */
-  const raza = Math.max(1.2, Math.abs(2 * h) * 1.4);
+  /*
+   * Domeniul desenului: în jurul lui x₀, destul cât să se vadă și nodurile.
+   *
+   * `hypot`, nu `max`: cu `Math.max(1.2, 2,8·h)` cadrul stătea încremenit sub
+   * `h ≈ 0,43` și pornea brusc peste el — o cotitură exact în mijlocul
+   * cursorului. Așa, trecerea de la „încape tot" la „urmează nodurile" e lină,
+   * fără niciun prag.
+   */
+  const raza = Math.hypot(1.1, 2.4 * h);
   const domeniuX = useMemo<readonly [number, number]>(
     () => [punct - raza, punct + raza],
     [punct, raza],
@@ -102,7 +175,9 @@ export function InterfataDerivareNumerica() {
     if (valori.length === 0) return [-1, 1];
     const min = Math.min(...valori);
     const max = Math.max(...valori);
-    const margine = Math.max(0.25, (max - min) * 0.12);
+    // Marginea crește odată cu desenul, fără prag: un `Math.max` aici făcea
+    // cadrul pe verticală să se oprească din mișcare pe curbele aproape plate.
+    const margine = (max - min) * 0.12 + 0.12;
     return [min - margine, max + margine];
   }, [segmente]);
 
@@ -114,10 +189,6 @@ export function InterfataDerivareNumerica() {
   return (
     <div className="flex flex-col gap-10">
       <Legend elemente={LEGENDA} />
-
-      <Callout tip="retine" titlu={`Pe ${functie.eticheta}`}>
-        <Notatie>{functie.ceArata}</Notatie>
-      </Callout>
 
       <Tabs value={idFormula} onValueChange={setIdFormula}>
         <TabsList className="w-full">
@@ -180,7 +251,9 @@ export function InterfataDerivareNumerica() {
                 aria-label="Pasul h, ca ordin de mărime"
                 min={EXPONENT_MIN}
                 max={EXPONENT_MAX}
-                step={0.1}
+                // Pas mărunt: la 0,1 se simțeau treptele sub deget, iar nodurile
+                // săreau din poziție în poziție în loc să alunece.
+                step={0.01}
                 value={[exponent]}
                 onValueChange={([v]) => setExponent(v ?? 0)}
               />
@@ -267,13 +340,6 @@ export function InterfataDerivareNumerica() {
           </ControlPanel>
         </div>
       </div>
-
-      <FormulaBlock
-        latex={`${formula.latex} = ${zecimale(aproximare, 6)}`}
-        eticheta="Formula, cu pasul de acum"
-        evidentiaza={["der-h"]}
-        className="text-[1.15rem] sm:text-[1.3rem]"
-      />
     </div>
   );
 }

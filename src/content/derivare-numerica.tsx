@@ -125,8 +125,12 @@ export const continutDerivareNumerica: ContinutPagina = {
             latex:
               "f'(x_0) = \\frac{1}{2h}\\left[f(x_0+h) - f(x_0-h)\\right] - \\frac{h^2}{6}f'''(\\xi), \\qquad \\xi \\in [x_0-h,\\, x_0+h]",
             sursa: "curs 11, three-point midpoint",
+            subtitlu: "Punct de mijloc",
             legenda: [
-              { simbol: "punct de mijloc", sens: <>x₀ e la mijloc între cele două noduri</> },
+              {
+                simbol: "x₀ ± h",
+                sens: <>cei doi vecini, la aceeași distanță de o parte și de alta</>,
+              },
               { simbol: "h²/6", sens: <>eroarea scade acum pătratic</> },
             ],
             explicatie: (
@@ -145,7 +149,11 @@ export const continutDerivareNumerica: ContinutPagina = {
             latex:
               "f'(x_0) = \\frac{1}{2h}\\left[-3f(x_0) + 4f(x_0+h) - f(x_0+2h)\\right] + \\frac{h^2}{3}f'''(\\xi)",
             sursa: "curs 11, three-point endpoint",
-            legenda: [{ simbol: "punct final", sens: <>x₀ e la capătul șirului de noduri</> }],
+            subtitlu: "Punct final",
+            legenda: [
+              { simbol: "x₀ + 2h", sens: <>al doilea vecin, luat tot spre dreapta</> },
+              { simbol: "h²/3", sens: <>de două ori eroarea punctului de mijloc</> },
+            ],
             explicatie: (
               <>
                 Când <Mate>x₀</Mate> e la <strong>capătul</strong> intervalului, nu ai vecin la
