@@ -109,6 +109,7 @@ function Cartonas({
   opacitate,
   rol,
   simbol,
+  titlu,
   text,
   st,
 }: {
@@ -117,8 +118,15 @@ function Cartonas({
   latime: number;
   opacitate: number;
   rol?: RolViz;
-  /** Lipsește când cartonașul poartă o singură propoziție, fără formulă deasupra. */
+  /** Formula de deasupra, în mono. Se exclude cu `titlu`. */
   simbol?: string;
+  /**
+   * Rândul de deasupra când el e **cuvinte**, nu formulă: același loc și
+   * aceeași greutate ca `simbol`, dar în Nunito Sans. Un cuvânt scris mono
+   * arată ca o scăpare (vezi regula din CLAUDE.md), iar un cartonaș cu o
+   * singură propoziție lungă, plutind la mijloc, ieșea din rândul celorlalte.
+   */
+  titlu?: string;
   text: string;
   st: number;
 }) {
@@ -145,9 +153,22 @@ function Cartonas({
           <NotatieSVG text={simbol} marime={34 * Math.min(st, 1.3)} />
         </text>
       )}
+      {titlu && (
+        <text
+          x={30}
+          y={inaltime / 2 - 24}
+          dominantBaseline="central"
+          fill={rol ? culoareEticheta(rol) : "var(--text)"}
+          style={{
+            font: `700 ${marimeCareIncape(titlu, latime - 30 * 2, 36) * Math.min(st, 1.3)}px var(--font-sans)`,
+          }}
+        >
+          {titlu}
+        </text>
+      )}
       <text
         x={30}
-        y={simbol ? inaltime / 2 + 30 : inaltime / 2}
+        y={simbol || titlu ? inaltime / 2 + 30 : inaltime / 2}
         dominantBaseline="central"
         fill="var(--text)"
         style={{
@@ -469,13 +490,16 @@ function Desen() {
           tinta={undefined}
           st={st}
         />
+        {/* Mai îngust decât cartonașele cu formulă: aici textul e scurt, iar la
+            640 rămânea o jumătate de cartonaș goală lângă el. */}
         <Cartonas
-          x={1180}
+          x={1230}
           y={414}
-          latime={640}
+          latime={470}
           opacitate={oPatru}
           rol={ROL_V}
-          text="Matricea identitate, cu 4 elemente schimbate"
+          titlu="Matricea identitate"
+          text="cu 4 elemente schimbate"
           st={st}
         />
       </g>
@@ -548,7 +572,7 @@ function Desen() {
           latime={720}
           opacitate={oRegula}
           rol="interval"
-          simbol="2 linii per rotație"
+          titlu="Două linii per rotație"
           text="Se pot face mai multe deodată"
           st={st}
         />
@@ -558,7 +582,7 @@ function Desen() {
           latime={720}
           opacitate={oRegula}
           rol={ROL_IMAGINE}
-          simbol="zerourile rămân"
+          titlu="Zerourile rămân"
           text="Nu amestecă toată coloana"
           st={st}
         />
