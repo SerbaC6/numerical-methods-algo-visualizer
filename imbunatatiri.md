@@ -5,9 +5,9 @@
 4. ✅ Nu mai pune subtitrarile sa fie scrise de jos in sus. Fa-le de sus in jos cand e pop-up nou de text
 
 # De rezolvat la animatii si altele:
-- Fa cumva sa pot schimba din sageti unde sunt pe video
-- Atunci cand ies de pe pagina, clipul si pagina se reiau de la 0. Fa cumva astfel incat sa ramana unde a fost
-- Cand am video ul in fata, fa cumva sa pot da pauza apasand space
+- ✅ Fa cumva sa pot schimba din sageti unde sunt pe video
+- ✅ Atunci cand ies de pe pagina, clipul si pagina se reiau de la 0. Fa cumva astfel incat sa ramana unde a fost
+- ✅ Cand am video ul in fata, fa cumva sa pot da pauza apasand space
 
 # la DVS:
 1. ✅ Sterge acest paragraf:

@@ -23,6 +23,39 @@ export type ClipProps = {
 /** Câte secunde de clip trec într-o secundă reală, la viteza 1×. */
 const VITEZA_BAZA = 1;
 
+/** Cât sare o apăsare de săgeată, în secunde de clip. */
+const PAS_SAGEATA = 1;
+
+/**
+ * Cât din înălțimea cadrului trebuie să se vadă ca tastele să fie ale lui.
+ * Peste jumătate nu pot fi două clipuri deodată, deci pragul e și regula care
+ * spune care dintre ele ascultă.
+ */
+const PRAG_PRIM_PLAN = 0.5;
+
+/** Cadrul e „în față"? Se măsoară la apăsarea tastei, nu se ține minte. */
+function inPrimPlan(el: HTMLElement | null): boolean {
+  if (!el) return false;
+  const r = el.getBoundingClientRect();
+  const vazut = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+  return r.height > 0 && vazut / r.height >= PRAG_PRIM_PLAN;
+}
+
+/**
+ * Unde rămăsese fiecare clip, ca să nu se reia de la zero când te întorci pe
+ * pagină.
+ *
+ * E o hartă în memorie, nu `localStorage` și nici `sessionStorage`: singura
+ * scriere pe disc de pe site rămâne preferința de temă (vezi CLAUDE.md).
+ * Harta ține exact cât ține fila deschisă, adică exact cât durează plimbarea
+ * dintre pagini care a pornit cerința — la reîncărcare, clipul chiar pornește
+ * de la început.
+ *
+ * Cheia e lista numelor de scene: e unică pe clip și nu cere un `id` scris de
+ * mână la fiecare folosire, care s-ar putea dubla din greșeală.
+ */
+const pozitii = new Map<string, { T: number; atins: boolean }>();
+
 /**
  * Un clip animat: ceasul, cadrul în care se desenează și bara de derulare.
  *
@@ -46,11 +79,21 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
   const miscareRedusa = useMiscareRedusa();
   const cadruStatic = Math.min(timpStatic ?? total, total);
 
-  const [T, setT] = useState(0);
+  const cheie = useMemo(() => scene.map((s) => s.nume).join("|"), [scene]);
+  const reluat = pozitii.get(cheie);
+
+  const [T, setT] = useState(reluat?.T ?? 0);
   const [ruleaza, setRuleaza] = useState(false);
   const [viteza, setViteza] = useState<Viteza>(1);
   /** Utilizatorul a atins comenzile? Atunci nu mai pornim și nu mai oprim noi. */
-  const atins = useRef(false);
+  const atins = useRef(reluat?.atins ?? false);
+
+  // Poziția se scrie la fiecare cadru, nu la demontare: pe schimbarea de rută,
+  // efectul de curățare vede uneori un `T` vechi de un cadru, iar aici tocmai
+  // ultimul cadru contează.
+  useEffect(() => {
+    pozitii.set(cheie, { T, atins: atins.current });
+  }, [cheie, T]);
 
   // Preferința se poate schimba în timpul vizitei (utilizatorul o comută din
   // sistem), iar atunci clipul trebuie să se oprească pe cadrul static — nu să
@@ -127,6 +170,14 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
     [T, total],
   );
 
+  const sari = useCallback(
+    (secunde: number) => {
+      atins.current = true;
+      setT((t) => Math.min(Math.max(t + secunde, 0), total));
+    },
+    [total],
+  );
+
   const [latime, setLatime] = useState(0);
   const cadru = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -139,6 +190,45 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
     observator.observe(el);
     return () => observator.disconnect();
   }, []);
+
+  // Tastatura: bara de spațiu dă pauză, săgețile derulează.
+  //
+  // Ascultătorul stă pe fereastră, nu pe cadru, fiindcă cerința era chiar „cât
+  // am clipul în față" — nu „după ce dau un clic pe el". Ca să nu se comande
+  // două clipuri deodată, tasta e a clipului doar dacă i se vede peste
+  // jumătate din cadru; se măsoară pe loc, cu `getBoundingClientRect`, fiindcă
+  // un `IntersectionObserver` raportează 0 pe filă ascunsă și ar lăsa tastele
+  // moarte la întoarcerea pe filă, până la primul derulaj.
+  const laTasta = useCallback(
+    (e: KeyboardEvent) => {
+      if (!inPrimPlan(cadru.current)) return;
+
+      // Pe un buton, pe slider sau într-un câmp, tastele au deja înțelesul lor.
+      const tinta = e.target instanceof HTMLElement ? e.target : null;
+      if (tinta?.closest("button, input, textarea, select, [role='slider'], [contenteditable]")) {
+        return;
+      }
+
+      if (e.key === " " || e.key === "Spacebar") {
+        e.preventDefault();
+        porneste(!ruleaza);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        sari(PAS_SAGEATA);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        sari(-PAS_SAGEATA);
+      }
+      // `Home` și `End` rămân ale paginii: pe un ascultător global ar face
+      // clipul să fure saltul în capul sau în josul documentului.
+    },
+    [porneste, ruleaza, sari],
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", laTasta);
+    return () => window.removeEventListener("keydown", laTasta);
+  }, [laTasta]);
 
   const { plinEcran, comutaPlinEcran } = usePlinEcran(container);
 
@@ -155,6 +245,7 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
         className,
       )}
       ref={container}
+      aria-keyshortcuts="Space ArrowLeft ArrowRight"
     >
       <ContextClip.Provider value={stare}>
         <figure className={cn("m-0", plinEcran && "flex min-h-0 flex-1 items-center")}>
