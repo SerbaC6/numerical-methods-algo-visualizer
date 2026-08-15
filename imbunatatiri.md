@@ -21,12 +21,12 @@ Pașii, în ordine: se calculează AT·A; valorile ei proprii, ordonate descresc
 Dacă un bj din mijloc se anulează, cu 2 < j < n, matricea se rupe și problema se sparge în două mai mici — una de dimensiune j − 1 și una de dimensiune n − j + 1 — cărora li se aplică QR separat.", cu tot cu b2 = 0 => .... si ce e scris in acel chenar pe lanaga asta
 
 # la LU:
-1. Rezolva animatia la LU astfel incat sa nu se mai puna partea portocalie cu scris peste matrice(la secunda 9, acest scris:  n + 1 = 4 determinanți, doar pentru n = 3)
-2. Rescrie aceste paragrafe, astfel:
+1. ✅ Rezolva animatia la LU astfel incat sa nu se mai puna partea portocalie cu scris peste matrice(la secunda 9, acest scris:  n + 1 = 4 determinanți, doar pentru n = 3)
+2. ✅ (era deja exact în forma cerută) Rescrie aceste paragrafe, astfel:
 - Un sistem A·x = b se poate rezolva cu determinanți — și nu se face niciodată așa: costul crește ca n!. Metodele directe merg pe alt drum: descompun A în două matrice triunghiulare, A = L·U, iar sistemul se sparge în două sisteme care se rezolvă prin simplă substituție, fiecare în O(n2).
-3. Sterge aceste paragrafe:
+3. ✅ Sterge aceste paragrafe:
 - La n = 10, N = 360.000.000 de operații. Metodele de mai departe sunt de ordinul O(n3): la n = 20, 8.000 de operații față de 2,4·1018 cerute de un singur determinant.
-4. Scoate zona de interactiv
+4. ✅ Scoate zona de interactiv
 
 # la Householder si Givnens:
 1. La animatia Householder:

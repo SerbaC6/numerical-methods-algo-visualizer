@@ -95,13 +95,6 @@ export const continutFactorizariLu: ContinutPagina = {
                 sens: <>înmulțirile și împărțirile cerute de toți cei n + 1 determinanți</>,
               },
             ],
-            explicatie: (
-              <>
-                La <Mate>n = 10</Mate>, <Mate>N = 360.000.000</Mate> de operații. Metodele de mai
-                departe sunt de ordinul <Mate>O(n³)</Mate>: la <Mate>n = 20</Mate>, 8.000 de
-                operații față de <Mate>2,4·10¹⁸</Mate> cerute de un singur determinant.
-              </>
-            ),
           },
         ],
       },

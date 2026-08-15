@@ -421,9 +421,6 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
       deci nu cere nicio primitivă nouă — cea mai ieftină pagină din listă.
 - [ ] **Pagina 14 — `cmmp`** (CMMP liniar și polinomial, Padé). `Plot` + norul de puncte și
       dreapta de aproximare. Refolosește tot; nicio primitivă nouă.
-- [ ] **Pagina 1 — `factorizari-lu`** (Cramer, LU, Doolittle, Crout, Cholesky). `MatrixGrid` +
-      umplere celulă cu celulă, plus spargerea matricei în două. **Fără input manual de valori**
-      (cerință din `Plan.md`).
 - [ ] **Pagina 3 — `eliminare-gaussiana`** (pivotări). `MatrixGrid` + operații pe linii.
       Primitivă nouă: linia care se mută, se schimbă cu alta și se scalează.
 - [ ] **Pagina 4 — `algoritmul-thomas`** (sistem tridiagonal, eliminare înainte, substituție
@@ -565,6 +562,10 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
 - **pagina 15** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
   set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
+- **pagina 1** (`factorizari-lu`) — **scoasă la cerere**. Rămâne clipul
+  (`AnimatiaFactorizariiLu`), pe factorizarea Doolittle exactă a matricei
+  `A = [[1,2,3],[2,8,11],[3,22,42]]`. Se potrivea oricum cu cerința din `Plan.md` de a nu
+  primi valori scrise de mână.
 
 **Clipuri portate dintr-o animație web gata făcută.** Pagina 1 (`factorizari-lu`) a primit clipul
 din `Animatie_LU.html`, rescris ca `AnimatiaFactorizariiLu`; pagina 3 (`eliminare-gaussiana`), pe al

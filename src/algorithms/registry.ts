@@ -123,6 +123,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Cramer", "LU", "Doolittle", "Crout", "Cholesky"],
     dificultate: "mediu",
     cursSursa: ["MN_curs2_lab2_matrici.md", "sisteme_liniare_metode_directe_MN_curs4.md"],
+    interactiv: false,
     gata: false,
   },
   {

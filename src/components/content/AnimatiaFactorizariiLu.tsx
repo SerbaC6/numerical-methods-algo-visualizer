@@ -569,9 +569,11 @@ function ActCramer({ st }: { st: number }) {
         );
       })}
 
+      {/* Sub matrice, nu peste ele: determinanții se termină pe la 805, iar
+          pastila are și ea înălțime — la 830 se așeza fix pe paranteze. */}
       <Pastila
         x={960}
-        y={830}
+        y={905}
         text="n + 1 = 4 determinanți, doar pentru n = 3"
         rol={ROL_COST}
         opacitate={intra(T, tc + 3.4, tl - 0.1)}
