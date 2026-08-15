@@ -106,6 +106,46 @@ a citit-o — repovestită încă o dată, mai vag, nu adaugă nimic și îi spu
 putea fi sărită. Câmpul `incheiere` nu mai există în `TeorieScurtaContinut`, deci nici nu se poate
 strecura la loc.
 
+### Cât text stă lângă o formulă — măsura e pagina 6
+
+**Etalonul e `ecuatii-neliniare` (bisecția): ~23 de cuvinte de proză per formulă.** Nu e o cifră
+inventată, e cea măsurată pe pagina care citea cel mai bine, iar restul paginilor se aduc la ea.
+Practic, asta înseamnă `explicatie` de **una-două propoziții scurte** și niciun bloc `tip: "text"`
+mai lung decât atât.
+
+Ce intră în fiecare câmp, ca să nu se dubleze:
+
+- **`esenta`** — o propoziție, ce face metoda. Se citește singură, fără formulă.
+- **`legenda`** — literele, obligatorie la orice formulă care introduce un simbol nou. **Nu se
+  scurtează niciodată**: fără ea formula nu se poate citi. Nu se pun în ea nume de variantă
+  („punct de mijloc"); pentru acelea există `subtitlu`.
+- **`subtitlu`** — numele variantei, deasupra formulei, când două formule înrudite curg una după
+  alta și trebuie despărțite („Punct de mijloc", „Punct final").
+- **`explicatie`** — **doar** afirmația pe care formula n-o spune singură. Dacă propoziția
+  repovestește simbolurile din legendă sau reface în cuvinte un calcul care apare deja scris,
+  se taie.
+
+Ce se taie primul, în ordinea asta: a treia și a patra propoziție; exemplele numerice refăcute în
+proză după ce apar în formulă sau în clip; și repetările a ce scrie legenda.
+
+**Cum se măsoară**, pe pagina randată, nu pe fișier — comentariile din `src/content/` sunt lungi
+intenționat și n-au ce căuta în socoteală:
+
+```js
+const sect = [...document.querySelectorAll("section")].find(
+  (x) => x.querySelector("h2")?.textContent === "Teorie pe scurt",
+);
+const proza = [...sect.querySelectorAll("figcaption, article > div > p")]
+  .map((e) => e.textContent)
+  .join(" ");
+Math.round(proza.trim().split(/\s+/).length / sect.querySelectorAll("figure").length);
+```
+
+Valorile de la ultima trecere, ca să se vadă banda: `factorizari-lu` 16, `norme-si-ortogonalitate`
+22, `ecuatii-neliniare` 23 (etalonul), `dvs` 23, `pagerank` 24, `fft` 27, `algoritmul-qr` 29,
+`metode-iterative` 30, `metode-de-gradient` 31, `eliminare-gaussiana` 33, `derivare-numerica` 36.
+Peste ~35 pagina se recitește și se taie; sub etalon nu e nimic de reparat.
+
 ### Corectitudinea matematică — zero greșeli, fără excepții
 
 **Nimic din ce ajunge sub ochii utilizatorului nu are voie să fie greșit matematic.** Nici o
