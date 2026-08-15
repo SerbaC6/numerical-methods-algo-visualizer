@@ -9,6 +9,7 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  "aria-label": eticheta,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(
@@ -47,6 +48,11 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
+          // Numele stă pe **mâner**, nu pe rădăcină: `role="slider"` e al lui,
+          // deci un `aria-label` pus pe `Root` nu ajunge la widgetul pe care îl
+          // anunță cititorul de ecran. Cu mai multe mânere n-are cum să fie
+          // același nume pentru amândouă, deci se pune doar când e unul singur.
+          aria-label={_values.length === 1 ? eticheta : undefined}
           className="border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
         />
       ))}

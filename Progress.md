@@ -594,6 +594,45 @@ Verificări numerice făcute în sesiune, de reținut:
 - pe pagina 16: `x²` cu punct de mijloc iese exact, iar cu două puncte greșește cu exact `h`; pe
   `x³/3`, mijlocul greșește cu `h²/3` și cele două puncte cu `x·h + h²/3`.
 
+### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/curbe-bezier/bezier.ts`: baza Bernstein (§14), schema
+  triunghiulară de Casteljau **cu toate nivelurile păstrate** (§16), eșantionarea curbei, plus
+  `punctPrinBernstein` — suma din definiție, ținută ca **martor** de verificare, nu ca
+  implementare de folosit (cursul o declară instabilă) — și `derivateHermite` pentru trecerea din
+  §15.
+- **Verificat numeric, în afara aplicației**: de Casteljau și suma Bernstein coincid până la
+  `1,8·10⁻¹⁵` pe 300 de poligoane aleatoare de 3–8 puncte; partiția unității, simetria, recurența
+  și maximul în `t = i/n` până la `4,4·10⁻¹⁶`; `B(0) = P₀`, `B(1) = Pₙ`; cubica desfășurată din §15
+  coincide până la `8,9·10⁻¹⁶`; tangenta în capete e coliniară cu primul și ultimul segment, iar
+  `B′(0) = 3(P₁−P₀)` — chiar relația Hermite ↔ Bézier.
+- **Teoria**, patru secțiuni: de la Hermite la Bézier, polinoamele Bernstein, curba, algoritmul de
+  Casteljau. La volumul cerut de regula din CLAUDE.md.
+- **Clipul** (`AnimatiaBezier`), cinci scene: poligonul de control, un nivel, restul nivelurilor
+  până rămâne un punct, `t` care parcurge 0 → 1 și trasează curba, apoi un punct de control care
+  se mută.
+- **Interfața** (`InterfataBezier`): puncte de control trase cu mouse-ul, numărul lor și `t` ca
+  parametri, plus un cursor care alege **până la ce nivel** se vede construcția. Curba apare abia
+  când construcția a ajuns la capăt. Fără bloc de formulă, la cerere.
+
+Ce **nu** s-a făcut, prin decizie:
+
+- **Comutatorul 2D/3D din `Plan.md`.** Cererea a fost o pagină simplificată, iar 3D-ul ar cere
+  proiecție scrisă de mână plus rotirea scenei.
+- **Numărul de puncte e plafonat la 5.** Nu e o limită a matematicii — de Casteljau merge la orice
+  grad — ci a paletei: construcția se citește doar dacă fiecare nivel are altă culoare, iar paleta
+  are exact trei roluri care nu sunt albastru pe albastru și nu sunt deja luate de curbă și de
+  punctul final. Nivelurile se despart și prin grosime, fiindcă portocaliul intervalului și
+  coralul pivotului sunt amândouă calde.
+
+Ce s-a reparat pe drum, în afara paginii:
+
+- `aria-label` dat unui `Slider` ajungea pe rădăcină, nu pe mâner — adică nu pe elementul cu
+  `role="slider"`. Toate cursoarele site-ului erau fără nume la cititorul de ecran. Reparat în
+  `src/components/ui/slider.tsx`.
+
 ### Pagina 16 — `derivare-numerica`, ce e gata și ce nu
 
 Ce există:

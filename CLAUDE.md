@@ -497,9 +497,10 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [ ] **Pagina 11 — `dvs`**. Interpretarea geometrică a DVS: **cerc unitate → elipsă**, primitivă
       nouă care trebuie legată de valorile singulare, alături de `MatrixGrid` pentru `U`, `S`, `V`.
       Se face după pagina 10, cu care împarte cursul-sursă.
-- [ ] **Pagina 13 — `curbe-bezier`** (Bézier, de Casteljau, 2D **și 3D**). Interpolarea de Casteljau
-      e ușoară în 2D; comutatorul 2D/3D cerut în `Plan.md` înseamnă **proiecție 3D scrisă de mână**
-      plus rotirea scenei — de departe cea mai mare bucată de cod nou.
+- [x] **Pagina 13 — `curbe-bezier`** (Bézier, de Casteljau) — **în plan**. Clipul arată construcția
+      nivel cu nivel, iar interfața o lasă pe cititor s-o oprească la ce nivel vrea.
+      **Comutatorul 2D/3D cerut în `Plan.md` nu s-a făcut**: ar însemna proiecție 3D scrisă de mână
+      plus rotirea scenei, iar cererea explicită a fost o pagină simplificată.
 - [ ] **Pagina 7 — `metode-de-gradient`** (gradient descendent și conjugat, „valea"). Primitivă
       nouă: **curbe de nivel** (isolinii) peste o funcție de două variabile, plus traseul care
       coboară. Întâi animații explicative, apoi interfața de aprofundare.

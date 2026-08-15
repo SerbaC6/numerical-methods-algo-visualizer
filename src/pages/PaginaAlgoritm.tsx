@@ -5,6 +5,8 @@ import { Link, Navigate, useParams } from "react-router";
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
 import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmuluiQr";
 import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
+import { AnimatiaBezier } from "@/components/content/AnimatiaBezier";
+import { InterfataBezier } from "@/components/content/InterfataBezier";
 import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
 import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
@@ -74,6 +76,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },
+  "curbe-bezier": { vizual: AnimatiaBezier, interactiv: InterfataBezier },
   "derivare-numerica": { interactiv: InterfataDerivareNumerica },
   fft: { vizual: VideoFft },
 };

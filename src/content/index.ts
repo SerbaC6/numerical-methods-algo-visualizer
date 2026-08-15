@@ -1,6 +1,7 @@
 import { continutDerivareNumerica } from "@/content/derivare-numerica";
 import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
+import { continutCurbeBezier } from "@/content/curbe-bezier";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
 import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
 import { continutFactorizariLu } from "@/content/factorizari-lu";
@@ -22,6 +23,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "derivare-numerica": continutDerivareNumerica,
   dvs: continutDvs,
   "algoritmul-qr": continutAlgoritmulQr,
+  "curbe-bezier": continutCurbeBezier,
   "ecuatii-neliniare": continutEcuatiiNeliniare,
   "eliminare-gaussiana": continutEliminareGaussiana,
   "factorizari-lu": continutFactorizariLu,
