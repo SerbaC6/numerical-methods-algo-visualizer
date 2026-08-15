@@ -112,10 +112,9 @@ export const continutPagerank: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Termenul al doilea adaugă aceeași cantitate mică în fiecare celulă: de oriunde,
-                navigatorul poate ajunge oriunde. G rămâne stocastică — coloanele ei însumează tot 1
-                — dar acum are toate elementele strict pozitive, ceea ce face λ = 1 valoare proprie
-                dominantă și unică.
+                Al doilea termen adaugă aceeași cantitate mică în fiecare celulă: de oriunde se
+                poate ajunge oriunde. <Mate>G</Mate> rămâne stocastică, dar strict pozitivă — de
+                aceea <Mate>λ = 1</Mate> e dominantă și unică.
               </>
             ),
           },
@@ -143,10 +142,8 @@ export const continutPagerank: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Iterația pornește din vectorul cu toate componentele 1 — la început, toate paginile
-                cântăresc la fel. Fiecare înmulțire cu G înseamnă „încă un click", iar împărțirea la
-                normă ține vectorul de lungime 1, ca înmulțirile repetate să nu-l umfle sau să-l
-                stingă.
+                Se pornește din vectorul cu toate componentele 1: la început, toate paginile
+                cântăresc la fel. Fiecare înmulțire cu <Mate>G</Mate> înseamnă „încă un click".
               </>
             ),
           },
@@ -160,10 +157,9 @@ export const continutPagerank: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Ultima linie a algoritmului, și singura care schimbă norma: până aici v a fost ținut
-                de lungime 1, iar acum se împarte la suma componentelor. Abia după pasul ăsta
-                cifrele se pot citi ca procente — de aceea ponderile desenate sub noduri sunt tot
-                timpul raportul <Mate>v/‖v‖₁</Mate>, nu <Mate>v</Mate> însuși.
+                Singura linie care schimbă norma: până aici <Mate>v</Mate> a fost ținut de lungime
+                1, iar acum se împarte la suma componentelor. Abia acum cifrele se citesc ca
+                procente.
               </>
             ),
           },

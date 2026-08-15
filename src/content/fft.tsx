@@ -125,10 +125,8 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Fiecare sumă are <Mate>2m</Mate> termeni, iar coeficienți sunt tot de ordinul{" "}
-                <Mate>2m</Mate>: de aici <Mate>(2m)²</Mate> înmulțiri și tot atâtea adunări, adică
-                aproximativ <Mate>4m²</Mate> operații. Nu doar că durează — cu atâtea operații se
-                strânge și o eroare de rotunjire mare, exact acolo unde setul de date e mai bogat.
+                <Mate>2m</Mate> termeni în fiecare sumă și tot atâția coeficienți: aproximativ{" "}
+                <Mate>4m²</Mate> operații, iar odată cu ele o eroare de rotunjire pe măsură.
               </>
             ),
           },
@@ -169,10 +167,8 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                O singură sumă complexă ține locul perechii cosinus–sinus: partea reală și cea
-                imaginară a exponențialei sunt chiar cele două funcții. Deocamdată nu s-a câștigat
-                nimic — suma are tot <Mate>2m</Mate> termeni. Câștigul vine din <em>forma</em> ei,
-                care se poate rupe în două.
+                O singură sumă complexă ține locul perechii cosinus–sinus. Deocamdată n-a câștigat
+                nimic — tot <Mate>2m</Mate> termeni —, dar <em>forma</em> ei se poate rupe în două.
               </>
             ),
           },
@@ -194,9 +190,8 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Odată aflați <Mate>cₖ</Mate>, coeficienții căutați ies dintr-o singură înmulțire:{" "}
-                <Mate>aₖ</Mate> e partea reală, <Mate>bₖ</Mate> cea imaginară. Nu toți contează —{" "}
-                <Mate>b₀</Mate> și <Mate>bₘ</Mate> sunt nuli și nu intră în rezultatul final.
+                Odată aflați <Mate>cₖ</Mate>, coeficienții ies dintr-o singură înmulțire:{" "}
+                <Mate>aₖ</Mate> e partea reală, <Mate>bₖ</Mate> cea imaginară.
               </>
             ),
           },
@@ -238,10 +233,9 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Cei doi coeficienți diferă doar prin factorul <Mate>e^(πij)</Mate>, care e{" "}
-                <Mate>+1</Mate> pentru <Mate>j</Mate> par și <Mate>−1</Mate> pentru <Mate>j</Mate>{" "}
-                impar. Adunându-i, termenii de indice impar se anulează: rămân doar <Mate>m</Mate>{" "}
-                termeni, deci <Mate>m</Mate> adunări în loc de <Mate>2m</Mate>.
+                Cei doi diferă doar prin <Mate>e^(πij)</Mate>, adică prin semnul care alternează cu
+                paritatea lui <Mate>j</Mate>. Adunați, termenii impari se sting: rămân{" "}
+                <Mate>m</Mate>, nu <Mate>2m</Mate>.
               </>
             ),
           },
@@ -260,12 +254,9 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Aceeași manevră, făcută cu scăderea în loc de adunare, stinge termenii de indice par
-                și îi lasă pe cei impari. Rezultatul: două sume de câte <Mate>m</Mate> termeni, una
-                peste punctele de indice par și una peste cele de indice impar — fiecare având{" "}
-                <em>exact aceeași formă</em> ca cea de la care s-a pornit, dar pe jumătate de set.
-                Din suma și diferența lor se recuperează atât <Mate>cₖ</Mate>, cât și{" "}
-                <Mate>c₍ₖ₊ₘ₎</Mate>, adică toți cei <Mate>2m</Mate> coeficienți.
+                Scăderea stinge, simetric, termenii pari. Rămân două sume de câte <Mate>m</Mate>{" "}
+                termeni, fiecare cu <em>exact aceeași formă</em> ca cea de la care s-a pornit — de
+                aceea pasul se poate repeta.
               </>
             ),
           },
@@ -306,9 +297,8 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Prima aplicare coboară deja de la <Mate>4m²</Mate> la <Mate>2m² + m</Mate>. Fiecare
-                repetare taie în două partea pătratică și adaugă în schimb doar <Mate>m</Mate>{" "}
-                operații — un schimb tot mai avantajos, cu cât se merge mai departe.
+                Prima aplicare coboară de la <Mate>4m²</Mate> la <Mate>2m² + m</Mate>. Fiecare
+                repetare taie în două partea pătratică și adaugă doar <Mate>m</Mate> operații.
               </>
             ),
           },
@@ -330,10 +320,8 @@ export const continutFft: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Procesul nu se poate repeta la nesfârșit: se oprește după <Mate>p + 1</Mate> pași,
-                când sumele au ajuns la un singur termen. Partea pătratică s-a topit la{" "}
-                <Mate>2m</Mate>, iar ce rămâne crește aproape liniar. Pentru un set de ordinul
-                miilor, asta înseamnă mii de operații în loc de milioane.
+                Se oprește după <Mate>p + 1</Mate> pași, când sumele au un singur termen. Pentru un
+                set de ordinul miilor: mii de operații în loc de milioane.
               </>
             ),
           },
@@ -341,24 +329,8 @@ export const continutFft: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                <strong>Cum se calculează, de fapt.</strong> Ordinea se inversează: se pornește de
-                la ultimul nivel, unde valorile sunt simple înmulțiri ale lui <Mate>yⱼ</Mate> cu
-                factori de fază, și se recombină nivel cu nivel, prin adunări și scăderi de tip
-                „butterfly", până se ajunge la <Mate>cₖ</Mate>. Constantele intermediare depind doar
-                de <Mate>m</Mate>, nu de punctele măsurate — pentru fiecare <Mate>m</Mate> există un
-                singur set, care se poate calcula o dată și refolosi.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Cât se câștigă, concret.</strong> Pentru <Mate>2m = 8</Mate> puncte,
-                calculul direct al coeficienților <Mate>c₀, …, c₇</Mate> cere{" "}
-                <strong>64 de înmulțiri sau împărțiri și 56 de adunări sau scăderi</strong>, în timp
-                ce FFT cere doar <strong>24 și 24</strong>. Iar distanța dintre cele două se mărește
-                cu fiecare punct adăugat.
+                Pe <Mate>2m = 8</Mate> puncte: <strong>64 de înmulțiri și 56 de adunări</strong> la
+                calculul direct, față de <strong>24 și 24</strong> cu FFT.
               </>
             ),
           },

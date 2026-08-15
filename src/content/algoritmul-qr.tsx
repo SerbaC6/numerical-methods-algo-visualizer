@@ -122,11 +122,9 @@ export const continutAlgoritmulQr: ContinutPagina = {
             legenda: [{ simbol: "Q⁽ⁱ⁾ᵀ", sens: <>transpusa lui Q⁽ⁱ⁾, egală cu inversa ei</> }],
             explicatie: (
               <>
-                Rândul care explică de ce funcționează metoda. <Mate>Q⁽ⁱ⁾</Mate> fiind ortogonală,
-                din prima relație iese <Mate>R⁽ⁱ⁾ = Q⁽ⁱ⁾ᵀ·A⁽ⁱ⁾</Mate>, deci pasul e o{" "}
-                <strong>transformare de asemănare ortogonală</strong>. De aici trei garanții
-                deodată: <Mate>A⁽ⁱ⁺¹⁾</Mate> rămâne simetrică, rămâne tridiagonală și are exact
-                aceleași valori proprii ca <Mate>A</Mate>.
+                Pasul e o <strong>asemănare ortogonală</strong>, iar de aici trei garanții deodată:{" "}
+                <Mate>A⁽ⁱ⁺¹⁾</Mate> rămâne simetrică, rămâne tridiagonală și păstrează exact
+                valorile proprii ale lui <Mate>A</Mate>.
               </>
             ),
           },
@@ -169,10 +167,8 @@ export const continutAlgoritmulQr: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Rata cu care <Mate>bⱼ₊₁</Mate> se apropie de zero, și implicit cea cu care{" "}
-                <Mate>aⱼ</Mate> se apropie de <Mate>λⱼ</Mate>. Consecința e neplăcută: dacă două
-                valori proprii vecine au module apropiate, raportul e aproape de 1 și metoda
-                înaintează foarte încet.
+                Dacă două valori proprii vecine au module apropiate, raportul e aproape de{" "}
+                <Mate>1</Mate> și metoda înaintează foarte încet.
               </>
             ),
           },
@@ -187,10 +183,8 @@ export const continutAlgoritmulQr: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Se scade <Mate>σ</Mate> de pe diagonală înainte de factorizare și se adaugă înapoi
-                după înmulțire. Fiind readăugată la fiecare pas, deplasarea nu rămâne datorie de
-                plătit la final: când <Mate>bₙ</Mate> ajunge ≈ 0, cifra <Mate>aₙ</Mate> se citește
-                direct ca <Mate>λₙ</Mate>.
+                <Mate>σ</Mate> se scade de pe diagonală înainte de factorizare și se adaugă înapoi
+                după înmulțire, deci nu rămâne datorie de plătit la final.
               </>
             ),
           },
@@ -218,11 +212,9 @@ export const continutAlgoritmulQr: ContinutPagina = {
             ],
             explicatie: (
               <>
-                De aici se ia deplasarea, alta la fiecare pas: <Mate>σᵢ</Mate> e valoarea proprie a
-                acestei matrice de ordinul doi cea mai apropiată de <Mate>aₙ⁽ⁱ⁾</Mate>. Alegerea o
-                grăbește pe <Mate>bₙ</Mate>, care ajunge la zero înaintea celorlalte; atunci{" "}
-                <Mate>aₙ</Mate> e o valoare proprie, se taie ultima linie și ultima coloană, și se
-                reia procedeul pe matricea rămasă, până se epuizează spectrul.
+                <Mate>σᵢ</Mate> e valoarea proprie a acestei matrice de ordinul doi cea mai
+                apropiată de <Mate>aₙ⁽ⁱ⁾</Mate>. Alegerea o grăbește pe <Mate>bₙ</Mate>: când ajunge
+                la zero, se taie ultima linie și coloană și se reia pe restul.
               </>
             ),
           },

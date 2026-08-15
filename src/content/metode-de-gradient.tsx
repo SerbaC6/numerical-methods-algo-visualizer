@@ -90,10 +90,8 @@ export const continutMetodeDeGradient: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Cele două fețe ale aceleiași mărimi: reziduul sistemului e chiar direcția în care
-                valea coboară cel mai abrupt. În animația de mai sus, <Mate>r⁽ᵏ⁾</Mate> e opusul
-                pantei — de aceea acolo, unde funcția are o singură variabilă, se scrie{" "}
-                <Mate>r⁽ᵏ⁾ = −f′(x⁽ᵏ⁾)</Mate>.
+                Două fețe ale aceleiași mărimi: reziduul sistemului e chiar direcția în care valea
+                coboară cel mai abrupt.
               </>
             ),
           },
@@ -143,11 +141,9 @@ export const continutMetodeDeGradient: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                Slăbiciunea metodei se vede pe curbele de nivel: fiecare direcție e ortogonală cu
-                cea dinaintea ei, deci traseul <strong>coboară</strong> de-a curmezișul văii și
-                înaintează încet. Cursul o spune direct — pentru sisteme liniare pașii descrescători
-                nu se folosesc, fiindcă au convergență slabă; rămân buni pentru sisteme neliniare și
-                pentru probleme de optimizare.
+                Slăbiciunea se vede pe curbele de nivel: fiecare direcție e ortogonală cu cea
+                dinaintea ei, deci traseul merge în zigzag de-a curmezișul văii. Pe sisteme liniare
+                nu se folosește; rămâne bun la optimizare.
               </>
             ),
           },
@@ -211,10 +207,8 @@ export const continutMetodeDeGradient: ContinutPagina = {
             sursa: "curs 5, §8.6",
             explicatie: (
               <>
-                Direcția nouă nu e chiar reziduul, ca la coborâre, ci reziduul <em>corectat</em> cu
-                o parte din direcția anterioară — exact cât să iasă A-ortogonală pe ea. E un
-                Gram-Schmidt care, în loc să scadă proiecțiile pe toate direcțiile de dinainte, are
-                nevoie doar de ultima.
+                Direcția nouă e reziduul <em>corectat</em> cu o parte din cea anterioară, exact cât
+                să iasă A-ortogonală pe ea — un Gram-Schmidt căruia îi ajunge ultima direcție.
               </>
             ),
           },
@@ -222,11 +216,8 @@ export const continutMetodeDeGradient: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                Reziduurile și direcțiile avansează în același subspațiu Krylov, Kₖ =
-                span&#123;r⁽⁰⁾, A·r⁽⁰⁾, …, A^(k−1)·r⁽⁰⁾&#125;, iar pentru A simetrică pozitiv
-                definită metoda atinge soluția <strong>exactă după cel mult n pași</strong>, dacă nu
-                intervin erori numerice. Pe un sistem 2×2, gradientul Descendent tot mai coboară
-                când Conjugatul a terminat deja.
+                Pentru <Mate>A</Mate> simetrică pozitiv definită, metoda atinge soluția{" "}
+                <strong>exactă după cel mult n pași</strong>, dacă nu intervin erori numerice.
               </>
             ),
           },

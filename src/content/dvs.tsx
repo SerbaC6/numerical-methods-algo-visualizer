@@ -66,11 +66,9 @@ export const continutDvs: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Singura matrice care nu e pătratică e cea din mijloc: <Mate>S</Mate> preia toată
-                diferența de formă dintre m și n, iar <Mate>U</Mate> și <Mate>V</Mate> rămân
-                pătratice și ortogonale. Cazul obișnuit e <Mate>m &gt; n</Mate>, adesea{" "}
-                <Mate>m ≫ n</Mate> — mai multe măsurători decât necunoscute. Elementele lui{" "}
-                <Mate>S</Mate> sunt nenegative: <Mate>Sᵢᵢ ≥ 0</Mate>.
+                <Mate>S</Mate> preia toată diferența de formă dintre <Mate>m</Mate> și{" "}
+                <Mate>n</Mate>, iar <Mate>U</Mate> și <Mate>V</Mate> rămân pătratice și ortogonale.
+                Elementele ei sunt nenegative.
               </>
             ),
           },
@@ -123,10 +121,8 @@ export const continutDvs: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Trecerea de la <Mate>A</Mate> la <Mate>Aᵀ·A</Mate> nu pierde nici rangul, nici
-                nucleul — de aceea se poate lucra cu matricea pătratică fără să se schimbe problema.
-                În plus, valorile proprii ale lui <Mate>Aᵀ·A</Mate> și <Mate>A·Aᵀ</Mate> sunt reale
-                și nenegative, iar cele diferite de 0 sunt aceleași pentru amândouă.
+                Trecerea la <Mate>Aᵀ·A</Mate> nu pierde nici rangul, nici nucleul, deci nu schimbă
+                problema. Valorile ei proprii sunt reale și nenegative.
               </>
             ),
           },
@@ -157,9 +153,8 @@ export const continutDvs: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Valorile proprii ale lui <Mate>Aᵀ·A</Mate> fiind nenegative, rădăcina se poate lua
-                fără grijă, iar ordonarea descrescătoare fixează care valoare singulară e prima.
-                Ultimele <Mate>n − k</Mate> sunt nule; <Mate>k</Mate> e numărul de direcții pe care{" "}
+                Ordonarea descrescătoare fixează care valoare singulară e prima. Ultimele{" "}
+                <Mate>n − k</Mate> sunt nule: <Mate>k</Mate> e numărul de direcții pe care{" "}
                 <Mate>A</Mate> chiar le întinde.
               </>
             ),

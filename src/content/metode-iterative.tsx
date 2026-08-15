@@ -171,10 +171,8 @@ export const continutMetodeIterative: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Aceeași formulă, scrisă ca „valoarea veche plus o corecție" — se obține adunând și
-                scăzând <Mate>aᵢᵢ·xᵢ⁽ᵏ⁾</Mate>. Forma asta e cea care se generalizează:{" "}
-                <Mate>Rᵢ = 0</Mate> înseamnă că ecuația <Mate>i</Mate> e deja satisfăcută, iar SOR
-                nu va face altceva decât să înmulțească corecția cu un factor.
+                Aceeași formulă, scrisă ca „valoarea veche plus o corecție". Forma asta e cea care
+                se generalizează: SOR nu face altceva decât să înmulțească corecția cu un factor.
               </>
             ),
           },
@@ -214,10 +212,8 @@ export const continutMetodeIterative: ContinutPagina = {
             explicatie: (
               <>
                 Singura diferență față de Jacobi e indicele din prima sumă, <Mate>k + 1</Mate> în
-                loc de <Mate>k</Mate>. În cod nici măcar nu se vede ca o schimbare de formulă: e pur
-                și simplu vectorul rescris <strong>pe loc</strong>, fără copie. Consecința e că aici{" "}
-                <strong>ordinea liniilor contează</strong>, iar componentele nu se mai pot calcula
-                în paralel.
+                loc de <Mate>k</Mate> — adică vectorul rescris <strong>pe loc</strong>. De aceea
+                aici ordinea liniilor contează, iar paralelizarea se pierde.
               </>
             ),
           },
@@ -227,10 +223,8 @@ export const continutMetodeIterative: ContinutPagina = {
             sursa: "curs 5, §5",
             explicatie: (
               <>
-                Acum <Mate>M = D − L</Mate> e inferior triunghiulară: inversa nu mai e imediată, dar
-                sistemul se rezolvă prin substituție directă, adică tot ieftin. Informația
-                suplimentară pe care o folosește fiecare linie e chiar ce se plătește cu pierderea
-                paralelismului.
+                <Mate>M = D − L</Mate> e inferior triunghiulară: inversa nu mai e imediată, dar
+                sistemul se rezolvă prin substituție directă, adică tot ieftin.
               </>
             ),
           },
@@ -283,10 +277,8 @@ export const continutMetodeIterative: ContinutPagina = {
             sursa: "curs 5, §6",
             explicatie: (
               <>
-                Forma matriceală, din care iese matricea de iterație a metodei — deci și raza ei
-                spectrală, pentru fiecare <Mate>ω</Mate> în parte. Relaxarea se aplică{" "}
-                <strong>componentă cu componentă</strong>, iar valoarea relaxată intră imediat în
-                linia următoare; nu se baleiază întâi tot vectorul.
+                Relaxarea se aplică <strong>componentă cu componentă</strong>, iar valoarea relaxată
+                intră imediat în linia următoare — nu se baleiază întâi tot vectorul.
               </>
             ),
           },
@@ -294,11 +286,9 @@ export const continutMetodeIterative: ContinutPagina = {
             tip: "text",
             continut: (
               <>
-                <strong>Ce valori are voie să ia ω.</strong> Peste <Mate>ω = 2</Mate> și sub{" "}
-                <Mate>ω = 0</Mate> metoda diverge pentru orice matrice, fiindcă raza spectrală e cel
-                puțin <Mate>|ω − 1|</Mate>. Între ele, <Mate>1 &lt; ω &lt; 2</Mate> înseamnă
-                suprarelaxare, <Mate>ω &lt; 1</Mate> subrelaxare. Dacă matricea e simetrică și
-                pozitiv definită, orice <Mate>ω</Mate> din <Mate>(0, 2)</Mate> converge.
+                În afara lui <Mate>(0, 2)</Mate> metoda diverge pentru orice matrice, fiindcă raza
+                spectrală e cel puțin <Mate>|ω − 1|</Mate>. Peste 1 e suprarelaxare, sub 1
+                subrelaxare.
               </>
             ),
           },

@@ -102,9 +102,8 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
             explicatie: (
               <>
                 Se citește direct ca reflexie: din <Mate>v</Mate> se scade de{" "}
-                <strong>două ori</strong> proiecția lui pe <Mate>d</Mate>. O dată ar duce vectorul{" "}
-                <em>în</em> oglindă; de două ori îl trece dincolo. Dacă <Mate>d</Mate> are norma 1,
-                împărțirea dispare și rămâne <Mate>P = I − 2ddᵀ</Mate>.
+                <strong>două ori</strong> proiecția lui pe <Mate>d</Mate>. O dată l-ar duce{" "}
+                <em>în</em> oglindă; de două ori îl trece dincolo.
               </>
             ),
           },
@@ -178,9 +177,8 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
             explicatie: (
               <>
                 <strong>Unghiul nu se calculează niciodată.</strong> Din condiția ca elementul de
-                sub diagonală să se anuleze ies direct <Mate>cos θ</Mate> și <Mate>sin θ</Mate>, iar
-                ele sunt tot ce trebuie ca să scrii matricea. Nu apare niciun arctangent, doar un
-                radical.
+                sub diagonală să se anuleze ies direct <Mate>cos θ</Mate> și <Mate>sin θ</Mate> —
+                niciun arctangent, doar un radical.
               </>
             ),
           },

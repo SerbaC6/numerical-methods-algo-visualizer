@@ -74,9 +74,8 @@ export const continutDerivareNumerica: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Egalitatea e <em>exactă</em>: nu e o aproximare cu „≈", ci formula plus un termen de
-                eroare. El se obține derivând polinomul de interpolare de grad 1 prin cele două
-                puncte și evaluând în <Mate>x₀</Mate>, unde unul dintre termeni se anulează.
+                Egalitatea e <em>exactă</em>: nu o aproximare cu „≈", ci formula plus termenul ei de
+                eroare, scos din polinomul de interpolare prin cele două puncte.
               </>
             ),
           },
@@ -156,10 +155,8 @@ export const continutDerivareNumerica: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Când <Mate>x₀</Mate> e la <strong>capătul</strong> intervalului, nu ai vecin la
-                stânga, deci ambele puncte se iau la dreapta. Prețul se vede în constantă:{" "}
-                <Mate>h²/3</Mate> în loc de <Mate>h²/6</Mate>, adică o eroare de două ori mai mare
-                la același pas.
+                Fără vecin la stânga, ambele puncte se iau la dreapta. Prețul e în constantă:{" "}
+                <Mate>h²/3</Mate> în loc de <Mate>h²/6</Mate>, adică dublul erorii la același pas.
               </>
             ),
           },
