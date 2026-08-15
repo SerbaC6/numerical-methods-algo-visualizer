@@ -213,10 +213,14 @@ export function PlanOrtogonal({
               strokeDasharray={s.punctata ? "12 9" : undefined}
             />
             {lungime > 30 && <VarfSageata la={[x, y]} unghi={unghi} culoare={culoare} />}
+            {/* Eticheta stă dincolo de vârf, pe direcția săgeții — dar un vector
+                culcat pe axă și-ar scrie numele **peste** linia axei, unde nu se
+                mai citește („±‖v‖·e₁", „P·v"). Când săgeata e aproape
+                orizontală, numele se ridică deasupra ei. */}
             {s.eticheta && (
               <text
                 x={x + Math.cos(unghi) * 42}
-                y={y + Math.sin(unghi) * 42}
+                y={y + Math.sin(unghi) * 42 - (Math.abs(Math.sin(unghi)) < 0.3 ? 56 : 0)}
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill={culoareEticheta(s.rol)}

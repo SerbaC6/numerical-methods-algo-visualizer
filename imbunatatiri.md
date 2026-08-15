@@ -29,19 +29,19 @@ Dacă un bj din mijloc se anulează, cu 2 < j < n, matricea se rupe și problema
 4. ✅ Scoate zona de interactiv
 
 # la Householder si Givnens:
-1. La animatia Householder:
+1. ✅ La animatia Householder:
 - Fa cumva sa nu mai fie desenul peste titlu
 - Cand prezinti prima oara axele +-||v||, nu pune ||v|| pe dreptul direct al axei, nu se vede deloc, pune-l mai sus putin. La fel si la P * v
 - Subtitrarile pica peste 
 
-2. La animatia Givens:
+2. ✅ La animatia Givens:
 - teta-ul ramane in aer dupa ce dispare v. Rezolva
 - nu scrie x impartit la r, y impartit la r. Scrie x / r, y / r
 - La cadrul cu matricea, fa o tranzitie de la forma Givens cu cos si sin la valorile numerice aflate anterior
 - Scoate partea cu G*A din cadrul mentionat mai sus, cel cu matricea, si pune in loc de "I, cu 4 schimbate" "Matricea identitate, cu 4 elemente schimbate". Jos nu mai pune nimic, la scrisul mic alb
 - Cand arati cum functioneaza Givens pe acel exemplu, ia mai bine linia si coloana, tu ai luat 2 linii. De asemenea, incepe cu elementul de pe linia 2, coloana 1. Apoi elem de pe linia 3, coloana 1. Apoi restul
 
-In aceasta pagina vreau animatiile sa se contopeasca cu teoria. Dupa teoria Householder, vreau sa pui animatia pentru Householder, iar dupa teoria Givens, animatia pentru Givens
+✅ In aceasta pagina vreau animatiile sa se contopeasca cu teoria. Dupa teoria Householder, vreau sa pui animatia pentru Householder, iar dupa teoria Givens, animatia pentru Givens
 
 La nivel de text:
 - ✅ Sterge aceste paragrafe:

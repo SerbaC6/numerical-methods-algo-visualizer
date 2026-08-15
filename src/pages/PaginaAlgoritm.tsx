@@ -1,17 +1,18 @@
-import { useEffect, type ComponentType } from "react";
+import { useEffect, type ComponentType, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router";
 
 import { CAPITOLE, getAlgoritm, getVecini, SECTIUNI } from "@/algorithms/registry";
 import { AnimatiaAlgoritmuluiQr } from "@/components/content/AnimatiaAlgoritmuluiQr";
 import { AnimatiaDvs } from "@/components/content/AnimatiaDvs";
+import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
+import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
 import { InterfataMetodeIterative } from "@/components/content/InterfataMetodeIterative";
 import { AnimatiaDerivarii } from "@/components/content/AnimatiaDerivarii";
 import { InterfataDerivareNumerica } from "@/components/content/InterfataDerivareNumerica";
 import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonalitate";
-import { VizualOrtogonalitate } from "@/components/content/VizualOrtogonalitate";
 import { AnimatiaMetodelorIterative } from "@/components/content/AnimatiaMetodelorIterative";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
@@ -71,12 +72,27 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
     interactiv: InterfataMetodeDeGradient,
   },
   "metode-iterative": { vizual: AnimatiaMetodelorIterative, interactiv: InterfataMetodeIterative },
-  "norme-si-ortogonalitate": { vizual: VizualOrtogonalitate, interactiv: InterfataOrtogonalitate },
+  "norme-si-ortogonalitate": { interactiv: InterfataOrtogonalitate },
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },
   "derivare-numerica": { vizual: AnimatiaDerivarii, interactiv: InterfataDerivareNumerica },
   fft: { vizual: VideoFft },
+};
+
+/**
+ * Clipurile care nu stau în „Vizual", ci lipite de metoda lor din teorie.
+ *
+ * Deocamdată doar pagina 2, și cu motiv: Householder și Givens sunt două
+ * geometrii diferite pentru aceeași problemă, iar fiecare se înțelege exact
+ * lângă formula ei. Puse amândouă sus, într-o secțiune „Vizual", cereau
+ * cititorului să țină minte oglinda până jos, la `P = I − 2ddᵀ/dᵀd`.
+ */
+const CLIPURI_IN_TEORIE: Record<string, Record<string, ReactNode>> = {
+  "norme-si-ortogonalitate": {
+    householder: <AnimatiaHouseholder />,
+    givens: <AnimatiaGivens />,
+  },
 };
 
 /**
@@ -163,7 +179,7 @@ export default function PaginaAlgoritm() {
                 </h2>
                 {scris ? (
                   <div className="mt-6">
-                    <TeorieScurta continut={scris} />
+                    <TeorieScurta continut={scris} dupaMetoda={CLIPURI_IN_TEORIE[pagina.slug]} />
                   </div>
                 ) : Piesa ? (
                   <div className="mt-6">

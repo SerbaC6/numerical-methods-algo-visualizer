@@ -75,8 +75,20 @@ export function matriceaGivens(
   return G;
 }
 
+/**
+ * În ce ordine se ia coloana.
+ *
+ * `"jos-sus"` e ordinea cursului, și cea implicită. `"sus-jos"` dă **aceeași**
+ * factorizare — o rotație atinge doar liniile `p` și `i`, deci un zero deja
+ * făcut pe linia `i` nu se strică nici dacă `p` se schimbă după aceea; verificat
+ * pe exemplul din §7.4, unde cele două ordini dau `R` identic. Există fiindcă
+ * pe desen se citește mai firesc de sus în jos, de la primul element de sub
+ * diagonală.
+ */
+export type OrdineColoana = "jos-sus" | "sus-jos";
+
 /** Triangularizarea `A = Q·R` prin rotații, un element la fiecare pas. */
-export function run(A: number[][]): RezultatQr {
+export function run(A: number[][], ordine: OrdineColoana = "jos-sus"): RezultatQr {
   const m = A.length;
   const n = A[0]?.length ?? 0;
   const pasi: PasOrtogonal[] = [];
@@ -85,9 +97,12 @@ export function run(A: number[][]): RezultatQr {
   let Q = identitate(m);
 
   for (let p = 0; p < n; p++) {
-    // De jos în sus, ca în Algorithm 2: fiecare rotație atinge doar liniile
-    // `p` și `i`, deci zerourile deja făcute rămân zerouri.
-    for (let i = m - 1; i > p; i--) {
+    const linii =
+      ordine === "jos-sus"
+        ? Array.from({ length: m - p - 1 }, (_, k) => m - 1 - k)
+        : Array.from({ length: m - p - 1 }, (_, k) => p + 1 + k);
+
+    for (const i of linii) {
       const y = R[i]?.[p] ?? 0;
       if (Math.abs(y) < 1e-14) continue;
 

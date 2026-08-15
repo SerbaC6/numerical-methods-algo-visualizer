@@ -136,6 +136,9 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Householder", "Givens", "Reflexii", "Rotații plane", "Descompunerea QR"],
     dificultate: "mediu",
     cursSursa: ["curs3_ortogonalitate.md", "MN_curs2_lab2_matrici.md"],
+    // Clipurile stau în teorie, lipite de metoda lor (`CLIPURI_IN_TEORIE`), nu
+    // într-o secțiune „Vizual" de sus.
+    clip: false,
     gata: false,
   },
   {

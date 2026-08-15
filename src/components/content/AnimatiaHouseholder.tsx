@@ -173,9 +173,11 @@ function Concluzie({
   st: number;
 }) {
   return (
+    // 866, nu 912: sub ea începe banda subtitrărilor, iar cele două propoziții
+    // ajungeau lipite, ca un singur paragraf citit din două locuri.
     <text
       x={W / 2}
-      y={912}
+      y={866}
       textAnchor="middle"
       opacity={opacitate}
       fill="var(--text)"
@@ -359,8 +361,8 @@ function Desen() {
       <Antet opacitate={oTinta} titlu="Unde poate ajunge" st={st} />
       <g opacity={oTinta}>
         <PlanOrtogonal
-          centru={[620, 500]}
-          scara={78}
+          centru={[620, 495]}
+          scara={62}
           raza={5}
           sageti={sagetiTinta}
           cerc={{ raza: REFLEXIE.norma, aparitie: oCerc }}
@@ -397,8 +399,8 @@ function Desen() {
       <Antet opacitate={oOglinda} titlu="Oglinda" st={st} />
       <g opacity={oOglinda}>
         <PlanOrtogonal
-          centru={[620, 500]}
-          scara={78}
+          centru={[620, 495]}
+          scara={62}
           raza={5}
           sageti={[
             {
@@ -458,8 +460,8 @@ function Desen() {
       <Antet opacitate={oSemn} titlu="De ce semnul acela" st={st} />
       <g opacity={oSemn}>
         <PlanOrtogonal
-          centru={[620, 490]}
-          scara={78}
+          centru={[620, 495]}
+          scara={62}
           raza={5}
           sageti={[
             { la: V_LIPIT, rol: ROL_V, eticheta: "v" },

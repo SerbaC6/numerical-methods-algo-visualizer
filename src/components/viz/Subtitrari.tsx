@@ -46,11 +46,10 @@ export function Subtitrari({ items, className }: SubtitrariProps) {
     >
       <p
         aria-hidden="true"
-        // Trei rânduri rezervate, nu două: cu doar două, propoziția lungă
-        // creștea în sus și împingea desenul, adică textul se citea de jos în
-        // sus. Acum locul e rezervat de la început și rândurile se adaugă în
-        // jos, ca la orice text.
-        className="text-text min-h-[3lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
+        // Două rânduri rezervate de la început, iar propoziția se așază de sus
+        // în jos în locul rezervat. Mai multe n-ar ajuta, ci ar strica: banda
+        // crește în sus, peste ultimul rând al desenului.
+        className="text-text min-h-[2lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
       >
         {/* `key` pe span, nu pe `p`: așa propoziția reapare la fiecare
             schimbare, iar înălțimea rezervată rămâne aceeași. Intrarea vine

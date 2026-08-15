@@ -29,7 +29,7 @@ const SCENE = [
     nume: "Exemplu",
     durata: 14,
     descriere:
-      "Trei rotații pe o matrice 3×3, de jos în sus. Prima are cosinusul zero: e o schimbare de linii curată.",
+      "Trei rotații pe o matrice 3×3, element cu element, de sus în jos. Prima are cosinusul zero: e o schimbare de linii curată.",
   },
   {
     nume: "Fata",
@@ -54,8 +54,20 @@ const CADRU_STATIC = CUE.Rotatia + 7;
  */
 const V: readonly [number, number] = [2.4, 1.6];
 const ROTATIE = givens.rotesteInPlan(V);
-const RULARE = givens.run(MATRICE_GIVENS);
+/**
+ * Ordinea de pe desen e de sus în jos: primul element de sub diagonală, apoi
+ * următorul. Dă aceeași factorizare ca ordinea cursului (verificat: `R` iese
+ * identic pe exemplul din §7.4) și se urmărește mai ușor cu ochiul.
+ */
+const RULARE = givens.run(MATRICE_GIVENS, "sus-jos");
 const RULARE_HH = householder.run(MATRICE_HOUSEHOLDER);
+
+/** Forma matricei, înainte să apară cifrele calculate mai sus. */
+const SIMBOLURI_G = [
+  ["cos θ", "−sin θ", "0"],
+  ["sin θ", "cos θ", "0"],
+  ["0", "0", "1"],
+] as const;
 
 /* ───────────────────────── roluri ───────────────────────── */
 
@@ -104,7 +116,8 @@ function Cartonas({
   latime: number;
   opacitate: number;
   rol?: RolViz;
-  simbol: string;
+  /** Lipsește când cartonașul poartă o singură propoziție, fără formulă deasupra. */
+  simbol?: string;
   text: string;
   st: number;
 }) {
@@ -120,18 +133,20 @@ function Cartonas({
         strokeWidth={2}
       />
       {rol && <rect width={6} height={inaltime} rx={3} fill={culoareRol(rol)} />}
+      {simbol && (
+        <text
+          x={30}
+          y={inaltime / 2 - 24}
+          dominantBaseline="central"
+          fill={rol ? culoareEticheta(rol) : "var(--text)"}
+          style={{ font: `700 ${34 * Math.min(st, 1.3)}px var(--font-mono)` }}
+        >
+          {simbol}
+        </text>
+      )}
       <text
         x={30}
-        y={inaltime / 2 - 24}
-        dominantBaseline="central"
-        fill={rol ? culoareEticheta(rol) : "var(--text)"}
-        style={{ font: `700 ${34 * Math.min(st, 1.3)}px var(--font-mono)` }}
-      >
-        {simbol}
-      </text>
-      <text
-        x={30}
-        y={inaltime / 2 + 30}
+        y={simbol ? inaltime / 2 + 30 : inaltime / 2}
         dominantBaseline="central"
         fill="var(--text)"
         style={{
@@ -154,9 +169,11 @@ function Concluzie({
   st: number;
 }) {
   return (
+    // 866, nu 912: sub ea începe banda subtitrărilor, iar cele două propoziții
+    // ajungeau lipite, ca un singur paragraf citit din două locuri.
     <text
       x={W / 2}
-      y={912}
+      y={866}
       textAnchor="middle"
       opacity={opacitate}
       fill="var(--text)"
@@ -176,7 +193,10 @@ function Matrice({
   y,
   valori,
   opacitate,
+  simboluri,
+  amestec = 1,
   liniiAtinse,
+  coloanaAtinsa,
   aprindere = 0,
   tinta,
   nume,
@@ -187,7 +207,15 @@ function Matrice({
   y: number;
   valori: number[][];
   opacitate: number;
+  /**
+   * Ce scrie în celule înainte să apară cifrele — forma simbolică a matricei.
+   * `amestec` face trecerea: 0 = simboluri, 1 = cifre.
+   */
+  simboluri?: readonly (readonly string[])[];
+  amestec?: number;
   liniiAtinse?: readonly number[];
+  /** Coloana elementului de anulat, evidențiată odată cu linia lui. */
+  coloanaAtinsa?: number;
   aprindere?: number;
   /** Elementul care tocmai a devenit zero. */
   tinta?: { linie: number; coloana: number };
@@ -215,6 +243,16 @@ function Matrice({
           fill={`color-mix(in oklab, ${culoareRol("interval")} ${(20 * aprindere).toFixed(1)}%, transparent)`}
         />
       ))}
+      {coloanaAtinsa !== undefined && (
+        <rect
+          x={stanga + coloanaAtinsa * (latura + spatiu) - 3}
+          y={sus - 14}
+          width={latura + 6}
+          height={inaltime + 28}
+          rx={12}
+          fill={`color-mix(in oklab, ${culoareRol("interval")} ${(20 * aprindere).toFixed(1)}%, transparent)`}
+        />
+      )}
 
       <g stroke="var(--text)" strokeWidth={6} fill="none" strokeLinecap="square">
         <path
@@ -245,11 +283,25 @@ function Matrice({
                   strokeWidth={4 * aprindere}
                 />
               )}
+              {simboluri && amestec < 1 && (
+                <text
+                  x={cx}
+                  y={cy}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  opacity={1 - amestec}
+                  fill={culoareEticheta(rol)}
+                  style={{ font: `600 ${34 * Math.min(st, 1.4)}px var(--font-mono)` }}
+                >
+                  {simboluri[i]?.[j] ?? ""}
+                </text>
+              )}
               <text
                 x={cx}
                 y={cy}
                 textAnchor="middle"
                 dominantBaseline="central"
+                opacity={simboluri ? amestec : 1}
                 fill={culoareEticheta(rol)}
                 style={{ font: `600 ${36 * Math.min(st, 1.4)}px var(--font-mono)` }}
               >
@@ -305,7 +357,8 @@ function Desen() {
   const M = cue.Matricea;
   const oMat = felie(T, M, cue.Exemplu);
   const oPatru = intra(T, M + 1.6, 0.6);
-  const oLinii = intra(T, M + 4.4, 0.7);
+  /** Trecerea de la `cos θ` la cifra lui: întâi forma, apoi valorile de mai sus. */
+  const amestecCifre = intra(T, M + 4.4, 1.2);
 
   /* 3 · exemplul */
   const E = cue.Exemplu;
@@ -330,8 +383,8 @@ function Desen() {
       <Antet opacitate={oRot} titlu="Rotația" st={st} />
       <g opacity={oRot}>
         <PlanOrtogonal
-          centru={[660, 500]}
-          scara={116}
+          centru={[660, 480]}
+          scara={106}
           raza={3}
           sageti={[
             {
@@ -344,7 +397,10 @@ function Desen() {
               : []),
           ]}
           arc={
-            rotire > 0.05
+            // Aceeași fereastră ca urma punctată a lui `v`: unghiul se măsoară
+            // **între** cele două direcții, deci n-are ce căuta pe ecran după
+            // ce una dintre ele a dispărut.
+            rotire > 0.05 && rotire < 0.98
               ? {
                   dela: [Math.cos(Math.atan2(V[1], V[0])), Math.sin(Math.atan2(V[1], V[0]))],
                   la: [1, 0],
@@ -362,7 +418,7 @@ function Desen() {
           opacitate={oCs}
           rol={ROL_V}
           simbol={`cos θ = ${zecimale(ROTATIE.c, 4)}`}
-          text="x împărțit la r"
+          text="x / r"
           st={st}
         />
         <Cartonas
@@ -372,7 +428,7 @@ function Desen() {
           opacitate={oCs}
           rol={ROL_V}
           simbol={`sin θ = ${zecimale(ROTATIE.s, 4)}`}
-          text="minus y împărțit la r"
+          text="−y / r"
           st={st}
         />
         <Cartonas
@@ -403,6 +459,8 @@ function Desen() {
             [ROTATIE.s, ROTATIE.c, 0],
             [0, 0, 1],
           ]}
+          simboluri={SIMBOLURI_G}
+          amestec={amestecCifre}
           opacitate={1}
           // Celulele au nevoie de loc: „−0,55" e cu un semn mai lung decât restul.
           latura={132}
@@ -412,40 +470,25 @@ function Desen() {
         />
         <Cartonas
           x={1180}
-          y={330}
+          y={414}
           latime={640}
           opacitate={oPatru}
           rol={ROL_V}
-          simbol="I, cu 4 schimbate"
-          text="Restul e matricea identitate"
-          st={st}
-        />
-        <Cartonas
-          x={1180}
-          y={500}
-          latime={640}
-          opacitate={oLinii}
-          rol="interval"
-          simbol="G·A → liniile i, j"
-          text="Toate celelalte linii rămân neatinse"
+          text="Matricea identitate, cu 4 elemente schimbate"
           st={st}
         />
       </g>
-      <Concluzie
-        opacitate={oMat * intra(T, M + 7.0, 0.5)}
-        st={st}
-        copii="Cine atinge puțin, strică puțin: restul matricei nici nu observă."
-      />
 
       {/* ═══ 3 · exemplul ═══ */}
-      <Antet opacitate={oEx} titlu="Trei rotații, de jos în sus" st={st} />
+      <Antet opacitate={oEx} titlu="Trei rotații, una pe element" st={st} />
       <g opacity={oEx}>
         <Matrice
           x={W / 2}
           y={470}
           valori={(aratatDupa ? pas?.dupa : pas?.inainte) ?? MATRICE_GIVENS}
           opacitate={1}
-          liniiAtinse={pas ? [pas.coloana, pas.linie ?? 0] : []}
+          liniiAtinse={pas ? [pas.linie ?? 0] : []}
+          coloanaAtinsa={pas?.coloana}
           aprindere={aratatDupa ? aprindere : 0.55}
           tinta={aratatDupa && pas ? { linie: pas.linie ?? 0, coloana: pas.coloana } : undefined}
           nume={aratatDupa ? `G${indice + 1}·A` : "A"}
@@ -548,7 +591,7 @@ const SUBTITRARI = [
     la: CUE.Matricea + 4.6,
     text: "De aceea înmulțirea atinge exact două linii, și nimic altceva.",
   },
-  { la: CUE.Exemplu + 0.4, text: "Pe o matrice 3×3, se merge de jos în sus, element cu element." },
+  { la: CUE.Exemplu + 0.4, text: "Pe o matrice 3×3, se ia element cu element, de sus în jos." },
   {
     la: CUE.Exemplu + 1.4,
     text: "Primul element de anulat stă sub un zero de pe diagonală: rotația schimbă cele două linii.",
@@ -582,8 +625,8 @@ export function AnimatiaGivens() {
         "păstrează lungimea, el aterizează la r = ‖v‖. Unghiul nu se calculează niciodată: din " +
         "condiția ca a doua componentă să devină zero ies direct cos θ = x/r și sin θ = −y/r. În " +
         "matrice, rotația e identitatea cu patru elemente schimbate, deci înmulțirea atinge exact " +
-        "două linii și lasă restul neatins. Pe matricea 3×3 din curs trebuie trei rotații, luate de " +
-        "jos în sus; prima are cosinusul zero, adică e o schimbare de linii. Față de Householder, " +
+        "două linii și lasă restul neatins. Pe matricea 3×3 din curs trebuie trei rotații, luate " +
+        "element cu element; prima are cosinusul zero, adică e o schimbare de linii. Față de Householder, " +
         "care termină în două reflexii, rotațiile sunt mai multe, dar fiecare atinge doar două " +
         "linii — se pot face în paralel și nu strică zerourile existente."
       }

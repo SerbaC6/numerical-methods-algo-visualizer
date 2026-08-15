@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Callout } from "@/components/content/Callout";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { Notatie } from "@/components/viz/Notatie";
@@ -71,6 +73,19 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
   );
 }
 
+export type TeorieScurtaProps = {
+  continut: TeorieScurtaContinut;
+  /**
+   * Ce se așază **după** blocurile unei metode, pe `id`-ul ei.
+   *
+   * Există pentru pagina 2, unde clipul fiecărei transformări stă lipit de
+   * teoria ei: oglinda după Householder, rotația după Givens. Un singur clip
+   * într-o secțiune „Vizual" de sus ar fi cerut cititorului să țină minte
+   * geometria până jos, la formulă — sau să urce înapoi.
+   */
+  dupaMetoda?: Record<string, ReactNode>;
+};
+
 /**
  * Secțiunea „Teorie pe scurt" a unei pagini de metodă.
  *
@@ -83,7 +98,7 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
  * normal devin ilizibili. O formulă pe care trebuie s-o apropii de ochi nu-și
  * face treaba.
  */
-export function TeorieScurta({ continut }: { continut: TeorieScurtaContinut }) {
+export function TeorieScurta({ continut, dupaMetoda }: TeorieScurtaProps) {
   return (
     <div className="flex flex-col gap-10">
       <p className="text-text text-xl leading-relaxed">{continut.intro}</p>
@@ -111,6 +126,7 @@ export function TeorieScurta({ continut }: { continut: TeorieScurtaContinut }) {
               {metoda.blocuri.map((bloc, i) => (
                 <Bloc key={i} bloc={bloc} />
               ))}
+              {dupaMetoda?.[metoda.id]}
             </div>
           </article>
         ))}
