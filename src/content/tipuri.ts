@@ -16,6 +16,12 @@ export type IntrareLegenda = {
 
 export type BlocTeorie =
   | { tip: "text"; continut: ReactNode }
+  /**
+   * O propoziție scoasă din rând: regula practică pe care o reții dacă nu reții
+   * altceva. Se folosește **rar** — un text în care fiecare al treilea paragraf
+   * e încadrat n-are niciun paragraf încadrat.
+   */
+  | { tip: "callout"; titlu: string; continut: ReactNode }
   | {
       tip: "formula";
       latex: string;

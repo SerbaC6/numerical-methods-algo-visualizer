@@ -44,7 +44,7 @@ Dacă un bj din mijloc se anulează, cu 2 < j < n, matricea se rupe și problema
 In aceasta pagina vreau animatiile sa se contopeasca cu teoria. Dupa teoria Householder, vreau sa pui animatia pentru Householder, iar dupa teoria Givens, animatia pentru Givens
 
 La nivel de text:
-- Sterge aceste paragrafe:
+- ✅ Sterge aceste paragrafe:
     - (PTP = I, se verifică în trei rânduri de calcul)
     - Ultima e semnătura unei oglinzi: o rotație are determinantul +1. Tot de aici iese și că P aplicată de două ori nu face nimic — o reflectare a reflectării
     - De ce contează care dintre cele două. Cu semnul celălalt, d = v − ‖v‖·e1 devine o scădere între numere aproape egale exact când v e deja aproape de axă — iar atunci cifrele semnificative se pierd. Pe v = (1; 10−10; 0), alegerea din formulă ține ‖d‖ = 2, iar cea opusă o prăbușește la 10−10: oglinda ajunge să fie definită de zgomot. Regula generală e că v și reflexia lui trebuie să fie depărtate. Prima coloană are norma 3, deci d = (5; 1; 2), iar reflexia o duce în (−3; 0; 0). Amândouă zerourile apar odată — asta e ce deosebește metoda: o transformare pe coloană, nu pe element. La pasul următor, d primește zerouri deasupra poziției de lucru. Nu e un detaliu de implementare: așa liniile de deasupra rămân neatinse, iar zerourile făcute la pasul dinainte nu se strică. Pentru o matrice m×n ajung min(m − 1, n) reflexii. (scoate inclusiv acea matrice)
@@ -52,7 +52,7 @@ La nivel de text:
     - Matricea de la Givens
     - Primul element de anulat e sub un 0 de pe diagonală, deci cos θ = 0 și sin θ = −1: rotația de un sfert de tură care schimbă cele două linii între ele. E cel mai scurt exemplu că rotația nu „calculează" nimic, doar așază.
 
-- Schimba acest paragraf (Care dintre ele, și când
+- ✅ Schimba acest paragraf (Care dintre ele, și când
 Aceeași țintă, două socoteli diferite: una ieftină pe matrice pline, cealaltă paralelizabilă și blândă cu zerourile.
 
 Câte transformări. Householder cere una pe coloană, deci de ordinul n. Givens cere una pentru fiecare element de sub diagonală, deci de ordinul n2/2 — un ordin de mărime mai mult, și fiecare cu radicalul ei. Pe matricea 3×3 din exemple: două reflexii față de trei rotații.

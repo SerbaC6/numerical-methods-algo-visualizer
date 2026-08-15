@@ -1,3 +1,4 @@
+import { Callout } from "@/components/content/Callout";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { Notatie } from "@/components/viz/Notatie";
 import type { BlocTeorie, TeorieScurtaContinut } from "@/content/tipuri";
@@ -6,6 +7,14 @@ import type { BlocTeorie, TeorieScurtaContinut } from "@/content/tipuri";
 function Bloc({ bloc }: { bloc: BlocTeorie }) {
   if (bloc.tip === "text") {
     return <p className="text-text-slab text-lg leading-relaxed">{bloc.continut}</p>;
+  }
+
+  if (bloc.tip === "callout") {
+    return (
+      <Callout tip="retine" titlu={bloc.titlu}>
+        {bloc.continut}
+      </Callout>
+    );
   }
 
   return (

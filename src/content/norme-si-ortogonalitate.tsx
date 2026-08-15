@@ -113,11 +113,8 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
             continut: (
               <>
                 <strong>Trei proprietăți care ies din formulă</strong>, nu din memorie:{" "}
-                <Mate>P</Mate> e <strong>simetrică</strong>, e <strong>ortogonală</strong> (
-                <Mate>PᵀP = I</Mate>, se verifică în trei rânduri de calcul) și are{" "}
-                <Mate>det(P) = −1</Mate>. Ultima e semnătura unei oglinzi: o rotație are
-                determinantul <Mate>+1</Mate>. Tot de aici iese și că <Mate>P</Mate> aplicată de
-                două ori nu face nimic — o reflectare a reflectării.
+                <Mate>P</Mate> e <strong>simetrică</strong>, e <strong>ortogonală</strong> și are{" "}
+                <Mate>det(P) = −1</Mate>.
               </>
             ),
           },
@@ -135,44 +132,6 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
                 Norma se păstrează, deci imaginea nu poate cădea decât în <Mate>±‖v‖·e₁</Mate> —
                 două ținte, deci două oglinzi posibile. Semnul din formulă o alege pe cea care duce
                 vectorul <strong>în partea opusă</strong>.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>De ce contează care dintre cele două.</strong> Cu semnul celălalt,{" "}
-                <Mate>d = v − ‖v‖·e₁</Mate> devine o scădere între numere aproape egale exact când{" "}
-                <Mate>v</Mate> e deja aproape de axă — iar atunci cifrele semnificative se pierd. Pe{" "}
-                <Mate>v = (1; 10⁻¹⁰; 0)</Mate>, alegerea din formulă ține <Mate>‖d‖ = 2</Mate>, iar
-                cea opusă o prăbușește la <Mate>10⁻¹⁰</Mate>: oglinda ajunge să fie definită de
-                zgomot. Regula generală e că <Mate>v</Mate> și reflexia lui trebuie să fie{" "}
-                <strong>depărtate</strong>.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "A_1 = \\begin{pmatrix}2&4&5\\\\1&-1&1\\\\2&1&-1\\end{pmatrix} \\;\\xrightarrow{\\;P_1\\;}\\; \\begin{pmatrix}-3&-3&-3\\\\0&-\\tfrac{12}{5}&-\\tfrac{3}{5}\\\\0&-\\tfrac{9}{5}&-\\tfrac{21}{5}\\end{pmatrix}",
-            sursa: "curs 3, §6.5",
-            explicatie: (
-              <>
-                Prima coloană are norma 3, deci <Mate>d = (5; 1; 2)</Mate>, iar reflexia o duce în{" "}
-                <Mate>(−3; 0; 0)</Mate>. <strong>Amândouă zerourile apar odată</strong> — asta e ce
-                deosebește metoda: o transformare pe coloană, nu pe element.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                La pasul următor, <Mate>d</Mate> primește <strong>zerouri deasupra</strong> poziției
-                de lucru. Nu e un detaliu de implementare: așa liniile de deasupra rămân neatinse,
-                iar zerourile făcute la pasul dinainte nu se strică. Pentru o matrice{" "}
-                <Mate>m×n</Mate> ajung <Mate>min(m − 1, n)</Mate> reflexii.
               </>
             ),
           },
@@ -225,31 +184,6 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "text",
-            continut: (
-              <>
-                Poziția în matrice se citește simplu: <strong>linia care se anulează</strong> dă
-                unde stă <Mate>sin θ</Mate>. La descompunerea <Mate>QR</Mate>, perechea de linii e
-                chiar poziția elementului de anulat — se merge de jos în sus pe fiecare coloană, ca
-                zerourile deja făcute să nu fie atinse.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "A_1 = \\begin{pmatrix}0&1&2\\\\3&2&0\\\\4&1&5\\end{pmatrix} \\;\\xrightarrow{\\;G_1\\;}\\; \\begin{pmatrix}4&1&5\\\\3&2&0\\\\0&-1&-2\\end{pmatrix}",
-            sursa: "curs 3, §7.4",
-            explicatie: (
-              <>
-                Primul element de anulat e sub un <Mate>0</Mate> de pe diagonală, deci{" "}
-                <Mate>cos θ = 0</Mate> și <Mate>sin θ = −1</Mate>: rotația de un sfert de tură care{" "}
-                <strong>schimbă cele două linii între ele</strong>. E cel mai scurt exemplu că
-                rotația nu „calculează" nimic, doar așază.
-              </>
-            ),
-          },
         ],
       },
       {
@@ -263,35 +197,11 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
         ),
         blocuri: [
           {
-            tip: "text",
+            tip: "callout",
+            titlu: "Regula practică",
             continut: (
               <>
-                <strong>Câte transformări.</strong> Householder cere una pe coloană, deci de ordinul{" "}
-                <Mate>n</Mate>. Givens cere una pentru <em>fiecare</em> element de sub diagonală,
-                deci de ordinul <Mate>n²/2</Mate> — un ordin de mărime mai mult, și fiecare cu
-                radicalul ei. Pe matricea 3×3 din exemple: <strong>două</strong> reflexii față de{" "}
-                <strong>trei</strong> rotații.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                <strong>Ce câștigă totuși rotația.</strong> O rotație atinge exact două linii, deci
-                mai multe rotații care lucrează pe perechi de linii diferite se pot face{" "}
-                <strong>în același timp</strong>. Și, mai important, nu strică zerourile care există
-                deja: pe o matrice rară, unde majoritatea elementelor sunt nule, ea plătește doar
-                pentru cele câteva care nu sunt, în timp ce reflexia amestecă toată coloana.
-              </>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                Regula practică e chiar asta:{" "}
-                <strong>Householder pentru matrice pline, Givens pentru matrice rare</strong>.
+                <strong>Householder pentru matrice pline, Givens pentru matrice rare.</strong>{" "}
                 Restul — ortogonalitatea, păstrarea normei, stabilitatea numerică — e comun; nu de
                 acolo se alege.
               </>
