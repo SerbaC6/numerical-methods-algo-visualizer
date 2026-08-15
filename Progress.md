@@ -553,6 +553,47 @@ Ating **toate** paginile cu secțiune „Vizual", deci nu stau la niciuna dintre
   amândouă variantele. Pe tot ecranul cadrul renunță la 16:9 și ia toată suprafața: SVG-ul se
   centrează singur, fără să se deformeze.
 
+### Sesiunea de corecturi din `imbunatatiri.md` — ce s-a schimbat peste tot
+
+Lista cerută de utilizator, luată bloc cu bloc. Ce ating **toate** paginile:
+
+- **Momentele clipurilor nu se mai numerotează** — antetul e doar titlul, urcat în locul cifrei.
+- **Textul mărunt din cartonașe** pornește de la `CORP_EXPLICATIE` (34 de unități, de la 26–28) și
+  se micșorează doar cât să încapă, prin `marimeCareIncape()` din `src/lib/tipografie-clip.ts`.
+- **Simbolurile din cartonașe** trec prin `NotatieSVG`, deci exponenții nu mai vin din fontul de
+  sistem cu spații în plus.
+- **Subtitrarea** își rezervă locul de la început și intră de sus în jos.
+- **Clipul se comandă de la tastatură**: spațiu = pauză, săgeți = ±1 s, cât timp cadrul se vede pe
+  jumătate. Poziția clipului **și** cea a paginii se rețin într-o hartă în memorie, deci
+  întoarcerea „înapoi" reia de unde ai plecat.
+- **„Teoria pe scurt" nu se mai încheie cu un rezumat** — câmpul `incheiere` a fost scos din tip și
+  din randare, deci nu se poate strecura la loc.
+- `BlocTeorie` are un tip nou, `callout`, pentru regula practică scoasă din rând (folosit o singură
+  dată, pe pagina 2).
+
+Pagini fără interfață interactivă, **prin decizie luată aici**: 1 (`factorizari-lu`) și 5
+(`metode-iterative`). Pagina 16 rămâne fără clip, tot prin decizie. Pagina 2 nu mai are secțiune
+„Vizual": clipurile ei stau în teorie, fiecare lângă transformarea lui (`CLIPURI_IN_TEORIE` din
+`PaginaAlgoritm`).
+
+Ce a apărut ca unealtă refolosibilă:
+
+- `fractie()` în `src/lib/numere.ts` — reconstrucție rațională cu fracții continue, ca valorile
+  unei iterații să se scrie exact (`1/10`, `39/40`, `−341/360`), nu rotunjite;
+- `src/algorithms/derivare-numerica/functii-derivare.ts` — funcții alese pentru **curbură**, ca
+  formulele de derivare să se separe vizibil una de alta.
+
+Verificări numerice făcute în sesiune, de reținut:
+
+- matricea paginii 5 (curs 5, §10, problema 3) e **slab** dominant diagonală, nu strict: linia a
+  doua are `|4| = 1 + 3`. Ambele metode converg oricum (`ρ = 0,6072` și `0,4082`), iar animația nu
+  afirmă nicăieri dominanța;
+- ordinea rotațiilor Givens pe coloană (de sus în jos față de cea a cursului) dă **același** `R` pe
+  exemplul din §7.4 — de aceea `run()` primește ordinea ca parametru, iar clipul o folosește pe cea
+  care se citește mai firesc;
+- pe pagina 16: `x²` cu punct de mijloc iese exact, iar cu două puncte greșește cu exact `h`; pe
+  `x³/3`, mijlocul greșește cu `h²/3` și cele două puncte cu `x·h + h²/3`.
+
 ### Pagina 16 — `derivare-numerica`, ce e gata și ce nu
 
 Ce există:
