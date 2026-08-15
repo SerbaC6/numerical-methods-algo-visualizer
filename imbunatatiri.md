@@ -126,7 +126,17 @@ DE SCHIMBAT:
 - ✅ Lucreaza mult pe functii, daca lasam asa nu se intelege nimic, eu nu inteleg nimic din exemplele tale. Vino cu ceva mai bun si care sa arate mai bine diferenta intre ele
 
 
-Incepe 
+# Curbe Bezier:
+1. ✅ Partea de Interfata interactiva:
+- ca aici(https://www.desmos.com/calculator/cahqdxeshd), doar ca simplificat. Vreau sa se vada pe pasi cum se construieste, sa pun eu acel p de la algoritmul lui Casteljau, iar abia la final sa pot sa ma joc asa cu ea. De asemenea, ca parametru, pune numarul de puncte si acel p. Fa cu multe culori, sa se distinga clar cum se construieste.
+- nu pune formula
+
+2. ✅ Partea de Teorie:
+- la fel ca in celelalte pagini, cum scrie in Claude.md
+- Explica trecerea de la curbe Hermite la Bezier, importanta lor, ca formula pune mai mult despre polinoamele Bernstein si algoritmul lui deCasteljau
+
+3. ✅ Partea de Vizual:
+- Vreau sa explici doar pasii de rezolvare a algoritmului de Casteljau, cum se formeaza, si apoi sa te joci putin cu o curba Bezier
 
 
 
