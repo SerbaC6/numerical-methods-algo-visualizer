@@ -139,6 +139,9 @@ DE SCHIMBAT:
 - Vreau sa explici doar pasii de rezolvare a algoritmului de Casteljau, cum se formeaza, si apoi sa te joci putin cu o curba Bezier
 
 
+Cuadraturi Adaptive si Gaussiene:
+- fa doar partea de interactiv si teorie, unde vom folosi la interactiv pozele date in cursuri_MN/poze. Reprodu tipul acela de grafic, fa-l foarte mare, fa-l partea centrala, aeriseste-l, nu-l umple cu formule, si fa un slot pentru cuadraturile Gaussiene, iar altul pentru cuadraturile Adaptive. Fa cumva ca utilizatorul sa inteleaga importanta acestor metode prin mai multe exemple, fiecare ajutand la intelegerea mai profunda a plusurilor acestor metode pe anumite functii si ce rau ar fi daca nu le-ar fi folosit
 
 
-
+ODE:
+- aici fa doar partea de animatie si teorie, unde vreau sa te axezi mai mult pe Euler, apoi. Vreau sa incepi prin a arata importanta ODE, cum dintr-un punct si dintr o panta poti aproxima functia, cu ideea aceea a albiei de rau din poze, apoi sa treci la Euler si celelalte metode, pe langa Euler celelalte fiind trecute mai mult in revista, cu maxim ceva esential despre fiecare in parte(poti pune putin mai mult accent pe RK4). Tot asa, animatia vreau sa fie mai mult un mod de intelegere vizuala, nu vreau sa fie umpluta cu formule, doar strictul necesar.

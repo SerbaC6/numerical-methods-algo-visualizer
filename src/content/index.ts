@@ -3,6 +3,7 @@ import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
 import { continutAlgoritmulThomas } from "@/content/algoritmul-thomas";
 import { continutCurbeBezier } from "@/content/curbe-bezier";
+import { continutEcuatiiDiferentiale } from "@/content/ecuatii-diferentiale";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
 import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
 import { continutFactorizariLu } from "@/content/factorizari-lu";
@@ -29,6 +30,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "algoritmul-qr": continutAlgoritmulQr,
   "algoritmul-thomas": continutAlgoritmulThomas,
   "curbe-bezier": continutCurbeBezier,
+  "ecuatii-diferentiale": continutEcuatiiDiferentiale,
   "ecuatii-neliniare": continutEcuatiiNeliniare,
   "eliminare-gaussiana": continutEliminareGaussiana,
   "factorizari-lu": continutFactorizariLu,

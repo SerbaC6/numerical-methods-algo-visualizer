@@ -517,26 +517,26 @@ Singura pagină al cărei clip **nu** e scris în cod e 14 (`fft`): acolo secți
 găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu restanță — vezi
 `CLAUDE.md`.
 
-| Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual       | Implem. | Clip | Text | Interactiv | Mobil | Gata |
-| --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------ | ------- | ---- | ---- | ---------- | ----- | ---- |
-| 1   | LU (Cramer, Doolittle, Crout, Cholesky)       | `factorizari-lu`                   | curs2, curs4 | matrice      | [ ]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
-| 2   | Householder și Givens                         | `norme-si-ortogonalitate`          | curs3, curs2 | plan vectori | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice      | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
-| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice      | [x]     | [x]  | [x]  | n/a        | [ ]   | [ ]  |
-| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
-| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
-| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | plan vectori | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
-| 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice      | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
-| 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
-| 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
-| 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [x]     | [ ]  | [x]  | [x]        | [ ]   | [ ]  |
-| 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
-| 18  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| Nr. | Pagină (metode)                               | Slug                               | Curs sursă   | Vizual        | Implem. | Clip | Text | Interactiv | Mobil | Gata |
+| --- | --------------------------------------------- | ---------------------------------- | ------------ | ------------- | ------- | ---- | ---- | ---------- | ----- | ---- |
+| 1   | LU (Cramer, Doolittle, Crout, Cholesky)       | `factorizari-lu`                   | curs2, curs4 | matrice       | [ ]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
+| 2   | Householder și Givens                         | `norme-si-ortogonalitate`          | curs3, curs2 | plan vectori  | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 3   | Eliminare gaussiană și pivotări               | `eliminare-gaussiana`              | curs4        | matrice       | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
+| 4   | Algoritmul Thomas (sisteme tridiagonale)      | `algoritmul-thomas`                | curs4        | matrice       | [x]     | [x]  | [x]  | n/a        | [ ]   | [ ]  |
+| 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval      | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
+| 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D  | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
+| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | plan vectori  | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf  | [x]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
+| 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice       | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
+| 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă   | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
+| 12  | Lagrange, Neville, funcția Runge, spline      | `interpolare-polinomiala`          | curs09       | grafic        | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas        | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube  | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
+| 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic        | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic        | [x]     | [ ]  | [x]  | [x]        | [ ]   | [ ]  |
+| 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic        | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 18  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | câmp direcții | [x]     | [x]  | [x]  | n/a        | [x]   | [ ]  |
 
 ### Modificări transversale la clipuri
 

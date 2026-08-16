@@ -9,6 +9,7 @@ import { AnimatiaBezier } from "@/components/content/AnimatiaBezier";
 import { InterfataBezier } from "@/components/content/InterfataBezier";
 import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
 import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
+import { AnimatiaEcuatiilorDiferentiale } from "@/components/content/AnimatiaEcuatiilorDiferentiale";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
 import { AnimatiaInterpolarii } from "@/components/content/AnimatiaInterpolarii";
@@ -95,6 +96,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   "curbe-bezier": { vizual: AnimatiaBezier, interactiv: InterfataBezier },
   "derivare-numerica": { interactiv: InterfataDerivareNumerica },
   "newton-cotes": { interactiv: InterfataNewtonCotes },
+  "ecuatii-diferentiale": { vizual: AnimatiaEcuatiilorDiferentiale },
   fft: { vizual: VideoFft },
 };
 

@@ -8,11 +8,15 @@
  *
  * 1. fiecare formulă e o combinație de diferențe (`Σcₖ = 0`) și e **exactă** pe
  *    polinoamele de grad mic, exact cât promite ordinul ei;
- * 2. ordinul erorii, **măsurat ca pantă** pe graficul log-log, nu enunțat;
+ * 2. ordinul erorii, **măsurat ca pantă** la înjumătățirea pasului, nu enunțat;
  * 3. formula înapoi e chiar cea înainte cu `h` schimbat de semn, cum spune cursul;
- * 4. capcana din finalul cursului: sub un anumit `h`, eroarea crește la loc;
- * 5. `h`-ul optim teoretic se potrivește cu cel măsurat, în limita unui ordin de
- *    mărime.
+ * 4. nodurile desenate sunt chiar cele din formulă.
+ *
+ * Ce **nu** se mai verifică aici: capcana „sub un anumit `h`, eroarea crește la
+ * loc" și `h`-ul optim. Amândouă au ieșit de pe pagină odată cu graficul erorii,
+ * iar modulul care le calcula (`derivare-numerica/eroare.ts`) nu mai există. Un
+ * script care testează cod șters pică la fiecare rulare și ascunde greșelile
+ * adevărate ale celorlalte fișiere.
  */
 import {
   FORMULE,
@@ -20,13 +24,6 @@ import {
   noduriConcrete,
   sumaCoeficientilor,
 } from "../../src/algorithms/derivare-numerica/formule.ts";
-import {
-  baleiazaH,
-  EPSILON,
-  hOptimTeoretic,
-  pantaMasurata,
-} from "../../src/algorithms/derivare-numerica/eroare.ts";
-
 let picate = 0;
 const verifica = (nume: string, conditie: boolean, detaliu = "") => {
   if (!conditie) picate++;
@@ -79,17 +76,22 @@ console.log("=== 1. Structura formulelor ===");
 console.log("\n=== 2. Ordinul erorii, măsurat ca pantă ===");
 {
   // `sin` are toate derivatele mărginite de 1, deci e cazul curat pentru pantă.
+  // Panta se măsoară aici, din două erori la pași care se înjumătățesc: modulul
+  // care făcea baleiajul a ieșit odată cu graficul erorii, iar ce se testează e
+  // oricum `formule.ts`, nu baleiajul.
   const f = Math.sin;
   const x0 = 0.6;
 
   for (const formula of FORMULE) {
     const exact = formula.ordin === 1 ? Math.cos(x0) : -Math.sin(x0);
-    const curba = baleiazaH(formula, f, x0, exact, { hMax: 1e-1, hMin: 1e-4 });
-    const panta = pantaMasurata(curba, 1e-4, 1e-1);
+    const eroareLa = (h: number) => Math.abs(formula.aproximeaza(f, x0, h) - exact);
+    // Pași destul de mari cât să nu conteze rotunjirea mașinii, destul de mici
+    // cât termenul dominant să fie chiar el dominant.
+    const panta = Math.log2(eroareLa(1e-2) / eroareLa(5e-3));
     verifica(
       `${formula.eticheta}: panta ≈ ${formula.ordinEroare}`,
-      panta !== null && Math.abs(panta - formula.ordinEroare) < 0.06,
-      `măsurat ${panta?.toFixed(4)}`,
+      Math.abs(panta - formula.ordinEroare) < 0.06,
+      `măsurat ${panta.toFixed(4)}`,
     );
   }
 }
@@ -115,70 +117,7 @@ console.log("\n=== 3. Înainte și înapoi sunt aceeași formulă, cu semn schim
   );
 }
 
-console.log("\n=== 4. Capcana: sub un h, eroarea crește la loc ===");
-{
-  const f = Math.sin;
-  const x0 = 0.6;
-  const exact = Math.cos(x0);
-
-  for (const id of ["inainte", "mijloc"]) {
-    const formula = getFormula(id);
-    const curba = baleiazaH(formula, f, x0, exact, { hMax: 1, hMin: 1e-14 });
-
-    const laOptim = curba.eroareMinima;
-    const laCelMaiMic = curba.puncte.at(-1)!.eroare;
-    verifica(
-      `${formula.eticheta}: cel mai mic h **nu** dă cea mai mică eroare`,
-      laCelMaiMic > laOptim * 10,
-      `h optim ${curba.hOptim.toExponential(1)} (eroare ${laOptim.toExponential(2)}), la h = 10⁻¹⁴ eroarea e ${laCelMaiMic.toExponential(2)}`,
-    );
-    verifica(
-      `${formula.eticheta}: h optim e departe de capete`,
-      curba.hOptim < 1e-3 && curba.hOptim > 1e-12,
-      `${curba.hOptim.toExponential(2)}`,
-    );
-  }
-}
-
-console.log("\n=== 5. h optim: teoretic față de măsurat ===");
-{
-  const f = Math.sin;
-  const x0 = 0.6;
-  const exact = Math.cos(x0);
-
-  // Constantele din termenii de eroare ai cursului: 1/2 la două puncte,
-  // 1/6 la punctul de mijloc. `M = 1` fiindcă derivatele lui sin sunt ≤ 1.
-  const cazuri = [
-    { id: "inainte", constanta: 1 / 2 },
-    { id: "mijloc", constanta: 1 / 6 },
-  ];
-
-  for (const caz of cazuri) {
-    const formula = getFormula(caz.id);
-    const teoretic = hOptimTeoretic(formula.ordinEroare, caz.constanta, 1, EPSILON);
-    const curba = baleiazaH(formula, f, x0, exact, { hMax: 1, hMin: 1e-14, puncteDeDecada: 24 });
-    const raport = curba.hOptim / teoretic;
-    verifica(
-      `${formula.eticheta}: h optim măsurat și teoretic, în același ordin de mărime`,
-      raport > 0.1 && raport < 10,
-      `teoretic ${teoretic.toExponential(2)}, măsurat ${curba.hOptim.toExponential(2)}`,
-    );
-  }
-
-  // Cifrele scrise în teorie.
-  verifica(
-    "două puncte: h optim ≈ 2·10⁻⁸",
-    Math.abs(Math.log10(hOptimTeoretic(1, 1 / 2)) + 8) < 0.7,
-    hOptimTeoretic(1, 1 / 2).toExponential(2),
-  );
-  verifica(
-    "punct de mijloc: h optim ≈ 9·10⁻⁶",
-    Math.abs(Math.log10(hOptimTeoretic(2, 1 / 6)) + 5) < 0.7,
-    hOptimTeoretic(2, 1 / 6).toExponential(2),
-  );
-}
-
-console.log("\n=== 6. Nodurile, cele desenate ===");
+console.log("\n=== 4. Nodurile, cele desenate ===");
 {
   const f = (x: number) => x * x;
   const noduri = noduriConcrete(getFormula("capat"), f, 2, 0.5);

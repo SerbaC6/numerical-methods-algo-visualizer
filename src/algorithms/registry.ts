@@ -412,7 +412,12 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     metode: ["Problema Cauchy", "Lipschitz", "Euler", "Taylor", "Runge-Kutta", "Metode multipas"],
     dificultate: "mediu",
     cursSursa: ["ode-runge-kutta_curs13.md"],
-    gata: false,
+    // Fără secțiune „Interactiv", prin decizie. Clipul duce singur povestea, de
+    // la câmpul de direcții până la RK4, iar ce ar putea schimba cititorul —
+    // pasul, metoda — se vede deja acolo, comparat cu soluția exactă. Un panou
+    // de parametri ar repeta clipul, fără să adauge o întrebare nouă.
+    interactiv: false,
+    gata: true,
   },
 ];
 

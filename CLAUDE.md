@@ -479,8 +479,14 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [ ] **Pagina 17 — `cuadraturi-adaptive-si-gaussiene`**. `Plot` pentru intervalul care se
       înjumătățește la Simpson adaptiv și pentru nodurile neechidistante Gaussiene. Primitivă
       nouă: subdiviziunea recursivă desenată fără să devină o pădure de linii.
-- [ ] **Pagina 18 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). `Plot` + **câmp de
-      direcții** — primitivă nouă: multe segmente scurte orientate, desenate eficient.
+- [x] **Pagina 18 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). Clipul
+      (`AnimatiaEcuatiilorDiferentiale`) pornește de la **câmpul de direcții** — „albia" prin care
+      curg soluțiile —, trece prin Euler pas cu pas și se închide cu RK4. Câmpul se eșantionează în
+      `src/algorithms/ecuatii-diferentiale/camp-directii.ts`, iar unghiul cu care se desenează un
+      segment **nu e arctangenta pantei**: trece prin raportul scărilor ecranului, altfel câmpul ar
+      arăta alte direcții decât cere ecuația. Ultimele două momente arată un singur pas, deci clipul
+      are o **cameră** care se apropie și se depărtează; tot ce e desenat în coordonate de lume se
+      taie la zona graficului. **Fără secțiune „Interactiv", prin decizie** — vezi lista de mai jos.
 - [ ] **Pagina 2 — `norme-si-ortogonalitate`** (norme, Householder, Givens, Gram-Schmidt).
       Primitive noi: vector cu vârf de săgeată, reflexie și rotație interactivă, plus **jocul**
       de Gram-Schmidt (inspirație: PerfectlyNormal, dar cu pași mult mai clari).
@@ -616,6 +622,9 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
 - **pagina 4** (`algoritmul-thomas`) — **cerută explicit fără interfață**. Metoda are un singur
   drum, fără parametri de ales: clipul (`AnimatiaThomas`) îl arată în întregime, de la pasul de
   eliminare până la substituția înapoi.
+- **pagina 18** (`ecuatii-diferentiale`) — clipul duce singur povestea, de la albia de direcții
+  până la RK4, iar ce ar putea schimba cititorul (pasul, metoda) se vede deja acolo, comparat cu
+  soluția exactă. Exemplul desenat e fix: `y′ = y − t² + 1`, `y(0) = 0,5`, pe `[0, 2]`.
 - **pagina 1** (`factorizari-lu`) — **scoasă la cerere**. Rămâne clipul
   (`AnimatiaFactorizariiLu`), pe factorizarea Doolittle exactă a matricei
   `A = [[1,2,3],[2,8,11],[3,22,42]]`. Se potrivea oricum cu cerința din `Plan.md` de a nu
