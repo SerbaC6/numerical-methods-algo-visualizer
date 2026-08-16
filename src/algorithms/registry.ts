@@ -223,13 +223,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     capitol: "valori-proprii",
     descriere:
       "Cum scoate o simplă înmulțire repetată valoarea proprie dominantă și cum ajungi la celelalte, prin puterea inversă și deflație.",
-    metode: [
-      "Matrici asemenea",
-      "Metoda puterii",
-      "Puterea inversă",
-      "Iterarea Rayleigh",
-      "Deflație",
-    ],
+    metode: ["Metoda puterii", "Puterea inversă", "Iterarea Rayleigh", "Deflație"],
     dificultate: "greu",
     cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
     gata: false,
