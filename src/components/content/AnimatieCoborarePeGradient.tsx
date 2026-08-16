@@ -183,18 +183,6 @@ function Peisaj({ T, cue, st }: { T: number; cue: Cue; st: number }) {
 
   return (
     <g>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <line
-          key={i}
-          x1={px(XS)}
-          x2={px(XD)}
-          y1={SUS + (INALTIME / 4) * i}
-          y2={SUS + (INALTIME / 4) * i}
-          stroke={culoareRol("grila")}
-          strokeWidth={2}
-        />
-      ))}
-
       <path
         d={TEREN}
         fill={culoareRol("functie")}
@@ -210,24 +198,6 @@ function Peisaj({ T, cue, st }: { T: number; cue: Cue; st: number }) {
         strokeDashoffset={LUNGIME_CURBA * (1 - trasat)}
       />
 
-      <line
-        x1={px(XS)}
-        x2={px(XD)}
-        y1={py(Y0)}
-        y2={py(Y0)}
-        stroke="var(--text-slab)"
-        strokeWidth={2.5}
-        opacity={0.5}
-      />
-      <text
-        x={STANGA + LATIME - MARGINE_TEXT}
-        y={py(Y0) - 16}
-        textAnchor="end"
-        fill="var(--text-slab)"
-        style={{ font: `600 ${30 * st}px var(--font-mono)` }}
-      >
-        x
-      </text>
       <text
         x={STANGA + MARGINE_TEXT}
         y={SUS + 38}
