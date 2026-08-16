@@ -375,6 +375,10 @@ export function InterfataMetodeDeGradient() {
           }))}
           randCurent={derulare.pas}
           onAlegeRand={derulare.setPas}
+          // Gradientul conjugat se oprește în doi-trei pași, cel descendent după
+          // zeci: fără înălțime fixă, tabelul se strânge și trage pagina în sus
+          // la schimbarea tabului.
+          className="h-96"
         />
       )}
     </div>
