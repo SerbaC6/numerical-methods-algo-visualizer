@@ -1046,7 +1046,7 @@ const SUBTITRARI = [
  * acolo la soluție.
  *
  * **Clip scris în cod** — ca la paginile 7, 9, 10 și 11, și din același motiv:
- * animația a venit gata făcută ca animație web (`Eliminare Gaussiana.html`) și
+ * animația a venit gata făcută ca animație web (`animatii-sursa/Eliminare Gaussiana.html`) și
  * s-a portat ca atare. Ca orice clip, **nu** primește parametrii utilizatorului:
  * sistemul desenat e fix.
  *

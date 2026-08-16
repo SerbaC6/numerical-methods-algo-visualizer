@@ -890,7 +890,7 @@ Ce **nu** e verificat încă:
 ### Pagina 7 — `metode-de-gradient`, ce e gata și ce nu
 
 Prima pagină cu secțiunea „Vizual" completă. Clipul e **scris în cod** — pe atunci o excepție de la
-regula Manim, între timp regula însăși (vezi Faza 5): a pornit de la o animație web gata făcută (`Coborare pe gradient.html`,
+regula Manim, între timp regula însăși (vezi Faza 5): a pornit de la o animație web gata făcută (`animatii-sursa/Coborare pe gradient.html`,
 un bundle cu motor propriu) și s-a portat în proiect ca desen pe ceas propriu.
 
 Ce există:
@@ -1101,7 +1101,7 @@ Ce există:
 - **Clipul**, `src/components/content/AnimatiaMatriceiPageRank.tsx` — a treia excepție de la regula
   Manim de atunci (după paginile 6 și 7), din același motiv pentru care regula a și căzut: animația a
   venit gata făcută ca animație web
-  (`Matricea PageRank.html`) și s-a portat pe `Clip`. Toate cifrele vin din
+  (`animatii-sursa/Matricea PageRank.html`) și s-a portat pe `Clip`. Toate cifrele vin din
   `src/algorithms/pagerank/`, culorile din `viz-roles.ts` (deci merge în ambele teme, spre deosebire
   de originalul pe fundal alb), iar scena matricei a fost **rescrisă pe linii plus transpunere**, ca
   să spună aceeași poveste ca teoria de sub ea. `d` e fixat la 0,85: un clip nu primește parametrii
@@ -1139,7 +1139,7 @@ Ce există:
   să nu se rescrie greșit.
 - **Clipul**, `src/components/content/AnimatiaDvs.tsx` — a patra excepție de la regula Manim de atunci (după
   paginile 6, 7 și 9), din același motiv: animația a venit gata făcută ca animație web
-  (`Animatie DVS.html`) și s-a portat pe `Clip`. Culorile vin din `viz-roles.ts`, deci merge în
+  (`animatii-sursa/Animatie DVS.html`) și s-a portat pe `Clip`. Culorile vin din `viz-roles.ts`, deci merge în
   ambele teme, iar textele desenului folosesc `culoareEticheta`, nu culoarea de desen — safirul lui
   `Vᵀ` ar da 2,86:1 ca literă pe suprafața temei întunecate. Geometria nu e aleasă din ochi: e DVS-ul
   exact al matricei `A = [[1, 2], [0, 1]]` — `s = (1+√2, √2−1)`, `V = rot(67,5°)`, `U = rot(22,5°)`,
@@ -1200,7 +1200,7 @@ Ce există:
   formule, nu cu proză — cum s-a cerut.
 - **Clipul**, `src/components/content/AnimatiaFactorizariiLu.tsx` — a cincea excepție de la regula
   Manim (după paginile 6, 7, 9, 10 și 11), din același motiv: animația a venit gata făcută ca
-  animație web (`Animatie_LU.html`) și s-a portat pe `Clip`. Nouă scene, 68 de secunde: sistemul,
+  animație web (`animatii-sursa/Animatie_LU.html`) și s-a portat pe `Clip`. Nouă scene, 68 de secunde: sistemul,
   cei `n + 1` determinanți ai lui Cramer, arborele Laplace până la `4!`, explozia lui `n!`,
   comparația cu `O(n³)`, despărțirea lui `A` în `L` și `U`, cele două substituții, Doolittle și, la
   final, cele trei feluri de a fixa diagonala. Culorile vin din `viz-roles.ts` (`curent` = L,

@@ -466,7 +466,7 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
       nu se mută animat, permutarea e un pas propriu, cu ambele linii marcate. Dacă vreodată e
       nevoie de mișcare, `src/components/viz/README.md` spune unde intră `motion`.
 - [x] **Pagina 4 — `algoritmul-thomas`** (sistem tridiagonal, eliminare înainte, substituție
-      înapoi). Portată din `Algoritmul Thomas(1).html` ca **clip scris în cod**
+      înapoi). Portată din `animatii-sursa/Algoritmul Thomas(1).html` ca **clip scris în cod**
       (`AnimatiaThomas`), plus teorie. **Primitiva de linii care se mută nu s-a făcut**, ca și la
       pagina 3: liniile stau pe loc, iar pasul se vede din cifra care se schimbă în celulă și din
       cele două linii marcate (`i − 1` sursă, `i` țintă). Fără secțiune „Interactiv", prin
@@ -622,9 +622,9 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   primi valori scrise de mână.
 
 **Clipuri portate dintr-o animație web gata făcută.** Pagina 1 (`factorizari-lu`) a primit clipul
-din `Animatie_LU.html`, rescris ca `AnimatiaFactorizariiLu`; pagina 3 (`eliminare-gaussiana`), pe al
-ei din `Eliminare Gaussiana.html`; pagina 4 (`algoritmul-thomas`), pe al ei din
-`Algoritmul Thomas(1).html`. Portarea nu schimbă nicio condiție: clipul rulează tot pe ceasul
+din `animatii-sursa/Animatie_LU.html`, rescris ca `AnimatiaFactorizariiLu`; pagina 3 (`eliminare-gaussiana`), pe al
+ei din `animatii-sursa/Eliminare Gaussiana.html`; pagina 4 (`algoritmul-thomas`), pe al ei din
+`animatii-sursa/Algoritmul Thomas(1).html`. Portarea nu schimbă nicio condiție: clipul rulează tot pe ceasul
 lui (`Clip`) și nu primește parametrii utilizatorului — exemplul desenat e fix (la pagina 1,
 factorizarea Doolittle exactă a matricei `A = [[1,2,3],[2,8,11],[3,22,42]]`).
 
