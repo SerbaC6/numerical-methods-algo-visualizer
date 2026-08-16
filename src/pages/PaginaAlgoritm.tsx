@@ -123,9 +123,9 @@ export default function PaginaAlgoritm() {
 
   useEffect(() => {
     if (!pagina) return;
-    document.title = `${pagina.titlu} · Metode Numerice`;
+    document.title = `${pagina.titlu} · visualiser-mn`;
     return () => {
-      document.title = "Vizualizator de Metode Numerice";
+      document.title = "visualiser-mn";
     };
   }, [pagina]);
 
