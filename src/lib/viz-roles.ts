@@ -2,9 +2,9 @@
  * Rolurile vizuale ale proiectului: ce înseamnă fiecare culoare din desen.
  *
  * Sursa unică de adevăr. Variabilele CSS sunt definite în `src/index.css` și se
- * folosesc **și** în scenele Manim, ca desenul din browser și animația randată
- * să spună același lucru. Legenda își ia culorile tot de aici, deci nu poate
- * ajunge să mintă față de ce se vede pe ecran.
+ * folosesc **și** în clipurile secțiunii „Vizual", ca desenul din interfață și
+ * cel din clip să spună același lucru. Legenda își ia culorile tot de aici, deci
+ * nu poate ajunge să mintă față de ce se vede pe ecran.
  *
  * Etichetele sunt cele implicite; o pagină le poate rescrie când în contextul ei
  * există un nume mai bun („intervalul [aₖ, bₖ]" în loc de „intervalul de căutare").

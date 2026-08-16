@@ -85,7 +85,7 @@
   --halou: none;
   --halou-focus: none;
 
-  /* Roluri de vizualizare — folosite de grafice ȘI de scenele Manim */
+  /* Roluri de vizualizare — folosite de grafice, de interfețe ȘI de clipuri */
   --viz-functie: var(--color-adanc);
   --viz-curent: var(--color-safir);
   --viz-anterior: var(--color-estompat);
