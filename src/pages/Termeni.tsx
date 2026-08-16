@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ADRESE_EMAIL, DATA_ACTUALIZARE, GITHUB_URL } from "@/content/contact";
@@ -52,13 +54,17 @@ export default function Termeni() {
           <h2 className="text-sectiune mt-10 font-bold">Disponibilitate</h2>
           <p className="text-text-slab mt-3">
             Site-ul e găzduit pe GitHub Pages și e oferit așa cum e, fără garanția că e mereu
-            accesibil. Paginile se pot schimba sau reorganiza pe măsură ce le lucrăm.
+            accesibil. Paginile se pot schimba sau reorganiza.
           </p>
 
           <h2 className="text-sectiune mt-10 font-bold">Datele tale</h2>
           <p className="text-text-slab mt-3">
             Nu îți cerem niciuna. Ce se întâmplă totuși — alegerea temei, ținută în browserul tău,
-            și jurnalele gazdei — scrie în politica de confidențialitate.
+            și jurnalele gazdei — scrie în{" "}
+            <Link to="/confidentialitate" className="text-accent-slab underline underline-offset-4">
+              politica de confidențialitate
+            </Link>
+            .
           </p>
 
           <h2 className="text-sectiune mt-10 font-bold">Cine răspunde</h2>
