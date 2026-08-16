@@ -99,10 +99,15 @@ export const SISTEME: readonly SistemGata[] = [
   {
     id: "rotunda",
     eticheta: "Vale rotundă",
-    // κ = 1: curbele de nivel sunt cercuri, deci direcția cea mai abruptă arată
-    // chiar spre fundul văii. Coborârea termină într-un pas — exact ca
-    // gradientul Conjugat, care aici n-are ce îmbunătăți.
-    valori: { a11: 2, a12: 0, a22: 2, b1: 1, b2: 2, x01: 0, x02: 0, tol: 1e-8, maxIteratii: 40 },
+    // κ = 1,1: curbele de nivel sunt elipse cu semiaxele în raport 1,05, deci
+    // ochiul le citește tot ca cercuri, dar direcția cea mai abruptă **nu**
+    // arată exact spre fundul văii. Coborârea face 6 pași, Conjugatul 2 — adică
+    // se vede că zigzagul există chiar și pe o vale aproape rotundă.
+    //
+    // La `a11 = 2` exact (κ = 1) coborârea termina din primul pas, iar butonul
+    // nu mai avea nimic de derulat: o rulare de un cadru arată ca un defect,
+    // nu ca rezultat.
+    valori: { a11: 2.2, a12: 0, a22: 2, b1: 1, b2: 2, x01: 0, x02: 0, tol: 1e-8, maxIteratii: 40 },
   },
   {
     id: "curs",
