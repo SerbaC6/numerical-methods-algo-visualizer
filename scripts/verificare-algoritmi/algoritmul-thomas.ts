@@ -21,6 +21,11 @@ import {
   SOLUTIA,
 } from "../../src/algorithms/algoritmul-thomas/exemplu.ts";
 import {
+  COSTURI,
+  operatiiGauss,
+  operatiiThomas,
+} from "../../src/algorithms/algoritmul-thomas/cost.ts";
+import {
   eliminareGaussiana,
   substitutieInapoi,
   type Matrice,
@@ -134,6 +139,70 @@ console.log("=== 5. Cazul-limită: bᵢ₋₁ nul ===");
     aruncat = true;
   }
   verifica("un b nul oprește metoda, în loc să dea Infinity", aruncat);
+}
+
+console.log("");
+console.log("=== 6. Costul: O(n) față de O(n³) ===");
+{
+  /**
+   * Formulele din `cost.ts` se compară cu o contorizare independentă: se rulează
+   * buclele algoritmilor și se numără efectiv înmulțirile și împărțirile. Dacă
+   * formula și bucla se depărtează, barele din clip ar minți.
+   */
+
+  /** Eliminare gaussiană simplă + substituție înapoi, pe matricea extinsă. */
+  const numaraGauss = (n: number) => {
+    let c = 0;
+    for (let k = 1; k <= n - 1; k++) {
+      for (let i = k + 1; i <= n; i++) {
+        c += 1; // µ ← A[i][k] / A[k][k]
+        c += n - k; // A[i][j] −= µ·A[k][j], j = k+1 … n
+        c += 1; // b[i] −= µ·b[k]
+      }
+    }
+    for (let i = n; i >= 1; i--) {
+      c += n - i; // A[i][j]·x[j], j = i+1 … n
+      c += 1; // împărțirea la A[i][i]
+    }
+    return c;
+  };
+
+  /** Algorithm 5, numărat pe pașii pe care îi produce chiar modulul livrat. */
+  const numaraThomas = (n: number) => {
+    const sistem = {
+      a: Array.from({ length: n }, (_, i) => (i === 0 ? 0 : -1)),
+      b: Array.from({ length: n }, () => 4),
+      c: Array.from({ length: n }, (_, i) => (i === n - 1 ? 0 : -1)),
+      d: Array.from({ length: n }, () => 1),
+    };
+    const r = algoritmulThomas(sistem);
+    // 3 pe pas de eliminare (µ, bᵢ, dᵢ); 1 pentru xₙ; 2 pe pas de substituție.
+    return 3 * r.pasiEliminare.length + 1 + 2 * (r.pasiSubstitutie.length - 1);
+  };
+
+  for (const n of [3, 4, 5, 10, 20, 100]) {
+    verifica(
+      `n = ${n}: formula Gauss = bucla numărată`,
+      operatiiGauss(n) === numaraGauss(n),
+      `${operatiiGauss(n)} vs ${numaraGauss(n)}`,
+    );
+    verifica(
+      `n = ${n}: 5n − 4 = pașii lui Thomas numărați`,
+      operatiiThomas(n) === numaraThomas(n),
+      `${operatiiThomas(n)} vs ${numaraThomas(n)}`,
+    );
+  }
+
+  for (const c of COSTURI) {
+    verifica(
+      `n = ${c.n}: raportul e cel afișat`,
+      c.raport === c.gauss / c.thomas,
+      `${c.gauss} / ${c.thomas} = ${c.raport}`,
+    );
+    console.log(
+      `   n = ${c.n}: Gauss ${c.gauss}, Thomas ${c.thomas}, de ${Math.round(c.raport)} ori mai puține`,
+    );
+  }
 }
 
 console.log("");
