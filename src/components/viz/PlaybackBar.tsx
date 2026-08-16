@@ -54,10 +54,10 @@ export function PlaybackBar({
   /**
    * Cu un singur pas nu e nimic de derulat, deci redarea se stinge.
    *
-   * Nu e un caz teoretic: pe „valea rotundă" a paginii 7, κ = 1, direcția cea
-   * mai abruptă arată chiar spre soluție și metoda termină din primul pas. Un
-   * buton de redare activ care nu face nimic se citește ca defect, nu ca
-   * rezultat.
+   * Nu e un caz teoretic: o metodă poate să nimerească soluția din primul pas
+   * (coborârea pe gradient, când direcția cea mai abruptă arată chiar spre
+   * fundul văii). Un buton de redare activ care nu face nimic se citește ca
+   * defect, nu ca rezultat.
    */
   const unSingurPas = totalPasi === 1;
 
