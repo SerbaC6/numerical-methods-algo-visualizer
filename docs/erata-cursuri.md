@@ -468,3 +468,120 @@ construcția nodurilor și faptul că formulele deschise nu evaluează funcția 
 
 Verificarea e ținută ca test care trebuie să pice dacă cineva „repară" exponentul înapoi la 3:
 `scripts/verificare-algoritmi/newton-cotes.ts`, secțiunea 10.
+
+---
+
+## curs9, §2 — produsul din `l_k` pornește de la `x1`, iar `c_k` de la `x0`
+
+**Cursul scrie**, în două linii alăturate:
+
+```
+l_k(x) = c_k (x − x1)...(x − x_{k−1})(x − x_{k+1})...(x − xn)
+c_k    = 1 / [ (x_k − x0)...(x_k − x_{k−1})(x_k − x_{k+1})...(x_k − xn) ]
+```
+
+Produsul din prima linie începe la `x1`, iar cel din a doua la `x0`. Cele două nu descriu același
+polinom: pentru `k ≥ 1`, forma tipărită are cu un factor mai puțin decât numitorul, deci nici gradul
+nu iese `n`.
+
+**Verificare, pe fracții exacte**, cu nodurile `{0, 1, 3, 4}` și `x = 7/3`:
+
+| `k` | forma tipărită | forma închisă `Π_{i≠k}` |
+| --- | -------------- | ----------------------- |
+| 0   | `−10/81`       | `−10/81` — coincid      |
+| 1   | `5/27`         | `35/81`                 |
+| 2   | `10/27`        | `70/81`                 |
+| 3   | `−2/27`        | `−14/81`                |
+
+`k = 0` coincide întâmplător: acolo `x0` e chiar nodul sărit, deci lipsa lui nu se vede. La `k = 2`
+forma tipărită dă chiar `l_2(x_2) = 1/3`, deși condiția din care e dedusă cere `l_k(x_k) = 1`.
+
+**Ce s-a pus pe site.** Doar forma închisă, `l_k(x) = Π_{i=0, i≠k}^{n} (x − x_i)/(x_k − x_i)`, care
+e tot din §2 și trece toate verificările: `l_k(x_i) = δ_ik` și `Σ l_k ≡ 1`. **Concluzia cursului
+rămâne neatinsă** — e chiar formula pe care cursul o scrie imediat după, ca rezultat.
+
+Verificare: `scripts/verificare-algoritmi/interpolare-polinomiala.ts`, secțiunea 1.
+
+---
+
+## curs9, §4 — liniile intermediare ale identității lui Newton n-au produsul acumulat
+
+**Cursul scrie** șirul de egalități:
+
+```
+(x − x0)              · F1[x, x0]          = f(x) − f(x0)
+(x − x0)(x − x1)      · F2[x, x0, x1]      = F1[x, x0] − F1[x0, x1]
+(x − x0)(x − x1)(x − x2) · F3[x, x0, x1, x2] = F2[x, x0, x1] − F2[x0, x1, x2]
+```
+
+Prima linie e corectă. De la a doua în jos, în stânga apare produsul **întreg**, deși relația de
+recurență a diferențelor divizate cere doar ultimul factor.
+
+**Verificare, pe fracții exacte**, cu `f(x) = x⁵`, nodurile `{0, 1, 3, 4}` și `x = 7/3`:
+
+| mărime                                | valoare                     |
+| ------------------------------------- | --------------------------- |
+| `F1[x, x0] − F1[x0, x1]`              | `2320/81`                   |
+| `(x − x1)·F2[x, x0, x1]` (corect)     | `2320/81` ✓                 |
+| `(x − x0)(x − x1)·F2` (cum e tipărit) | `16240/243`                 |
+| raportul dintre ele                   | `7/3`, adică chiar `x − x0` |
+
+**Rezultatul final pe care cursul îl deduce din ele este exact.** Verificat pe aceleași fracții:
+`f(x) = P_n(x) + R_n(x)` se închide la egalitate, cu `P_n` scris în forma Newton și
+`R_n(x) = (x − x0)...(x − x_n)·F_{n+1}[x, x0, ..., x_n]`.
+
+**Ce s-a pus pe site.** Doar rezultatul — definiția recursivă a lui `F_p` și teorema erorii din
+finalul secțiunii. Pașii intermediari ai deducerii nu apar pe pagină.
+
+---
+
+## curs9, §7 — derivata multiplicatorului Lagrange
+
+**Cursul scrie:**
+
+```
+l'_k(x) = Π_{i=0, i≠k}^{n} 1/(x_k − x_i)
+```
+
+Fals. Derivata unui produs de `n` factori are `n` termeni, nu unul singur; valoarea corectă în nodul
+propriu e `l'_k(x_k) = Σ_{j≠k} 1/(x_k − x_j)`.
+
+**Verificare, pe fracții exacte**, plus control prin raport finit (`(l_k(x_k + ε) − 1)/ε`):
+
+| noduri         | `k` | tipărit în curs | corect   |
+| -------------- | --- | --------------- | -------- |
+| `{0, 1, 3, 4}` | 0   | `−1/12`         | `−19/12` |
+| `{0, 1, 3, 4}` | 1   | `1/6`           | `1/6` ⚠  |
+| `{0, 1, 2, 5}` | 2   | `−1/6`          | `7/6`    |
+| `{−1, 0, 2}`   | 0   | `1/3`           | `−4/3`   |
+
+Rândul marcat coincide **din întâmplare** — exact genul de potrivire care ascunde greșeala dacă se
+verifică un singur set de noduri.
+
+**Ce s-a pus pe site.** Nimic: interpolarea Hermite n-are card pe pagina 12, iar `l'_k` nu apare
+nicăieri. **Concluzia cursului rămâne neatinsă**, fiindcă formula nu e folosită mai departe în ce
+se afișează.
+
+---
+
+## curs9, §10 — eticheta „SPLINE de clasă C1 — polinoame liniare"
+
+**Cursul intitulează** secțiunea „SPLINE de clasă C1", dar condițiile enumerate chiar acolo sunt
+doar interpolarea și racordarea valorii:
+
+```
+p_i(x_{i+1}) = p_{i+1}(x_{i+1}),   i = 0 : n−2
+```
+
+adică **C⁰**. Derivata nu e cerută continuă, și nici nu iese așa: pantele `a_i` sunt raportul
+creșterilor pe fiecare subinterval, deci diferă între ele.
+
+**Verificare**, cu nodurile `(−2; 3), (−1; −1), (1; 2), (2; 2)`: pantele ies `−4`, `3/2`, `0` —
+trei valori diferite, deci derivata sare în fiecare nod interior. O funcție de clasă C¹ n-ar putea
+face asta.
+
+**Ce s-a pus pe site.** **Condițiile**, nu eticheta: pagina 12 scrie cele două formule ale lui `a_i`
+și `b_i` din §10 și spune că spline-ul liniar n-are rupturi, dar are colțuri. Formulele sunt exact
+cele din curs și trec verificarea (fiecare bucată trece prin capetele ei).
+
+Verificare: `scripts/verificare-algoritmi/interpolare-polinomiala.ts`, secțiunea 5.

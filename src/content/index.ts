@@ -7,6 +7,7 @@ import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
 import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
 import { continutFactorizariLu } from "@/content/factorizari-lu";
 import { continutFft } from "@/content/fft";
+import { continutInterpolarePolinomiala } from "@/content/interpolare-polinomiala";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
 import { continutMetodelePuterii } from "@/content/metodele-puterii";
 import { continutMetodeIterative } from "@/content/metode-iterative";
@@ -32,6 +33,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "eliminare-gaussiana": continutEliminareGaussiana,
   "factorizari-lu": continutFactorizariLu,
   fft: continutFft,
+  "interpolare-polinomiala": continutInterpolarePolinomiala,
   "metode-iterative": continutMetodeIterative,
   "newton-cotes": continutNewtonCotes,
   "metodele-puterii": continutMetodelePuterii,

@@ -11,6 +11,7 @@ import { AnimatiaGivens } from "@/components/content/AnimatiaGivens";
 import { AnimatiaHouseholder } from "@/components/content/AnimatiaHouseholder";
 import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaEliminariiGaussiene";
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
+import { AnimatiaInterpolarii } from "@/components/content/AnimatiaInterpolarii";
 import { AnimatiaThomas } from "@/components/content/AnimatiaThomas";
 import { InterfataDerivareNumerica } from "@/components/content/InterfataDerivareNumerica";
 import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonalitate";
@@ -21,6 +22,7 @@ import { InterfataMetodelorPuterii } from "@/components/content/InterfataMetodel
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataEliminareGaussiana } from "@/components/content/InterfataEliminareGaussiana";
+import { InterfataInterpolare } from "@/components/content/InterfataInterpolare";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
 import { InterfataNewtonCotes } from "@/components/content/InterfataNewtonCotes";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
@@ -86,6 +88,10 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },
+  "interpolare-polinomiala": {
+    vizual: AnimatiaInterpolarii,
+    interactiv: InterfataInterpolare,
+  },
   "curbe-bezier": { vizual: AnimatiaBezier, interactiv: InterfataBezier },
   "derivare-numerica": { interactiv: InterfataDerivareNumerica },
   "newton-cotes": { interactiv: InterfataNewtonCotes },
