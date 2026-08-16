@@ -476,9 +476,14 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Etapa 2 — pagini medii (cer o primitivă nouă fiecare)
 
-- [ ] **Pagina 17 — `cuadraturi-adaptive-si-gaussiene`**. `Plot` pentru intervalul care se
-      înjumătățește la Simpson adaptiv și pentru nodurile neechidistante Gaussiene. Primitivă
-      nouă: subdiviziunea recursivă desenată fără să devină o pădure de linii.
+- [x] **Pagina 17 — `cuadraturi-adaptive-si-gaussiene`**. Interfața are două file pe **aceeași**
+      funcție și același interval, fiindcă acolo e lecția: adaptivul îndeasă panouri unde funcția
+      se mișcă, Gauss mută nodurile în interiorul aceluiași interval. Primitiva nouă e
+      `PlotBandaRecursie` — arborele de tăieri ca **benzi suprapuse** în josul graficului, un rând
+      pe nivel; linii verticale peste desen ar fi acoperit tocmai curba. Pe amândouă filele,
+      **figura desenată e chiar aproximarea** (arcele lui Simpson, respectiv aria de sub polinomul
+      prin noduri), verificat numeric. Graficul ține toată lățimea ramei, cu parametrii dedesubt.
+      **Fără secțiune „Vizual", prin decizie** — vezi lista de mai jos.
 - [x] **Pagina 18 — `ecuatii-diferentiale`** (Cauchy, Euler, Runge-Kutta). Clipul
       (`AnimatiaEcuatiilorDiferentiale`) pornește de la **câmpul de direcții** — „albia" prin care
       curg soluțiile —, trece prin Euler pas cu pas și se închide cu RK4. Câmpul se eșantionează în
@@ -601,6 +606,9 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
 
 - **pagina 15** (`derivare-numerica`) — clipul a fost construit și **scos la cerere**; pagina
   rămâne cu interfața interactivă, unde pasul se trage cu mâna.
+- **pagina 17** (`cuadraturi-adaptive-si-gaussiene`) — cele două metode se înțeleg trăgând de
+  toleranță și de numărul de noduri, iar recursia se derulează oricum pas cu pas în interfață. Un
+  clip ar arăta exact ce face interfața, doar că fără să-l poți opri unde vrei.
 - **pagina 6** (`ecuatii-neliniare`) — doar interfața interactivă. Bisecția se înțelege trăgând de
   capetele intervalului, iar un film ar arăta exact ce face interfața, doar că fără să-l poți opri.
   Secțiunea „Vizual" **nu există** acolo: fără schelet, fără text de așteptare — vezi regula despre

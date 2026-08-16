@@ -14,6 +14,7 @@ import { AnimatiaEliminariiGaussiene } from "@/components/content/AnimatiaElimin
 import { AnimatiaFactorizariiLu } from "@/components/content/AnimatiaFactorizariiLu";
 import { AnimatiaInterpolarii } from "@/components/content/AnimatiaInterpolarii";
 import { AnimatiaThomas } from "@/components/content/AnimatiaThomas";
+import { InterfataCuadraturi } from "@/components/content/InterfataCuadraturi";
 import { InterfataDerivareNumerica } from "@/components/content/InterfataDerivareNumerica";
 import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonalitate";
 import { AnimatiaMetodelorIterative } from "@/components/content/AnimatiaMetodelorIterative";
@@ -97,6 +98,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   "derivare-numerica": { interactiv: InterfataDerivareNumerica },
   "newton-cotes": { interactiv: InterfataNewtonCotes },
   "ecuatii-diferentiale": { vizual: AnimatiaEcuatiilorDiferentiale },
+  "cuadraturi-adaptive-si-gaussiene": { interactiv: InterfataCuadraturi },
   fft: { vizual: VideoFft },
 };
 

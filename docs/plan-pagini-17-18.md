@@ -56,14 +56,14 @@ se taie la mijloc").
 Cinci funcții în dropdown, fiecare aleasă ca să arate un lucru și numai unul. Toate cifrele de mai
 jos sunt măsurate, nu estimate:
 
-| Funcția                              | Ce arată                                                                                                                                                                                     |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `e⁻³ˣ·sin 4x` pe `[0; 4]`            | **Cazul care justifică adaptivul.** La `ε = 10⁻⁶`, recursia se oprește cu 24 de panouri: 8 stau în `[0; 0,5]`, unde funcția oscilează, și doar 4 în `[2; 4]`, unde e practic plată.          |
-| aceeași, comparată cu Simpson compus | Adaptivul atinge eroarea `1,9·10⁻⁷` cu 24 de panouri; Simpson compus cu pas uniform are nevoie de `N = 128` ca să ajungă la `2,4·10⁻⁷`. Aceeași precizie, de câteva ori mai puține evaluări. |
-| `x³ − 2x` pe `[0; 2]`                | **Cazul care justifică Gauss.** Cu 3 puncte echidistante, trapezele greșesc cu `1,0`; Gauss cu **2** noduri dă exact — gradul de valabilitate `2n − 1 = 3`.                                  |
-| `eˣ` pe `[0; 1]`                     | Gauss cu 2 noduri (`3,9·10⁻⁴`) bate Simpson cu 3 noduri (`5,8·10⁻⁴`); cu 3 noduri, Gauss coboară la `8,2·10⁻⁷`.                                                                              |
-| `sin x` pe `[0; π]`                  | Diferența cea mai mare: Simpson pe 3 puncte greșește cu `9,4·10⁻²`, Gauss pe 3 noduri cu `1,4·10⁻³`.                                                                                         |
-| `1/x` pe `[1; 2]`                    | Funcție netedă, dar cu variație mare la stânga: adaptivul își pune panourile spre `x = 1`, iar Gauss cu 5 noduri ajunge la `2,3·10⁻⁸`.                                                       |
+| Funcția                              | Ce arată                                                                                                                                                                              |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `e⁻³ˣ·sin 4x` pe `[0; 4]`            | **Cazul care justifică adaptivul.** La `ε = 10⁻⁶`, recursia se oprește cu 24 de panouri: 8 stau în `[0; 0,5]`, unde funcția oscilează, și doar 4 în `[2; 4]`, unde e practic plată.   |
+| aceeași, comparată cu Simpson compus | La `ε = 10⁻⁶`, adaptivul ajunge la eroarea `5,6·10⁻⁸` cu **97 de evaluări**; Simpson cu pas uniform are nevoie de 128 de panouri, adică **257 de evaluări**, pentru aceeași precizie. |
+| `x³ − 2x` pe `[0; 2]`                | **Cazul care justifică Gauss.** Cu 3 puncte echidistante, trapezele greșesc cu `1,0`; Gauss cu **2** noduri dă exact — gradul de valabilitate `2n − 1 = 3`.                           |
+| `eˣ` pe `[0; 1]`                     | Gauss cu 2 noduri (`3,9·10⁻⁴`) bate Simpson cu 3 noduri (`5,8·10⁻⁴`); cu 3 noduri, Gauss coboară la `8,2·10⁻⁷`.                                                                       |
+| `sin x` pe `[0; π]`                  | Diferența cea mai mare: Simpson pe 3 puncte greșește cu `9,4·10⁻²`, Gauss pe 3 noduri cu `1,4·10⁻³`.                                                                                  |
+| `1/x` pe `[1; 2]`                    | Funcție netedă, dar cu variație mare la stânga: adaptivul își pune panourile spre `x = 1`, iar Gauss cu 5 noduri ajunge la `2,3·10⁻⁸`.                                                |
 
 Ce trebuie să rămână cititorului, spus prin desen și cifre, nu prin paragraf: **adaptivul pune
 efortul unde e nevoie de el; Gauss cumpără două grade de exactitate cu același număr de evaluări.**
@@ -210,6 +210,21 @@ h·f(tᵢ, wᵢ)`, ce se aruncă și cât costă. Aici se spune și de ce e impo
 - primii patru pași Euler cu `h = 0,5`, cifră cu cifră, față de calculul de mână.
 
 ---
+
+## Ce s-a schimbat față de plan, la execuție
+
+- **Adaptivul reține valorile lui `f`.** Fără asta, cele cinci puncte ale unui interval erau
+  numărate din nou la fiecare jumătate, iar metoda ieșea _mai scumpă_ decât pasul uniform: 423 de
+  evaluări față de 257. Cu reținere: 97 față de 257. Măsurătoarea a prins-o, nu ochiul.
+- **Adaptivul nu respectă toleranța pe `√x`** — derivata a patra e nemărginită în zero, deci
+  estimarea de eroare se înșală și metoda se oprește prea devreme (eroarea urcă la ~3,6·ε). Nu s-a
+  ascuns: e măsurată în script și scrisă pe pagină, într-un callout.
+- **Gauss merge doar până la `n = 4`**, fiindcă atâtea polinoame Legendre monice dă cursul. Nodurile
+  nu sunt copiate din niciun tabel: sunt rădăcinile polinoamelor din curs, găsite prin bisecție, iar
+  ponderile ies din integrala Lagrange, calculată exact pe coeficienți.
+- **Pagina 18 n-a primit `PlotCampDirectii` ca piesă din `viz/`**: fără secțiune „Interactiv",
+  câmpul de direcții apare doar în clip, iar clipurile își desenează singure SVG-ul. Eșantionarea
+  a rămas totuși în `src/algorithms/`, verificabilă.
 
 ## Ordinea de lucru propusă
 

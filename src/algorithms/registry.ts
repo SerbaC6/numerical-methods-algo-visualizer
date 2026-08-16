@@ -400,7 +400,11 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     ],
     dificultate: "greu",
     cursSursa: ["romberg-cuadraturi-gaussiene_curs12.md"],
-    gata: false,
+    // Fără secțiune „Vizual", prin decizie: cele două metode se înțeleg trăgând
+    // de toleranță și de numărul de noduri, iar un clip ar arăta exact ce face
+    // interfața, doar că fără să-l poți opri unde vrei.
+    clip: false,
+    gata: true,
   },
   {
     slug: "ecuatii-diferentiale",

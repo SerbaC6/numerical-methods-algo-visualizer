@@ -2,6 +2,7 @@ import { continutDerivareNumerica } from "@/content/derivare-numerica";
 import { continutDvs } from "@/content/dvs";
 import { continutAlgoritmulQr } from "@/content/algoritmul-qr";
 import { continutAlgoritmulThomas } from "@/content/algoritmul-thomas";
+import { continutCuadraturi } from "@/content/cuadraturi-adaptive-si-gaussiene";
 import { continutCurbeBezier } from "@/content/curbe-bezier";
 import { continutEcuatiiDiferentiale } from "@/content/ecuatii-diferentiale";
 import { continutEcuatiiNeliniare } from "@/content/ecuatii-neliniare";
@@ -29,6 +30,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   dvs: continutDvs,
   "algoritmul-qr": continutAlgoritmulQr,
   "algoritmul-thomas": continutAlgoritmulThomas,
+  "cuadraturi-adaptive-si-gaussiene": continutCuadraturi,
   "curbe-bezier": continutCurbeBezier,
   "ecuatii-diferentiale": continutEcuatiiDiferentiale,
   "ecuatii-neliniare": continutEcuatiiNeliniare,

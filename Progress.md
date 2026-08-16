@@ -535,7 +535,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube  | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
 | 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic        | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic        | [x]     | [ ]  | [x]  | [x]        | [ ]   | [ ]  |
-| 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic        | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic        | [x]     | n/a  | [x]  | [x]        | [ ]   | [ ]  |
 | 18  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | câmp direcții | [x]     | [x]  | [x]  | n/a        | [x]   | [ ]  |
 
 ### Modificări transversale la clipuri
