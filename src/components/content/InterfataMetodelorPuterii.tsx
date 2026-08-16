@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { IterationTable } from "@/components/viz/IterationTable";
+import { AceeasiInaltime } from "@/components/viz/AceeasiInaltime";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { Notatie } from "@/components/viz/Notatie";
 import { NumberInput } from "@/components/viz/NumberInput";
@@ -206,25 +207,25 @@ export function InterfataMetodelorPuterii() {
               ))}
             </div>
 
-            {/* Deplasarea e numai a puterii inverse, dar locul ei rămâne ocupat
-                pe celelalte două taburi: altfel panoul — și cu el tot blocul —
-                s-ar scurta cu un câmp la fiecare schimbare de tab. Un control
-                inert ar fi fost mai rău decât un loc gol, de aceea e ascuns,
-                nu dezactivat. */}
-            <div
-              aria-hidden={metoda !== "inversa"}
-              className={metoda === "inversa" ? "" : "invisible"}
-            >
-              <NumberInput
-                eticheta="q"
-                valoare={q}
-                onChange={(x) => {
-                  setQ(x === "" ? 0 : x);
-                  derulare.setPas(0);
-                }}
-                pas={0.1}
-              />
-            </div>
+            {/* Deplasarea e numai a puterii inverse, dar locul ei rămâne
+                ocupat pe celelalte două taburi: altfel panoul — și cu el tot
+                blocul — s-ar scurta cu un câmp la fiecare schimbare de tab. */}
+            <AceeasiInaltime
+              activa={metoda === "inversa" ? 0 : 1}
+              variante={[
+                <NumberInput
+                  key="q"
+                  eticheta="q"
+                  valoare={q}
+                  onChange={(x) => {
+                    setQ(x === "" ? 0 : x);
+                    derulare.setPas(0);
+                  }}
+                  pas={0.1}
+                />,
+                <div key="gol" />,
+              ]}
+            />
 
             <NumberInput
               eticheta="Toleranța"
