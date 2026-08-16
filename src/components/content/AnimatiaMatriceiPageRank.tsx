@@ -626,11 +626,9 @@ const SUBTITRARI = [
 /**
  * Clipul paginii 9: de la graful de link-uri la clasamentul PageRank.
  *
- * **Clip scris în cod, nu randat cu Manim** — a treia excepție de la regula din
- * `CLAUDE.md`, după paginile 6 și 7, și din același motiv: animația a venit gata
- * făcută ca animație web (`Matricea PageRank.html`) și s-a portat ca atare. Ca
- * orice clip, **nu** primește parametrii utilizatorului: `d` e fixat la 0,85,
- * iar sliderul e al interfeței interactive de sub el.
+ * **Portat dintr-o animație web gata făcută** (`animatii-sursa/Matricea PageRank.html`),
+ * rescris ca scenă pe ceasul `Clip`. Ca orice clip, **nu** primește parametrii
+ * utilizatorului: `d` e fixat la 0,85.
  *
  * **Toate cifrele vin din `src/algorithms/pagerank/`**, aceleași module pe care
  * le folosește interfața — altfel clipul ar putea arăta un clasament, iar

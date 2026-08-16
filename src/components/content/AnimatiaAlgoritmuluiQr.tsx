@@ -894,11 +894,9 @@ const SUBTITRARI = [
 /**
  * Clipul paginii 10: cum ajunge algoritmul QR la toate valorile proprii deodată.
  *
- * **Clip scris în cod, nu randat cu Manim** — aceeași excepție de la regula din
- * `CLAUDE.md` ca la paginile 7, 9 și 11, și din același motiv: animația a venit
- * gata făcută ca animație web (`Algoritmul QR.html`) și s-a portat ca atare. Ca
- * orice clip, **nu** primește parametrii utilizatorului: matricea desenată e
- * simbolică și fixă.
+ * **Portat dintr-o animație web gata făcută** (`animatii-sursa/Algoritmul QR.html`),
+ * rescris ca scenă pe ceasul `Clip`. Ca orice clip, **nu** primește parametrii
+ * utilizatorului: matricea desenată e simbolică și fixă.
  *
  * Față de originalul de pe fundal alb, culorile vin din `viz-roles.ts`, deci
  * clipul se vede corect în ambele teme, iar cifrele din celule folosesc

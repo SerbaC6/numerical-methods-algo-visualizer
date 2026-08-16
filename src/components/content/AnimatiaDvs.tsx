@@ -611,11 +611,9 @@ const SUBTITRARI = [
 /**
  * Clipul paginii 11: ce face, geometric, fiecare dintre cele trei matrice ale DVS.
  *
- * **Clip scris în cod, nu randat cu Manim** — a patra excepție de la regula din
- * `CLAUDE.md`, după paginile 6, 7 și 9, și din același motiv: animația a venit
- * gata făcută ca animație web (`Animatie DVS.html`) și s-a portat ca atare. Ca
- * orice clip, **nu** primește parametrii utilizatorului: transformarea desenată
- * e fixă.
+ * **Portat dintr-o animație web gata făcută** (`animatii-sursa/Animatie DVS.html`),
+ * rescris ca scenă pe ceasul `Clip`. Ca orice clip, **nu** primește parametrii
+ * utilizatorului: transformarea desenată e fixă.
  *
  * Față de originalul de pe fundal alb, culorile vin din `viz-roles.ts`, deci
  * clipul se vede corect în ambele teme, iar textele desenului folosesc

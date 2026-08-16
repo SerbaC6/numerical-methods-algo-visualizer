@@ -1304,11 +1304,9 @@ const SUBTITRARI = [
  * Clipul paginii 1: de ce nu se folosește regula lui Cramer și ce aduce, în
  * locul ei, factorizarea `A = L · U`.
  *
- * **Clip scris în cod, nu randat cu Manim** — a cincea excepție de la regula din
- * `CLAUDE.md`, după paginile 6, 7, 9 și 11, și din același motiv: animația a
- * venit gata făcută ca animație web (`Animatie_LU.html`) și s-a portat ca atare.
- * Ca orice clip, **nu** primește parametrii utilizatorului: exemplul desenat e
- * fix.
+ * **Portat dintr-o animație web gata făcută** (`animatii-sursa/Animatie_LU.html`),
+ * rescris ca scenă pe ceasul `Clip`. Ca orice clip, **nu** primește parametrii
+ * utilizatorului: exemplul desenat e fix.
  *
  * Față de originalul cu paletă proprie, culorile vin din `viz-roles.ts`, deci
  * clipul se vede corect în ambele teme, iar textele desenului folosesc
