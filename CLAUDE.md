@@ -487,9 +487,16 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 
 ### Etapa 3 — pagini grele (primitive scumpe, de atacat la final)
 
-- [ ] **Pagina 8 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație).
-      `MatrixGrid` + vector care converge la direcția proprie. Două feluri de desen pe aceeași
-      pagină, sincronizate pe același `steps[]`.
+- [x] **Pagina 8 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație). Clipul
+      (`AnimatiaMetodelorPuterii`) lucrează **în plan**, pe `A = [[3,1],[1,3]]`, cu valorile proprii
+      exacte 4 și 2 pe cele două diagonale: acolo iterația se vede ca o săgeată care se rotește, ceea
+      ce o matrice 3×3 n-ar arăta fără o proiecție scrisă de mână. Interfața
+      (`InterfataMetodelorPuterii`) are trei taburi pe aceeași matrice editabilă 3×3 — directă,
+      inversă cu deplasare, Rayleigh —, cu barele componentelor lui `v⁽ᵏ⁾` peste cele ale pasului
+      dinainte. **Deflația rămâne doar în teorie**, prin decizie: nu e o iterație care se derulează,
+      ci o schimbare a matricei între două rulări, iar un tab lângă celelalte trei ar face-o să pară
+      altceva decât e. Matematica ei stă totuși în `src/algorithms/metodele-puterii/` și e verificată
+      numeric, ca formulele din teorie să se poată garanta.
 - [ ] **Pagina 9 — `pagerank`**. `MatrixGrid` pentru matricea stocastică + **graf cu noduri și
       muchii** — primitivă nouă, și singurul loc din site care o cere. Iterația e chiar metoda
       puterii de la pagina 8, deci se face după ea.

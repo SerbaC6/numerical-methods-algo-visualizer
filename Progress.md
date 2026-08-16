@@ -526,7 +526,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice      | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval     | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
-| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | matrice      | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | plan vectori | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf | [x]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
 | 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice      | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
 | 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă  | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
