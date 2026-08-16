@@ -61,7 +61,14 @@ export const continutNewtonCotes: ContinutPagina = {
             legenda: [
               { simbol: "xᵢ", sens: <>nodurile: punctele în care se evaluează funcția</> },
               { simbol: "Aᵢ", sens: <>ponderile, integralele multiplicatorilor Lagrange</> },
-              { simbol: "lᵢ", sens: <>multiplicatorul Lagrange al nodului i</> },
+              {
+                simbol: "lᵢ",
+                sens: (
+                  <>
+                    multiplicatorul Lagrange al nodului <Mate>i</Mate>
+                  </>
+                ),
+              },
             ],
             explicatie: (
               <>
@@ -130,11 +137,22 @@ export const continutNewtonCotes: ContinutPagina = {
               "\\int_a^b f(x)\\,dx = \\frac{h}{2}\\left[f(a) + f(b)\\right] - \\frac{h^3 f''(\\xi)}{12}, \\qquad h = b-a",
             sursa: "curs 11, formula trapezelor",
             legenda: [
-              { simbol: "h", sens: <>lungimea intervalului, aici chiar b − a</> },
+              {
+                simbol: "h",
+                sens: (
+                  <>
+                    lungimea intervalului, aici chiar <Mate>b − a</Mate>
+                  </>
+                ),
+              },
               { simbol: "ξ", sens: <>un punct din interval, necunoscut, dar existent</> },
               {
                 simbol: "−h³f″(ξ)/12",
-                sens: <>eroarea: dispare când f″ e nulă, adică pe drepte</>,
+                sens: (
+                  <>
+                    eroarea: dispare când <Mate>f″</Mate> e nulă, adică pe drepte
+                  </>
+                ),
               },
             ],
             explicatie: (
@@ -205,7 +223,14 @@ export const continutNewtonCotes: ContinutPagina = {
             sursa: "curs 11, formula compusă a trapezelor",
             subtitlu: "Trapeze",
             legenda: [
-              { simbol: "N", sens: <>în câte subintervale se taie [a, b]</> },
+              {
+                simbol: "N",
+                sens: (
+                  <>
+                    în câte subintervale se taie <Mate>[a, b]</Mate>
+                  </>
+                ),
+              },
               { simbol: "2", sens: <>nodurile interioare aparțin la câte două trapeze</> },
             ],
             explicatie: (
