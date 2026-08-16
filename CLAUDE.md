@@ -268,7 +268,7 @@ validare de suprafață; parserul adevărat vine în Faza 4.
 | `#2C444C` | `--color-ardezie`  | suprafețe pe tema luminoasă; grila din grafice                    |
 | `#A8C4EC` | `--color-cer`      | text pe fundal închis, grilă și etichete de axe                   |
 | `#06457F` | `--color-adanc`    | accent apăsat — hover/active, interval evidențiat                 |
-| `#262B40` | `--color-noapte`   | fundalul temei întunecate (tema implicită)                        |
+| `#262B40` | `--color-noapte`   | baza temei întunecate — fundalul și suprafețele se derivă din ea  |
 
 #### Vermillionul pivotului — `--viz-pivot` (aprobat explicit)
 
@@ -387,9 +387,9 @@ componente din shadcn/Magic UI/Aceternity fără să le rescrii.
 
 Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-curent`), nu hexul brut.
 
-- Tema implicită e cea **întunecată**; `:root` conține deja valorile închise, ca pagina să nu
+- Tema implicită e cea **luminoasă**; `:root` conține deja valorile deschise, ca pagina să nu
   pâlpâie înainte să ruleze JS-ul (`initTheme()` din `src/hooks/use-theme.ts`, apelat în `main.tsx`).
-  Există și temă deschisă (`.light`) — orice componentă nouă se verifică în ambele.
+  Există și temă închisă (`.dark`) — orice componentă nouă se verifică în ambele.
 - Culorile de vizualizare au rol semantic fix: `--viz-curent` = iterația curentă,
   `--viz-anterior` = iterații anterioare, `--viz-functie` = curba, `--viz-grila` = grilă/adnotări,
   `--viz-interval` = zona evidențiată (și linia activă dintr-o matrice), `--viz-solutie` = soluția,
