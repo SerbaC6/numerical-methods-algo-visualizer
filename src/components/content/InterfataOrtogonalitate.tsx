@@ -8,6 +8,7 @@ import { Callout } from "@/components/content/Callout";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
+import { AceeasiInaltime } from "@/components/viz/AceeasiInaltime";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { MatrixGrid } from "@/components/viz/MatrixGrid";
 import { Notatie } from "@/components/viz/Notatie";
@@ -107,7 +108,17 @@ export function InterfataOrtogonalitate() {
 
   return (
     <div className="flex flex-col gap-10">
-      <Legend elemente={esteHh ? LEGENDA_HH : LEGENDA_GV} />
+      {/* Reflexia are o intrare în plus față de rotație — dreapta de
+          oglindire, care la Givens nu există. Legendele rămân ce sunt; se
+          egalizează doar spațiul, ca blocul să nu se scurteze la schimbarea
+          tabului. */}
+      <AceeasiInaltime
+        activa={esteHh ? 0 : 1}
+        variante={[
+          <Legend key="hh" elemente={LEGENDA_HH} />,
+          <Legend key="gv" elemente={LEGENDA_GV} />,
+        ]}
+      />
 
       {/* Imediat sub legendă, nu la capătul paginii: e cheia de citire a
           desenului, deci trebuie citită **înainte** de a trage de vector. */}
