@@ -27,9 +27,9 @@ timpul autorat `T`, cu scenele declarate într-o listă și coregrafia scrisă f
 din ea (`repere()` din [`src/lib/compozitie.ts`](../../lib/compozitie.ts)). Nimic nu se montează la
 granița dintre scene, deci un element poate traversa granița prin interpolare.
 
-Se folosește pentru secțiunea „Vizual" atunci când clipul e scris în cod, nu randat cu Manim — vezi
-excepția paginii 7 din `CLAUDE.md`. Un clip **nu** primește parametrii utilizatorului; când e nevoie
-de asta, e vorba de interfața interactivă, adică de `Plot`/`MatrixGrid`.
+Se folosește pentru secțiunea „Vizual", singura de care răspunde: clipurile se scriu **în cod**, ca
+funcție pură de timp. Un clip **nu** primește parametrii utilizatorului; când e nevoie de asta, e
+vorba de interfața interactivă, adică de `Plot`/`MatrixGrid`.
 
 `Plot` se compune din **straturi cu nume**, nu din proprietăți (regula 10 din
 [`docs/referinte.md`](../../../docs/referinte.md)). Fiecare strat își ia scara din context, deci o
