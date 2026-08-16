@@ -376,6 +376,11 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     ],
     dificultate: "ușor",
     cursSursa: ["derivare-integrare-numerica_curs11.md"],
+    // Fără secțiune „Vizual" cât timp clipul nu e scris. Scheletul care ținea
+    // locul era tocmai lucrul pe care regula stărilor de progres îl interzice:
+    // o casetă goală în capul paginii spune tăcut „aici lipsește ceva". Evidența
+    // a ce urmează stă în `Progress.md`; steagul se scoate când apare clipul.
+    clip: false,
     gata: false,
   },
   {

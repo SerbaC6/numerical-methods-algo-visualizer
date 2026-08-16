@@ -712,8 +712,11 @@ Ce **nu** e făcut, prin decizie deocamdată:
 
 Ce **nu** e verificat încă:
 
-- [ ] **Clipul din secțiunea „Vizual".** Cerut explicit sărit la runda asta; secțiunea rămâne
-      deocamdată schelet tăcut, ca la orice pagină neterminată.
+- [ ] **Clipul din secțiunea „Vizual".** Cerut explicit sărit la runda asta. Pagina are între timp
+      `clip: false` în registru, deci secțiunea **lipsește cu totul**: scheletul care îi ținea locul
+      era chiar ce interzice regula stărilor de progres — o casetă goală în capul paginii care
+      spune tăcut că lipsește ceva. Steagul se scoate din registru odată cu clipul; până atunci,
+      rândul ăsta e singura evidență că mai e ceva de făcut.
 - [ ] **Verificare cu ochiul, în browser.** Nimic din interfață n-a fost văzut pe ecran: nici
       încadrarea desenului, nici hașura ariei sub curbă, nici înălțimea blocurilor la schimbarea
       filei. De verificat în ambele teme, în portret și în peisaj.
