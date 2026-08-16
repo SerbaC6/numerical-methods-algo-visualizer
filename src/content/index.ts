@@ -8,6 +8,7 @@ import { continutEliminareGaussiana } from "@/content/eliminare-gaussiana";
 import { continutFactorizariLu } from "@/content/factorizari-lu";
 import { continutFft } from "@/content/fft";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
+import { continutMetodelePuterii } from "@/content/metodele-puterii";
 import { continutMetodeIterative } from "@/content/metode-iterative";
 import { continutNormeSiOrtogonalitate } from "@/content/norme-si-ortogonalitate";
 import { continutPagerank } from "@/content/pagerank";
@@ -31,6 +32,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "factorizari-lu": continutFactorizariLu,
   fft: continutFft,
   "metode-iterative": continutMetodeIterative,
+  "metodele-puterii": continutMetodelePuterii,
   "norme-si-ortogonalitate": continutNormeSiOrtogonalitate,
   "metode-de-gradient": continutMetodeDeGradient,
   pagerank: continutPagerank,
