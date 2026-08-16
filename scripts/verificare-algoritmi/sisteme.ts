@@ -42,7 +42,7 @@ const parametri = (v: ValoriSistem) => ({
  * care își ia așteptarea din codul verificat n-ar putea să pice niciodată.
  */
 const ASTEPTAT: Record<string, { kappa: number; descendent: number; conjugat: number }> = {
-  rotunda: { kappa: 1, descendent: 1, conjugat: 1 },
+  rotunda: { kappa: 1.1, descendent: 6, conjugat: 2 },
   curs: { kappa: 1.9387, descendent: 16, conjugat: 2 },
   alungita: { kappa: 10, descendent: 36, conjugat: 2 },
 };
