@@ -78,6 +78,12 @@
      Albastrul estompat #5379AE ar da doar 4,23:1 — nu trece AA. */
   --accent-slab: var(--color-safir);
   --bordura: color-mix(in oklab, var(--color-estompat) 35%, transparent);
+  /* Bordura stărilor interactive. Pe tema luminoasă e doar mai apăsată;
+     haloul de mai jos rămâne fără efect vizibil, fiindcă pe fundal deschis
+     lumina nu spune nimic — acolo stările se citesc din umbră și din bordură. */
+  --bordura-tare: color-mix(in oklab, var(--color-estompat) 70%, transparent);
+  --halou: none;
+  --halou-focus: none;
 
   /* Roluri de vizualizare — folosite de grafice ȘI de scenele Manim */
   --viz-functie: var(--color-adanc);
@@ -162,26 +168,47 @@
 }
 
 .dark {
-  --fundal: var(--color-noapte);
-  --fundal-ridicat: color-mix(in oklab, var(--color-noapte) 82%, #ffffff);
-  /* Suprafața temei întunecate NU e ardezia. Ardezia (#2C444C) e pe hue 195,
-     adică albastru-verde: pusă ca fundal de card, lângă un fundal albastru
-     curat (noapte, hue 228), citea ca verde în fiecare căsuță de pe site.
-     Derivata de mai jos stă pe hue 221 — albastru, ca restul temei — și e chiar
-     un pic mai deschisă decât ardezia (L 0,053 față de 0,052).
-     Mai deschisă de atât **nu se poate**, oricât ar cere ochiul: eticheta
-     pivotului (#FF8E74) ajunge la exact 4,55:1 aici, iar pragul e 4,5:1. Un
-     card alb ar duce textul (#EEF3FB) la 1,02:1, adică invizibil.
+  /* ── Fundalul: negru colorat, nu negru pur și nici bleumarinul de dinainte ──
+     Trei trepte, toate derivate din noapte (hue 228), deci tema rămâne
+     albastră, nu gri. Negrul pur (#000) e evitat intenționat: obosește ochiul
+     și taie orice senzație de adâncime — treapta cea mai de jos e #101320,
+     adică un negru cu tentă de safir.
+     Randate: fundal #101320, suprafață #242C41, ridicat #2A334B — popover-ul
+     stă cu o treaptă peste card, cardul cu o treaptă peste pagină. Hexurile
+     astea sunt cele din scripts/verifica-contrast.py; dacă amestecurile de
+     aici se schimbă, se schimbă și acolo. */
+  --fundal: color-mix(in oklab, var(--color-noapte) 65%, #000000);
+  --fundal-ridicat: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--color-noapte) 82%, var(--color-estompat)) 94%,
+    #000000
+  );
+  /* Suprafața NU e ardezia. Ardezia (#2C444C) e pe hue 195, adică
+     albastru-verde: pusă ca fundal de card, lângă un fundal albastru curat,
+     citea ca verde în fiecare căsuță de pe site. Derivata de mai jos rămâne
+     albastră și stă cu o treaptă peste fundal — atât cât cardul să se ridice
+     de pe pagină fără să devină o pată deschisă.
      Ardezia rămâne în paletă; pe tema luminoasă ține grila din grafice. */
-  --suprafata: color-mix(in oklab, var(--color-noapte) 70%, var(--color-estompat));
+  --suprafata: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--color-noapte) 88%, var(--color-estompat)) 90%,
+    #000000
+  );
   --text: #eef3fb;
   --text-slab: var(--color-cer);
   --accent: var(--color-safir);
   --accent-apasat: var(--color-adanc);
-  /* Pe fundal închis accentul-text e albastrul deschis (7,84:1).
-     Safirul ar da 2,86:1 — doar umplere, niciodată text. */
+  /* Pe fundal închis accentul-text e albastrul deschis (10,36:1 pe fundal).
+     Safirul ar da 3,79:1 — doar umplere, niciodată text. */
   --accent-slab: var(--color-cer);
-  --bordura: color-mix(in oklab, var(--color-estompat) 40%, transparent);
+  /* Bordurile și fundalurile discrete se fac din ALB cu opacitate, nu dintr-un
+     gri-albastru plin: albul preia singur tenta stratului de sub el, deci
+     aceeași bordură arată corect și pe fundal, și pe card, și peste o bandă
+     colorată — un hex fix ar fi trebuit ales pentru unul dintre ele și greșit
+     pentru celelalte. */
+  --bordura: rgb(255 255 255 / 0.1);
+  /* Bordura stărilor interactive: aceeași culoare, dublu de prezentă. */
+  --bordura-tare: rgb(255 255 255 / 0.22);
 
   --viz-functie: var(--color-cer);
   --viz-curent: var(--color-safir);
@@ -229,15 +256,26 @@
   --atentie-fundal: color-mix(in oklab, #fbbf24 14%, transparent);
   --eroare-fundal: color-mix(in oklab, #f87171 14%, transparent);
 
-  --secondary: color-mix(in oklab, var(--color-estompat) 25%, transparent);
-  /* Se ia din suprafață, nu din ardezie: altfel fundalurile „domolite" ar fi
-     rămas singurele pete verzui de pe temă. */
-  --muted: color-mix(in oklab, var(--suprafata) 70%, transparent);
+  /* Tot alb cu opacitate, din același motiv ca bordura de mai sus. */
+  --secondary: rgb(255 255 255 / 0.1);
+  --muted: rgb(255 255 255 / 0.06);
   --ring: var(--color-cer);
 
-  --shadow-jos: 0 1px 2px 0 rgb(6 12 30 / 0.18);
-  --shadow-mediu: 0 4px 14px -3px rgb(6 12 30 / 0.28);
-  --shadow-sus: 0 18px 40px -12px rgb(6 12 30 / 0.45);
+  /* Umbrele coboară spre negrul de sub fundal: pe o temă atât de închisă, o
+     umbră cenușie s-ar vedea ca o pată deschisă, nu ca adâncime. */
+  --shadow-jos: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-mediu: 0 6px 18px -4px rgb(0 0 0 / 0.55);
+  --shadow-sus: 0 22px 48px -14px rgb(0 0 0 / 0.7);
+  /* Pe întuneric, un element interactiv nu se poate marca prin umbră — umbra
+     e neagră pe negru. Se marchează prin LUMINĂ: un halou de accent care iese
+     din marginea elementului. Vezi regulile de stare din @layer base. */
+  --shadow-accent: 0 0 0 1px color-mix(in oklab, var(--color-safir) 55%, transparent);
+  --halou:
+    0 0 0 1px color-mix(in oklab, var(--color-cer) 22%, transparent),
+    0 0 22px -4px color-mix(in oklab, var(--color-safir) 55%, transparent);
+  --halou-focus:
+    0 0 0 1px color-mix(in oklab, var(--color-cer) 45%, transparent),
+    0 0 28px -2px color-mix(in oklab, var(--color-safir) 70%, transparent);
 }
 
 @theme inline {
@@ -250,6 +288,9 @@
   --color-accent-apasat: var(--accent-apasat);
   --color-accent-slab: var(--accent-slab);
   --color-bordura: var(--bordura);
+  --color-bordura-tare: var(--bordura-tare);
+  --shadow-halou: var(--halou);
+  --shadow-halou-focus: var(--halou-focus);
   --color-succes: var(--succes);
   --color-atentie: var(--atentie);
   --color-eroare: var(--eroare);
@@ -317,6 +358,50 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-wrap: pretty;
+  }
+
+  /* Sursa de lumină a temei întunecate. Un fundal plat de aceeași valoare pe
+     toată înălțimea citește ca o folie, nu ca o adâncime; două pete foarte
+     slabe de safir, fixate în colțuri, dau paginii un „sus" și un „jos" fără
+     să schimbe nicio culoare de conținut. Rămâne sub prag ca element grafic
+     (2–4 % opacitate), deci nu intră în niciun calcul de contrast.
+     E `background-attachment: fixed`, ca lumina să stea pe ecran, nu pe
+     document — altfel s-ar derula odată cu textul și ar clipi. */
+  .dark body {
+    background-image:
+      radial-gradient(
+        60rem 40rem at 15% -10%,
+        color-mix(in oklab, var(--color-safir) 14%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        50rem 36rem at 105% 8%,
+        color-mix(in oklab, var(--color-estompat) 12%, transparent),
+        transparent 70%
+      );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  /* ── Stările interactive (regula 5) ────────────────────────────────────────
+     Pe fundal închis, hover-ul clasic „cu un pic mai deschis" dispare pur și
+     simplu: diferența de luminozitate pe care se baza nu mai are unde să
+     încapă. Aici starea se anunță prin lumină — un halou de accent în jurul
+     elementului — plus bordura tare.
+     Regulile stau în `base`, deci orice `shadow-*` sau `border-*` pus pe
+     componentă (utilities) le bate; sunt un fundal de siguranță, nu un decret. */
+  .dark
+    :is(button, [role="button"], [role="tab"], summary):not(
+      :disabled,
+      [aria-disabled="true"]
+    ):hover {
+    box-shadow: var(--halou);
+    border-color: var(--bordura-tare);
+  }
+
+  .dark
+    :is(a, button, [role="button"], [role="tab"], summary, input, select, textarea):focus-visible {
+    box-shadow: var(--halou-focus);
   }
 
   h1,
