@@ -19,6 +19,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { IterationTable } from "@/components/viz/IterationTable";
+import { AceeasiInaltime } from "@/components/viz/AceeasiInaltime";
 import { Legend } from "@/components/viz/Legend";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
@@ -155,7 +156,15 @@ export function InterfataEcuatiiNeliniare() {
           utilizatorul se uitase deja la un desen pe care nu-l înțelegea. Aici
           urmează firesc după alegerea metodei — întâi afli ce metodă e și ce
           vei vedea, apoi te uiți. */}
-      <Legend elemente={legendaMetodei(idMetoda, etichetaCurba)} />
+      {/* Legendele au între patru și șase intrări, după metodă, iar blocul
+          se scurta la fiecare schimbare de tab. Rămân exact ce erau — se
+          egalizează doar spațiul. */}
+      <AceeasiInaltime
+        activa={METODE.findIndex((m) => m.id === idMetoda)}
+        variante={METODE.map((m) => (
+          <Legend key={m.id} elemente={legendaMetodei(m.id, etichetaCurba)} />
+        ))}
+      />
 
       {/* Graficul și parametrii stau într-o **singură** ramă, despărțiți doar de
           o linie. Sunt un instrument, nu două panouri alăturate: tragi de un
@@ -245,17 +254,27 @@ export function InterfataEcuatiiNeliniare() {
             )}
 
             {PORNIRE[idMetoda] === "un-punct" && (
-              <NumberInput
-                eticheta="Punctul de pornire, x₀"
-                valoare={pornire.a}
-                onChange={(v) => setPornire((p) => ({ ...p, a: v }))}
-                pas={0.1}
-                ajutor={
-                  idMetoda === "newton"
-                    ? "Prea departe de rădăcină, tangenta poate arunca punctul aiurea."
-                    : undefined
-                }
-              />
+              <>
+                <NumberInput
+                  eticheta="Punctul de pornire, x₀"
+                  valoare={pornire.a}
+                  onChange={(v) => setPornire((p) => ({ ...p, a: v }))}
+                  pas={0.1}
+                  ajutor={
+                    idMetoda === "newton"
+                      ? "Prea departe de rădăcină, tangenta poate arunca punctul aiurea."
+                      : undefined
+                  }
+                />
+                {/* Metodele care pornesc dintr-un singur punct au un câmp mai
+                    puțin decât celelalte, iar panoul — și cu el tot blocul —
+                    se scurta cu un rând la schimbarea tabului. Locul rămâne
+                    ocupat, dar gol: un al doilea câmp, inert, ar fi fost mai
+                    rău decât nimic. */}
+                <div aria-hidden className="pointer-events-none invisible" inert>
+                  <NumberInput eticheta="—" valoare={0} onChange={() => {}} pas={0.1} />
+                </div>
+              </>
             )}
 
             {PORNIRE[idMetoda] === "doua-puncte" && (
@@ -377,6 +396,10 @@ export function InterfataEcuatiiNeliniare() {
           }))}
           randCurent={derulare.pas}
           onAlegeRand={derulare.setPas}
+          // Bisecția are zeci de rânduri, tangenta patru: fără înălțime fixă,
+          // tabelul se strânge și trage toată pagina în sus la schimbarea
+          // tabului.
+          className="h-96"
         />
       )}
     </div>
