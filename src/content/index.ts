@@ -10,6 +10,7 @@ import { continutFft } from "@/content/fft";
 import { continutMetodeDeGradient } from "@/content/metode-de-gradient";
 import { continutMetodelePuterii } from "@/content/metodele-puterii";
 import { continutMetodeIterative } from "@/content/metode-iterative";
+import { continutNewtonCotes } from "@/content/newton-cotes";
 import { continutNormeSiOrtogonalitate } from "@/content/norme-si-ortogonalitate";
 import { continutPagerank } from "@/content/pagerank";
 import type { ContinutPagina } from "@/content/tipuri";
@@ -32,6 +33,7 @@ const CONTINUT: Partial<Record<string, ContinutPagina>> = {
   "factorizari-lu": continutFactorizariLu,
   fft: continutFft,
   "metode-iterative": continutMetodeIterative,
+  "newton-cotes": continutNewtonCotes,
   "metodele-puterii": continutMetodelePuterii,
   "norme-si-ortogonalitate": continutNormeSiOrtogonalitate,
   "metode-de-gradient": continutMetodeDeGradient,

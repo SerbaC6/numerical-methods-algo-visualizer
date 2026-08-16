@@ -534,7 +534,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 13  | Curbe Bézier, algoritmul de Casteljau (2D/3D) | `curbe-bezier`                     | curs09       | canvas       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 14  | Transformata Fourier rapidă (FFT)             | `fft`                              | curs10       | clip YouTube | n/a     | [x]  | [x]  | n/a        | [x]   | [ ]  |
 | 15  | Derivare numerică                             | `derivare-numerica`                | curs11       | grafic       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
-| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
+| 16  | Newton-Cotes: trapeze și Simpson              | `newton-cotes`                     | curs11       | grafic       | [x]     | [ ]  | [x]  | [x]        | [ ]   | [ ]  |
 | 17  | Cuadraturi adaptive și cuadraturi Gaussiene   | `cuadraturi-adaptive-si-gaussiene` | curs12       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 | 18  | ODE: problema Cauchy, Euler, Runge-Kutta      | `ecuatii-diferentiale`             | curs13       | grafic       | [ ]     | [ ]  | [ ]  | [ ]        | [ ]   | [ ]  |
 
@@ -663,6 +663,60 @@ Ce **nu** e verificat încă:
 
 - [ ] **Verificare cu ochiul pe telefon real.** Pe cadru lat, în tema întunecată, clipul și
       interfața au fost văzute scenă cu scenă; tema luminoasă și portretul, nu.
+
+### Pagina 16 — `newton-cotes`, ce e gata și ce nu
+
+Ce există:
+
+- **Matematica**, în `src/algorithms/newton-cotes/`: cele trei formule ale cursului — trapeze,
+  Simpson și punctul de mijloc (singura **deschisă**) —, fiecare tăiată în panouri, cu nodurile,
+  coeficienții, contribuția și eroarea pe panou (`cuadraturi.ts`); plus cele cinci funcții de
+  integrat, cu primitivele și derivatele scrise **analitic** (`functii-integrare.ts`), fiindcă
+  primitiva e referința față de care se măsoară eroarea și n-are voie să fie ea însăși o
+  aproximare. Nu are `run(params)` cu pași, ca și pagina 15: rezultatul e o sumă finită, iar ce se
+  derulează pe ecran sunt panourile, nu iterațiile.
+- **Verificarea numerică**, `scripts/verificare-algoritmi/newton-cotes.ts`, pe modulele reale, în
+  unsprezece secțiuni: primitivele sunt chiar primitivele; formulele simple ale cursului ies din
+  cele compuse cu un singur panou, la `0` diferență; sumele compuse coincid cu formulele închise
+  tipărite în curs (rescrise independent în script) pentru `N` între 2 și 50; **gradul de
+  exactitate** măsurat pe monoame — trapezele până la gradul 1, Simpson până la **3**, și niciuna
+  mai departe; ordinul erorii măsurat ca pantă la înjumătățirea pasului (`2,0002`, `4,0012`,
+  `2,0003`); marginile de eroare ale cursului chiar mărginesc eroarea, la toate valorile lui `N`;
+  semnul erorii dat de convexitate; și aria figurii desenate, integrată exact, egală cu suma
+  formulei — adică desenul **e** aproximarea, nu o ilustrație a ei.
+- **Erata**, `docs/erata-cursuri.md`: formula deschisă cu `n = 2` din curs11 are termenul de eroare
+  scris `14h³/45·f⁽⁴⁾(ξ)` în loc de `14h⁵/45`. Prins întâi dimensional, apoi măsurat pe `x⁴`, unde
+  `f⁽⁴⁾` e constantă: eroarea reală e `7,291667·10⁻³`, iar forma tipărită dă `1,166667·10⁻¹` — de
+  16 ori mai mult, adică exact `1/h²`. Formula **nu apare pe site**; din familia deschisă se
+  folosește doar `n = 0`, care e corect așa cum e tipărit.
+- **Teoria**, `src/content/newton-cotes.tsx`: cuadratura ca sumă cu ponderi, nodurile echidistante
+  care **sunt** definiția lui Newton-Cotes, distincția închis/deschis cu punctul de mijloc ca
+  exemplu, trapezele și Simpson cu termenii lor de eroare, și cele două formule compuse.
+- **Interfața**, `InterfataNewtonCotes`: aria de sub curbă tăiată în panouri, cu figura desenată
+  chiar ca aproximare (poligonul de sub coarde la trapeze, aria de sub arcele de parabolă la
+  Simpson), panoul curent evidențiat și legat de partea aprinsă din formula compusă. Un **singur
+  cursor** duce de la formula simplă la cea compusă, fiindcă `N = 1` și `N = 2` chiar dau formulele
+  simple ale cursului; funcția rămâne aceeași la schimbarea filei, ca cele două rânduri de cifre să
+  se poată compara.
+- **O primitivă nouă**, `PlotVerticala`: segmentul dintre linia de bază și un punct, adică marginea
+  dintre două panouri vecine. Fără ea, `N` trapeze lipite se citesc ca o singură pată, iar tocmai
+  numărul lor e ce se schimbă de la cursor.
+
+Ce **nu** e făcut, prin decizie deocamdată:
+
+- **Punctul de mijloc n-are filă în interfață.** Matematica lui e scrisă și verificată, iar formula
+  stă în teorie, dar în notația cursului `h` e **jumătate** din lățimea panoului, nu lățimea lui.
+  O a treia filă în care aceeași literă ar însemna altceva ar strica exact lucrul pe care cursorul
+  de `N` îl explică bine. Dacă se răzgândește cineva, mutarea e scrisă în comentariul lui
+  `panouriMijloc`.
+
+Ce **nu** e verificat încă:
+
+- [ ] **Clipul din secțiunea „Vizual".** Cerut explicit sărit la runda asta; secțiunea rămâne
+      deocamdată schelet tăcut, ca la orice pagină neterminată.
+- [ ] **Verificare cu ochiul, în browser.** Nimic din interfață n-a fost văzut pe ecran: nici
+      încadrarea desenului, nici hașura ariei sub curbă, nici înălțimea blocurilor la schimbarea
+      filei. De verificat în ambele teme, în portret și în peisaj.
 
 ### Pagina 2 — `norme-si-ortogonalitate`, ce e gata și ce nu
 

@@ -22,6 +22,7 @@ import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborar
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataEliminareGaussiana } from "@/components/content/InterfataEliminareGaussiana";
 import { InterfataMetodeDeGradient } from "@/components/content/InterfataMetodeDeGradient";
+import { InterfataNewtonCotes } from "@/components/content/InterfataNewtonCotes";
 import { TeorieScurta } from "@/components/content/TeorieScurta";
 import { VideoFft } from "@/components/content/VideoFft";
 import { Container } from "@/components/layout/Container";
@@ -87,6 +88,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   dvs: { vizual: AnimatiaDvs },
   "curbe-bezier": { vizual: AnimatiaBezier, interactiv: InterfataBezier },
   "derivare-numerica": { interactiv: InterfataDerivareNumerica },
+  "newton-cotes": { interactiv: InterfataNewtonCotes },
   fft: { vizual: VideoFft },
 };
 

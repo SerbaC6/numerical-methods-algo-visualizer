@@ -431,3 +431,40 @@ de litere pentru aceeași matrice: §7.4 pune `s` pe poziția `(i, j)` cu `i` = 
 iar Algorithm 2 pune `−A(j,i)/r` pe `(j, i)` cu `j` = linia care se anulează. Sunt aceeași matrice
 cu literele schimbate între ele. Pe site se folosește o singură convenție, iar în cod linia care se
 anulează se numește peste tot `linie`.
+
+---
+
+## curs11, „Formulele Newton-Cotes deschise particularizate" — `h³` în loc de `h⁵`
+
+**Cursul scrie**, pentru formula deschisă cu `n = 2`:
+
+$$\int_{x_{-1}}^{x_3} f(x)\,dx = \frac{4h}{3}\left[2f(x_0) - f(x_1) + 2f(x_2)\right] + \frac{14h^3}{45}f^{(4)}(\xi)$$
+
+**Partea principală e corectă; exponentul din termenul de eroare, nu.** Trebuie `h⁵`.
+
+Se vede și fără calcul, dintr-o verificare de dimensiuni: o integrală are unitățile lui `f` înmulțite
+cu cele ale lui `x`, iar `f⁽⁴⁾` le are pe ale lui `f` împărțite la `x⁴`. Ca produsul `hᵖ·f⁽⁴⁾(ξ)` să
+iasă tot o integrală, `p` trebuie să fie 5. Cu `h³` cele două părți ale egalității n-ar avea aceleași
+unități. Celelalte două formule deschise tipărite alături (`n = 0` și `n = 1`) trec verificarea asta
+și sunt corecte așa cum sunt scrise.
+
+**Verificare numerică.** Pe `[0, 1]`, deci `h = 1/4`, cu `f(x) = x⁴` — unde `f⁽⁴⁾ = 24` e constantă,
+deci `ξ` nu mai contează și termenul se poate compara cifră cu cifră:
+
+| mărime                         | valoare                              |
+| ------------------------------ | ------------------------------------ |
+| eroarea măsurată               | `7,291667·10⁻³`                      |
+| `14h⁵/45 · f⁽⁴⁾`               | `7,291667·10⁻³` ✓                    |
+| `14h³/45 · f⁽⁴⁾` (cum e scris) | `1,166667·10⁻¹` — de 16 ori mai mult |
+
+Factorul 16 e chiar `1/h²`, adică exact cele două puteri lipsă. Partea principală a formulei e, în
+schimb, exactă pe toate polinoamele de grad ≤ 3, deci nu ea e problema.
+
+**Ce s-a pus pe site.** Nimic: formula deschisă cu `n = 2` **nu apare** pe pagina 16. Din familia
+deschisă se folosește doar cazul `n = 0` — punctul de mijloc, `2h·f(x₀) + h³/3·f″(ξ)` —, care trece
+verificarea așa cum e tipărit. **Concluzia cursului rămâne neatinsă**: distincția închis/deschis,
+construcția nodurilor și faptul că formulele deschise nu evaluează funcția în capete se păstrează
+întocmai.
+
+Verificarea e ținută ca test care trebuie să pice dacă cineva „repară" exponentul înapoi la 3:
+`scripts/verificare-algoritmi/newton-cotes.ts`, secțiunea 10.
