@@ -6,15 +6,29 @@ import { cn } from "@/lib/utils";
 /**
  * Panou split-flap („tabelă de aeroport"), din registry-ul Aceternity, adaptat:
  * culorile vin exclusiv din paletă (panoul e un obiect întunecat în ambele
- * teme, ca un aparat fotografiat), alfabetul are diacriticele românești, iar
- * la `prefers-reduced-motion` literele apar direct, fără rotire.
+ * teme, ca un aparat fotografiat), alfabetul are diacriticele românești — dar
+ * rola care se rostogolește, doar semne de pe o tastatură obișnuită —, iar la
+ * `prefers-reduced-motion` literele apar direct, fără rotire.
  */
 
 /**
- * Alfabetul rolei. Ce nu e aici devine spațiu — de aceea Ă, Â, Î, Ș, Ț, plus É,
- * care nu e literă românească, dar apare în „curbe Bézier".
+ * Ce poate să **rămână** într-o celulă la finalul rotirii. Ce nu e aici devine
+ * spațiu — de aceea Ă, Â, Î, Ș, Ț, plus É, care nu e literă românească, dar
+ * apare în „curbe Bézier".
  */
-const FLAP_CHARS = " AĂÂBCDEÉFGHIÎJKLMNOPQRSȘTȚUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°";
+const CARACTERE_AFISABILE = " AĂÂBCDEÉFGHIÎJKLMNOPQRSȘTȚUVWXYZ0123456789!@#$%&()-+=;:'\",./?";
+
+/**
+ * Ce **fâlfâie** în timpul rotirii: doar semne care se găsesc pe tastatura unui
+ * laptop obișnuit, europeană sau americană. Nu e o restrângere estetică — o rolă
+ * adevărată are un set fix de clapete, iar ce trecea pe lângă ochi până acum
+ * (`°` și literele cu diacritice) arăta ca un alfabet străin amestecat printre
+ * litere.
+ *
+ * Litera finală poate în continuare să aibă diacritice: aceea vine din titlul
+ * paginii, nu de pe rolă.
+ */
+const CARACTERE_ROLA = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&()-+=;:'\",./?";
 
 const BASE_COL_DELAY = 30;
 const BASE_ROW_DELAY = 20;
@@ -97,7 +111,9 @@ const FlapCell = React.memo(
       startTimer.current = null;
       stepTimer.current = null;
 
-      const normalized = FLAP_CHARS.includes(target.toUpperCase()) ? target.toUpperCase() : " ";
+      const normalized = CARACTERE_AFISABILE.includes(target.toUpperCase())
+        ? target.toUpperCase()
+        : " ";
       if (normalized === tgtRef.current) return;
       tgtRef.current = normalized;
 
@@ -118,7 +134,7 @@ const FlapCell = React.memo(
         const isLast = i === scrambleCount;
         const ch = isLast
           ? normalized
-          : (FLAP_CHARS[1 + Math.floor(Math.random() * (FLAP_CHARS.length - 1))] ?? " ");
+          : (CARACTERE_ROLA[1 + Math.floor(Math.random() * (CARACTERE_ROLA.length - 1))] ?? " ");
 
         const newAccent =
           isLast || Math.random() >= 0.2
