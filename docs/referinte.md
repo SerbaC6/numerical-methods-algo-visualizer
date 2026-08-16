@@ -93,9 +93,9 @@ decât acolo, cu formula alături la fiecare pas.
 
 ## [3Blue1Brown](https://www.3blue1brown.com)
 
-Referința pentru **mișcare și pentru desenul matematic**. Legătura nu e doar estetică: **Manim e
-motorul lui Grant Sanderson**, exact cel pe care îl folosim în Faza 5. Deci ce se vede acolo nu e
-un ideal îndepărtat, e ce poate produce unealta pe care o avem deja în `manim/`.
+Referința pentru **mișcare și pentru desenul matematic**. Clipurile noastre se scriu în cod, cu
+altă unealtă decât a lui, deci ce împrumutăm de aici e **gramatica mișcării** — cum se leagă un
+desen de o formulă, cât stă o idee pe ecran —, nu efectele.
 
 Site-ul e organizat pe „lecții" grupate pe domenii (algebră liniară, analiză, ecuații
 diferențiale, rețele neuronale), fiecare cu video plus text — nu e o galerie de clipuri, e un
@@ -104,7 +104,9 @@ material didactic.
 **Împrumutăm:**
 
 - **Transformarea, nu tăietura.** Un obiect se _preface_ în altul, nu dispare ca să apară altceva
-  în loc. În Manim asta e `Transform`. Aplicat direct la noi: matricea care se desface în `L` și
+  în loc. La noi asta se obține din felul în care e construit `Clip`: nimic nu se montează la
+  granița dintre scene, deci un element poate traversa granița prin interpolare. Aplicat direct:
+  matricea care se desface în `L` și
   `U` (pagina 1), linia care se scade din alta (pagina 3), cercul unitate care devine elipsă
   (pagina 8). Continuitatea vizuală e cea care explică, nu textul de sub desen.
 - **O idee nouă pe cadru**, cu o pauză după ea. Ritmul lui 3b1b e lent intenționat: desenul stă pe
@@ -120,7 +122,7 @@ material didactic.
 - **Paleta lui.** Albastru-galben-verde pe negru e semnătura lui 3b1b și **nu intră la noi** —
   avem „Sapphire nightfall whisper", închisă. Împrumutăm gramatica mișcării, nu culorile.
 - **Formatul pasiv.** 3b1b e video liniar, de 20 de minute, în care privești. Site-ul nostru e
-  interactiv: clipul Manim e hero-ul de sus, dar lucrul principal e interfața cu care se joacă
+  interactiv: clipul e hero-ul de sus, dar lucrul principal e interfața cu care se joacă
   studentul. Un clip lung ar înlocui exact ce vrem să facem.
 - Densitatea de idei pe minut — la el funcționează pentru că poți da înapoi; la noi, o animație
   care cere replay e o animație ratată.
@@ -193,10 +195,10 @@ Observable Inputs și D3.
 2. **Bara de playback e aceeași peste tot.** Un student învață controalele o dată.
 3. **Formula e „pseudocodul" nostru** și se evidențiază sincron cu animația.
 4. **Fiecare interfață interactivă are legendă** și o instrucțiune de folosire în 3–5 pași.
-5. **Culorile au înțeles fix**, aceleași în web și în scenele Manim (aceleași tokens `--viz-*`).
+5. **Culorile au înțeles fix**, aceleași în interfețe și în clipuri (aceleași tokens `--viz-*`).
 6. **Pe mobil: grafic sus, controale jos.** Pe desktop: alături.
 7. **Se transformă, nu se taie.** Un obiect se preface în altul; nu dispare ca să apară altul în
-   locul lui. Valabil și în Manim (`Transform`), și în SVG-ul din browser.
+   locul lui. Valabil și în clip, și în interfața interactivă.
 8. **O idee nouă pe cadru**, cu o pauză după ea. Dacă o animație cere replay ca s-o înțelegi,
    e de refăcut.
 9. **Fără buton „calculează".** Orice schimbare de parametru se vede instant; `debounce` doar pe
