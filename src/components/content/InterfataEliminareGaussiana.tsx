@@ -23,6 +23,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
+import { AceeasiInaltime } from "@/components/viz/AceeasiInaltime";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { MatrixGrid, type StareCelula } from "@/components/viz/MatrixGrid";
 import { Notatie } from "@/components/viz/Notatie";
@@ -113,7 +114,15 @@ export function InterfataEliminareGaussiana() {
 
   return (
     <div className="flex flex-col gap-8">
-      <Legend elemente={legendaMetodei(strategie)} />
+      {/* Explicația scorului e alta la fiecare strategie și se înfășoară pe
+          alt număr de rânduri. Legendele rămân ce sunt; se egalizează doar
+          spațiul. */}
+      <AceeasiInaltime
+        activa={METODE.findIndex((m) => m.id === strategie)}
+        variante={METODE.map((m) => (
+          <Legend key={m.id} elemente={legendaMetodei(m.id)} />
+        ))}
+      />
 
       {/* La schimbarea tabului derularea se ia de la capăt: pasul 4 al
           pivotării parțiale și pasul 4 al celei totale nu sunt același moment
@@ -301,11 +310,23 @@ function ColoanaScoruri({
               }}
             >
               {gol ? "—" : cifra(scor)}
-              {alegere?.scalari?.[i] != null && !gol && (
-                <span className="text-text-slab block text-xs">
+              {/* Rândul cu `sᵢ` există numai la pivotul scalat, dar locul
+                  lui se ține la toate trei: altfel coloana — și cu ea grila de
+                  lângă ea — creștea cu un rând la schimbarea tabului. */}
+              <span
+                className={
+                  alegere?.scalari?.[i] != null && !gol
+                    ? "text-text-slab block text-xs"
+                    : "invisible block text-xs"
+                }
+                aria-hidden={alegere?.scalari?.[i] == null || gol}
+              >
+                {alegere?.scalari?.[i] != null && !gol ? (
                   <Notatie>{`sᵢ = ${cifra(alegere.scalari[i] as number)}`}</Notatie>
-                </span>
-              )}
+                ) : (
+                  "sᵢ = 0"
+                )}
+              </span>
             </li>
           );
         })}
