@@ -40,11 +40,24 @@ function randuriPanou(titlu: string): string[] {
 }
 
 /**
- * Ce scrie panoul: titlul fiecărei pagini din registru, pe rând, în ordinea din
- * cuprins. Lista nu se scrie de mână — dacă apare o pagină nouă, apare și în
- * panou, cu titlul ei adevărat.
+ * Ce scrie panoul: titlul fiecărei pagini din registru. Lista nu se scrie de
+ * mână — dacă apare o pagină nouă, apare și în panou, cu titlul ei adevărat.
+ * Ordinea se amestecă la fiecare încărcare (vezi `amesteca`).
  */
 const MESAJE = ALGORITMI.map((pagina) => randuriPanou(pagina.titlu).join("\n"));
+
+/**
+ * Amestec Fisher-Yates pe o copie: panoul nu pornește de fiecare dată de la
+ * aceeași metodă, deci nici cine intră des pe site nu vede mereu același șir.
+ */
+function amesteca<T>(lista: readonly T[]): T[] {
+  const copie = [...lista];
+  for (let i = copie.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copie[i], copie[j]] = [copie[j] as T, copie[i] as T];
+  }
+  return copie;
+}
 
 // Un titlu care nu încape ar fi tăiat tăcut de panou. În dezvoltare se aude.
 if (import.meta.env.DEV) {
@@ -135,19 +148,22 @@ function Hero() {
 
 /** Panoul split-flap din hero, care schimbă mesajul la fiecare 4,25 secunde. */
 function PanouMesaje() {
+  // Amestecat o singură dată, la montare: ordinea rămâne stabilă cât stai pe
+  // pagină, dar diferă de la o vizită la alta.
+  const [mesaje] = useState(() => amesteca(MESAJE));
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % MESAJE.length), PAUZA_MESAJ);
+    const id = setInterval(() => setIndex((i) => (i + 1) % mesaje.length), PAUZA_MESAJ);
     return () => clearInterval(id);
-  }, []);
+  }, [mesaje.length]);
 
   return (
     <Suspense
       fallback={<div className="bg-noapte border-bordura aspect-2/1 w-full rounded-xl border" />}
     >
       <TextFlippingBoard
-        text={MESAJE[index] ?? ""}
+        text={mesaje[index] ?? ""}
         gridRows={RANDURI_PANOU}
         gridCols={COLOANE_PANOU}
         duration={0.6}
