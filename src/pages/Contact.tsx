@@ -15,8 +15,7 @@ export default function Contact() {
         <div className="max-w-3xl">
           <h2 className="text-sectiune font-bold">Cine ține site-ul</h2>
           <p className="text-text-slab mt-3">
-            Robert Dimitrescu și Șerban Ciumacencu, studenți la {FACULTATE}. Site-ul a pornit din
-            cursul de metode numerice de aici.
+            Robert Dimitrescu și Șerban Ciumacencu, studenți la {FACULTATE}.
           </p>
 
           <h2 className="text-sectiune mt-10 font-bold">Pe e-mail</h2>
