@@ -137,7 +137,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
         începe să pice de la sine în clipa în care scriptul `test` există
   - [x] Cache pentru npm — `actions/setup-node` cu `cache: npm` și `node-version-file: .nvmrc`
   - [ ] CI pică intenționat o dată (test stricat) ca să confirmi că e funcțional
-- [ ] Deployment GitHub Pages
+- [x] Deployment GitHub Pages
   - [x] Decide: **project page** (`/nume-repo/`) — `base` rămâne un subdirector
   - [x] Setare `base` corect și verificare că asset-urile se încarcă în `npm run preview`
   - [x] Workflow `deploy.yml` (`configure-pages` + `upload-pages-artifact` + `deploy-pages`).
@@ -149,20 +149,24 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
         nu le are
   - [x] Fișier `.nojekyll` în `public/` — verificat că ajunge în `dist/`
   - [x] ~~`404.html` pentru rutele client-side~~ → **nu e nevoie**: `HashRouter` (vezi decizia de sus)
-- [ ] HTTPS / SSL
+- [x] HTTPS / SSL
   - [x] „Enforce HTTPS" activat în setările Pages — pe `serbac6.github.io` e obligatoriu, deci
         bifat și blocat din interfață
   - [ ] (Opțional) domeniu custom: `CNAME` + DNS + așteptare certificat
-  - [ ] Verificare în browser: lacăt, fără conținut mixt (mixed content)
-- [ ] Test end-to-end de livrare
-  - [ ] Un commit banal pe `main` → build automat → schimbarea e vizibilă live
-  - [ ] Notează în README URL-ul live
+  - [x] Verificare în browser: lacăt, fără conținut mixt (mixed content) — nimic nu se încarcă
+        de pe alt domeniu (fonturile sunt auto-găzduite), iar iframe-ul YouTube de pe pagina `fft`
+        se montează abia la clic
+- [x] Test end-to-end de livrare
+  - [x] Un commit banal pe `main` → build automat → schimbarea e vizibilă live
+  - [x] Notează în README URL-ul live —
+        <https://serbac6.github.io/numerical-methods-visualizer/>
 - [ ] 🔒 **După primul deploy reușit** — trecerea pe regimul normal de lucru
   - [ ] Activare branch protection pe `main`
   - [ ] Convenție de branch-uri + template-uri de issue și PR
   - [ ] Actualizare secțiunea „Contribuții" din README
 
-**Gata când:** site-ul „hello world" e live pe HTTPS. _(Blocarea PR-urilor pe CI roșu vine în pasul 🔒, după deploy.)_
+**Gata când:** site-ul „hello world" e live pe HTTPS. ✅ _(Blocarea PR-urilor pe CI roșu vine în
+pasul 🔒, de acum înainte.)_
 
 ---
 

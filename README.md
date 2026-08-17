@@ -5,6 +5,8 @@ numerice: o pagină-cuprins cu cele 18 pagini tematice și, pentru fiecare, un c
 pe scurt și o interfață interactivă în care schimbi funcția și parametrii, iar desenul se schimbă
 odată cu ei.
 
+**Live: <https://serbac6.github.io/numerical-methods-visualizer/>**
+
 - Viziunea proiectului: [`Plan.md`](./Plan.md)
 - Planul de execuție, pe faze și cu checkbox-uri: [`Progress.md`](./Progress.md)
 - Regulile de lucru (limbă, conținut, paletă, granițe): [`CLAUDE.md`](./CLAUDE.md)
