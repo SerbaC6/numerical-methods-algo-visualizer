@@ -491,7 +491,13 @@ function NumeBloc({
 }
 
 /**
- * O celulă din desen: rama, eticheta din colț („b₂") și valoarea din mijloc.
+ * O celulă din desen: rama și valoarea din mijloc.
+ *
+ * **Fără eticheta din colț.** „a₂", „b₂", „c₂", „d₂" scrise în fiecare celulă
+ * dublau o informație care se citește deja din desen — diagonala pe care stă
+ * celula și numele blocului de deasupra —, iar pe un ecran de telefon cele două
+ * texte suprapuse în aceeași celulă se citeau ca un ghem. Numele literelor
+ * rămân acolo unde chiar spun ceva: în formulele din panoul din dreapta.
  *
  * Valoarea se poate schimba în timpul clipului, deci primește două texte și
  * greutatea trecerii: cel vechi urcă și se stinge, cel nou intră de jos. E
@@ -500,7 +506,6 @@ function NumeBloc({
 function Celula({
   coloana,
   linie,
-  eticheta,
   vechi,
   nou,
   trecere,
@@ -513,7 +518,6 @@ function Celula({
 }: {
   coloana: number;
   linie: number;
-  eticheta?: string;
   vechi: string;
   nou?: string;
   /** 0 = valoarea veche, 1 = cea nouă. */
@@ -536,7 +540,10 @@ function Celula({
   const cy = linie + CH / 2;
   const m = trecere ?? 0;
   const gata = m >= 0.999;
-  const corp = 34 * Math.min(st, 1.35);
+  // Cifra a crescut de la 34 odată cu scoaterea etichetei din colț: acum are
+  // celula pentru ea singură, iar cel mai lung text din desen („x₁", „40") are
+  // trei semne, deci încape lejer în cei 94 de unități de lățime interioară.
+  const corp = 38 * Math.min(st, 1.35);
 
   const culoare = pivot
     ? "var(--viz-pivot-text)"
@@ -561,17 +568,6 @@ function Celula({
         stroke={activ > 0.02 ? culoareRol(ROL_ACTIUNE) : "var(--bordura)"}
         strokeWidth={activ > 0.02 ? 2 + 2 * activ : 2}
       />
-      {eticheta && (
-        <Mono
-          x={x + 12}
-          y={y + 18}
-          text={eticheta}
-          marime={19 * Math.min(st, 1.3)}
-          culoare={pivot ? "var(--viz-pivot-text)" : "var(--text-slab)"}
-          greutate={700}
-          opacitate={pivot ? 0.9 : 0.75}
-        />
-      )}
       <g transform={`translate(${cx}, ${cy}) scale(${scala})`}>
         {m < 0.999 && (
           <g opacity={1 - m} transform={`translate(0, ${-14 * m})`}>
@@ -933,7 +929,6 @@ function Desen() {
                 key={`m${linie}-${coloana}`}
                 coloana={GX + coloana * CW}
                 linie={GY + linie * CH}
-                eticheta={`${esteA ? "a" : esteB ? "b" : "c"}${indice(linie + 1)}`}
                 vechi={num(valoare)}
                 nou={dupa === undefined ? undefined : num(dupa)}
                 trecere={dupa === undefined ? 0 : schimba(T, cand)}
@@ -983,7 +978,6 @@ function Desen() {
               key={`d${linie}`}
               coloana={DCOL}
               linie={GY + linie * CH}
-              eticheta={`d${indice(linie + 1)}`}
               vechi={num(D[linie]!)}
               nou={linie > 0 ? num(D_DUPA_ELIMINARE[linie]!) : undefined}
               trecere={linie > 0 ? schimba(T, cand) : 0}
