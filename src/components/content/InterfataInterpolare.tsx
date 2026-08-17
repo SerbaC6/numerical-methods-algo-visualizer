@@ -363,11 +363,16 @@ export function InterfataInterpolare() {
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,30%,400px)]">
           <div className="flex min-w-0 flex-col gap-6 p-6 sm:p-8">
-            {/* Cei 100 de pixeli în plus la înălțime sunt chiar locul lăsat
-                liber de triunghiul lui Neville, mutat sub bara de derulare:
-                până acum tabelul creștea cu fiecare nivel calculat și împingea
-                desenul în sus, adică graficul era cel mai mic exact la pasul
-                unde se vede tot. */}
+            {/* Locul lăsat liber de triunghiul lui Neville, mutat sub bara de
+                derulare, se dă graficului — dar prin `raport`, nu prin
+                `inaltimeMaxima`.
+
+                Măsurat: coloana din stânga se oprește la 707px și nu crește
+                nici pe ecran de 1536px, deci înălțimea ieșea din `707 / 1,6 =
+                442px`. Plafonul nu era atins la nicio lățime, adică ridicat
+                singur n-ar fi mișcat niciun pixel. Cu `1,3` ies 544px, iar
+                plafonul rămâne pus ca să nu urce mai mult decât rândul de
+                cifre de alături. */}
             <Plot
               domeniuX={domeniuX}
               domeniuY={domeniuY}
@@ -384,6 +389,7 @@ export function InterfataInterpolare() {
                 rezultat: schema.rezultat,
                 tipSpline,
               })}
+              raport={1.3}
               inaltimeMaxima={560}
             >
               {/* Funcția de la care s-au luat nodurile. Punctată: nu e ce
