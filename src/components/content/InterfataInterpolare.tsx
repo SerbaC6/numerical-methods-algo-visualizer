@@ -108,9 +108,10 @@ function extremele(valori: readonly number[]): [number, number] {
  * vede că Lagrange și Neville dau **același** polinom, iar spline-ul e altceva —
  * nu trei pagini care nu se ating.
  *
- * **Nodurile se trag cu mâna** (`PlotPunctTras`), în afara filei cu funcția
- * Runge: acolo fenomenul e chiar despre noduri echidistante, iar unul mutat cu
- * degetul ar desființa exemplul.
+ * **Nodurile se trag cu mâna** (`PlotPunctTras`), pe toate filele. Fila cu
+ * funcția Runge, singura pe care nodurile stăteau pe loc — acolo fenomenul e
+ * chiar despre noduri echidistante —, a fost scoasă la cerere; funcția rămâne
+ * în lista din panou, deci oscilația se poate vedea în continuare.
  *
  * Matematica nu stă aici: vine din `src/algorithms/interpolare-polinomiala/`.
  */
@@ -309,7 +310,10 @@ export function InterfataInterpolare() {
         activa={FILE.findIndex((f) => f.id === fila)}
       />
 
-      <Tabs value={fila} onValueChange={(v) => schimbaFila(v as Fila)}>
+      {/* Schimbarea filei nu mai atinge nodurile: toate trei lucrează pe funcția
+          aleasă din panou, deci nu mai există filă care să-și aducă funcția ei
+          și să le reașeze pe alta. */}
+      <Tabs value={fila} onValueChange={(v) => setFila(v as Fila)}>
         <TabsList className="w-full">
           {FILE.map((f) => (
             <TabsTrigger key={f.id} value={f.id} className="flex-1">
@@ -337,7 +341,6 @@ export function InterfataInterpolare() {
                 noduri,
                 eroarePolinom,
                 eroareSpline,
-                amplitudine,
                 nivel: nivelAles,
                 xEval,
                 rezultat: schema.rezultat,
@@ -772,25 +775,6 @@ function legendaFilei(fila: Fila, tipSpline: TipSpline): ElementLegenda[] {
     ];
   }
 
-  if (fila === "runge") {
-    return [
-      LEGENDA_FUNCTIE,
-      { rol: "anterior", eticheta: "nodurile echidistante", forma: "punct" },
-      {
-        rol: "curent",
-        eticheta: "polinomul de interpolare Pₙ",
-        forma: "linie",
-        explicatie: "Un singur polinom, pe tot intervalul.",
-      },
-      {
-        rol: "solutie",
-        eticheta: "spline-ul cubic, pe aceleași noduri",
-        forma: "linie",
-        explicatie: "Câte o cubică pe fiecare subinterval, lipite în noduri.",
-      },
-    ];
-  }
-
   return [
     LEGENDA_FUNCTIE,
     LEGENDA_NODURI_TRASE,
@@ -814,7 +798,6 @@ function descrieDesenul({
   noduri,
   eroarePolinom,
   eroareSpline,
-  amplitudine,
   nivel,
   xEval,
   rezultat,
@@ -825,7 +808,6 @@ function descrieDesenul({
   noduri: readonly Nod[];
   eroarePolinom: number;
   eroareSpline: number;
-  amplitudine: number;
   nivel: number;
   xEval: number;
   rezultat: number;
@@ -844,13 +826,6 @@ function descrieDesenul({
     return (
       `${comun} Se văd polinoamele de grad ${nivel} din schema Neville, evaluate în ` +
       `x = ${zecimale(xEval, 3)}. Rezultatul întregii scheme acolo e ${zecimale(rezultat, 5)}.`
-    );
-  }
-  if (fila === "runge") {
-    return (
-      `${comun} Nodurile sunt echidistante. Polinomul urcă până la ${zecimale(amplitudine, 3)} ` +
-      `și se abate de funcție cu ${zecimale(eroarePolinom, 4)}; spline-ul cubic pe aceleași ` +
-      `noduri se abate doar cu ${zecimale(eroareSpline, 4)}.`
     );
   }
   return (
