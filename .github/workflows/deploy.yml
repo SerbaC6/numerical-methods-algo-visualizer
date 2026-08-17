@@ -34,9 +34,13 @@ jobs:
 
       # Dă `base` corect pentru project page (`/<nume-repo>/`), luat din numele repo-ului,
       # ca redenumirea repo-ului să nu ceară și o modificare în `vite.config.ts`.
+      # `enablement` pornește Pages de la prima rulare, cu sursa pe GitHub Actions, ca să nu
+      # fie nevoie de un pas manual din setările repo-ului.
       - name: Configurare Pages
         id: pages
         uses: actions/configure-pages@v6
+        with:
+          enablement: true
 
       - name: Instalare dependențe
         run: npm ci
