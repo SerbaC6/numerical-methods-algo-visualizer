@@ -127,8 +127,16 @@ export function TeorieScurta({ continut, dupaMetoda }: TeorieScurtaProps) {
                 {metoda.titlu}
               </h3>
               {/* Esența stă înaintea oricărei formule: cine citește doar rândul
-                  ăsta trebuie să plece știind ce face metoda. */}
-              <p className="text-text border-accent border-l-4 pl-4 text-xl leading-relaxed font-semibold">
+                  ăsta trebuie să plece știind ce face metoda.
+
+                  19px, scris de mână fiindcă Tailwind n-are treaptă între
+                  `text-lg` (18px) și `text-xl` (20px). Titlul de deasupra e
+                  `text-sectiune`, adică 22–28px după lățimea ecranului: la 20px
+                  esența venea prea aproape de el și cele două rânduri se citeau
+                  ca un singur bloc de titlu, iar la 18px scădea prea mult. 19px
+                  rămâne clar peste textul curent (16px) — deci se vede că e
+                  rândul important — fără să se bată cu titlul. */}
+              <p className="text-text border-accent border-l-4 pl-4 text-[1.1875rem] leading-relaxed font-semibold">
                 {metoda.esenta}
               </p>
             </header>
