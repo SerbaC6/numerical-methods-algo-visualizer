@@ -650,6 +650,47 @@ Lista rescrisă de utilizator după prima trecere. Ce s-a schimbat:
   atunci; propoziția pasului a dispărut de pe Neville; fila spline nu mai desenează și polinomul de
   comparație; nodurile pornesc de la 5 și își scriu numele doar până la 5.
 
+### A treia trecere prin `imbunatatiri.md` (17 august 2026)
+
+Lista fusese bifată aproape toată în trecerea a doua, dar `InterfataInterpolare.tsx` rămăsese
+**la jumătate de refactorizare și nu compila**: `useDerulare` și `PlaybackBar` erau folosite fără
+să fie importate, `schimbaFila`, `kAles` și `amplitudine` fuseseră șterse dar erau încă chemate,
+iar filei Runge îi rămăseseră ramurile de legendă și de descriere. Zece erori de tipuri, deci nici
+`npm run build` nu trecea. Ce s-a terminat:
+
+- **Lagrange, o singură linie.** Evidențierea din formulă s-a mutat de pe `l_k(x)` pe `P_n(x)`:
+  multiplicatorul nu se mai desenează, deci nu mai are ce aprinde pe grafic. Legenda a scăpat de
+  cele două intrări rămase fără desen.
+- **Neville, pași cu săgeți.** Bara de derulare și triunghiul stau sub desen; legenda a scăpat de
+  „verticala punctului evaluat" și de „P₀ₙ(x)", niciuna desenată.
+- **Graficul crește prin `raport`, nu prin plafon.** Plafonul ridicat de la 460 la 560 **nu mișcase
+  niciun pixel**: măsurat în browser, coloana din stânga se oprește la 707px și nu crește nici pe
+  1536px, deci înălțimea ieșea din `707 / 1,6 = 442px`, iar plafonul nu era atins la nicio lățime.
+  Cu `raport = 1,3` se ajunge la **544px**. **De reținut**: `inaltimeMaxima` e o limită, nu o
+  cerere — cine vrea un desen mai înalt schimbă `raport`.
+- **Spline-ul se vede că are două curbe.** Aici măsurătoarea a schimbat decizia. Desenarea
+  amândurora, făcută în trecerea trecută, nu ajunge: pe `sin(πx)`, la numărul implicit de noduri,
+  cele două condiții de capăt stau la **2px** una de alta, iar de la nouă noduri se suprapun exact.
+
+  | noduri   | 4   | 5   | 7   | 9   | 13  |
+  | -------- | --- | --- | --- | --- | --- |
+  | sin(πx)  | 8   | 2   | 0   | 0   | 0   |
+  | x⁵ − 2x³ | 12  | 10  | 5   | 3   | 1,5 |
+
+  Deci funcția de start a devenit `x⁵ − 2x³`. Celelalte două file nu pierd nimic: `max |Pₙ| = 1`
+  la orice număr de noduri, iar de la șase noduri polinomul reproduce funcția exact. Legenda
+  numește acum și curba punctată, iar lângă `s″(x₀)` („de ce") stă `depărtarea` („cu cât").
+
+  Cu trei noduri cele două curbe coincid **exact**: `(−1, 1)`, `(0, 0)`, `(1, −1)` sunt coliniare,
+  deci amândouă condițiile dau dreapta `y = −x`. Verificat, nu e o scăpare de calcul.
+
+Verificat în browser, pe ambele teme, la 360px și 1280px, cu `prefers-reduced-motion`: fără erori
+în consolă și fără derulare orizontală.
+
+**Rămâne de reparat, în afara listei:** `PlotDreapta` scrie `undefined` în `x1/x2/y1/y2` la primul
+cadru (`motion.line` cu `animate` și fără valori statice), deci consola primește patru erori pe
+`derivare-numerica` și pe `ecuatii-neliniare`. E mai vechi decât lista și nu ține de ea.
+
 ### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
 
 Ce există:
