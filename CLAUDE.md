@@ -18,7 +18,7 @@ actualizează la finalul fiecărei sesiuni — bifezi ce ai terminat.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/numerical-methods-algo-visualizer/ (atenție la base path)
+npm run dev        # http://localhost:5173/numerical-methods-visualizer/ (atenție la base path)
 npm run build      # tsc -b && vite build → dist/
 npm run preview
 npm run typecheck  # tsc -b --noEmit

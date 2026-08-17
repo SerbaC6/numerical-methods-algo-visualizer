@@ -13,7 +13,7 @@ export const ADRESE_EMAIL = [
 export const FACULTATE = "UPB, Facultatea de Automatică și Calculatoare, specializarea CTI";
 
 /** Depozitul public al site-ului. */
-export const GITHUB_URL = "https://github.com/SerbaC6/numerical-methods-algo-visualizer";
+export const GITHUB_URL = "https://github.com/SerbaC6/numerical-methods-visualizer";
 
 /**
  * Data ultimei revizuiri a paginilor de termeni și confidențialitate. Se scrie

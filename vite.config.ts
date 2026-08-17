@@ -6,7 +6,7 @@ import { defineConfig } from "vite";
 
 // Deploy pe GitHub Pages ca project page: asset-urile trebuie servite din /<nume-repo>/.
 // Dacă trecem pe domeniu propriu sau pe user page, `base` devine "/".
-const base = process.env.VITE_BASE ?? "/numerical-methods-algo-visualizer/";
+const base = process.env.VITE_BASE ?? "/numerical-methods-visualizer/";
 
 // https://vite.dev/config/
 export default defineConfig({

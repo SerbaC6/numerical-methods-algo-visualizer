@@ -143,7 +143,7 @@ verificat, interfața interactivă și clipul nu.
    `h_{i−1}` vs `h_i`) și la minusul tipografic. Câmpul `sursa` primește secțiunea exactă („curs 9,
    §3") — nu se afișează, dar e urma care face reverificarea posibilă.
 3. `npm run typecheck` și `npm run lint` — verde. (`prettier --check` prinde și formatarea.)
-4. `npm run dev` → `http://localhost:5173/numerical-methods-algo-visualizer/algoritm/interpolare-polinomiala`:
+4. `npm run dev` → `http://localhost:5173/numerical-methods-visualizer/algoritm/interpolare-polinomiala`:
    - toate formulele randează (KaTeX rulează cu `throwOnError: true`, deci o formulă stricată apare
      roșu, ca „Formulă invalidă" — semnal clar, nu tăcere);
    - secțiunile „Vizual" și „Interactiv" rămân schelete tăcute, fără text de așteptare;

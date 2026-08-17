@@ -43,7 +43,7 @@ export default function Contact() {
               rel="noreferrer"
               className="text-accent-slab underline underline-offset-4"
             >
-              SerbaC6/numerical-methods-algo-visualizer
+              SerbaC6/numerical-methods-visualizer
             </a>
             .
           </p>
