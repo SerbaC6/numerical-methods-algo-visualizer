@@ -45,7 +45,7 @@ import { esantioneaza, sparge } from "@/lib/plot-esantionare";
 type Fila = "adaptiv" | "gauss";
 
 const FILE: { id: Fila; eticheta: string }[] = [
-  { id: "adaptiv", eticheta: "Cuadraturi adaptive" },
+  { id: "adaptiv", eticheta: "Cuadraturi Adaptive" },
   { id: "gauss", eticheta: "Cuadraturi Gaussiene" },
 ];
 
@@ -68,12 +68,11 @@ const FUNCTIE_IMPLICITA: Record<Fila, string> = {
   // Vârful ascuțit lângă zero și coada plată: exact cazul care cere panouri de
   // lățimi diferite.
   adaptiv: "oscilanta",
-  // Sinusul pe [0, π]. Cu patru noduri alese, formula greșește cu 1,6e-5; cu
-  // patru echidistante, cu 4,1e-2 — de două mii de ori mai mult, și se vede pe
-  // desen, fiindcă polinomul prin nodurile echidistante taie vizibil vârful.
-  // Pe funcția adaptivului, amândouă variantele greșesc grosolan și butoanele
-  // nu mai arată nimic.
-  gauss: "sinus",
+  // Radicalul pe [0, 1]. Tangenta verticală din zero e chiar cazul în care se
+  // vede de ce contează unde cad nodurile: cele echidistante trebuie să pună
+  // unul exact în capătul unde funcția urcă vertical, iar polinomul prin ele
+  // pleacă în jos înainte să urce. Cele alese stau înăuntru și nu ating capătul.
+  gauss: "radical",
 };
 
 /**

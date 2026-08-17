@@ -357,19 +357,20 @@ export function InterfataNewtonCotes() {
                 controlul principal al paginii, iar de el se trage privind
                 figura, nu citind o etichetă. */}
             <div className="flex flex-col gap-3">
+              {/* Cifra stă lipită de litera ei: „N = 4" se citește ca un lucru,
+                  pe când `N` la stânga și `4` la dreapta, aruncate în capetele
+                  rândului, se citeau ca două. `h` rămâne singur la dreapta,
+                  fiindcă e cealaltă mărime. */}
               <div className="flex items-baseline justify-between gap-4">
                 <span className="text-text-slab text-base">
-                  Subintervale
-                  <span className="ml-2 font-mono">N</span>
+                  Subintervale{" "}
+                  <span className="text-text font-mono text-lg tabular-nums">N = {n}</span>
                 </span>
-                <span className="text-text font-mono text-lg tabular-nums">
-                  {n}
-                  {rezultat && (
-                    <span className="text-text-slab ml-3 text-base">
-                      h = {zecimale(rezultat.h, 4)}
-                    </span>
-                  )}
-                </span>
+                {rezultat && (
+                  <span className="text-text-slab font-mono text-base tabular-nums">
+                    h = {zecimale(rezultat.h, 4)}
+                  </span>
+                )}
               </div>
               <Slider
                 aria-label="Numărul de subintervale"
