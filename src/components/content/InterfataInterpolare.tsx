@@ -74,12 +74,31 @@ const ESANTIOANE = 400;
 /**
  * Funcția cu care pornește interfața.
  *
- * Sinusoida: polinomul stă lipit de curbă, deci se vede lucrul pe care îl arată
- * fila, nu oscilația de la capete. E și funcția pe care cele două condiții de
- * capăt ale spline-ului se despart cel mai tare — panta ei la capete e `±π`,
- * iar spline-ul natural o ignoră din construcție.
+ * `x⁵ − 2x³`, fiindcă pe ea se vede diferența dintre cele două condiții de
+ * capăt ale spline-ului — singurul lucru de pe pagină care se citește doar
+ * comparând două curbe. Diferența dintre ele, măsurată ca depărtare maximă și
+ * transformată în pixeli pe înălțimea desenului:
+ *
+ * |  noduri   |  4   |  5   |  7   |  9   |  13  |
+ * | --------- | ---- | ---- | ---- | ---- | ---- |
+ * | sin(πx)   |  8   |  2   |  0   |  0   |  0   |
+ * | x⁵ − 2x³  | 12   | 10   |  5   |  3   |  1,5 |
+ *
+ * Pe sinusoidă, la numărul implicit de noduri, cele două curbe stau la **doi
+ * pixeli** una de alta, iar de la nouă noduri se suprapun exact — adică fila
+ * arăta o singură linie și cerea să se creadă că sunt două. Pe polinom rămân
+ * despărțite pe aproape tot intervalul cursorului.
+ *
+ * Celelalte două file nu pierd nimic: polinomul de interpolare nu iese din
+ * cadru la niciun număr de noduri (`max |Pₙ| = 1`, cât funcția însăși), iar de
+ * la șase noduri îl reproduce exact — pe puncte distincte, polinomul de grad
+ * cel mult `n` care trece prin ele e unic.
+ *
+ * Singurul loc unde nu se vede nimic e capătul de jos al cursorului: cu trei
+ * noduri, `(−1, 1)`, `(0, 0)` și `(1, −1)` sunt coliniare, deci amândouă
+ * condițiile dau chiar dreapta `y = −x`. Nu e o scăpare de calcul, e adevărat.
  */
-const FUNCTIE_IMPLICITA = "sinusoida";
+const FUNCTIE_IMPLICITA = "polinom";
 
 /* ───────────────────────── cadrul de desen ───────────────────────── */
 
@@ -260,6 +279,24 @@ export function InterfataInterpolare() {
     () => abatereMaxima((x) => evalueazaSpline(spline, x), functie.f, [a, b], 2000),
     [spline, functie, a, b],
   );
+
+  /**
+   * Cât de departe ajung una de alta cele două condiții de capăt.
+   *
+   * E cifra care spune dacă mai e ceva de văzut pe desen: sub câțiva pixeli,
+   * curbele se suprapun, iar asta nu se poate deosebi cu ochiul de o pană a
+   * interfeței. Se măsoară doar pe suportul nodurilor, unde spline-ul e definit.
+   */
+  const departareaSplineurilor = useMemo(
+    () =>
+      abatereMaxima(
+        (x) => evalueazaSpline(spline, x),
+        (x) => evalueazaSpline(splineCealalta, x),
+        [noduri[0]!.x, noduri[n]!.x],
+        2000,
+      ),
+    [spline, splineCealalta, noduri, n],
+  );
   /* ── mutarea unui nod ─────────────────────────────────────────────── */
 
   const mutaNodul = (i: number, punct: Punct) => {
@@ -341,6 +378,7 @@ export function InterfataInterpolare() {
                 noduri,
                 eroarePolinom,
                 eroareSpline,
+                departare: departareaSplineurilor,
                 nivel: nivelAles,
                 xEval,
                 rezultat: schema.rezultat,
@@ -522,10 +560,10 @@ export function InterfataInterpolare() {
                 fila,
                 n,
                 eroarePolinom,
-                eroareSpline,
                 schema,
                 nivel: nivelAles,
                 spline,
+                departareaSplineurilor,
                 noduri,
               }).map(([cheie, valoare]) => (
                 <div
@@ -703,15 +741,16 @@ function cifrele({
   schema,
   nivel,
   spline,
+  departareaSplineurilor,
   noduri,
 }: {
   fila: Fila;
   n: number;
   eroarePolinom: number;
-  eroareSpline: number;
   schema: ReturnType<typeof schemaNeville>;
   nivel: number;
   spline: ReturnType<typeof splineCubic>;
+  departareaSplineurilor: number;
   noduri: readonly Nod[];
 }): [string, string][] {
   if (fila === "lagrange") {
@@ -729,6 +768,11 @@ function cifrele({
   return [
     ["bucăți", String(Math.max(0, noduri.length - 1))],
     ["s″(x₀)", zecimale(2 * (spline.c[0] ?? 0), 3)],
+    // Cifra care spune cât de mare e diferența pe care fila o desenează:
+    // `s″(x₀)` arată **de ce** se despart curbele, asta arată **cu cât**.
+    // Scrisă în cuvânt, nu ca `max |s − s̃|`: al doilea spline n-are simbol în
+    // curs, iar unul inventat aici ar cere el însuși o legendă.
+    ["depărtarea", zecimale(departareaSplineurilor, 4)],
   ];
 }
 
@@ -787,6 +831,13 @@ function legendaFilei(fila: Fila, tipSpline: TipSpline): ElementLegenda[] {
           ? "Curbura se anulează la capete."
           : "Panta de la capete e chiar cea a funcției.",
     },
+    {
+      rol: "interval",
+      eticheta: tipSpline === "natural" ? "spline-ul tensionat" : "spline-ul natural",
+      forma: "linie-punctata",
+      explicatie:
+        "Cealaltă condiție de capăt, pe aceleași noduri: singura piesă cu care se compară.",
+    },
   ];
 }
 
@@ -798,6 +849,7 @@ function descrieDesenul({
   noduri,
   eroarePolinom,
   eroareSpline,
+  departare,
   nivel,
   xEval,
   rezultat,
@@ -808,6 +860,7 @@ function descrieDesenul({
   noduri: readonly Nod[];
   eroarePolinom: number;
   eroareSpline: number;
+  departare: number;
   nivel: number;
   xEval: number;
   rezultat: number;
@@ -828,8 +881,11 @@ function descrieDesenul({
       `x = ${zecimale(xEval, 3)}. Rezultatul întregii scheme acolo e ${zecimale(rezultat, 5)}.`
     );
   }
+  const ales = tipSpline === "natural" ? "natural" : "tensionat";
+  const celalalt = tipSpline === "natural" ? "tensionat" : "natural";
   return (
-    `${comun} Spline-ul ${tipSpline === "natural" ? "natural" : "tensionat"} se abate de funcție ` +
-    `cu cel mult ${zecimale(eroareSpline, 4)}.`
+    `${comun} Spline-ul ${ales} se abate de funcție cu cel mult ` +
+    `${zecimale(eroareSpline, 4)}. Punctat, pe aceleași noduri, e spline-ul ${celalalt}: ` +
+    `cele două se depărtează una de alta cu cel mult ${zecimale(departare, 4)}.`
   );
 }
