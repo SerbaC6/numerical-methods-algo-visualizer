@@ -32,11 +32,12 @@ import { ControlPanel } from "@/components/viz/ControlPanel";
 import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
 import { Notatie } from "@/components/viz/Notatie";
+import { PlaybackBar } from "@/components/viz/PlaybackBar";
 import { Plot } from "@/components/viz/Plot";
 import { PlotCurba } from "@/components/viz/PlotCurba";
-import { PlotDreapta } from "@/components/viz/PlotDreapta";
 import { PlotPunct } from "@/components/viz/PlotPunct";
 import { PlotPunctTras } from "@/components/viz/PlotPunctTras";
+import { useDerulare } from "@/hooks/use-derulare";
 import { zecimale } from "@/lib/numere";
 import { cn } from "@/lib/utils";
 
@@ -321,6 +322,11 @@ export function InterfataInterpolare() {
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,30%,400px)]">
           <div className="flex min-w-0 flex-col gap-6 p-6 sm:p-8">
+            {/* Cei 100 de pixeli în plus la înălțime sunt chiar locul lăsat
+                liber de triunghiul lui Neville, mutat sub bara de derulare:
+                până acum tabelul creștea cu fiecare nivel calculat și împingea
+                desenul în sus, adică graficul era cel mai mic exact la pasul
+                unde se vede tot. */}
             <Plot
               domeniuX={domeniuX}
               domeniuY={domeniuY}
@@ -337,7 +343,7 @@ export function InterfataInterpolare() {
                 rezultat: schema.rezultat,
                 tipSpline,
               })}
-              inaltimeMaxima={460}
+              inaltimeMaxima={560}
             >
               {/* Funcția de la care s-au luat nodurile. Punctată: nu e ce
                   calculează metoda, ci ce ar vrea să nimerească. */}
@@ -760,10 +766,9 @@ function legendaFilei(fila: Fila, tipSpline: TipSpline): ElementLegenda[] {
         rol: "interval",
         eticheta: "polinoamele Pᵢⱼ de pe nivelul ales",
         forma: "linie",
-        explicatie: "Fiecare e trasat doar peste nodurile din care iese.",
+        explicatie:
+          "Fiecare e trasat doar peste nodurile din care iese, cu un punct acolo unde e evaluat.",
       },
-      { rol: "grila", eticheta: "verticala punctului evaluat", forma: "linie-punctata" },
-      { rol: "solutie", eticheta: "P₀ₙ(x), rezultatul schemei", forma: "punct" },
     ];
   }
 
