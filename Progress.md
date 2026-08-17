@@ -143,8 +143,10 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
   - [x] Workflow `deploy.yml` (`configure-pages` + `upload-pages-artifact` + `deploy-pages`).
         `base` vine din `steps.pages.outputs.base_path`, dat build-ului ca `VITE_BASE`: o redenumire
         a repo-ului nu mai cere și o modificare în `vite.config.ts`
-  - [x] Activare Pages din setările repo-ului, sursa = GitHub Actions — automat, prin
-        `configure-pages` cu `enablement: true`, deci se face singură la prima rulare
+  - [ ] Activare Pages din setările repo-ului, sursa = GitHub Actions — se face **o singură
+        dată**, manual. `configure-pages` cu `enablement: true` a fost încercat și a picat:
+        activarea din workflow cere un token cu drepturi de administrare, pe care `GITHUB_TOKEN`
+        nu le are
   - [x] Fișier `.nojekyll` în `public/` — verificat că ajunge în `dist/`
   - [x] ~~`404.html` pentru rutele client-side~~ → **nu e nevoie**: `HashRouter` (vezi decizia de sus)
 - [ ] HTTPS / SSL
