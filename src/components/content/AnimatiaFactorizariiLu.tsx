@@ -190,16 +190,24 @@ function Antet({
   nota?: readonly string[];
   st: number;
 }) {
-  const notaSus = 150 + (titlu.length - 1) * 66 + 54;
+  // Rândurile se așază **față de corpul literei**, nu la 66 și 40 de unități
+  // fixe. Pasul fix era scris pentru desktop, unde `st` e 1 și corpul iese exact
+  // 60 și 29; pe un cadru îngust corpul crește până la 81, respectiv 43,5, iar
+  // rândul al doilea urca peste primul — se vedea la orice titlu sau notă de
+  // două rânduri. Factorii sunt cei care refac exact valorile de dinainte la
+  // `st = 1`: 66/60 și 40/29, iar 54/60 pentru golul dintre titlu și notă.
+  const corpTitlu = 60 * Math.min(st, 1.35);
+  const corpNota = 29 * Math.min(st, 1.5);
+  const notaSus = 150 + (titlu.length - 1) * corpTitlu * 1.1 + corpTitlu * 0.9;
   return (
     <g opacity={opacitate} transform={`translate(0, ${(1 - opacitate) * 18})`}>
       {titlu.map((linie, i) => (
         <text
           key={linie}
           x={120}
-          y={150 + i * 66}
+          y={150 + i * corpTitlu * 1.1}
           fill="var(--text)"
-          style={{ font: `800 ${60 * Math.min(st, 1.35)}px var(--font-sans)` }}
+          style={{ font: `800 ${corpTitlu}px var(--font-sans)` }}
         >
           {linie}
         </text>
@@ -208,9 +216,9 @@ function Antet({
         <text
           key={linie}
           x={120}
-          y={notaSus + i * 40}
+          y={notaSus + i * corpNota * 1.38}
           fill="var(--text-slab)"
-          style={{ font: `400 ${29 * Math.min(st, 1.5)}px var(--font-sans)` }}
+          style={{ font: `400 ${corpNota}px var(--font-sans)` }}
         >
           {linie}
         </text>
@@ -722,18 +730,14 @@ function ActExplozie({ st }: { st: number }) {
             >
               {rand.eticheta}
             </text>
+            {/* Cifra și unitatea stau în **același** text, una după alta, nu la
+                două x-uri fixe (1580 și 1720). Fiecare avea corpul înmulțit cu
+                `st`, deci pe un cadru îngust „3.628.800" creștea până sub
+                „operații" și cele două se scriau una peste alta. Într-un singur
+                text, ancorat la dreapta, golul e `dx` — crește și el cu corpul,
+                deci nu se mai poate închide. */}
             <text
               x={1720}
-              y={y}
-              textAnchor="end"
-              dominantBaseline="alphabetic"
-              fill="var(--text-slab)"
-              style={{ font: `500 ${26 * Math.min(st, 1.5)}px var(--font-mono)` }}
-            >
-              operații
-            </text>
-            <text
-              x={1580}
               y={y}
               textAnchor="end"
               dominantBaseline="alphabetic"
@@ -746,10 +750,20 @@ function ActExplozie({ st }: { st: number }) {
                   <tspan style={{ fontSize: "0.6em" }} dy="-0.45em">
                     18
                   </tspan>
+                  {/* Readuce linia de bază de unde a ridicat-o exponentul:
+                      același corp, același `dy`, cu semnul schimbat. */}
+                  <tspan style={{ fontSize: "0.6em" }} dy="0.45em" />
                 </>
               ) : (
                 cuMii(Math.round(p * rand.valoare))
               )}
+              <tspan
+                dx={26 * Math.min(st, 1.5)}
+                fill="var(--text-slab)"
+                style={{ font: `500 ${26 * Math.min(st, 1.5)}px var(--font-mono)` }}
+              >
+                operații
+              </tspan>
             </text>
             <Bara
               x={200}
