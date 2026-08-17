@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ContextClip, type StareClip } from "@/components/viz/clip-context";
 import { PlaybackClip } from "@/components/viz/PlaybackClip";
+import { BANDA_SUBTITRARE } from "@/components/viz/Subtitrari";
 import { repere, type Scena } from "@/lib/compozitie";
 import type { Viteza } from "@/lib/playback";
 import { cn } from "@/lib/utils";
@@ -261,21 +262,32 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
       aria-keyshortcuts="Space ArrowLeft ArrowRight"
     >
       <ContextClip.Provider value={stare}>
-        <figure className={cn("m-0", plinEcran && "flex min-h-0 flex-1 items-center")}>
-          {/* `@container`: textele din desen și din subtitrări se scalează după
-              lățimea cadrului, nu după cea a ferestrei — altfel pe telefon, în
-              peisaj, ar fi ilizibile.
+        {/* `@container` stă pe `figure`, nu pe cadru: textele din desen și din
+            subtitrări se scalează după lățimea cadrului, nu după cea a
+            ferestrei — altfel pe telefon, în peisaj, ar fi ilizibile. Lățimea e
+            aceeași la amândouă (cadrul e `w-full`), dar unitățile `cq*` se
+            măsoară întotdeauna față de un **strămoș**, deci cadrul nu-și poate
+            citi propria lățime ca să-și calculeze rezerva de mai jos. */}
+        <figure className={cn("@container m-0", plinEcran && "flex min-h-0 flex-1 items-center")}>
+          {/* Pe tot ecranul, cadrul renunță la 16:9 și ia toată suprafața:
+              SVG-ul dinăuntru are `preserveAspectRatio` implicit, deci desenul
+              rămâne nedeformat și doar se centrează, pe același fundal ca
+              pagina.
 
-              Pe tot ecranul, cadrul renunță la 16:9 și ia toată suprafața: SVG-ul
-              dinăuntru are `preserveAspectRatio` implicit, deci desenul rămâne
-              nedeformat și doar se centrează, pe același fundal ca pagina. */}
+              `paddingBottom` e rezerva subtitrării, și e zero pe orice cadru mai
+              lat de ~674px. Sub prag, corpul literei se oprește la podeaua lui
+              (altfel ar ajunge la 6px) și banda ar crește peste desen; atunci
+              cadrul îi dă înălțimea cerută, iar SVG-ul se micșorează cu ea.
+              Subtitrarea e poziționată pe `bottom-0`, adică pe marginea cutiei
+              de padding, deci rămâne exact în banda eliberată. */}
           <div
             ref={cadru}
             role="img"
             aria-label={descriere}
             onDoubleClick={() => peisajStramt && setBaraCeruta((v) => !v)}
+            style={{ paddingBottom: BANDA_SUBTITRARE }}
             className={cn(
-              "border-bordura bg-fundal shadow-jos @container relative w-full overflow-hidden rounded-xl border",
+              "border-bordura bg-fundal shadow-jos relative w-full overflow-hidden rounded-xl border",
               plinEcran ? "h-full" : "aspect-video",
             )}
           >
