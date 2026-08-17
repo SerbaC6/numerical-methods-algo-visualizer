@@ -38,8 +38,7 @@ export const continutMetodeIterative: ContinutPagina = {
         Eliminarea gaussiană rezolvă sistemul în <Mate>O(n³)</Mate> operații și dă răspunsul exact,
         dar pentru un sistem mare devine scumpă. Metodele iterative fac altceva: pornesc de la o
         ghicire și o îmbunătățesc, cu <Mate>O(n²)</Mate> operații la fiecare pas, până când vectorul
-        nu se mai mișcă. Prețul e că <strong>nu converg pentru orice sistem</strong> — iar toată
-        pagina e despre ce anume decide dacă merg sau nu.
+        nu se mai mișcă. Prețul e că <strong>nu converg pentru orice sistem</strong>.
       </>
     ),
 

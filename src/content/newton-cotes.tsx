@@ -1,3 +1,4 @@
+import { FormulaBlock } from "@/components/viz/FormulaBlock";
 import { Mate } from "@/components/viz/Notatie";
 import type { ContinutPagina } from "@/content/tipuri";
 
@@ -38,8 +39,14 @@ export const continutNewtonCotes: ContinutPagina = {
     intro: (
       <>
         Când primitiva nu se cunoaște, sau funcția e știută doar prin valorile ei în câteva puncte,
-        integrala <Mate>∫ₐᵇ f(x) dx</Mate> se înlocuiește cu o sumă de valori ale lui <Mate>f</Mate>
-        , fiecare cu ponderea ei.
+        integrala{" "}
+        {/* Singura matematică din proza site-ului scrisă cu KaTeX, nu cu `Mate`:
+            capetele integralei trebuie să stea unul deasupra celuilalt, iar
+            „∫ₐᵇ" din Unicode le pune alături, ca doi indici lipiți de semn.
+            `\limits` le urcă și le coboară pe semn, ca într-o formulă scrisă
+            de mână. */}
+        <FormulaBlock inline latex="\int\limits_a^b f(x)\,dx" /> se înlocuiește cu o sumă de valori
+        ale lui <Mate>f</Mate>, fiecare cu ponderea ei.
       </>
     ),
 
@@ -102,23 +109,6 @@ export const continutNewtonCotes: ContinutPagina = {
               </>
             ),
           },
-          {
-            tip: "formula",
-            latex:
-              "\\int_{x_{-1}}^{x_1} f(x)\\,dx = 2hf(x_0) + \\frac{h^3}{3}f''(\\xi), \\qquad h = \\frac{b-a}{2}",
-            sursa: "curs 11, formulele Newton-Cotes deschise particularizate (n = 0)",
-            subtitlu: "Cea mai simplă formulă deschisă: punctul de mijloc",
-            legenda: [
-              { simbol: "x₋₁, x₁", sens: <>capetele intervalului, care nu sunt noduri</> },
-              { simbol: "x₀", sens: <>singurul nod, la mijlocul intervalului</> },
-            ],
-            explicatie: (
-              <>
-                O singură evaluare, la mijloc: dreptunghiul care iese e mai bun decât ar părea,
-                fiindcă ce iese peste curbă de o parte intră sub ea de cealaltă.
-              </>
-            ),
-          },
         ],
       },
       {
@@ -150,7 +140,7 @@ export const continutNewtonCotes: ContinutPagina = {
                 simbol: "−h³f″(ξ)/12",
                 sens: (
                   <>
-                    eroarea: dispare când <Mate>f″</Mate> e nulă, adică pe drepte
+                    eroarea (dispare când <Mate>f″</Mate> e nulă, adică pe drepte)
                   </>
                 ),
               },
@@ -199,8 +189,7 @@ export const continutNewtonCotes: ContinutPagina = {
             continut: (
               <>
                 Termenul de eroare conține <Mate>f⁽⁴⁾</Mate>, iar la un polinom de grad cel mult 3
-                aceea e identic nulă. Arcul desenat nu coincide cu curba, dar cât iese peste ea
-                într-o jumătate, atât intră sub ea în cealaltă.
+                aceea e identic nulă.
               </>
             ),
           },
@@ -233,12 +222,6 @@ export const continutNewtonCotes: ContinutPagina = {
               },
               { simbol: "2", sens: <>nodurile interioare aparțin la câte două trapeze</> },
             ],
-            explicatie: (
-              <>
-                Eroarea totală e <Mate>−(b − a)h²f″(µ)/12</Mate>: înjumătățirea pasului o împarte la
-                patru.
-              </>
-            ),
           },
           {
             tip: "formula",
@@ -251,12 +234,6 @@ export const continutNewtonCotes: ContinutPagina = {
               { simbol: "4", sens: <>nodurile impare, mijloacele perechilor</> },
               { simbol: "2", sens: <>nodurile pare din interior, comune la două perechi</> },
             ],
-            explicatie: (
-              <>
-                Eroarea e <Mate>−(b − a)h⁴f⁽⁴⁾(µ)/180</Mate>: același pas înjumătățit împarte acum
-                eroarea la șaisprezece.
-              </>
-            ),
           },
         ],
       },

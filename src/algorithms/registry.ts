@@ -144,7 +144,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "eliminare-gaussiana",
     numar: 3,
-    titlu: "Eliminare gaussiană și pivotări",
+    titlu: "Eliminare Gaussiană",
     capitol: "sisteme-liniare",
     descriere:
       "Eliminarea gaussiană văzută pe matrice, plus ce aduce în plus și cât costă fiecare tip de pivotare.",
@@ -156,10 +156,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "algoritmul-thomas",
     numar: 4,
-    titlu: "Algoritmul Thomas (sisteme tridiagonale)",
+    titlu: "Algoritmul Thomas",
     capitol: "sisteme-liniare",
     descriere:
-      "Aceeași eliminare, dar pe trei diagonale: patru vectori în loc de o matrice și O(n) operații în loc de O(n³).",
+      "Frumusețea sistemelor tridiagonale și optimizarea pe care o aduc, văzută prin aplicarea algoritmului Thomas pe o matrice aleasă aleator.",
     metode: [
       "Sisteme tridiagonale",
       "Eliminare înainte",
@@ -177,7 +177,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "metode-iterative",
     numar: 5,
-    titlu: "Jacobi, Gauss-Seidel, SOR",
+    titlu: "Metode iterative pentru rezolvarea sistemelor de ecuații liniare",
     capitol: "sisteme-liniare",
     descriere:
       "Trei moduri de a te apropia de soluție prin repetiție, cu formula alături de matricea care se schimbă la fiecare pas.",
@@ -191,7 +191,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "ecuatii-neliniare",
     numar: 6,
-    titlu: "Puncte fixe, bisecție, Newton, secantă",
+    titlu: "Rezolvarea ecuațiilor neliniare",
     capitol: "ecuatii-optimizare",
     descriere:
       "Cauți rădăcina unei funcții pe un interval: alegi metoda, tragi de capete și vezi cât de repede se strânge fiecare.",
@@ -219,13 +219,16 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "metodele-puterii",
     numar: 8,
-    titlu: "Metodele puterii, Rayleigh, deflație",
+    titlu: "Metodele Puterii",
     capitol: "valori-proprii",
     descriere:
       "Cum scoate o simplă înmulțire repetată valoarea proprie dominantă și cum ajungi la celelalte, prin puterea inversă și deflație.",
     metode: ["Metoda puterii", "Puterea inversă", "Iterarea Rayleigh", "Deflație"],
     dificultate: "greu",
     cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
+    // Pagina se sprijină pe clip și pe teorie; interfața interactivă a fost
+    // construită și scoasă prin decizie, deci secțiunea nu se pune deloc.
+    interactiv: false,
     gata: false,
   },
   {
@@ -234,7 +237,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     titlu: "Algoritmul PageRank",
     capitol: "valori-proprii",
     descriere:
-      "Importanța unei pagini web ca vector propriu pentru λ = 1 al matricei Google — adică metoda puterii, aplicată pe un graf de linkuri.",
+      "Metoda puterii, aplicată pe un graf de linkuri. Secretele din spatele algoritmului care a impactat Google, descris pas cu pas.",
     metode: ["Matrice stocastică", "Matricea Google", "Metoda puterii", "Deflație pe blocuri"],
     dificultate: "mediu",
     cursSursa: ["valori_vectori_proprii_teorie_curs7.md"],
@@ -246,7 +249,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "algoritmul-qr",
     numar: 10,
-    titlu: "Algoritmul QR și valorile proprii",
+    titlu: "Algoritmul QR",
     capitol: "valori-proprii",
     descriere:
       "Ce înseamnă de fapt Q și R și de ce, repetând factorizarea, matricea se apropie de o formă din care se citesc toate valorile proprii deodată.",
@@ -276,7 +279,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     titlu: "Descompunerea valorilor singulare (DVS)",
     capitol: "valori-proprii",
     descriere:
-      "Orice matrice, chiar și dreptunghiulară, se scrie ca o rotație, o întindere pe axe și încă o rotație — de unde ies valorile singulare și la ce sunt bune.",
+      "Orice matrice, chiar și dreptunghiulară, se scrie ca o rotație, o întindere pe axe și încă o rotație.",
     metode: [
       "DVS",
       "SVD",
@@ -297,7 +300,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "interpolare-polinomiala",
     numar: 12,
-    titlu: "Lagrange, Neville, funcția Runge, spline",
+    titlu: "Interpolări polinomiale",
     capitol: "interpolare-aproximare",
     descriere:
       "Îți alegi punctele, iar polinomul le trece prin toate — până când funcția Runge arată de ce era nevoie de spline-uri.",
@@ -309,10 +312,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "curbe-bezier",
     numar: 13,
-    titlu: "Curbe Bézier, algoritmul de Casteljau",
+    titlu: "Curbe Bézier. Algoritmul de Casteljau",
     capitol: "interpolare-aproximare",
     descriere:
-      "Tragi de punctele de control și curba te urmează: construcția de Casteljau, în plan și în spațiu.",
+      "Tragi de punctele de control și curba te urmează: construcția algoritmului de Casteljau, pas cu pas.",
     metode: ["Curbe Bézier", "Polinoame Bernstein", "de Casteljau", "2D / 3D"],
     dificultate: "ușor",
     cursSursa: ["interpolare_spline_bezier_teorie_curs09.md"],
@@ -323,8 +326,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     numar: 14,
     titlu: "Transformata Fourier rapidă (FFT)",
     capitol: "interpolare-aproximare",
-    descriere:
-      "Cum coboară interpolarea trigonometrică de la 4m² operații la O(m log m): coeficienții complecși și pasul de înjumătățire.",
+    descriere: "Cum coboară interpolarea trigonometrică de la 4m² operații la O(m log m).",
     metode: [
       "FFT",
       "Cooley-Tukey",
@@ -345,7 +347,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     titlu: "Derivare numerică",
     capitol: "integrare-ode",
     descriere:
-      "Panta tangentei, aproximată prin panta unei secante: ce câștigi micșorând pasul h și de unde apare eroarea de rotunjire.",
+      "Formulele importante ale aproximării derivatelor, explicate printr-o interfață interactivă.",
     metode: [
       "Formula two-point",
       "Derivare înainte",
@@ -362,10 +364,10 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "newton-cotes",
     numar: 16,
-    titlu: "Newton-Cotes: trapeze și Simpson",
+    titlu: "Metodele Newton-Cotes: formula trapezelor și formula Simpson",
     capitol: "integrare-ode",
     descriere:
-      "Aria de sub grafic, aproximată pe noduri echidistante cu trapeze și cu parabole, plus ce câștigă formulele compuse.",
+      "Cum calculăm aria de sub grafic, aproximată pe noduri echidistante cu trapeze și parabole.",
     metode: [
       "Cuadratură numerică",
       "Newton-Cotes",
@@ -386,7 +388,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
   {
     slug: "cuadraturi-adaptive-si-gaussiene",
     numar: 17,
-    titlu: "Cuadraturi adaptive și cuadraturi Gaussiene",
+    titlu: "Cuadraturi Adaptive și Gaussiene",
     capitol: "integrare-ode",
     descriere:
       "Unde își împarte Simpson intervalul când eroarea e prea mare și de ce nodurile Gaussiene nu sunt echidistante.",

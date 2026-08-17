@@ -97,11 +97,19 @@ const CURBA_FUNCTIEI: Punct[] = esantioneaza(RUNGE.f, DOMENIU, 320);
 
 /* ───────────────────────── roluri ───────────────────────── */
 
-const ROL_FUNCTIE = "functie" as const satisfies RolViz;
+/**
+ * Funcția adevărată se desenează **portocaliu**, nu cu albastrul curbei.
+ *
+ * Pe tema întunecată, `functie` e aproape alb, iar linia punctată se citea ca o
+ * urmă de grilă în loc de curba din care au fost luate valorile — adică tocmai
+ * lucrul cu care se compară tot restul clipului. Portocaliul o desparte de
+ * polinomul safir la prima privire, fără să mai aibă nevoie de punctare.
+ */
+const ROL_FUNCTIE = "interval" as const satisfies RolViz;
 const ROL_POLINOM = "curent" as const satisfies RolViz;
 const ROL_NODURI = "anterior" as const satisfies RolViz;
 const ROL_SPLINE = "solutie" as const satisfies RolViz;
-const ROL_ACCENT = "interval" as const satisfies RolViz;
+const ROL_ACCENT = "pivot" as const satisfies RolViz;
 
 /* ───────────────────────── cadrul de desen ───────────────────────── */
 
@@ -396,7 +404,6 @@ function Desen() {
           rol={ROL_FUNCTIE}
           opacitate={intra(T, N + 6.0, 0.6)}
           grosime={6}
-          punctata
         />
         <Curba puncte={curbaTrasata} rol={ROL_POLINOM} opacitate={1} />
         <Noduri noduri={SETURI[0]!} opacitate={1} />
@@ -425,7 +432,7 @@ function Desen() {
       {/* ═══ 3 · mai multe noduri ═══ */}
       <Antet opacitate={oMaiMulte} titlu="Mai multe noduri, aproximare mai proastă" st={st} />
       <g opacity={oMaiMulte}>
-        <Curba puncte={CURBA_FUNCTIEI} rol={ROL_FUNCTIE} opacitate={0.85} grosime={6} punctata />
+        <Curba puncte={CURBA_FUNCTIEI} rol={ROL_FUNCTIE} opacitate={0.85} grosime={6} />
         {/* Curba dinainte se stinge în timp ce cea nouă intră: schimbarea de
             treaptă se vede ca o mișcare, nu ca o tăietură. */}
         <Curba
@@ -442,7 +449,7 @@ function Desen() {
           opacitate={intra(T, M + 0.6, 0.5)}
           rol={ROL_NODURI}
           simbol={`${TREPTE[treapta]} noduri`}
-          text="Echidistante, ca în curs"
+          text="Oscilează, fiindcă eroarea se adună"
           st={st}
         />
         <Cartonas
@@ -470,7 +477,7 @@ function Desen() {
       {/* ═══ 4 · spline-ul ═══ */}
       <Antet opacitate={oSpline} titlu="Bucată cu bucată, în loc de un polinom mare" st={st} />
       <g opacity={oSpline}>
-        <Curba puncte={CURBA_FUNCTIEI} rol={ROL_FUNCTIE} opacitate={0.85} grosime={6} punctata />
+        <Curba puncte={CURBA_FUNCTIEI} rol={ROL_FUNCTIE} opacitate={0.85} grosime={6} />
         <Curba
           puncte={CURBE_POLINOM[TREPTE.length - 1]!}
           rol={ROL_POLINOM}
@@ -519,7 +526,7 @@ const SUBTITRARI = [
   },
   {
     la: CUE.Polinom + 7.0,
-    text: "Punctată e funcția adevărată, cea din care au fost luate valorile.",
+    text: "Cealaltă curbă e funcția adevărată, cea din care au fost luate valorile.",
   },
   { la: CUE.MaiMulte + 0.6, text: "Pare firesc ca mai multe noduri să dea o aproximare mai bună." },
   {

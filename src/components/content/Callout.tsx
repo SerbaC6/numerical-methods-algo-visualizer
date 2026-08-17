@@ -48,11 +48,15 @@ export function Callout({ tip = "nota", titlu, children, className }: CalloutPro
   const Icon = stil.icon;
 
   return (
-    <aside className={cn("flex gap-3.5 rounded-lg border p-5", stil.clase, className)}>
+    // Pe telefon caseta e cât un ecran de lată și orice rând în plus se vede:
+    // spațiul din jur se strânge acolo, nu și pe desktop.
+    <aside
+      className={cn("flex gap-3 rounded-lg border p-4 sm:gap-3.5 sm:p-5", stil.clase, className)}
+    >
       <Icon className={cn("mt-0.5 size-5 shrink-0", stil.iconClase)} aria-hidden="true" />
       <div className="min-w-0">
         <p className="text-base font-bold">{titlu ?? stil.titlu}</p>
-        <div className="text-text-slab mt-1.5 text-lg [&_a]:underline">{children}</div>
+        <div className="text-text-slab mt-1.5 text-base sm:text-lg [&_a]:underline">{children}</div>
       </div>
     </aside>
   );

@@ -440,7 +440,10 @@ export function Plot({
             aria-labelledby={idTitlu}
             aria-describedby={descriere ? idDescriere : undefined}
             className={cn(
-              "block overflow-visible",
+              // `select-none`: tragerea de pe grafic e un gest de desen, nu de
+              // citit. Fără el, cursorul selectează în drum etichetele („x₀",
+              // „a₀") și rămân evidențiate albastru după ce ai dat drumul.
+              "block overflow-visible select-none",
               interactiv &&
                 "focus-visible:ring-ring/50 cursor-grab rounded-lg focus-visible:ring-[3px] focus-visible:outline-none active:cursor-grabbing",
             )}

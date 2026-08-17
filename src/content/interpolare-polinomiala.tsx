@@ -65,7 +65,7 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
                 sens: <>suportul interpolării: nodurile în care se cunoaște f</>,
               },
               { simbol: "lₖ", sens: <>multiplicatorul Lagrange al nodului k</> },
-              { simbol: "n", sens: <>gradul, cu unul mai mic decât numărul de noduri</> },
+              { simbol: "n", sens: <>gradul, cu 1 mai mic decât numărul de noduri</> },
             ],
             explicatie: (
               <>
@@ -116,57 +116,8 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
             ],
             explicatie: (
               <>
-                Cele două ponderi se adună la 1, deci pasul e o interpolare liniară între două
-                rezultate parțiale. Schema urcă de la gradul 0 până la <Mate>P₀ₙ</Mate>.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "eroare",
-        titlu: "Diferențe divizate și eroarea",
-        esenta: (
-          <>
-            Aceleași valori, adunate altfel — iar din scrierea asta iese formula erorii pe care
-            interpolarea o lasă în urmă.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "F_p[x_0, \\dots, x_p] = \\frac{F_{p-1}[x_0, \\dots, x_{p-1}] - F_{p-1}[x_1, \\dots, x_p]}{x_0 - x_p}",
-            sursa: "curs 9, §4",
-            legenda: [
-              { simbol: "F₀[x₀]", sens: <>chiar f(x₀): de acolo pornește recurența</> },
-              { simbol: "Fₚ", sens: <>diferența divizată de ordinul p, pe p + 1 noduri</> },
-            ],
-            explicatie: (
-              <>
-                Fiecare ordin se calculează din două diferențe de ordinul dinainte, decalate cu un
-                nod.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "f(x) = P(x) + \\frac{f^{(n+1)}(\\xi(x))}{(n+1)!}\\,(x - x_0)(x - x_1)\\cdots(x - x_n)",
-            sursa: "curs 9, §4",
-            legenda: [
-              { simbol: "ξ(x)", sens: <>un punct dintre noduri, care depinde de x</> },
-              { simbol: "f⁽ⁿ⁺¹⁾", sens: <>derivata de ordinul n + 1, cerută continuă</> },
-              {
-                simbol: "(x − x₀)…(x − xₙ)",
-                sens: <>produsul distanțelor de la x până la noduri</>,
-              },
-            ],
-            explicatie: (
-              <>
-                Produsul se anulează în noduri și crește între ele; pe noduri echidistante e cu
-                ordine de mărime mai mare în subintervalele de la capete.
+                Cele 2 ponderi se adună la 1, deci pasul e o interpolare liniară între 2 rezultate
+                parțiale. Schema urcă de la gradul 0 până la <Mate>P₀ₙ</Mate>.
               </>
             ),
           },
@@ -203,9 +154,8 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
             titlu: "De ce nu se rezolvă cu mai multe puncte",
             continut: (
               <>
-                Creșterea gradului nu îmbunătățește neapărat aproximarea. Vinovat nu e numărul de
-                puncte, ci faptul că <strong>un singur</strong> polinom trebuie să se potrivească pe
-                tot intervalul deodată — de aici pornește interpolarea pe porțiuni.
+                Vinovat nu e numărul de puncte, ci faptul că <strong>un singur</strong> polinom
+                trebuie să se potrivească pe tot intervalul deodată.
               </>
             ),
           },
@@ -239,7 +189,14 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
               "a_i = \\frac{f(x_{i+1}) - f(x_i)}{x_{i+1} - x_i}, \\qquad b_i = \\frac{x_{i+1}f(x_i) - x_i f(x_{i+1})}{x_{i+1} - x_i}",
             sursa: "curs 9, §10",
             legenda: [
-              { simbol: "pᵢ(x)", sens: <>dreapta aᵢ·x + bᵢ, pe subintervalul i</> },
+              {
+                simbol: "pᵢ(x)",
+                sens: (
+                  <>
+                    dreapta <Mate>aᵢ·x + bᵢ</Mate>, pe subintervalul <Mate>i</Mate>
+                  </>
+                ),
+              },
               { simbol: "aᵢ", sens: <>panta ei, adică raportul dintre creșteri</> },
             ],
             explicatie: (
@@ -256,13 +213,27 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
               "s_i(t) = y_i(1-t)^3 + (3y_i + h_i y'_i)\\,t(1-t)^2 + (3y_{i+1} - h_i y'_{i+1})\\,t^2(1-t) + y_{i+1}t^3",
             sursa: "curs 9, §11",
             legenda: [
-              { simbol: "t", sens: <>(x − xᵢ)/hᵢ, adică poziția în subinterval, de la 0 la 1</> },
-              { simbol: "hᵢ", sens: <>lungimea subintervalului, xᵢ₊₁ − xᵢ</> },
+              {
+                simbol: "t",
+                sens: (
+                  <>
+                    <Mate>(x − xᵢ)/hᵢ</Mate>, adică poziția în subinterval, de la 0 la 1
+                  </>
+                ),
+              },
+              {
+                simbol: "hᵢ",
+                sens: (
+                  <>
+                    lungimea subintervalului, <Mate>xᵢ₊₁ − xᵢ</Mate>
+                  </>
+                ),
+              },
               { simbol: "y′ᵢ", sens: <>derivata cerută în nodul i</> },
             ],
             explicatie: (
               <>
-                Cele patru paranteze sunt baza Bernstein — aceleași polinoame care conduc curbele
+                Cele 4 paranteze sunt baza Bernstein — aceleași polinoame care conduc curbele
                 Bézier. Prețul e că trebuie cunoscute și derivatele în noduri, nu doar valorile.
               </>
             ),
@@ -285,46 +256,49 @@ export const continutInterpolarePolinomiala: ContinutPagina = {
             latex: "s_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3",
             sursa: "curs 9, §12",
             legenda: [
-              { simbol: "aᵢ, bᵢ, cᵢ, dᵢ", sens: <>cei patru coeficienți ai bucății i</> },
+              { simbol: "aᵢ, bᵢ, cᵢ, dᵢ", sens: <>cei 4 coeficienți ai bucății i</> },
               { simbol: "4n", sens: <>câți coeficienți sunt în total, pe n subintervale</> },
             ],
             explicatie: (
               <>
-                Interpolarea dă <Mate>n + 1</Mate> condiții, racordarea valorii, a pantei și a
-                curburii încă <Mate>3n − 3</Mate>: în total <Mate>4n − 2</Mate>, deci mai lipsesc
-                două.
+                Pe <Mate>n</Mate> subintervale sunt <Mate>4n</Mate> coeficienți de aflat, iar tot ce
+                urmează sunt condițiile care îi fixează.
+              </>
+            ),
+          },
+          {
+            tip: "formula",
+            latex: "s_i(x_i) = f(x_i), \\quad i = 0 : n-1, \\qquad s_{n-1}(x_n) = f(x_n)",
+            sursa: "curs 9, §12, condițiile de interpolare de tip Lagrange",
+            subtitlu: "Condițiile de interpolare",
+            legenda: [
+              { simbol: "sᵢ", sens: <>bucata de cubică de pe subintervalul i</> },
+              { simbol: "f(xᵢ)", sens: <>valoarea cunoscută în nodul i</> },
+            ],
+            explicatie: (
+              <>
+                Fiecare bucată trece prin nodul ei, iar ultima și prin capătul din dreapta:{" "}
+                <Mate>n + 1</Mate> condiții, din care iese direct <Mate>aᵢ = f(xᵢ)</Mate>.
               </>
             ),
           },
           {
             tip: "formula",
             latex:
-              "h_{i-1}c_{i-1} + 2(h_{i-1} + h_i)\\,c_i + h_i c_{i+1} = \\frac{3(a_{i+1} - a_i)}{h_i} - \\frac{3(a_i - a_{i-1})}{h_{i-1}}",
-            sursa: "curs 9, §12",
+              "s_i(x_{i+1}) = s_{i+1}(x_{i+1}), \\qquad s_i'(x_{i+1}) = s_{i+1}'(x_{i+1}), \\qquad s_i''(x_{i+1}) = s_{i+1}''(x_{i+1})",
+            sursa: "curs 9, §12, cele 3n − 3 condiții de racordare",
+            subtitlu: "Condițiile de racordare",
             legenda: [
-              { simbol: "cᵢ", sens: <>necunoscutele: jumătate din curbura în nodul i</> },
-              { simbol: "hᵢ", sens: <>lungimea subintervalului i</> },
+              { simbol: "sᵢ(xᵢ₊₁)", sens: <>valoarea, în nodul dintre două bucăți vecine</> },
+              { simbol: "sᵢ′", sens: <>panta, adică derivata întâi</> },
+              { simbol: "sᵢ″", sens: <>curbura, adică derivata a doua</> },
             ],
             explicatie: (
               <>
-                Fiecare linie leagă doar trei necunoscute vecine, deci matricea e{" "}
-                <strong>tridiagonală</strong> — se rezolvă cu algoritmul Thomas.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "a_i = f(x_i), \\qquad d_i = \\frac{c_{i+1} - c_i}{3h_i}, \\qquad b_i = \\frac{a_{i+1} - a_i}{h_i} - \\frac{h_i}{3}(2c_i + c_{i+1})",
-            sursa: "curs 9, §12",
-            legenda: [
-              { simbol: "aᵢ", sens: <>chiar valoarea funcției în nod</> },
-              { simbol: "s″", sens: <>derivata a doua, cea care se anulează la capete</> },
-            ],
-            explicatie: (
-              <>
-                Cele două condiții care lipsesc se aleg la capete: <strong>natural</strong> cere{" "}
-                <Mate>s″ = 0</Mate>, iar <strong>tensionat</strong> cere <Mate>s′ = f′</Mate>.
+                În fiecare nod interior se potrivesc valoarea, panta și curbura: <Mate>3n − 3</Mate>{" "}
+                condiții. Cu cele de interpolare se ajunge la <Mate>4n − 2</Mate>, deci mai lipsesc
+                2 — alese la capete: <strong>natural</strong> cere <Mate>s″ = 0</Mate>,{" "}
+                <strong>tensionat</strong> cere <Mate>s′ = f′</Mate>.
               </>
             ),
           },

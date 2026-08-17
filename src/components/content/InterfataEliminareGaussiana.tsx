@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import {
   EXEMPLE_PIVOTARE,
@@ -29,7 +29,6 @@ import { MatrixGrid, type StareCelula } from "@/components/viz/MatrixGrid";
 import { Notatie } from "@/components/viz/Notatie";
 import { NumberInput } from "@/components/viz/NumberInput";
 import { PlaybackBar } from "@/components/viz/PlaybackBar";
-import { StepExplanation } from "@/components/viz/StepExplanation";
 import { useDerulare } from "@/hooks/use-derulare";
 import { zecimale } from "@/lib/numere";
 import { culoareEticheta, culoareRol } from "@/lib/viz-roles";
@@ -201,25 +200,11 @@ export function InterfataEliminareGaussiana() {
               </Select>
             </div>
 
-            {matrice.map((linie, i) => (
-              <div
-                key={i}
-                className="grid gap-2"
-                style={{ gridTemplateColumns: `repeat(${linie.length}, minmax(0, 1fr))` }}
-              >
-                {linie.map((valoare, j) => (
-                  <NumberInput
-                    key={j}
-                    eticheta={
-                      j < coeficienti ? `a${indice(i + 1)}${indice(j + 1)}` : `b${indice(i + 1)}`
-                    }
-                    valoare={valoare}
-                    onChange={(x) => schimbaCelula(i, j, x)}
-                    pas={0.1}
-                  />
-                ))}
-              </div>
-            ))}
+            <MatriceEditabila
+              matrice={matrice}
+              coeficienti={coeficienti}
+              onSchimba={schimbaCelula}
+            />
           </ControlPanel>
         </div>
       </div>
@@ -234,19 +219,20 @@ export function InterfataEliminareGaussiana() {
         onVitezaChange={derulare.setViteza}
       />
 
-      <StepExplanation
-        explicatie={pas ? <Notatie>{pas.explicatie}</Notatie> : undefined}
-        pas={derulare.pas}
-        totalPasi={rezultat.pasi.length}
-        ruleaza={derulare.ruleaza}
-      />
+      {/* O singură formulă, **simbolică**, aceeași la toți pașii: se aprinde
+          doar bucata la care s-a ajuns.
 
+          Înainte, aici stăteau două piese care creșteau la fiecare pas —
+          propoziția pasului și formula lui cu numerele puse în ea. Împreună
+          făceau din interfață un al doilea capitol de teorie, exact ce nu-i
+          trebuia: ce se schimbă pe grilă se vede pe grilă, iar de ce s-a ales
+          pivotul acela se citește din coloana de scoruri de lângă ea. */}
       {pas && (
         <FormulaBlock
-          latex={pas.latexPas}
-          eticheta="Pasul acesta, cu numerele în formulă"
+          latex={REGULA_PASULUI[strategie]}
+          eticheta="Regula pasului"
           evidentiaza={pas.evidentiaza}
-          className="text-[1.15rem] sm:text-[1.3rem]"
+          className="text-[1.05rem] sm:text-[1.2rem]"
         />
       )}
 
@@ -264,6 +250,104 @@ export function InterfataEliminareGaussiana() {
         </Callout>
       )}
     </div>
+  );
+}
+
+/**
+ * Sistemul de editat, scris ca **o matrice**, nu ca un teanc de câmpuri.
+ *
+ * Cu eticheta fiecărei celule scrisă deasupra ei („a₁₁", „a₁₂", …, „b₁"),
+ * panoul arăta ca o listă de doisprezece parametri fără legătură între ei, deși
+ * e chiar matricea desenată alături. Numele n-au dispărut, doar au ieșit de pe
+ * ecran: fiecare câmp îl păstrează ca nume accesibil, iar ochiul primește în loc
+ * paranteza care le ține împreună și linia care desparte coeficienții de
+ * termenii liberi — aceleași două semne ca pe grilă.
+ */
+function MatriceEditabila({
+  matrice,
+  coeficienti,
+  onSchimba,
+}: {
+  matrice: Matrice;
+  coeficienti: number;
+  onSchimba: (i: number, j: number, valoare: number | "") => void;
+}) {
+  const coloane = matrice[0]?.length ?? 0;
+  const areTermenLiber = coloane > coeficienti;
+
+  return (
+    <div className="grid gap-2">
+      <span className="text-text-slab text-sm font-semibold">Matricea sistemului</span>
+      {/* Paranteza e făcută din chenarul din stânga și cel din dreapta, ca la
+          matricea din panoul metodelor puterii: două laturi verticale, niciuna
+          orizontală. */}
+      <div className="border-accent-slab/60 flex gap-2 rounded-sm border-x-2 border-y-0 px-2 py-2">
+        <div className="grid flex-1 gap-2">
+          {matrice.map((linie, i) => (
+            <div
+              key={i}
+              className="grid items-center gap-1.5"
+              style={{
+                gridTemplateColumns: areTermenLiber
+                  ? `repeat(${coeficienti}, minmax(0, 1fr)) auto minmax(0, 1fr)`
+                  : `repeat(${coloane}, minmax(0, 1fr))`,
+              }}
+            >
+              {linie.map((valoare, j) => (
+                <Fragment key={j}>
+                  {areTermenLiber && j === coeficienti && (
+                    <span
+                      aria-hidden="true"
+                      className="bg-accent-slab/60 h-10 w-px justify-self-center"
+                    />
+                  )}
+                  {/* Cifra la mijloc și cu margini strânse: în celule de 57 px,
+                      `px-3` din `Input` lăsa 33 px pentru text, iar „35" și „−1"
+                      ieșeau din câmp. */}
+                  <NumberInput
+                    className="[&_input]:px-1.5 [&_input]:text-center"
+                    eticheta={
+                      j < coeficienti ? `a${indice(i + 1)}${indice(j + 1)}` : `b${indice(i + 1)}`
+                    }
+                    etichetaAscunsa
+                    valoare={valoare}
+                    onChange={(x) => onSchimba(i, j, x)}
+                    pas={0.1}
+                  />
+                </Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Regula fiecărei etape, scrisă o singură dată și cu simboluri, nu cu numere.
+ *
+ * Cele patru bucăți sunt exact cele patru feluri de pas pe care le produce
+ * `ruleazaPivotare`, iar `\htmlId`-urile poartă aceleași nume ca `evidentiaza`
+ * din pași — de aceea se aprinde singură bucata potrivită, fără ca formula să
+ * se recompileze la fiecare pas.
+ *
+ * Ce diferă între strategii e **doar** scorul după care se alege pivotul; restul
+ * eliminării e identic la toate trei.
+ */
+const REGULA_PASULUI: Record<Strategie, string> = {
+  partiala: regulaPasului("\\max_{i \\ge p} |a_{ip}|"),
+  scalata: regulaPasului("\\max_{i \\ge p} \\frac{|a_{ip}|}{s_i}"),
+  totala: regulaPasului("\\max_{i,\\,j \\ge p} |a_{ij}|"),
+};
+
+function regulaPasului(scor: string): string {
+  return (
+    "\\begin{aligned}" +
+    `\\htmlId{piv-linie}{${scor}} &\\quad \\htmlId{piv-permutare}{L_p \\leftrightarrow L_{i_p}} \\\\[4pt]` +
+    "\\htmlId{piv-linie-noua}{L_i \\leftarrow L_i - \\mu_{ip}\\,L_p} &\\quad " +
+    "\\htmlId{piv-x}{x_i = \\frac{b_i - \\sum_{j>i} a_{ij}x_j}{a_{ii}}}" +
+    "\\end{aligned}"
   );
 }
 

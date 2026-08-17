@@ -588,13 +588,12 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
 - [x] **Pagina 8 — `metodele-puterii`** (puterea, puterea inversă, Rayleigh, deflație). Clipul
       (`AnimatiaMetodelorPuterii`) lucrează **în plan**, pe `A = [[3,1],[1,3]]`, cu valorile proprii
       exacte 4 și 2 pe cele două diagonale: acolo iterația se vede ca o săgeată care se rotește, ceea
-      ce o matrice 3×3 n-ar arăta fără o proiecție scrisă de mână. Interfața
-      (`InterfataMetodelorPuterii`) are trei taburi pe aceeași matrice editabilă 3×3 — directă,
-      inversă cu deplasare, Rayleigh —, cu barele componentelor lui `v⁽ᵏ⁾` peste cele ale pasului
-      dinainte. **Deflația rămâne doar în teorie**, prin decizie: nu e o iterație care se derulează,
-      ci o schimbare a matricei între două rulări, iar un tab lângă celelalte trei ar face-o să pară
-      altceva decât e. Matematica ei stă totuși în `src/algorithms/metodele-puterii/` și e verificată
-      numeric, ca formulele din teorie să se poată garanta.
+      ce o matrice 3×3 n-ar arăta fără o proiecție scrisă de mână. **Interfața interactivă a fost
+      construită și scoasă la cerere**, cu tot cu fișierul ei: pagina rămâne cu clipul și cu teoria.
+      **Deflația rămâne doar în teorie**, prin decizie: nu e o iterație care se derulează, ci o
+      schimbare a matricei între două rulări. Matematica amândurora stă totuși în
+      `src/algorithms/metodele-puterii/` și e verificată numeric, ca formulele din teorie să se
+      poată garanta.
 - [ ] **Pagina 9 — `pagerank`**. `MatrixGrid` pentru matricea stocastică + **graf cu noduri și
       muchii** — primitivă nouă, și singurul loc din site care o cere. Iterația e chiar metoda
       puterii de la pagina 8, deci se face după ea.
@@ -724,6 +723,8 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   Transformarea desenată e fixă: DVS-ul exact al matricei `A = [[1, 2], [0, 1]]`.
 - **pagina 9** (`pagerank`) — interfața a fost construită și **scoasă la cerere**; pe pagină rămâne
   clipul (`AnimatiaMatriceiPageRank`), cu `d` fixat la 0,85.
+- **pagina 8** (`metodele-puterii`) — la fel, interfața a fost construită și **scoasă la cerere**;
+  rămâne clipul (`AnimatiaMetodelorPuterii`), pe `A = [[3,1],[1,3]]`.
 - **pagina 14** (`fft`) — clipul duce singur povestea, iar teoria o scrie în formule. Nu există un
   set de parametri pe care cititorul să-i schimbe fără să reconstruiască tot planul complex.
 - **pagina 5** (`metode-iterative`) — interfața a fost construită și **scoasă la cerere**; pe

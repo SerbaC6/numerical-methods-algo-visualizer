@@ -456,23 +456,29 @@ function Panou({ T, cue, st }: { T: number; cue: Cue; st: number }) {
 
       {valoare && (
         <g>
+          {/* Formula stă mai mare decât înainte și mai depărtată de cifră: la
+              28 de unități se citea ca o notă de subsol a numărului, deși ea
+              spune ce anume e numărul. */}
           <text
             x={PX + LATIME_MATRICE / 2}
             y={PY + LATIME_MATRICE + 110}
             textAnchor="middle"
             fill="var(--text-slab)"
-            style={{ font: `600 ${28 * Math.min(st, 1.2)}px var(--font-mono)` }}
+            style={{ font: `700 ${42 * Math.min(st, 1.2)}px var(--font-mono)` }}
           >
             {valoare.eticheta}
           </text>
+          {/* Trei zecimale, nu șase: aici se urmărește **spre ce** urcă câtul,
+              iar ultimele trei cifre se schimbau prea repede ca să se citească.
+              Cifra e și puțin mai mică, ca să nu strivească formula de deasupra. */}
           <text
             x={PX + LATIME_MATRICE / 2}
-            y={PY + LATIME_MATRICE + 190}
+            y={PY + LATIME_MATRICE + 230}
             textAnchor="middle"
             fill={culoareEticheta(T >= cue.Inversa ? "interval" : "curent")}
-            style={{ font: `800 ${64 * Math.min(st, 1.2)}px var(--font-mono)` }}
+            style={{ font: `800 ${54 * Math.min(st, 1.2)}px var(--font-mono)` }}
           >
-            {virgula(valoare.valoare, 6)}
+            {virgula(valoare.valoare, 3)}
           </text>
         </g>
       )}
@@ -482,13 +488,13 @@ function Panou({ T, cue, st }: { T: number; cue: Cue; st: number }) {
           {[
             {
               text: `λ₁ = ${VALORI_PLANE[0]}`,
-              sub: "metoda puterii, iterarea Rayleigh",
+              sub: "Metoda puterii, iterarea Rayleigh",
               rol: "solutie" as const,
               y: PY + LATIME_MATRICE + 120,
             },
             {
               text: `λ₂ = ${VALORI_PLANE[1]}`,
-              sub: "puterea inversă",
+              sub: "Puterea inversă",
               rol: "interval" as const,
               y: PY + LATIME_MATRICE + 250,
             },

@@ -16,6 +16,30 @@ export type NumberInputProps = {
   pas?: number;
   /** Unitate sau simbol afișat în dreapta (ex. „iterații", „ε"). */
   unitate?: string;
+  /**
+   * Valoarea se scrie **întotdeauna** în notație științifică („1e-8"), oricât
+   * de mare ar fi. Pentru toleranțe, unde altfel același câmp arăta „0,0001"
+   * la un preset și „1e-8" la altul.
+   */
+  stiintific?: boolean;
+  /**
+   * Fără săgețile de sus-jos.
+   *
+   * Se pune pe câmpurile care se plimbă peste ordine de mărime — toleranța,
+   * pasul `h`: un pas de 1e-9 pe o valoare de 1e-6 înseamnă o mie de apăsări ca
+   * să se schimbe ceva vizibil, deci săgeata promitea o reglare pe care n-o
+   * putea face.
+   */
+  faraSageti?: boolean;
+  /**
+   * Eticheta rămâne, dar numai pentru cititorul de ecran.
+   *
+   * Se pune acolo unde câmpurile formează ele însele o figură — o matrice între
+   * paranteze —, iar numele fiecărei celule scris deasupra ei ar face din
+   * matrice o listă de câmpuri. Numele nu dispare: câmpul îl păstrează ca nume
+   * accesibil, deci „a₂₃" se aude în continuare.
+   */
+  etichetaAscunsa?: boolean;
   /** Explicație scurtă sub câmp, când e valid. */
   ajutor?: string;
   /** Mesaj de eroare; prezența lui pune câmpul în stare invalidă. */
@@ -47,9 +71,11 @@ function esteSimbol(eticheta: string): boolean {
 }
 
 /** Ce scrie în câmp pentru o valoare venită din afară (preset, „Resetează"). */
-function afiseaza(valoare: number | ""): string {
+function afiseaza(valoare: number | "", stiintific = false): string {
   if (valoare === "") return "";
-  if (valoare !== 0 && Math.abs(valoare) < PRAG_STIINTIFIC) return valoare.toExponential();
+  if (valoare !== 0 && (stiintific || Math.abs(valoare) < PRAG_STIINTIFIC)) {
+    return valoare.toExponential();
+  }
   return String(valoare);
 }
 
@@ -66,6 +92,9 @@ export function NumberInput({
   max,
   pas,
   unitate,
+  stiintific,
+  faraSageti,
+  etichetaAscunsa,
   ajutor,
   eroare,
   disabled,
@@ -83,13 +112,13 @@ export function NumberInput({
    * **doar** când valoarea din afară chiar diferă de ce s-a tastat — adică la un
    * preset sau la „Resetează".
    */
-  const [text, setText] = useState(() => afiseaza(valoare));
+  const [text, setText] = useState(() => afiseaza(valoare, stiintific));
 
   useEffect(() => {
     const dinText = text.trim() === "" ? "" : Number(text);
     if (dinText === valoare) return;
     if (typeof dinText === "number" && typeof valoare === "number" && dinText === valoare) return;
-    setText(afiseaza(valoare));
+    setText(afiseaza(valoare, stiintific));
     // `text` lipsește dinadins din dependențe: efectul reacționează la valoarea
     // venită din afară, nu la fiecare tastă.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +130,10 @@ export function NumberInput({
           cuvânt („Toleranța", „Iterații maxime"): un cuvânt scris mono arată ca
           o eroare de stil. Simbolurile se scriu și mai mare, ca indicii să se
           vadă. */}
-      <Label htmlFor={id} className={cn("text-lg", esteSimbol(eticheta) && "font-mono")}>
+      <Label
+        htmlFor={id}
+        className={cn("text-lg", esteSimbol(eticheta) && "font-mono", etichetaAscunsa && "sr-only")}
+      >
         <Notatie>{eticheta}</Notatie>
       </Label>
       <div className="relative">
@@ -114,12 +146,16 @@ export function NumberInput({
             // în clasa lui de bază, care altfel câștigă de la breakpoint în sus
             // și lăsa cifrele la 14 px pe desktop.
             "tinta-atingere font-mono text-lg md:text-lg",
+            // Firefox scoate săgețile cu `appearance: textfield`,
+            // WebKit/Chromium doar prin pseudo-elementele lor.
+            faraSageti &&
+              "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
             unitate && "pr-14",
           )}
           value={text}
           min={min}
           max={max}
-          step={pas}
+          step={faraSageti ? "any" : pas}
           disabled={disabled}
           aria-invalid={eroare ? true : undefined}
           aria-describedby={mesaj ? idMesaj : undefined}

@@ -11,8 +11,16 @@ export type PlotArieProps = {
    * sub curbă, chiar punctele curbei.
    */
   puncte: readonly Punct[];
-  /** Linia de bază la care se închide aria. Implicit axa, adică `y = 0`. */
-  baza?: number;
+  /**
+   * La ce se închide aria: o linie orizontală (implicit axa, `y = 0`) sau **un
+   * al doilea contur**.
+   *
+   * Conturul e pentru zona dintre două curbe — la o cuadratură, fâșia dintre
+   * curba adevărată și figura cu care a fost înlocuită, adică chiar eroarea.
+   * Punctele lui se dau în aceeași ordine ca ale conturului de sus, de la stânga
+   * la dreapta; închiderea le parcurge invers.
+   */
+  baza?: number | readonly Punct[];
   rol?: RolViz;
   opacitate?: number;
   /** Conturul ariei — util ca să se vadă unde se lipesc două trapeze vecine. */
@@ -54,17 +62,32 @@ export function PlotArie({
   const ultimul = valide[valide.length - 1];
   if (!primul || !ultimul || valide.length < 2) return null;
 
-  const yBaza = plot.y.la(baza);
   const sus = valide
     .map(
       (p, i) => `${i === 0 ? "M" : "L"}${plot.x.la(p.x).toFixed(2)},${plot.y.la(p.y).toFixed(2)}`,
     )
     .join("");
 
-  // Închiderea: coboară la bază în dreapta, revine în stânga, se închide.
-  const d = `${sus}L${plot.x.la(ultimul.x).toFixed(2)},${yBaza.toFixed(2)}L${plot.x
-    .la(primul.x)
-    .toFixed(2)},${yBaza.toFixed(2)}Z`;
+  // Închiderea: fie coboară la o linie orizontală, fie urmează al doilea contur
+  // de la dreapta la stânga.
+  let d: string;
+  if (typeof baza === "number") {
+    const yBaza = plot.y.la(baza);
+    d = `${sus}L${plot.x.la(ultimul.x).toFixed(2)},${yBaza.toFixed(2)}L${plot.x
+      .la(primul.x)
+      .toFixed(2)},${yBaza.toFixed(2)}Z`;
+  } else {
+    const jos = baza.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
+    if (jos.length < 2) return null;
+    d =
+      sus +
+      jos
+        .slice()
+        .reverse()
+        .map((p) => `L${plot.x.la(p.x).toFixed(2)},${plot.y.la(p.y).toFixed(2)}`)
+        .join("") +
+      "Z";
+  }
 
   return (
     <g clipPath={`url(#${plot.idTaiere})`} aria-hidden="true">

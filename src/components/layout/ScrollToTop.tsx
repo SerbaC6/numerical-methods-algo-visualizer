@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useLocation, useNavigationType } from "react-router";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLocation } from "react-router";
 
 /**
  * Cât așteptăm să apară elementul-țintă înainte să renunțăm și să mergem în
@@ -18,10 +18,13 @@ const ASTEPTARE_TINTA_MS = 2000;
 const pozitii = new Map<string, number>();
 
 /**
- * La schimbarea rutei pagina pornește de sus — **în afară de întoarcerea
- * înapoi**, unde se așază unde rămăsese. Butonul „înapoi" al browserului nu
- * înseamnă „încă o pagină nouă", ci „unde eram", iar pe paginile lungi de aici
- * capul paginii e la câteva ecrane distanță de locul din care ai plecat.
+ * La schimbarea rutei pagina pornește de sus — **în afară de paginile pe care
+ * le-ai mai deschis o dată**, unde se așază unde rămăsese. Pe paginile lungi de
+ * aici capul paginii e la câteva ecrane distanță de locul din care ai plecat,
+ * iar plimbarea „ies o clipă, mă întorc" e cea obișnuită: se pleacă din mijlocul
+ * teoriei la cuprins sau la pagina vecină și se revine tot acolo. Nu contează
+ * cum te-ai întors — cu butonul „înapoi" al browserului sau printr-un link —,
+ * fiindcă poziția înseamnă același lucru în amândouă cazurile.
  *
  * Fără `behavior: "smooth"` — `html { scroll-behavior: smooth }` din
  * `index.css` ar face un derulaj lung și inutil între pagini.
@@ -34,28 +37,47 @@ const pozitii = new Map<string, number>();
  */
 export function ScrollToTop() {
   const { pathname, hash } = useLocation();
-  const tipNavigare = useNavigationType();
 
-  // Poziția paginii pe care tocmai o părăsim. Se ține într-un `ref` fiindcă
-  // efectul de curățare rulează **după** ce ruta s-a schimbat, deci `pathname`
-  // de acolo e deja cel nou.
+  // Calea și poziția paginii pe care tocmai o părăsim. Amândouă în `ref`-uri,
+  // fiindcă se citesc din curățarea efectului, când `pathname` de mai sus e deja
+  // cel nou.
   const caleaCurenta = useRef(pathname);
-  useEffect(() => {
+  const ultimaPozitie = useRef(0);
+
+  /*
+   * Poziția se notează la plecare, dintr-un `ref`, și în efect **de așezare**.
+   * Amândouă amănuntele sunt lecția bugului „mă trimite mereu sus":
+   *
+   * - **din `ref`, nu din `window.scrollY`.** Când ruta se schimbă, pagina veche
+   *   iese din DOM, documentul devine scurt și browserul taie derularea la zero.
+   *   O citire făcută după momentul acela dă zero, iar zeroul se scria în hartă
+   *   peste poziția bună.
+   * - **efect de așezare, nu efect obișnuit.** Efectele obișnuite rulează
+   *   *după* desenare, deci după ce browserul a apucat să taie derularea și să
+   *   trimită un `scroll` — pe care ascultătorul încă montat îl scria, tot ca
+   *   zero, tot pe calea veche. Curățarea unui efect de așezare se face în
+   *   timpul aceleiași commit, înainte de desenare, deci ascultătorul e demontat
+   *   la timp.
+   */
+  useLayoutEffect(() => {
     caleaCurenta.current = pathname;
-    const noteaza = () => pozitii.set(caleaCurenta.current, window.scrollY);
+    ultimaPozitie.current = window.scrollY;
+    const noteaza = () => {
+      ultimaPozitie.current = window.scrollY;
+    };
     window.addEventListener("scroll", noteaza, { passive: true });
     return () => {
-      noteaza();
       window.removeEventListener("scroll", noteaza);
+      pozitii.set(caleaCurenta.current, ultimaPozitie.current);
     };
   }, [pathname]);
 
   useEffect(() => {
     if (!hash) {
-      // Întoarcerea înapoi: pagina se așază unde era. Poziția se cere cadru cu
-      // cadru, din același motiv ca la ancoră — pagina se montează `lazy()`,
+      // Pagina se așază unde era, dacă am mai fost pe ea. Poziția se cere cadru
+      // cu cadru, din același motiv ca la ancoră — pagina se montează `lazy()`,
       // deci în primul cadru documentul e prea scurt ca să se poată derula.
-      const salvata = tipNavigare === "POP" ? pozitii.get(pathname) : undefined;
+      const salvata = pozitii.get(pathname);
       if (salvata) {
         const limita = performance.now() + ASTEPTARE_TINTA_MS;
         let cadru = 0;
@@ -95,7 +117,7 @@ export function ScrollToTop() {
 
     cadru = requestAnimationFrame(incearca);
     return () => cancelAnimationFrame(cadru);
-  }, [pathname, hash, tipNavigare]);
+  }, [pathname, hash]);
 
   return null;
 }

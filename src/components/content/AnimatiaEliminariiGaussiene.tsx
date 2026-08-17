@@ -782,33 +782,38 @@ function Desen() {
             opacitate={intra(T, t0 + 3.4, 0.5)}
             st={st}
           />
+          {/* Multiplicatorul stă **între** cei doi vectori, nu peste primul.
+              Scris centrat la 128 și cu 34 de unități, „− 1 ·" se întindea de la
+              85 la 171, adică peste coloana din stânga, care se termină la 104.
+              Aici centrul e la mijlocul golului dintre ele, iar corpul e cât
+              încape în gol. */}
           <Mono
-            x={PX + 128}
+            x={PX + 158}
             y={PY + 230 + pas.inainte.length * 26}
             text={`${pas.mu < 0 ? "+" : "−"} ${Math.abs(pas.mu)} ·`}
-            marime={34 * Math.min(st, 1.25)}
+            marime={30 * Math.min(st, 1.25)}
             culoare="var(--text-slab)"
             ancora="middle"
             opacitate={intra(T, t0 + 3.7, 0.5)}
           />
           <VectorColoana
-            x={PX + 186}
+            x={PX + 212}
             y={PY + 230}
             valori={pas.liniaPivot}
             opacitate={intra(T, t0 + 3.7, 0.5)}
             st={st}
           />
           <Mono
-            x={PX + 322}
+            x={PX + 348}
             y={PY + 230 + pas.inainte.length * 26}
             text="="
-            marime={34 * Math.min(st, 1.25)}
+            marime={30 * Math.min(st, 1.25)}
             culoare="var(--text-slab)"
             ancora="middle"
             opacitate={intra(T, t0 + 4.3, 0.5)}
           />
           <VectorColoana
-            x={PX + 362}
+            x={PX + 380}
             y={PY + 230}
             valori={pas.dupa}
             opacitate={intra(T, t0 + 4.3, 0.5)}

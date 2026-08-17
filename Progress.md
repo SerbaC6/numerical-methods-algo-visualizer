@@ -549,7 +549,7 @@ găzduit de YouTube, încărcat abia la clic (`VideoIncorporat`). Decizie, nu re
 | 5   | Jacobi, Gauss-Seidel, SOR                     | `metode-iterative`                 | curs5        | matrice       | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
 | 6   | Puncte fixe, bisecție, Newton, secantă        | `ecuatii-neliniare`                | curs6, curs5 | interval      | [x]     | n/a  | [x]  | [x]        | [~]   | [ ]  |
 | 7   | Gradient descendent, gradient conjugat        | `metode-de-gradient`               | curs6, curs5 | vale 1D + 3D  | [x]     | [x]  | [x]  | [x]        | [x]   | [ ]  |
-| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | plan vectori  | [x]     | [x]  | [x]  | [x]        | [ ]   | [ ]  |
+| 8   | Metodele puterii, Rayleigh, deflație          | `metodele-puterii`                 | curs7        | plan vectori  | [x]     | [x]  | [x]  | n/a        | [x]   | [ ]  |
 | 9   | Algoritmul PageRank                           | `pagerank`                         | curs7        | matrice+graf  | [x]     | [x]  | [x]  | [ ]        | [~]   | [ ]  |
 | 10  | Algoritmul QR și valorile proprii             | `algoritmul-qr`                    | curs8, curs3 | matrice       | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
 | 11  | Descompunerea valorilor singulare (DVS)       | `dvs`                              | curs8, curs3 | cerc→elipsă   | [ ]     | [x]  | [x]  | n/a        | [~]   | [ ]  |
@@ -615,6 +615,40 @@ Verificări numerice făcute în sesiune, de reținut:
   care se citește mai firesc;
 - pe pagina 15: `x²` cu punct de mijloc iese exact, iar cu două puncte greșește cu exact `h`; pe
   `x³/3`, mijlocul greșește cu `h²/3` și cele două puncte cu `x·h + h²/3`.
+
+### A doua trecere prin `imbunatatiri.md` (17 august 2026)
+
+Lista rescrisă de utilizator după prima trecere. Ce s-a schimbat:
+
+- **Derularea paginii se reține cu adevărat.** Bugul „mă trimite mereu sus" avea două cauze, iar
+  prima ascundea a doua. Poziția se citea din `window.scrollY` **în curățarea efectului**, adică
+  după ce pagina veche ieșise din DOM: documentul nou e scurt, browserul taie derularea la zero, iar
+  zeroul se scria peste poziția bună. Iar efectul era unul obișnuit, deci rula **după** desenare —
+  destul cât browserul să apuce să trimită un `scroll` de zero pe ascultătorul încă montat. Acum
+  poziția vine dintr-un `ref` scris de ascultător, iar montarea și demontarea lui stau într-un
+  `useLayoutEffect`. **De reținut pentru testat**: un `window.scrollTo` rulat din consola de
+  automatizare **nu** declanșează evenimentul `scroll`, deci un test scris așa arată un bug care nu
+  există — se verifică prin derulare adevărată.
+- **Pagina 8 (`metodele-puterii`) a rămas fără interfață interactivă**, la cerere:
+  `InterfataMetodelorPuterii.tsx` a fost ștearsă, iar `interactiv: false` din registru face
+  secțiunea să lipsească de tot, nu să rămână schelet.
+- **Cuadraturi**: fiecare filă își ține funcția și intervalul ei. Fila Gaussiană pornește pe
+  `sin(x)` de pe `[0, π]`, unde diferența e vizibilă și măsurabilă — cu 4 noduri alese eroarea e
+  `1,6e-5`, cu 4 echidistante `4,1e-2` —, în timp ce pe funcția adaptivului (`e⁻³ˣ·sin 4x` pe
+  `[0, 4]`) amândouă greșesc grosolan și butonul nu mai arată nimic.
+- **Etichetele funcțiilor din liste trec prin `Notatie`**: `e⁻³ˣ` are trei caractere care nu sunt în
+  fonturile proiectului, deci se scriau cu exponenți din fontul de sistem.
+- **Newton-Cotes**: propoziția pasului a fost scoasă, la fel caseta „Cât a greșit formula" (cifrele
+  ei stăteau oricum în panou); scurtăturile lui `N` se strâng cu `new Set` după normalizare, fiindcă
+  la Simpson `1` urcă la `2` și ieșeau două butoane „2".
+- **Derivare numerică**: butoanele lui `h` sunt mai mari și cu exponentul prin `Notatie`.
+- **Eliminare gaussiană**: parametrii nu mai sunt douăsprezece câmpuri cu nume deasupra, ci **o
+  matrice** — paranteze din chenar, linie înaintea termenilor liberi, cifre centrate. Numele
+  fiecărei celule a rămas ca nume accesibil (`etichetaAscunsa` din `NumberInput`).
+- **Interpolări**: filele care lasă alegerea pornesc pe `sin(πx)`, iar fila Runge își aduce funcția
+  ei și blochează lista. Formula fiecărei file e acum **simbolică**, nu umplută cu numerele de
+  atunci; propoziția pasului a dispărut de pe Neville; fila spline nu mai desenează și polinomul de
+  comparație; nodurile pornesc de la 5 și își scriu numele doar până la 5.
 
 ### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
 

@@ -20,7 +20,6 @@ import { InterfataOrtogonalitate } from "@/components/content/InterfataOrtogonal
 import { AnimatiaMetodelorIterative } from "@/components/content/AnimatiaMetodelorIterative";
 import { AnimatiaMatriceiPageRank } from "@/components/content/AnimatiaMatriceiPageRank";
 import { AnimatiaMetodelorPuterii } from "@/components/content/AnimatiaMetodelorPuterii";
-import { InterfataMetodelorPuterii } from "@/components/content/InterfataMetodelorPuterii";
 import { AnimatieCoborarePeGradient } from "@/components/content/AnimatieCoborarePeGradient";
 import { InterfataEcuatiiNeliniare } from "@/components/content/InterfataEcuatiiNeliniare";
 import { InterfataEliminareGaussiana } from "@/components/content/InterfataEliminareGaussiana";
@@ -86,7 +85,7 @@ const PIESE_PAGINA: Record<string, { vizual?: ComponentType; interactiv?: Compon
   },
   "metode-iterative": { vizual: AnimatiaMetodelorIterative },
   "norme-si-ortogonalitate": { interactiv: InterfataOrtogonalitate },
-  "metodele-puterii": { vizual: AnimatiaMetodelorPuterii, interactiv: InterfataMetodelorPuterii },
+  "metodele-puterii": { vizual: AnimatiaMetodelorPuterii },
   pagerank: { vizual: AnimatiaMatriceiPageRank },
   "algoritmul-qr": { vizual: AnimatiaAlgoritmuluiQr },
   dvs: { vizual: AnimatiaDvs },

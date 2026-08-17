@@ -35,7 +35,7 @@ export function FormulaBlock({
 }: FormulaBlockProps) {
   const [html, setHtml] = useState<string | null>(null);
   const [eroare, setEroare] = useState<string | null>(null);
-  const container = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let anulat = false;
@@ -175,9 +175,19 @@ export function FormulaBlock({
       )}
       {html === null ? (
         <span className="text-text-slab font-mono text-sm">{latex}</span>
+      ) : inline ? (
+        // Inline, învelișul e tot un `<span>`: o formulă din mijlocul unei
+        // propoziții ajunge în interiorul unui `<p>`, iar un `<div>` acolo îl
+        // închide pe loc și rupe paragraful în două.
+        <span
+          ref={container as React.RefObject<HTMLSpanElement>}
+          className="formula"
+          // conținutul e generat de KaTeX din LaTeX scris de noi, nu de utilizator
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       ) : (
         <div
-          ref={container}
+          ref={container as React.RefObject<HTMLDivElement>}
           className="formula"
           // conținutul e generat de KaTeX din LaTeX scris de noi, nu de utilizator
           dangerouslySetInnerHTML={{ __html: html }}
