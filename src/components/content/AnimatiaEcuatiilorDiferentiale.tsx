@@ -20,7 +20,7 @@ import { useClip } from "@/components/viz/clip-context";
 import { NotatieSVG } from "@/components/viz/Notatie";
 import { Subtitrari } from "@/components/viz/Subtitrari";
 import { animeaza, clamp, EASING, repere, type Scena } from "@/lib/compozitie";
-import { marimeCareIncape } from "@/lib/tipografie-clip";
+import { randuriCartonas } from "@/lib/tipografie-clip";
 import { culoareEticheta, culoareRol, type RolViz } from "@/lib/viz-roles";
 
 /* ───────────────────────── timpul ───────────────────────── */
@@ -167,6 +167,29 @@ const H = 1080;
 const ZONA = { stanga: 250, dreapta: 1190, sus: 200, jos: 850 } as const;
 
 /**
+ * Coloana de cartonașe din dreapta: înălțimea unui cartonaș cu un rând, cele
+ * trei poziții pe care se așază și mijlocul, pentru momentele cu unul singur.
+ *
+ * Rândurile stau la 210 unități unul de altul, nu la 170: un cartonaș cu
+ * explicația ruptă pe două rânduri crește cu ~57 de unități, iar la distanța
+ * dinainte al doilea rând intra peste el.
+ */
+const INALTIME_CARTONAS = 132;
+const RAND_CARTONAS = [260, 470, 680] as const;
+const Y_CARTONAS_UNIC = (ZONA.sus + ZONA.jos - INALTIME_CARTONAS) / 2;
+
+/**
+ * Culoarea numelor de axă și a reperelor de pe ele.
+ *
+ * Axele nu sunt desen, sunt scris: pe `--text-slab` se pierdeau în text, iar
+ * cifrele „0,5 / 1 / 1,5 / 2" nu se citeau ca aparținând axei. Rolul
+ * `interval` e cel care iese din albastru fără să intre în verdele soluției, iar
+ * aici se ia în varianta lui de **etichetă** — culoarea de desen (3,66:1 pe
+ * luminoasă) e calibrată pentru linii, nu pentru litere.
+ */
+const culoareAxa = () => culoareEticheta(ROL_ACCENT);
+
+/**
  * Camera: ce bucată de plan se vede în zona graficului.
  *
  * Există fiindcă ultimele două momente arată **un singur pas**, iar la
@@ -292,7 +315,9 @@ function Cartonas({
   st: number;
 }) {
   if (opacitate <= 0) return null;
-  const inaltime = 132;
+  const { randuri, marime } = randuriCartonas(text, latime - 60, Math.min(st, 1.35));
+  // Cartonașul crește cu al doilea rând, în loc să-l lase să iasă pe dedesubt.
+  const inaltime = INALTIME_CARTONAS + (randuri.length - 1) * marime * 1.25;
   return (
     <g opacity={opacitate} transform={`translate(${x}, ${y})`}>
       <rect
@@ -307,7 +332,7 @@ function Cartonas({
       {simbol && (
         <text
           x={30}
-          y={inaltime / 2 - 24}
+          y={INALTIME_CARTONAS / 2 - 24}
           dominantBaseline="central"
           fill={rol ? culoareEticheta(rol) : "var(--text)"}
           style={{ font: `700 ${34 * Math.min(st, 1.3)}px var(--font-mono)` }}
@@ -317,14 +342,16 @@ function Cartonas({
       )}
       <text
         x={30}
-        y={simbol ? inaltime / 2 + 30 : inaltime / 2}
+        y={simbol ? INALTIME_CARTONAS / 2 + 30 : INALTIME_CARTONAS / 2}
         dominantBaseline="central"
         fill="var(--text)"
-        style={{
-          font: `600 ${marimeCareIncape(text, latime - 60) * Math.min(st, 1.35)}px var(--font-sans)`,
-        }}
+        style={{ font: `600 ${marime}px var(--font-sans)` }}
       >
-        {text}
+        {randuri.map((rand, i) => (
+          <tspan key={i} x={30} dy={i === 0 ? 0 : marime * 1.25}>
+            {rand}
+          </tspan>
+        ))}
       </text>
     </g>
   );
@@ -361,7 +388,7 @@ function Axe({ st }: { st: number }) {
       <text
         x={ZONA.dreapta + 46}
         y={origine.y + 12}
-        fill="var(--text-slab)"
+        fill={culoareAxa()}
         style={{ font: `600 ${30 * Math.min(st, 1.35)}px var(--font-mono)` }}
       >
         t
@@ -369,7 +396,7 @@ function Axe({ st }: { st: number }) {
       <text
         x={origine.x - 46}
         y={ZONA.sus - 30}
-        fill="var(--text-slab)"
+        fill={culoareAxa()}
         style={{ font: `600 ${30 * Math.min(st, 1.35)}px var(--font-mono)` }}
       >
         y
@@ -390,7 +417,7 @@ function Axe({ st }: { st: number }) {
               x={p.x}
               y={origine.y + 46}
               textAnchor="middle"
-              fill="var(--text-slab)"
+              fill={culoareAxa()}
               style={{ font: `600 ${26 * Math.min(st, 1.35)}px var(--font-mono)` }}
             >
               {zecimale(t, t % 1 === 0 ? 0 : pas < 0.5 ? 2 : 1)}
@@ -624,7 +651,9 @@ function Desen() {
   /* ── albia ── */
   const A = cue.Albia;
   const oAlbia = felie(T, A, cue.Cauchy);
-  const camp = intra(T, A + 0.6, 1.2);
+  // Câmpul e fundal, nu subiect: la opacitate plină striga peste curbele
+  // albiei, care sunt ce trebuie urmărit în momentul ăsta.
+  const camp = intra(T, A + 0.6, 1.2) * 0.6;
   const albie = intra(T, A + 4.2, 1.6);
 
   /* ── condiția inițială ── */
@@ -724,24 +753,17 @@ function Desen() {
               />
             )),
           )}
+          {/* Singurul cartonaș al momentului, deci așezat pe mijlocul zonei
+              de desen, nu pe primul rând al coloanei: sus, cu nimic sub el,
+              atârna. */}
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={Y_CARTONAS_UNIC}
             latime={560}
             opacitate={intra(T, A + 1.6, 0.5)}
             rol={ROL_CAMP}
             simbol="y′ = f(t, y)"
-            text="panta cerută în fiecare punct"
-            st={st}
-          />
-          <Cartonas
-            x={1250}
-            y={470}
-            latime={560}
-            opacitate={intra(T, A + 5.6, 0.5)}
-            rol={ROL_ALBIE}
-            simbol="o familie"
-            text="fiecare curbă urmează aceleași direcții"
+            text="Panta cerută în fiecare punct"
             st={st}
           />
         </g>
@@ -787,13 +809,13 @@ function Desen() {
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={RAND_CARTONAS[0]}
             latime={560}
             opacitate={intra(T, C + 6.4, 0.5)}
             rol={ROL_EXACTA}
-            simbol="o singură curbă"
-            text="ecuația plus punctul o determină"
+            simbol="O singură curbă"
+            text="Ecuația + punctul o determină"
             st={st}
           />
         </g>
@@ -832,33 +854,33 @@ function Desen() {
             />
           )}
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={RAND_CARTONAS[0]}
             latime={560}
             opacitate={intra(T, E + 0.8, 0.5)}
             rol={ROL_METODA}
             simbol="h = 0,5"
-            text="patru pași de la 0 la 2"
+            text="Patru pași de la 0 la 2"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={470}
+            x={1300}
+            y={RAND_CARTONAS[1]}
             latime={560}
             opacitate={pasiFacuti > 0 ? 1 : 0}
             rol={ROL_ACCENT}
-            simbol={`panta ${zecimale(pasCurent.pantaPas, 2)}`}
-            text="cerută de ecuație în punctul curent"
+            simbol={`Panta ${zecimale(pasCurent.pantaPas, 2)}`}
+            text="Cerută în punctul curent"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={640}
+            x={1300}
+            y={RAND_CARTONAS[2]}
             latime={560}
             opacitate={pasiFacuti > 0 && inPas >= 1 ? 1 : 0}
             rol={ROL_EXACTA}
-            simbol={`abatere ${zecimale(pasCurent.eroare, 3)}`}
-            text="cât s-a depărtat de curba adevărată"
+            simbol={`Abatere ${zecimale(pasCurent.eroare, 3)}`}
+            text="Depărtarea de curba adevărată"
             st={st}
           />
         </g>
@@ -878,8 +900,8 @@ function Desen() {
           ))}
           <Marcaj punct={{ t: 0, y: PROBLEMA.alfa }} rol={ROL_START} opacitate={1} raza={13} />
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={RAND_CARTONAS[0]}
             latime={560}
             opacitate={1}
             rol={ROL_METODA}
@@ -888,13 +910,13 @@ function Desen() {
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={470}
+            x={1300}
+            y={RAND_CARTONAS[1]}
             latime={560}
             opacitate={1}
             rol={ROL_ACCENT}
-            simbol={`eroare ${zecimale(EULER_TREPTE[treapta]!.eroareFinala, 3)}`}
-            text="se înjumătățește odată cu pasul"
+            simbol={`Eroare ${zecimale(EULER_TREPTE[treapta]!.eroareFinala, 3)}`}
+            text="Se înjumătățește odată cu pasul"
             st={st}
           />
         </g>
@@ -973,33 +995,33 @@ function Desen() {
           />
 
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={RAND_CARTONAS[0]}
             latime={560}
             opacitate={oMijlocCartonas}
             rol={ROL_METODA}
-            simbol="punctul de mijloc"
-            text="pas de probă până la mijloc, apoi panta de acolo"
+            simbol="Punctul de mijloc"
+            text="Panta luată din mijlocul pasului"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={470}
+            x={1300}
+            y={RAND_CARTONAS[1]}
             latime={560}
             opacitate={oModificat}
             rol={ROL_START}
             simbol="Euler modificat"
-            text="media dintre panta de la început și cea din capăt"
+            text="Media pantelor de la capete"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={640}
+            x={1300}
+            y={RAND_CARTONAS[2]}
             latime={560}
             opacitate={intra(T, O + 9.6, 0.5)}
             rol={ROL_ACCENT}
-            simbol="a doua evaluare"
-            text="atât costă trecerea de la ordinul 1 la 2"
+            simbol="A doua evaluare"
+            text="Atât costă ordinul 2"
             st={st}
           />
         </g>
@@ -1049,33 +1071,33 @@ function Desen() {
             altfel „drumul se lipește de curbă" n-ar avea de ce să se lipească. */}
           <Curba puncte={TRASEU_RK4} rol={ROL_METODA} opacitate={oTraseuRk} grosime={5} />
           <Cartonas
-            x={1250}
-            y={300}
+            x={1300}
+            y={RAND_CARTONAS[0]}
             latime={560}
             opacitate={intra(T, R + 0.8, 0.5)}
             rol={ROL_ACCENT}
             simbol="k₁ k₂ k₃ k₄"
-            text="una la început, două la mijloc, una la capăt"
+            text="Una la capete, două la mijloc"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={470}
+            x={1300}
+            y={RAND_CARTONAS[1]}
             latime={560}
             opacitate={oPasRk}
             rol={ROL_METODA}
             simbol="1 : 2 : 2 : 1"
-            text="mijlocul cântărește dublu față de capete"
+            text="Mijlocul cântărește dublu"
             st={st}
           />
           <Cartonas
-            x={1250}
-            y={640}
+            x={1300}
+            y={RAND_CARTONAS[2]}
             latime={560}
             opacitate={intra(T, R + 10.4, 0.5)}
             rol={ROL_EXACTA}
             simbol={`${stiintific(EROARE_RK4)} față de ${stiintific(EROARE_EULER_COMP)}`}
-            text="același pas, patru evaluări în loc de una"
+            text="Același pas, patru evaluări"
             st={st}
           />
         </g>

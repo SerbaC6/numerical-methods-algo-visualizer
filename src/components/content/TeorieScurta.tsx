@@ -54,9 +54,14 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
                   key={intrare.simbol}
                   className="col-span-2 grid grid-cols-subgrid items-baseline"
                 >
-                  {/* Aliniat la dreapta ca semnele egal să cadă unul sub altul,
-                      deși simbolurile au lățimi diferite („a" față de „pₙ₋₁"). */}
-                  <dt className="text-accent-slab text-right font-mono text-xl font-semibold tabular-nums">
+                  {/* Pe ecran lat, aliniat la dreapta: semnele egal cad unul sub
+                      altul, deși simbolurile au lățimi diferite („a" față de
+                      „pₙ₋₁"). Pe telefon, la stânga — acolo coloana simbolurilor
+                      se strânge cât să încapă explicația, iar un simbol lung
+                      („r = √(x² + y²)") se rupe pe două rânduri: aliniat la
+                      dreapta, rândurile lui plecau din locuri diferite și nu se
+                      mai vedea unde începe intrarea. */}
+                  <dt className="text-accent-slab text-left font-mono text-xl font-semibold tabular-nums sm:text-right">
                     <Notatie>{intrare.simbol}</Notatie>
                     <span aria-hidden="true" className="text-text-slab ml-2 font-normal">
                       =

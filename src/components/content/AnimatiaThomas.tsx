@@ -1138,7 +1138,7 @@ function Desen() {
         <Proza
           x={1770}
           y={COST_LEGENDA}
-          text="înmulțiri și împărțiri"
+          text="Înmulțiri și împărțiri"
           marime={26 * Math.min(st, 1.4)}
           culoare="var(--text-slab)"
           ancora="end"
@@ -1201,7 +1201,7 @@ function Desen() {
               <Proza
                 x={COST_BARE}
                 y={y + 104}
-                text={`de ${cuMii(cost.raport)} de ori mai puține`}
+                text={`De ${cuMii(cost.raport)} de ori mai puține`}
                 marime={26 * Math.min(st, 1.35)}
                 culoare="var(--text-slab)"
                 greutate={600}

@@ -7,8 +7,12 @@ import type { ContinutPagina } from "@/content/tipuri";
  * **Sursă: `cursuri_MN/ode-runge-kutta_curs13.md`**, în ordinea din curs:
  * problema Cauchy, condiția Lipschitz și teorema de existență și unicitate,
  * problemele bine puse, metoda lui Euler, metodele Taylor, cadrul Runge-Kutta
- * (ordin și rang), metodele particulare de ordin 2, RK de ordin 4 și metodele
- * multipas Adams. Nimic scris din memorie.
+ * (ordin și rang), metodele particulare de ordin 2 și RK de ordin 4. Nimic
+ * scris din memorie.
+ *
+ * Metodele multipas (Adams-Bashforth, Adams-Moulton) sunt în curs, dar **nu**
+ * pe pagină: scoase la cerere. Pagina se închide cu RK4, adică exact acolo unde
+ * se închide și clipul.
  *
  * Accentul cerut pentru pagină: Euler și RK4 pe larg, restul în revistă, cu
  * maximum esențialul despre fiecare.
@@ -257,26 +261,10 @@ export const continutEcuatiiDiferentiale: ContinutPagina = {
         blocuri: [
           {
             tip: "formula",
-            latex:
-              "\\begin{aligned} k_1 &= hf(t_i, w_i) & k_2 &= hf\\!\\left(t_i + \\tfrac{h}{2},\\ w_i + \\tfrac{1}{2}k_1\\right) \\\\ k_3 &= hf\\!\\left(t_i + \\tfrac{h}{2},\\ w_i + \\tfrac{1}{2}k_2\\right) & k_4 &= hf(t_{i+1},\\ w_i + k_3) \\end{aligned}",
-            sursa: "curs 13, §„RK de ordin 4”",
-            legenda: [
-              { simbol: "k₁", sens: <>pasul luat cu panta din capătul din stânga</> },
-              { simbol: "k₂, k₃", sens: <>două încercări la mijlocul pasului, a doua corectată</> },
-              { simbol: "k₄", sens: <>panta din capătul unde duce k₃</> },
-            ],
-            explicatie: (
-              <>
-                Fiecare sondă pornește din <Mate>wᵢ</Mate> și folosește ce a aflat cea dinainte;
-                niciuna nu e pasul adevărat.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
             latex: "w_{i+1} = w_i + \\frac{1}{6}\\left(k_1 + 2k_2 + 2k_3 + k_4\\right)",
             sursa: "curs 13, §„RK de ordin 4”",
             legenda: [
+              { simbol: "k₁ … k₄", sens: <>cele patru pante încercate pe pas</> },
               {
                 simbol: "1, 2, 2, 1",
                 sens: <>ponderile: mijlocul cântărește dublu față de capete</>,
@@ -289,49 +277,20 @@ export const continutEcuatiiDiferentiale: ContinutPagina = {
               </>
             ),
           },
-        ],
-      },
-
-      {
-        id: "multipas",
-        titlu: "Metode multipas",
-        esenta: (
-          <>
-            În loc să ceară pante noi, folosesc valorile deja calculate la pașii dinainte — deci
-            sunt ieftine, dar au nevoie de o pornire.
-          </>
-        ),
-        blocuri: [
           {
             tip: "formula",
             latex:
-              "w_{i+1} = a_{m-1}w_i + \\cdots + a_0w_{i+1-m} + h\\big[b_mf(t_{i+1},w_{i+1}) + \\cdots + b_0f(t_{i+1-m},w_{i+1-m})\\big]",
-            sursa: "curs 13, §„Metode multipas”",
+              "\\begin{aligned} k_1 &= hf(t_i, w_i) & k_2 &= hf\\!\\left(t_i + \\tfrac{h}{2},\\ w_i + \\tfrac{1}{2}k_1\\right) \\\\ k_3 &= hf\\!\\left(t_i + \\tfrac{h}{2},\\ w_i + \\tfrac{1}{2}k_2\\right) & k_4 &= hf(t_{i+1},\\ w_i + k_3) \\end{aligned}",
+            sursa: "curs 13, §„RK de ordin 4”",
             legenda: [
-              { simbol: "m", sens: <>câți pași dinainte intră în formulă</> },
-              { simbol: "bₘ", sens: <>ponderea capătului nou; dacă e nulă, metoda e explicită</> },
+              { simbol: "k₁", sens: <>pasul luat cu panta din capătul din stânga</> },
+              { simbol: "k₂, k₃", sens: <>două încercări la mijlocul pasului, a doua corectată</> },
+              { simbol: "k₄", sens: <>panta din capătul unde duce k₃</> },
             ],
             explicatie: (
               <>
-                Cu <Mate>bₘ ≠ 0</Mate>, necunoscuta apare în ambii membri: pasul cere atunci
-                rezolvarea unei ecuații.
-              </>
-            ),
-          },
-          {
-            tip: "formula",
-            latex:
-              "w_{i+1} = w_i + \\frac{h}{2}\\left[3f(t_i,w_i) - f(t_{i-1},w_{i-1})\\right], \\qquad \\tau_{i+1}(h) = \\frac{5}{12}y'''(\\mu_i)h^2",
-            sursa: "curs 13, §„Adams-Bashforth (explicite)”, doi pași",
-            subtitlu: "Adams-Bashforth cu doi pași",
-            legenda: [
-              { simbol: "τᵢ₊₁(h)", sens: <>eroarea de trunchiere a unui pas</> },
-              { simbol: "w₀, w₁", sens: <>valorile de pornire, cerute dinainte</> },
-            ],
-            explicatie: (
-              <>
-                O singură evaluare nouă pe pas, față de patru la RK4; în schimb, primele valori vin
-                de la altă metodă.
+                Fiecare sondă pornește din <Mate>wᵢ</Mate> și folosește ce a aflat cea dinainte;
+                niciuna nu e pasul adevărat.
               </>
             ),
           },

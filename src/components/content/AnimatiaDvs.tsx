@@ -531,7 +531,7 @@ function Desen() {
           x={-1.5 * PAS_CARD}
           simbol="A"
           dimensiune="m×n"
-          rol="matricea dată"
+          rol="Matricea dată"
           culoare="var(--text)"
           culoareText="var(--text)"
           aprins={acum === "tot"}
@@ -543,7 +543,7 @@ function Desen() {
           x={-0.5 * PAS_CARD}
           simbol="U"
           dimensiune="m×m"
-          rol="rotește"
+          rol="Rotește"
           culoare={culoareRol(ROL_U)}
           culoareText={culoareEticheta(ROL_U)}
           aprins={aprins("U")}
@@ -555,7 +555,7 @@ function Desen() {
           x={0.5 * PAS_CARD}
           simbol="S"
           dimensiune="m×n"
-          rol="întinde"
+          rol="Întinde"
           culoare={culoareRol(ROL_S)}
           culoareText={culoareEticheta(ROL_S)}
           aprins={aprins("S")}
@@ -567,7 +567,7 @@ function Desen() {
           x={1.5 * PAS_CARD}
           simbol="Vᵀ"
           dimensiune="n×n"
-          rol="rotește"
+          rol="Rotește"
           culoare={culoareRol(ROL_V)}
           culoareText={culoareEticheta(ROL_V)}
           aprins={aprins("V")}

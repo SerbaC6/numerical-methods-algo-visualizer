@@ -127,9 +127,9 @@ export default function PaginaAlgoritm() {
 
   useEffect(() => {
     if (!pagina) return;
-    document.title = `${pagina.titlu} · numerical-methods-visualizer`;
+    document.title = `${pagina.titlu} · Metode Numerice`;
     return () => {
-      document.title = "numerical-methods-visualizer";
+      document.title = "Metode Numerice";
     };
   }, [pagina]);
 

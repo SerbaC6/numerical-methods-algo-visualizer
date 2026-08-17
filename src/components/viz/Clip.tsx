@@ -232,6 +232,19 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
 
   const { plinEcran, comutaPlinEcran } = usePlinEcran(container);
 
+  // Bara de comenzi în peisaj. Pe telefon culcat, cadrul are ~330 px pe
+  // înălțime, iar bara mânca aproape un sfert din ei — exact orientarea în care
+  // desenul are cel mai mult de câștigat. Acolo bara se dă la o parte, iar un
+  // dublu-clic pe cadru o aduce înapoi (și o ascunde iar). În portret nu se
+  // ascunde niciodată.
+  const peisajStramt = usePeisajStramt();
+  const [baraCeruta, setBaraCeruta] = useState(false);
+  // Întoarcerea în portret e chiar cererea din caiet: bara „revine în portret".
+  useEffect(() => {
+    if (!peisajStramt) setBaraCeruta(false);
+  }, [peisajStramt]);
+  const baraVizibila = !peisajStramt || baraCeruta;
+
   const stare = useMemo<StareClip>(
     () => ({ T, cue, total, ruleaza, latime }),
     [T, cue, total, ruleaza, latime],
@@ -260,6 +273,7 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
             ref={cadru}
             role="img"
             aria-label={descriere}
+            onDoubleClick={() => peisajStramt && setBaraCeruta((v) => !v)}
             className={cn(
               "border-bordura bg-fundal shadow-jos @container relative w-full overflow-hidden rounded-xl border",
               plinEcran ? "h-full" : "aspect-video",
@@ -270,7 +284,10 @@ export function Clip({ scene, descriere, timpStatic, className, children }: Clip
         </figure>
       </ContextClip.Provider>
 
+      {/* Ascunsă, nu demontată: `hidden` o scoate și din ordinea de tabulare și
+          din cititorul de ecran, iar la întoarcere nu se pierde nimic. */}
       <PlaybackClip
+        hidden={!baraVizibila}
         timp={T}
         total={total}
         ruleaza={ruleaza}
@@ -343,17 +360,38 @@ function usePlinEcran(element: React.RefObject<HTMLElement | null>) {
   return { plinEcran, comutaPlinEcran };
 }
 
+/**
+ * Ecran culcat și scund — adică un telefon în peisaj, nu un monitor.
+ *
+ * Pragul de înălțime e cel care desparte cele două: fără el, orice laptop ar
+ * intra în regula asta, fiindcă și el e „landscape".
+ */
+function usePeisajStramt(): boolean {
+  return useMedia("(orientation: landscape) and (max-height: 600px)");
+}
+
 /** `prefers-reduced-motion: reduce`, urmărit și după prima randare. */
 function useMiscareRedusa(): boolean {
-  const [redusa, setRedusa] = useState(false);
+  return useMedia("(prefers-reduced-motion: reduce)");
+}
+
+/**
+ * O interogare media urmărită și după prima randare.
+ *
+ * Pornește pe `false` și se măsoară în efect, nu la randare: pe server-ul de
+ * dezvoltare și la prima trecere `window.matchMedia` ar da un rezultat care nu
+ * se potrivește cu HTML-ul deja trimis.
+ */
+function useMedia(interogare: string): boolean {
+  const [potrivit, setPotrivit] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setRedusa(media.matches);
-    const asculta = (e: MediaQueryListEvent) => setRedusa(e.matches);
+    const media = window.matchMedia(interogare);
+    setPotrivit(media.matches);
+    const asculta = (e: MediaQueryListEvent) => setPotrivit(e.matches);
     media.addEventListener("change", asculta);
     return () => media.removeEventListener("change", asculta);
-  }, []);
+  }, [interogare]);
 
-  return redusa;
+  return potrivit;
 }

@@ -577,6 +577,8 @@ Regulile care se aplică la fiecare punct de mai jos, fără excepție:
       arăta alte direcții decât cere ecuația. Ultimele două momente arată un singur pas, deci clipul
       are o **cameră** care se apropie și se depărtează; tot ce e desenat în coordonate de lume se
       taie la zona graficului. **Fără secțiune „Interactiv", prin decizie** — vezi lista de mai jos.
+      **Metodele multipas (Adams-Bashforth, Adams-Moulton) au fost scoase la cerere**: sunt în curs,
+      dar nu pe pagină. Teoria se închide cu RK4, adică exact acolo unde se închide și clipul.
 - [ ] **Pagina 2 — `norme-si-ortogonalitate`** (norme, Householder, Givens, Gram-Schmidt).
       Primitive noi: vector cu vârf de săgeată, reflexie și rotație interactivă, plus **jocul**
       de Gram-Schmidt (inspirație: PerfectlyNormal, dar cu pași mult mai clari).
@@ -686,6 +688,20 @@ iar rezultatul se verifică în ambele teme și cu `prefers-reduced-motion` porn
   se coboară corpul.
 - **Subtitrarea se citește de sus în jos.** Locul ei e rezervat de la început (`Subtitrari` ține
   trei rânduri), iar o propoziție nouă intră de sus, nu de jos, și nu împinge desenul.
+- **Tot ce se scrie într-un cartonaș începe cu literă mare** — și titlul, și explicația măruntă de
+  sub el, și eticheta unui bloc desenat. Nu doar propozițiile întregi: și un fragment de două
+  cuvinte („Suportul interpolării", „Media pantelor de la capete", „Minim local") se scrie cu
+  majusculă. Cartonașele stau unul sub altul, ca un rând de titluri; unul cu literă mică arată ca
+  o continuare a celui de deasupra, deși nu e.
+
+  **Singura excepție e matematica**, și e o excepție de corectitudine, nu de stil: un text care
+  începe cu un simbol îl păstrează exact cum se scrie — `aᵢ = 0`, `y′ = f(t, y)`, `x₀ … x₄`,
+  `n + 1 = 4 determinanți`, `a₁ este valoare proprie`. `A₁` și `Aᵢ` înseamnă altceva decât `a₁` și
+  `aᵢ`, deci majuscula ar fi o greșeală, nu o corectură. Regula practică: dacă primul cuvânt e
+  cuvânt, se scrie cu majusculă; dacă e simbol, se lasă în pace.
+
+  Legendele din `Legend` **nu** intră aici: acolo intrările sunt elemente de listă, nu cartonașe, și
+  rămân cum sunt.
 
 **Pagini fără clip, prin decizie** — nu „încă nu au":
 

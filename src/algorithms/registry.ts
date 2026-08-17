@@ -413,7 +413,7 @@ export const ALGORITMI: IntrareAlgoritm[] = [
     capitol: "integrare-ode",
     descriere:
       "Pornești dintr-un singur punct și urmezi panta: de la pasul stângaci al lui Euler la precizia lui Runge-Kutta.",
-    metode: ["Problema Cauchy", "Lipschitz", "Euler", "Taylor", "Runge-Kutta", "Metode multipas"],
+    metode: ["Problema Cauchy", "Lipschitz", "Euler", "Taylor", "Runge-Kutta"],
     dificultate: "mediu",
     cursSursa: ["ode-runge-kutta_curs13.md"],
     // Fără secțiune „Interactiv", prin decizie. Clipul duce singur povestea, de

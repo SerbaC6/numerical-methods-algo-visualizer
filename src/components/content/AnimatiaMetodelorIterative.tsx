@@ -482,7 +482,7 @@ function Desen() {
         laturaColoana={116}
         corp={40}
         separator={N - 1}
-        eticheta="coeficienții și termenii liberi"
+        eticheta="Coeficienții și termenii liberi"
         st={st}
       />
       <g opacity={oGhicire}>

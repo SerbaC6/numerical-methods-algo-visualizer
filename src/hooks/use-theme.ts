@@ -24,13 +24,23 @@ function citesteDinStocare(): Theme {
   }
 }
 
+/**
+ * Culoarea barelor de sistem ale browserului (bara de adresă de pe telefon).
+ *
+ * Sunt **exact** `--fundal` de pe fiecare temă, nu culorile brute din paletă:
+ * pe cea întunecată fundalul e o derivată a nopții spre negru (#101320), iar
+ * noaptea curată (#262B40) făcea bara vizibil mai deschisă decât pagina, adică
+ * exact treapta care se vedea ca o dungă pe telefon.
+ */
+const CULOARE_BARA: Record<Theme, string> = { light: "#f7f9fd", dark: "#101320" };
+
 function aplica(valoare: Theme) {
   const html = document.documentElement;
   html.classList.toggle("light", valoare === "light");
   html.classList.toggle("dark", valoare === "dark");
-  document
-    .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", valoare === "light" ? "#f7f9fd" : "#262b40");
+  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+    meta.setAttribute("content", CULOARE_BARA[valoare]);
+  }
 }
 
 /** Se apelează o dată, înainte de randare, ca să nu pâlpâie tema. */

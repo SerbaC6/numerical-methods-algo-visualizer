@@ -35,12 +35,11 @@ export function Header() {
         <NavLink
           to="/"
           className="tinta-atingere -ml-3.5 flex shrink-0 items-center gap-2.5 rounded-md px-3.5"
-          aria-label="Acasă — numerical-methods-visualizer"
+          aria-label="Acasă — Metode Numerice"
         >
           <Logo className="shrink-0" />
           <span className="hidden leading-tight font-bold sm:inline">
-            numerical-methods
-            <span className="text-accent-slab">-visualizer</span>
+            Metode <span className="text-accent-slab">Numerice</span>
           </span>
         </NavLink>
 

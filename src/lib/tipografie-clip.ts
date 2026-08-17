@@ -39,3 +39,55 @@ export function marimeCareIncape(
   const incapatoare = latimeDisponibila / (text.length * LATIME_CARACTER);
   return Math.max(minim, Math.min(maxim, incapatoare));
 }
+
+/**
+ * Explicația unui cartonaș, ruptă pe cel mult două rânduri.
+ *
+ * **De ce nu ajunge `marimeCareIncape` singură.** Ea măsoară la corpul de bază,
+ * dar clipurile înmulțesc pe urmă rezultatul cu scara de cadru îngust (până la
+ * ×1,35, ca literele să nu se vadă la 6 px pe telefon). Înmulțit după ce s-a
+ * măsurat, corpul care „încăpea" nu mai încape: exact așa ieșeau din pânză
+ * explicațiile de la punctul de mijloc și de la Euler modificat, și numai pe
+ * telefon.
+ *
+ * Aici se socotește invers: `scara` intră în calcul **înainte** de măsurare,
+ * iar textul primește două rânduri în loc să fie micșorat până la ilizibil. Un
+ * text care nici pe două rânduri nu încape se scurtează la sursă — funcția nu
+ * taie cuvinte și nu pune trei puncte.
+ */
+export function randuriCartonas(
+  text: string,
+  latimeDisponibila: number,
+  scara = 1,
+): { randuri: string[]; marime: number } {
+  const marime = marimeCareIncape(
+    text,
+    2 * latimeDisponibila,
+    CORP_EXPLICATIE * scara,
+    CORP_EXPLICATIE_MINIM * scara,
+  );
+  const caracterePeRand = Math.max(1, Math.floor(latimeDisponibila / (LATIME_CARACTER * marime)));
+
+  if (text.length <= caracterePeRand) return { randuri: [text], marime };
+
+  const cuvinte = text.split(" ");
+  const randuri: string[] = [];
+  let curent = "";
+  for (const cuvant of cuvinte) {
+    const incercare = curent ? `${curent} ${cuvant}` : cuvant;
+    if (incercare.length <= caracterePeRand || !curent) {
+      curent = incercare;
+    } else {
+      randuri.push(curent);
+      curent = cuvant;
+    }
+  }
+  if (curent) randuri.push(curent);
+
+  // Peste două rânduri, cartonașul ar deveni un paragraf: restul se lipește de
+  // al doilea rând, iar ce iese din el e semnul că propoziția e prea lungă.
+  if (randuri.length > 2) {
+    return { randuri: [randuri[0]!, randuri.slice(1).join(" ")], marime };
+  }
+  return { randuri, marime };
+}

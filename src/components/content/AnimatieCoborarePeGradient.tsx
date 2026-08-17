@@ -486,7 +486,7 @@ function Desen() {
         <Steag
           x={DRUM_CAPCANA[DRUM_CAPCANA.length - 1] ?? 0}
           rol="pivot"
-          eticheta="minim local"
+          eticheta="Minim local"
           T={T}
           la={cue.MinimLocal + 0.5}
           st={st}
@@ -494,7 +494,7 @@ function Desen() {
         <Steag
           x={DRUM_BUN[DRUM_BUN.length - 1] ?? 0}
           rol="solutie"
-          eticheta="minim global"
+          eticheta="Minim global"
           T={T}
           la={cue.Lectie + 3.4}
           st={st}

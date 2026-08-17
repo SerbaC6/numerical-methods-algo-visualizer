@@ -51,8 +51,7 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
             <div className="flex items-center gap-2.5">
               <Logo className="shrink-0" />
               <span className="leading-tight font-bold">
-                numerical-methods
-                <span className="text-accent-slab">-visualizer</span>
+                Metode <span className="text-accent-slab">Numerice</span>
               </span>
             </div>
           </div>
@@ -96,7 +95,7 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
         <Separator className="mt-10" />
 
         <div className="text-text-slab flex flex-col gap-2 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>© {AN} · numerical-methods-visualizer</p>
+          <p>© {AN} · Metode Numerice</p>
           <p>Conținutul urmează cursul predat.</p>
         </div>
       </Container>

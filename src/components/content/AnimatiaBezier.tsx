@@ -346,7 +346,7 @@ function Desen() {
           opacitate={intra(T, P + 3.0, 0.5)}
           rol={ROL_PUNCT}
           simbol="P₀ și P₃"
-          text="curba trece chiar prin ele"
+          text="Curba trece chiar prin ele"
           st={st}
         />
         <Cartonas
@@ -356,7 +356,7 @@ function Desen() {
           opacitate={intra(T, P + 5.0, 0.5)}
           rol={CULORI_NIVEL[0]!}
           simbol="P₁ și P₂"
-          text="doar o trag după ele"
+          text="Doar o trag după ele"
           st={st}
         />
       </g>
@@ -386,7 +386,7 @@ function Desen() {
           opacitate={intra(T, N + 4.6, 0.5)}
           rol={CULORI_NIVEL[1]!}
           simbol={`t = ${T_CONSTRUCTIE.toFixed(2).replace(".", ",")}`}
-          text="cât din fiecare segment se parcurge"
+          text="Cât din fiecare segment se parcurge"
           st={st}
         />
         <Cartonas
@@ -396,7 +396,7 @@ function Desen() {
           opacitate={intra(T, N + 6.4, 0.5)}
           rol={CULORI_NIVEL[1]!}
           simbol="4 → 3"
-          text="un punct mai puțin decât înainte"
+          text="Un punct mai puțin decât înainte"
           st={st}
         />
       </g>
@@ -428,7 +428,7 @@ function Desen() {
           opacitate={intra(T, R + 6.0, 0.5)}
           rol={ROL_PUNCT}
           simbol="P⁽³⁾₀ = B(t)"
-          text="singurul punct rămas e pe curbă"
+          text="Singurul punct rămas e pe curbă"
           st={st}
         />
       </g>
@@ -475,7 +475,7 @@ function Desen() {
           opacitate={intra(T, C + 1.2, 0.5)}
           rol={ROL_PUNCT}
           simbol={`t = ${tCurba.toFixed(2).replace(".", ",")}`}
-          text="de la 0 la 1, punctul desenează curba"
+          text="De la 0 la 1, punctul desenează curba"
           st={st}
         />
       </g>
@@ -506,7 +506,7 @@ function Desen() {
           opacitate={intra(T, J + 4.6, 0.5)}
           rol={CULORI_NIVEL[0]!}
           simbol="P₀ și P₃"
-          text="capetele stau pe loc"
+          text="Capetele stau pe loc"
           st={st}
         />
         <Cartonas
@@ -515,8 +515,8 @@ function Desen() {
           latime={540}
           opacitate={intra(T, J + 6.0, 0.5)}
           rol={ROL_CURBA}
-          simbol="grad 3"
-          text="gradul nu se schimbă, forma da"
+          simbol="Grad 3"
+          text="Gradul nu se schimbă, forma da"
           st={st}
         />
       </g>

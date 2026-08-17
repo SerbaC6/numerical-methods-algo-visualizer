@@ -373,7 +373,7 @@ function Desen() {
           opacitate={intra(T, P + 2.6, 0.5)}
           rol={ROL_NODURI}
           simbol="x₀ … x₄"
-          text="suportul interpolării"
+          text="Suportul interpolării"
           st={st}
         />
         <Cartonas
@@ -383,7 +383,7 @@ function Desen() {
           opacitate={intra(T, P + 4.8, 0.5)}
           rol={ROL_FUNCTIE}
           simbol="f(xₖ)"
-          text="valorile cunoscute în ele"
+          text="Valorile cunoscute în ele"
           st={st}
         />
       </g>
@@ -406,8 +406,8 @@ function Desen() {
           latime={560}
           opacitate={intra(T, N + 4.6, 0.5)}
           rol={ROL_POLINOM}
-          simbol="grad ≤ 4"
-          text="pe 5 puncte distincte, el e unic"
+          simbol="Grad ≤ 4"
+          text="Pe 5 puncte distincte, el e unic"
           st={st}
         />
         <Cartonas
@@ -416,8 +416,8 @@ function Desen() {
           latime={560}
           opacitate={intra(T, N + 6.6, 0.5)}
           rol={ROL_FUNCTIE}
-          simbol={`abatere ${zecimale(EROARE_POLINOM[0]!, 2)}`}
-          text="cât ratează funcția adevărată"
+          simbol={`Abatere ${zecimale(EROARE_POLINOM[0]!, 2)}`}
+          text="Cât ratează funcția adevărată"
           st={st}
         />
       </g>
@@ -442,7 +442,7 @@ function Desen() {
           opacitate={intra(T, M + 0.6, 0.5)}
           rol={ROL_NODURI}
           simbol={`${TREPTE[treapta]} noduri`}
-          text="echidistante, ca în curs"
+          text="Echidistante, ca în curs"
           st={st}
         />
         <Cartonas
@@ -451,8 +451,8 @@ function Desen() {
           latime={560}
           opacitate={intra(T, M + 0.6, 0.5)}
           rol={ROL_ACCENT}
-          simbol={`vârf ${zecimale(AMPLITUDINE[treapta]!, 2)}`}
-          text="funcția însăși nu trece de 1"
+          simbol={`Vârf ${zecimale(AMPLITUDINE[treapta]!, 2)}`}
+          text="Funcția însăși nu trece de 1"
           st={st}
         />
         <Cartonas
@@ -461,8 +461,8 @@ function Desen() {
           latime={560}
           opacitate={intra(T, M + 6.0, 0.5)}
           rol={ROL_POLINOM}
-          simbol={`abatere ${zecimale(EROARE_POLINOM[treapta]!, 2)}`}
-          text="crește, nu scade"
+          simbol={`Abatere ${zecimale(EROARE_POLINOM[treapta]!, 2)}`}
+          text="Crește, nu scade"
           st={st}
         />
       </g>
@@ -484,8 +484,8 @@ function Desen() {
           latime={560}
           opacitate={intra(T, S + 4.8, 0.5)}
           rol={ROL_SPLINE}
-          simbol={`abatere ${zecimale(EROARE_SPLINE, 4)}`}
-          text="aceleași 11 noduri, altă construcție"
+          simbol={`Abatere ${zecimale(EROARE_SPLINE, 4)}`}
+          text="Aceleași 11 noduri, altă construcție"
           st={st}
         />
         <Cartonas
@@ -495,7 +495,7 @@ function Desen() {
           opacitate={intra(T, S + 6.6, 0.5)}
           rol={ROL_SPLINE}
           simbol="10 cubice"
-          text="câte una pe fiecare subinterval"
+          text="Câte una pe fiecare subinterval"
           st={st}
         />
       </g>

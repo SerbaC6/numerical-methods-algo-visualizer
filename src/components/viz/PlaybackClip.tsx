@@ -18,6 +18,8 @@ export type PlaybackClipProps = {
   /** Clipul e pe tot ecranul acum? Butonul apare doar dacă vine și `onPlinEcran`. */
   plinEcran?: boolean;
   onPlinEcran?: () => void;
+  /** Bara e dată la o parte? Iese și din așezare, și din ordinea de tabulare. */
+  hidden?: boolean;
   className?: string;
 };
 
@@ -44,6 +46,7 @@ export function PlaybackClip({
   onVitezaChange,
   plinEcran = false,
   onPlinEcran,
+  hidden = false,
   className,
 }: PlaybackClipProps) {
   const pozitie = Math.min(Math.max(timp, 0), total);
@@ -52,12 +55,17 @@ export function PlaybackClip({
     <div
       role="group"
       aria-label="Comenzile animației"
+      hidden={hidden}
       className={cn(
+        // Atributul `hidden` scoate bara din cititorul de ecran și din
+        // tabulare, dar `display` se scrie tot aici: utilitarele de mai jos ar
+        // bate regula lui din preflight.
+        hidden && "hidden",
         // `p-2` pe telefon, ca la `PlaybackBar`: rândul de butoane încăpea la
         // limită (302px necesari din 302 disponibili la 360px), adică orice
         // fallback de font îl rupea. Cei 8px din ramă sunt rezerva lui.
         "bg-suprafata border-bordura shadow-jos rounded-xl border p-2 sm:p-4",
-        "flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4",
+        !hidden && "flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4",
         className,
       )}
     >

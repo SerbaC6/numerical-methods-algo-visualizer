@@ -469,7 +469,7 @@ function Desen() {
           opacitate={oPatru}
           rol={ROL_V}
           titlu="Matricea identitate"
-          text="cu 4 elemente schimbate"
+          text="Cu 4 elemente schimbate"
           st={st}
         />
       </g>
