@@ -1,0 +1,44 @@
+# Verificarea fiecărei schimbări: lint, tipuri, teste, build.
+# Deploy-ul e treaba lui `deploy.yml` — aici doar se confirmă că build-ul iese.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# O rulare per branch: un push nou anulează verificarea începută pentru cel dinainte.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verifica:
+    name: Lint, tipuri și build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Node 22 (versiunea din `.nvmrc`)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalare dependențe
+        run: npm ci
+
+      - name: Lint (oxlint + prettier)
+        run: npm run lint
+
+      - name: Verificare de tipuri
+        run: npm run typecheck
+
+      # `--if-present` sare peste pas cât timp scriptul `test` nu există (apare în Faza 4,
+      # odată cu `src/algorithms/`) și pică normal, cu cod de eroare, din clipa în care există.
+      - name: Teste
+        run: npm run test --if-present
+
+      - name: Build
+        run: npm run build

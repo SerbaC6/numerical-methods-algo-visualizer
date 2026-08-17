@@ -1,0 +1,64 @@
+# Publicarea pe GitHub Pages: orice commit ajuns în `main` devine site-ul live.
+# Verificările (lint, tipuri, build) stau în `ci.yml` și rulează în paralel.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # Butonul de rulare manuală, pentru cazul în care Pages trebuie republicat fără un commit nou.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un singur deploy odată; o rulare în curs se lasă să se termine, ca site-ul să nu rămână
+# la jumătate de publicare.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Node 22 (versiunea din `.nvmrc`)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Dă `base` corect pentru project page (`/<nume-repo>/`), luat din numele repo-ului,
+      # ca redenumirea repo-ului să nu ceară și o modificare în `vite.config.ts`.
+      - name: Configurare Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Instalare dependențe
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/
+
+      - name: Încărcare artefact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    name: Publicare
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicare pe GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

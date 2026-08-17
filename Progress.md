@@ -24,9 +24,14 @@ Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
       întâmplat deja pe paginile 7, 9, 10 și 11. Fără Python, fără randare offline, fără fișiere
       video în repo — deci și întrebarea „unde stau fișierele randate, în repo sau în Releases"
       dispare
-- [ ] Domeniu: `github.io` sau domeniu propriu
+- [ ] Domeniu: `github.io` sau domeniu propriu — deocamdată **project page** pe `github.io`
+      (`serbac6.github.io/numerical-methods-visualizer/`); un domeniu propriu se poate adăuga
+      oricând, iar `base` se ia oricum din numele repo-ului în `deploy.yml`
 - [ ] MDX pentru conținut sau fișiere TypeScript simple
-- [ ] `HashRouter` vs. `BrowserRouter` + `404.html`
+- [x] ~~`HashRouter` vs. `BrowserRouter` + `404.html`~~ → **`HashRouter`** (deja în `src/main.tsx`).
+      GitHub Pages nu rescrie rutele, iar cu `#` orice adresă adâncă se deschide direct, fără
+      `404.html` care să redirecteze. Pagina de 404 rămâne o rută React (`src/pages/NotFound.tsx`),
+      pentru sluguri care nu există
 
 **Ordinea fazelor și dependențele:**
 
@@ -45,7 +50,7 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 
 - [x] Inițializare proiect
   - [x] Vite + React 19 + TypeScript (scaffold `react-ts`, Vite 8)
-  - [x] `npm install` și verificare `npm run dev` — pagina se deschide pe `/numerical-methods-algo-visualizer/`
+  - [x] `npm install` și verificare `npm run dev` — pagina se deschide pe `/numerical-methods-visualizer/`
   - [x] Fixare versiune Node în `.nvmrc` (22) + câmpul `engines` din `package.json`
   - [x] Curățare boilerplate Vite (logo-uri, `App.css`, `src/assets`)
 - [x] Structura de foldere
@@ -108,29 +113,39 @@ Faza 0 ──> Faza 1 ──> Faza 2 ──> Faza 3 ──┐
 > se activează abia atunci.
 
 - [ ] Repo GitHub
-  - [ ] Creare repo (public), push `main`
+  - [x] Creare repo (public), push `main` — `SerbaC6/numerical-methods-algo-visualizer`
+  - [ ] **Redenumire în `numerical-methods-visualizer`** — decisă; codul e deja pe numele nou
+        (`base`, `package.json`, `GITHUB_URL`, README), mai rămâne redenumirea din setările repo-ului
+        și `git remote set-url`
   - [ ] Descriere + topics (`numerical-methods`, `education`, `react`, `visualization`, `romanian`)
-  - [ ] Licență aleasă și adăugată (`LICENSE`)
+  - [ ] ~~Licență aleasă și adăugată (`LICENSE`)~~ → **fără licență deocamdată**, prin decizie.
+        Repo-ul rămâne „all rights reserved"; când se pune una, ea acoperă doar codul, iar
+        `cursuri_MN/` primește o notă separată (e material de curs al altcuiva)
   - [ ] 🔒 Branch protection pe `main`: PR obligatoriu, CI verde obligatoriu — **după primul deploy**
 - [ ] Convenții de lucru
-  - [ ] Convenție de commit-uri (Conventional Commits), documentată în README
+  - [x] Convenție de commit-uri (Conventional Commits), documentată în README — secțiunea
+        „Cum contribui": tipuri, domenii în română, exemple din istoricul real
   - [ ] Etichete: `algoritm`, `bug`, `design`, `conținut`, `infra`, `good first issue`
   - [ ] Milestones: `MVP`, `Toate metodele`, `Lansare`
   - [ ] Acces Claude la repo pentru commit-uri și issues (conform `Plan.md`)
   - [ ] 🔒 Convenție de branch-uri: `feat/`, `fix/`, `alg/<nume-metoda>`, `docs/`, `design/` — **după primul deploy**
   - [ ] 🔒 Template de issue: „Algoritm nou", „Bug", „Îmbunătățire design", „Conținut/text"
   - [ ] 🔒 Template de PR: ce s-a schimbat, screenshot mobil + desktop, checklist
-- [ ] CI (GitHub Actions)
-  - [ ] Workflow `ci.yml`: install → lint → typecheck → test → build, pe push în `main` (și pe PR-uri, când vor exista)
-  - [ ] Cache pentru npm
+- [x] CI (GitHub Actions)
+  - [x] Workflow `ci.yml`: install → lint → typecheck → test → build, pe push în `main` și pe PR-uri.
+        Pasul de teste rulează `npm run test --if-present`, deci se sare singur până în Faza 4 și
+        începe să pice de la sine în clipa în care scriptul `test` există
+  - [x] Cache pentru npm — `actions/setup-node` cu `cache: npm` și `node-version-file: .nvmrc`
   - [ ] CI pică intenționat o dată (test stricat) ca să confirmi că e funcțional
 - [ ] Deployment GitHub Pages
-  - [ ] Decide: project page (`/nume-repo/`) vs. user page — afectează `base` din `vite.config.ts`
-  - [ ] Setare `base` corect și verificare că asset-urile se încarcă în `npm run preview`
-  - [ ] Workflow `deploy.yml` (`upload-pages-artifact` + `deploy-pages`)
+  - [x] Decide: **project page** (`/nume-repo/`) — `base` rămâne un subdirector
+  - [x] Setare `base` corect și verificare că asset-urile se încarcă în `npm run preview`
+  - [x] Workflow `deploy.yml` (`configure-pages` + `upload-pages-artifact` + `deploy-pages`).
+        `base` vine din `steps.pages.outputs.base_path`, dat build-ului ca `VITE_BASE`: o redenumire
+        a repo-ului nu mai cere și o modificare în `vite.config.ts`
   - [ ] Activare Pages din setările repo-ului, sursa = GitHub Actions
-  - [ ] Fișier `.nojekyll` în `public/`
-  - [ ] `404.html` pentru rutele client-side (sau `HashRouter` — vezi Faza 3)
+  - [x] Fișier `.nojekyll` în `public/` — verificat că ajunge în `dist/`
+  - [x] ~~`404.html` pentru rutele client-side~~ → **nu e nevoie**: `HashRouter` (vezi decizia de sus)
 - [ ] HTTPS / SSL
   - [ ] „Enforce HTTPS" activat în setările Pages
   - [ ] (Opțional) domeniu custom: `CNAME` + DNS + așteptare certificat

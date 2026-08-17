@@ -106,7 +106,7 @@ Ai nevoie de **Node 22+** (vezi `.nvmrc`); scripturile de întreținere cer **Py
 
 ```bash
 npm install
-npm run dev        # server de dezvoltare → http://localhost:5173/numerical-methods-algo-visualizer/
+npm run dev        # server de dezvoltare → http://localhost:5173/numerical-methods-visualizer/
 npm run build      # build de producție în dist/
 npm run preview    # verifică build-ul local
 npm run lint       # oxlint + verificare formatare
@@ -115,7 +115,7 @@ npm run typecheck  # doar TypeScript
 ```
 
 Atenție la `base` din `vite.config.ts`: site-ul se servește dintr-un subdirector, deci și local
-adresa conține `/numerical-methods-algo-visualizer/`.
+adresa conține `/numerical-methods-visualizer/`.
 
 ### Verificări care nu sunt în build
 
@@ -197,3 +197,44 @@ tot — fără schelet și fără text de așteptare. Ce urmează se ține exclu
 - **react-router** pentru rutare
 - **oxlint + Prettier** (100 de coloane, ghilimele duble, `prettier-plugin-tailwindcss`)
 - **GitHub Pages** pentru găzduire, cu deploy din `main`
+
+---
+
+## Cum contribui
+
+Două workflow-uri se ocupă de tot ce vine după `git push`:
+
+- **`.github/workflows/ci.yml`** — lint, verificare de tipuri, teste (când vor exista) și build, la
+  fiecare push în `main` și la fiecare pull request.
+- **`.github/workflows/deploy.yml`** — build și publicare pe GitHub Pages, la fiecare push în `main`.
+  `base` se ia din numele repo-ului (`actions/configure-pages`), deci o redenumire a repo-ului nu
+  cere și o modificare în `vite.config.ts`.
+
+Înainte de commit, rulează local ce rulează și CI-ul: `npm run lint && npm run typecheck && npm run build`.
+
+### Convenția de commit-uri
+
+[Conventional Commits](https://www.conventionalcommits.org/), cu **descrierea în română, cu
+diacritice** — ca tot restul proiectului:
+
+```
+<tip>(<domeniu>): <ce s-a schimbat, la timpul prezent, fără punct final>
+```
+
+Tipurile folosite: `feat`, `fix`, `docs`, `refactor`, `style`, `perf`, `test`, `chore`.
+Domeniul e partea atinsă — `pagina 17`, `antet`, `culori`, `viz`, `clipuri`, `public` — și poate
+lipsi când schimbarea e transversală.
+
+```
+feat(pagina 17): cuadraturi adaptive și Gaussiene, cu graficul în centru
+fix(antet): sigla stă la aceeași distanță de margine ca butonul de temă
+docs(culori): rolurile `--viz-*` se împart între interfețe și clipuri
+```
+
+Nu scrie în mesaj de ce era greșit înainte, ci ce e adevărat după: mesajul se citește peste un an,
+lângă `git blame`, de cineva care nu ține minte discuția.
+
+### Regimul de branch-uri
+
+**Până la primul deploy reușit: un singur branch, `main`, cu commit-uri directe.** După aceea
+se trece pe branch protection și pull request-uri obligatorii, cu CI verde ca să se poată face merge.
