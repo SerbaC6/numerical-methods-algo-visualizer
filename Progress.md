@@ -691,6 +691,28 @@ Verificat în browser, pe ambele teme, la 360px și 1280px, cu `prefers-reduced-
 cadru (`motion.line` cu `animate` și fără valori statice), deci consola primește patru erori pe
 `derivare-numerica` și pe `ecuatii-neliniare`. E mai vechi decât lista și nu ține de ea.
 
+### Refacerea derulării se face doar la întoarcere (17 august 2026)
+
+Urmarea directă a reparației de mai sus, din a doua trecere: odată ce poziția chiar se reținea, s-a
+văzut că se **refăcea prea des**. Săgeata „pagina următoare" te lăsa în subsolul paginii următoare,
+nu la titlul ei.
+
+Cauza nu era derularea, ci **unde stau săgețile**: chiar la fundul paginii. Orice pagină părăsită
+printr-o săgeată își salva poziția „la fund", iar a doua oară când ajungeai pe ea — oricum ai fi
+ajuns — erai pus înapoi acolo. Măsurat pe `interpolare-polinomiala` → `curbe-bezier`, a doua
+trecere: **6713 din 6966** pe telefon și **5031 din 5031** pe desktop.
+
+**Nu era o problemă de telefon**, deși acolo a fost văzută: pe telefon paginile sunt cam de două ori
+mai înalte și săgeata se apasă mult mai des decât butonul „înapoi" al browserului, deci se nimerea
+mai des. Pe desktop se reproduce identic.
+
+Acum poziția se reface **doar la `POP`** (`useNavigationType` din react-router) — înapoi/înainte din
+browser, adică exact gestul căruia browserul îi reface singur derularea pe un site fără router. Un
+clic pe o legătură e `PUSH`: ai cerut altă pagină, deci o primești de la început.
+
+**De reținut**: „reține poziția paginii" nu e o singură cerință, ci două — _ce_ se salvează și _când_
+se reface. Prima trecere a rezolvat-o pe prima și a presupus că a doua n-are variante.
+
 ### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
 
 Ce există:
