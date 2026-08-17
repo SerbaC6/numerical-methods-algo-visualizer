@@ -31,9 +31,11 @@ export type MatrixGridProps = {
   /**
    * Cât de mari sunt cifrele. `normal` e mărimea de tabel, bună când matricea
    * stă lângă mult text; `mare` e pentru când matricea **e** subiectul zonei și
-   * are loc — altfel arată ca o notă de subsol lângă o formulă de 20 px.
+   * are loc — altfel arată ca o notă de subsol lângă o formulă de 20 px;
+   * `foarte-mare` e pentru pagina unde matricea e singurul desen și ține locul
+   * unui grafic.
    */
-  corp?: "normal" | "mare";
+  corp?: "normal" | "mare" | "foarte-mare";
   className?: string;
 };
 
@@ -216,7 +218,9 @@ export function MatrixGrid({
         <div
           className={cn(
             "grid w-max items-stretch gap-1 font-mono tabular-nums",
-            corp === "mare" ? "gap-1.5 text-lg" : "text-sm",
+            corp === "foarte-mare" && "gap-2 text-2xl",
+            corp === "mare" && "gap-1.5 text-lg",
+            corp === "normal" && "text-sm",
           )}
           style={{ gridTemplateColumns: sabloanColoane }}
         >
@@ -301,7 +305,8 @@ export function MatrixGrid({
                         data-stare={stare}
                         style={{ gridColumn: colDate(j), gridRow: primaLinieDate + i }}
                         className={cn(
-                          "duration-mediu ease-standard min-w-11 rounded-md border-2 px-2 py-1.5 text-center transition-colors",
+                          "duration-mediu ease-standard rounded-md border-2 text-center transition-colors",
+                          corp === "foarte-mare" ? "min-w-14 px-3 py-2" : "min-w-11 px-2 py-1.5",
                           // Linia/coloana activă stau dedesubt, ca fundal; starea
                           // celulei se desenează peste ele, deci nu se pierde.
                           // `/20` fiindcă `--viz-interval` e culoare plină:

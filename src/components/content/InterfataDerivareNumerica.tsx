@@ -217,15 +217,20 @@ export function InterfataDerivareNumerica() {
         </TabsList>
       </Tabs>
 
+      {/* Graficul ia toată lățimea ramei, iar parametrii trec dedesubt, ca la
+          celelalte pagini de integrare. Într-o coloană laterală, desenul rămânea
+          îngust tocmai unde se compară două înclinări, iar panoul de alături îl
+          împingea din mijlocul ramei. */}
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,28%,400px)]">
-          <div className="flex min-w-0 flex-col gap-8 p-6 sm:p-8">
+        <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col gap-8 p-4 sm:p-6">
             <Plot
               domeniuX={domeniuX}
               domeniuY={domeniuY}
               rezumat={`${formula.eticheta} pe ${functie.eticheta}`}
               descriere={descrieDesenul(functie.eticheta, punct, h, aproximare, exact)}
-              inaltimeMaxima={380}
+              raport={2}
+              inaltimeMaxima={560}
             >
               <PlotCurba segmente={segmente} rol="functie" />
 
@@ -293,53 +298,48 @@ export function InterfataDerivareNumerica() {
               setPas(PAS_IMPLICIT);
             }}
             incorporat
-            className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
+            className="border-bordura min-w-0 border-t"
           >
-            {/* Dintr-o listă, nu dintr-un șir de butoane: butoanele se rupeau pe
-                trei rânduri și cereau citite toate ca să alegi unul. */}
-            <div className="grid gap-2 sm:col-span-2">
-              <label className="text-base font-medium" htmlFor="alegere-functie-derivare">
-                Funcția
-              </label>
-              <Select value={idFunctie} onValueChange={schimbaFunctia}>
-                <SelectTrigger
-                  id="alegere-functie-derivare"
-                  className="tinta-atingere w-full font-mono text-base"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FUNCTII_DERIVARE.map((f) => (
-                    <SelectItem key={f.id} value={f.id} className="font-mono">
-                      f(x) = {f.eticheta}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {/* Dintr-o listă, nu dintr-un șir de butoane: butoanele se rupeau
+                  pe trei rânduri și cereau citite toate ca să alegi unul. */}
+              <div className="grid gap-2">
+                <label className="text-base font-medium" htmlFor="alegere-functie-derivare">
+                  Funcția
+                </label>
+                <Select value={idFunctie} onValueChange={schimbaFunctia}>
+                  <SelectTrigger
+                    id="alegere-functie-derivare"
+                    className="tinta-atingere w-full font-mono text-base"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FUNCTII_DERIVARE.map((f) => (
+                      <SelectItem key={f.id} value={f.id} className="font-mono">
+                        <Notatie>{`f(x) = ${f.eticheta}`}</Notatie>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <NumberInput eticheta="x₀" valoare={x0} onChange={setX0} pas={0.1} />
+
+              <NumberInput
+                eticheta="Pasul h"
+                valoare={pas}
+                onChange={setPas}
+                min={PAS_MINIM}
+                max={PAS_MAXIM}
+                faraSageti
+              />
             </div>
-
-            <NumberInput
-              className="sm:col-span-2"
-              eticheta="x₀"
-              valoare={x0}
-              onChange={setX0}
-              pas={0.1}
-            />
-
-            <NumberInput
-              className="sm:col-span-2"
-              eticheta="Pasul h"
-              valoare={pas}
-              onChange={setPas}
-              min={PAS_MINIM}
-              max={PAS_MAXIM}
-              faraSageti
-            />
 
             {/* Fiecare cifră în chenarul ei: într-o listă simplă, „exact" și
                 „aproximare" — două numere cu opt zecimale — se citeau ca un
                 singur bloc, tocmai unde diferența dintre ele e subiectul. */}
-            <dl className="grid gap-2 sm:col-span-2">
+            <dl className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 ["h folosit acum", stiintific(h, 2)],
                 ["f′(x₀) exact", zecimale(exact, 8)],
@@ -360,7 +360,9 @@ export function InterfataDerivareNumerica() {
               ))}
             </dl>
 
-            <p className="text-text-slab text-base leading-relaxed">{functie.ceArata}</p>
+            <p className="text-text-slab max-w-prose text-base leading-relaxed">
+              {functie.ceArata}
+            </p>
           </ControlPanel>
         </div>
       </div>

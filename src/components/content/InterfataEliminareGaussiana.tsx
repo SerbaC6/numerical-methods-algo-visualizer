@@ -146,7 +146,11 @@ export function InterfataEliminareGaussiana() {
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,30%,400px)]">
           <div className="flex min-w-0 flex-col items-center justify-center gap-6 overflow-x-auto p-5 sm:p-7">
-            <div className="flex items-start gap-4 sm:gap-6">
+            {/* `items-stretch`, nu `items-start`: coloana de scoruri își ia
+                înălțimea de la matrice, iar rândurile ei se împart în părți
+                egale — altfel scorul liniei a treia ajungea cu paisprezece
+                pixeli mai jos decât linia lui. */}
+            <div className="flex items-stretch gap-4 sm:gap-6">
               <MatrixGrid
                 valori={pas?.matrice ?? matrice}
                 stari={stari}
@@ -162,7 +166,7 @@ export function InterfataEliminareGaussiana() {
                 etichetaColoane={(matrice[0] ?? []).map((_, j) =>
                   j < coeficienti ? `C${j + 1}` : "b",
                 )}
-                corp="mare"
+                corp="foarte-mare"
                 formateaza={cifra}
                 descriere={descriereMatricei(pas, rezultat.pasi.length, derulare.pas)}
               />
@@ -371,11 +375,18 @@ function ColoanaScoruri({
     strategie === "partiala" ? "|aᵢₚ|" : strategie === "scalata" ? "|aᵢₚ| / sᵢ" : "max |aᵢⱼ|";
 
   return (
-    <figure className="m-0 min-w-[5.5rem]">
-      <figcaption className="text-text-slab mb-2 text-center font-mono text-sm">
+    <figure className="m-0 flex min-w-[6.5rem] flex-col">
+      {/* Antetul ține exact înălțimea rândului de nume al matricei — 16 px de
+          rând plus `pb-0.5` —, ca boxurile de dedesubt să pornească de unde
+          pornesc liniile. Simbolul e mai mare, dar cu `leading-4`: crește
+          litera, nu rândul. */}
+      <figcaption className="text-text-slab mb-2 pb-0.5 text-center font-mono text-xl leading-4">
         <Notatie>{antet}</Notatie>
       </figcaption>
-      <ul className="m-0 grid list-none gap-1 p-0">
+      <ul
+        className="m-0 grid flex-1 list-none gap-2 p-0"
+        style={{ gridTemplateRows: `repeat(${linii}, minmax(0, 1fr))` }}
+      >
         {Array.from({ length: linii }, (_, i) => {
           const scor = alegere?.scoruri[i];
           // Când toate scorurile sunt nule, nu există câștigător: linia „aleasă"
@@ -386,7 +397,7 @@ function ColoanaScoruri({
           return (
             <li
               key={i}
-              className="border-bordura rounded-md border px-2 py-1.5 text-center font-mono text-base tabular-nums"
+              className="border-bordura flex flex-col items-center justify-center rounded-md border px-2 text-center font-mono text-lg tabular-nums"
               style={{
                 color: gol ? undefined : culoareEticheta(castiga ? "pivot" : "anterior"),
                 borderColor: castiga ? culoareRol("pivot") : undefined,
@@ -400,8 +411,8 @@ function ColoanaScoruri({
               <span
                 className={
                   alegere?.scalari?.[i] != null && !gol
-                    ? "text-text-slab block text-xs"
-                    : "invisible block text-xs"
+                    ? "text-text-slab block text-[11px] leading-4"
+                    : "invisible block text-[11px] leading-4"
                 }
                 aria-hidden={alegere?.scalari?.[i] == null || gol}
               >
