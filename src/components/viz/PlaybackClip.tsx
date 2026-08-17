@@ -96,8 +96,8 @@ export function PlaybackClip({
           de aceea n-au `role`: un `role` pe un element cu `display: contents`
           poate cădea din arborele de accesibilitate.
 
-          **Pe telefon toate golurile sunt `gap-1`, și rândul nu se mai
-          împinge cu `justify-between`.** Cele două nu sunt cerințe separate:
+          **Sub 400px toate golurile sunt `gap-1`, și rândul nu se mai împinge
+          cu `justify-between`.** Cele două nu sunt cerințe separate:
           `justify-between` împărțea prisosul doar între cele trei grupuri de
           nivel întâi, deci golul dintre redare și viteze era de câteva ori cât
           cel dintre „reia" și „pornește" — iar când prisosul ajungea zero,
@@ -106,8 +106,15 @@ export function PlaybackClip({
           + 5 × 4px = 284px. Rama lasă `lățimea ecranului − 32` (`Container
           px-4`) `− 2` (rama) `− 16` (`p-2`), deci rândul ține până pe la 334px
           — sub etalonul de 360px, cu rezervă. `flex-wrap` rămâne pentru ce e
-          mai îngust de atât: acolo se rupe curat, între grupuri. */}
-      <div className="flex flex-wrap items-center gap-1 sm:contents">
+          mai îngust de atât: acolo se rupe curat, între grupuri.
+
+          **De la 400px în sus rămâne `justify-between`**, adică așezarea
+          dinainte: acolo prisosul e destul cât să nu rupă nimic, iar comenzile
+          întinse pe toată lățimea ramei citesc mai bine decât un pâlc lipit de
+          marginea din stânga, cu un gol cât un buton în dreapta. Pragul e scris
+          cu `min-[400px]:` fiindcă nu e o treaptă a temei — e exact lățimea de
+          la care rândul are loc să respire. */}
+      <div className="flex flex-wrap items-center gap-1 min-[400px]:justify-between sm:contents">
         <div className="flex items-center gap-1 sm:order-1">
           <Button
             variant="ghost"
@@ -139,13 +146,15 @@ export function PlaybackClip({
                 key={v}
                 size="sm"
                 variant={v === viteza ? "default" : "ghost"}
-                // `px-1` pe telefon: „0.5×" are patru semne mono la 14px, adică
+                // `px-1` sub 400px: „0.5×" are patru semne mono la 14px, adică
                 // 33,6px de text; cu `px-1.5` ieșea 45,6px, peste podeaua de
                 // 44px a țintei de atingere, deci butonul ăsta singur lățea
                 // rândul. La 8px de spațiu lateral intră sub podea și toate
                 // șase butoanele au aceeași lățime — de aici socoteala de mai
-                // sus. Ținta de atingere rămâne 44px, pe amândouă axele.
-                className="tinta-atingere px-1 font-mono sm:px-3"
+                // sus. Peste 400px se întoarce la `px-1.5`, unde cei 1,6px în
+                // plus nu mai rup nimic. Ținta de atingere rămâne 44px, pe
+                // amândouă axele, la orice lățime.
+                className="tinta-atingere px-1 font-mono min-[400px]:px-1.5 sm:px-3"
                 aria-pressed={v === viteza}
                 onClick={() => onVitezaChange(v)}
               >
