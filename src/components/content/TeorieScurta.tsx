@@ -38,6 +38,7 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
             cu 16px mai mult loc. */}
         <FormulaBlock
           latex={bloc.latex}
+          incapeInCaseta={bloc.incapeInCaseta}
           className="text-formula rounded-none border-0 bg-transparent px-3 py-5 sm:px-5 sm:py-6"
         />
 
