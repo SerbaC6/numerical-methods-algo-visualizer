@@ -416,6 +416,91 @@ Scrie întotdeauna rolul semantic (`bg-suprafata`, `text-text-slab`, `--viz-cure
 Mobilul nu e opțional: fiecare vizualizare și fiecare set de controale trebuie să se comporte
 corect în portret și peisaj.
 
+### Mobilul — regulile măsurate
+
+Regulile de mai jos nu sunt precauții teoretice: fiecare vine dintr-un bug care a ajuns pe site și
+care s-ar fi văzut din **socoteala făcută înainte de a scrie clasa**. Toate au aceeași cauză —
+măsura era scrisă pentru ecran lat (viewport-uri, `rem` fixe, `flex-wrap` lăsat să decidă singur),
+iar pe 360 px se rupea.
+
+**Etalonul e 360 px** — Galaxy S/A, Pixel, iPhone 12 mini. Se verifică și 375 px; sub 360 px se
+acceptă degradare curată, nu se optimizează.
+
+**Socoteala se face înainte, cu creionul.** Aduni lățimile minime ale copiilor plus spațiile dintre
+ei și compari cu `360 − 32` (`Container px-4`) `− padding-ul casetei − 2` (rama). Bara clipului cerea
+484 px pe un rând, adică nu încăpea pe niciun telefon fabricat — se vedea din adunare, nu din browser.
+
+**Textul dintr-o grilă cu număr fix de celule se leagă de celulă, nu de fereastră.** Unități de
+container (`cqi`), cu `container-type: inline-size` pe **grilă** — niciodată `vw`. `vw` și lățimea
+containerului cresc pe curbe diferite, iar podeaua unui `clamp()` ajunge să fie valoarea reală pe
+telefon: panoul din hero avea `clamp(7px, 2vw, 22px)` și scria cu 7 px într-o celulă de 18 px.
+Containerul se pune pe grilă, nu pe celulă, dacă celula are `transform-3d` — `container-type` aduce
+cu el `contain: layout`.
+
+**O margine negativă nu lățește o cutie cu `w-full`.** `-mx-4` pe un element cu lățime 100% doar îl
+**mută**. Ca să se întindă, îi trebuie și `w-auto` (`-mx-4 w-auto sm:mx-0 sm:w-full`).
+
+**`order-*` fără prefix rearanjează și telefonul.** Când așezarea de pe mobil vine din ordinea DOM,
+ordinea de pe desktop se scrie `sm:order-*`. Altfel un înveliș fără `order` (valoarea 0) trece
+înaintea unui frate cu `order-2` și rândurile ies pe dos — s-a întâmplat exact așa, la ambele bare.
+
+**Formulele au corp fluid, prin token.** `--text-formula` e singura mărime pentru KaTeX; un `rem`
+scris de mână pe o componentă e o scăpare. Fix la 1,4rem, formula ieșea din coloană pe orice telefon.
+
+**Regulile care luptă cu foaia KaTeX se scriu în afara layerelor.** `margin`, `text-align` și
+`white-space` de pe `.katex-display` vin nelayerate și bat orice `@layer`, indiferent de
+specificitate. Derularea stă pe `.katex-display`, cu `justify-content: safe center` — centrarea
+simplă împinge jumătate din depășire în afara zonei derulabile, adică tocmai **începutul** formulei
+devine de neatins.
+
+**Formula lată se rupe întâi, derulează abia după.** KaTeX taie deja matematica afișată în bucăți
+(`.base`), fix la relațiile și operatorii de nivel înalt, tocmai ca ele să se poată așeza pe rânduri
+diferite; singurul lucru care le ținea pe un rând era `white-space: nowrap` din foaia lui, anulat de
+`.formula .katex-display > .katex { white-space: normal }`. Măsurat: pe toate cele 18 pagini, din
+159 de formule ieșeau din coloană aproape toate, iar acum mai derulează **24**. Derularea rămâne
+pentru ce n-are unde să se rupă — o fracție lungă, un `\text{…}` scris dintr-o bucată, un bloc
+`aligned`. Ordinea contează: **întâi rupere, apoi corp mai mic, abia la urmă derulare**; corpul
+micșorat nu salvează o formulă de două ori mai lată decât coloana.
+
+**Matematica din proză (`Mate`) primește `overflow-wrap: anywhere`.** Lipsa lui `nowrap` nu ajunge:
+`−⟨v⁽ᵏ⁾,A·r⁽ᵏ⁾⟩/⟨v⁽ᵏ⁾,A·v⁽ᵏ⁾⟩` n-are niciun spațiu, deci trece drept un singur cuvânt și lățește
+pagina întreagă.
+
+**Barele de comenzi nu se lasă pe `flex-wrap`.** Sub `sm` se scrie explicit ce stă pe ce rând —
+sliderul singur, sus, fiindcă e singura piesă care se strică dacă e strâmtorată (avea 105 px de
+traseu pentru un clip întreg). Peste `sm` se revine la rândul unic cu `sm:contents` pe învelișurile
+de grupare. **Un `role`/`aria-label` nu se pune niciodată pe un element cu `display: contents`** — de
+aceea învelișurile sunt divuri goale, iar grupul cu `role="group"` rămâne element propriu.
+
+**`tinta-atingere` e o podea, nu o lățime.** „0,5×" are patru semne, deci butonul iese peste 44 px și
+rupe rândul de unul singur; pe telefon primește `px-2 sm:px-3`. Podeaua de 44 px rămâne — pe
+verticală întotdeauna, pe orizontală la tot ce încape în ea.
+
+**Spațiul dintre rândurile unei formule rupte se dă din `row-gap`, nu din `line-height`.** Bucățile
+KaTeX (`.katex-base`) sunt `inline-block` și mai înalte decât rândul — o fracție are 46px la un rând
+de 23px —, deci `line-height` nu le atinge (măsurat: dus la 2, golul rămâne 0). Un `margin` pe bucăți
+ar îngroșa și formulele de pe un rând; `.katex-html` devine flex cu `row-gap`, iar
+`align-items: baseline` ține bucățile de pe același rând aliniate ca înainte.
+
+**Egalizarea de înălțime (`AceeasiInaltime`) se oprește pe telefon.** Prețul ei se schimbă cu
+lățimea: pe două coloane, diferența dintre o legendă de patru intrări și una de șase e de câteva
+zeci de pixeli; pe o coloană a fost **98px** de rezervă goală sub legenda scurtă, adică un gol de
+122px acolo unde toate celelalte erau 24px. Sub `sm`, varianta ascunsă primește `hidden`, nu
+`invisible`. Regula generală: **ce ține loc „ca să nu salte pagina" trebuie remăsurat pe o
+coloană** — un rezervor calibrat pe desktop devine, pe telefon, cea mai mare gaură din pagină.
+
+**Perechile „înapoi/înainte" rămân rând la orice lățime**, cu `flex-1 min-w-0` pe fiecare jumătate și
+`justify-end` pentru cea din dreapta. Nu `text-right`: `text-align` nu mișcă un element flex, deci
+clasa aceea era moartă. Și lipsa unui vecin primește `<span className="flex-1" />`, la amândouă
+capetele — altfel simetria e accidentală.
+
+**Ce se verifică înainte de „gata":** 360 px și 768 px, portret și peisaj, ambele teme,
+`prefers-reduced-motion`, și **zero derulare orizontală** pe fiecare pagină:
+
+```js
+document.documentElement.scrollWidth <= document.documentElement.clientWidth;
+```
+
 ## TODO — animații și interfețe grafice
 
 Ordinea de lucru pentru partea vizuală, **de la cel mai ușor la cel mai greu**. Dificultatea nu e

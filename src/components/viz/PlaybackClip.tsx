@@ -53,35 +53,20 @@ export function PlaybackClip({
       role="group"
       aria-label="Comenzile animației"
       className={cn(
-        "bg-suprafata border-bordura shadow-jos flex flex-wrap items-center gap-4 rounded-xl border p-4",
+        // `p-2` pe telefon, ca la `PlaybackBar`: rândul de butoane încăpea la
+        // limită (302px necesari din 302 disponibili la 360px), adică orice
+        // fallback de font îl rupea. Cei 8px din ramă sunt rezerva lui.
+        "bg-suprafata border-bordura shadow-jos rounded-xl border p-2 sm:p-4",
+        "flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4",
         className,
       )}
     >
-      <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="tinta-atingere"
-          aria-label="Reia de la început"
-          onClick={() => {
-            onRuleazaChange(false);
-            onTimp(0);
-          }}
-        >
-          <RotateCcw aria-hidden="true" />
-        </Button>
-        <Button
-          size="icon"
-          className="tinta-atingere"
-          aria-label={ruleaza ? "Pauză" : "Pornește"}
-          aria-pressed={ruleaza}
-          onClick={() => onRuleazaChange(!ruleaza)}
-        >
-          {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-        </Button>
-      </div>
-
-      <div className="flex min-w-40 flex-1 items-center gap-3">
+      {/* Ordinea din DOM e cea de pe telefon — sliderul sus, comenzile dedesubt —,
+          iar `sm:order-*` o rearanjează pe ecran lat, unde redarea stă prima.
+          `order-*` fără prefix ar întoarce și rândurile de pe telefon: acolo
+          învelișul de mai jos e un singur element flex, fără `order`, deci ar
+          trece înaintea sliderului. */}
+      <div className="flex min-w-0 items-center gap-3 sm:order-2 sm:flex-1">
         <Slider
           aria-label="Poziția în animație, în secunde"
           min={0}
@@ -93,38 +78,74 @@ export function PlaybackClip({
             onTimp(v ?? 0);
           }}
         />
-        <span className="text-text-slab shrink-0 font-mono text-base tabular-nums">
+        <span className="text-text-slab shrink-0 font-mono text-sm tabular-nums sm:text-base">
           {secunde(pozitie)}/{secunde(total)}
         </span>
       </div>
 
-      <div className="flex items-center gap-1" role="group" aria-label="Viteză">
-        {VITEZE.map((v) => (
+      {/* Al doilea rând pe telefon. Peste `sm`, învelișurile astea dispar din
+          așezare (`contents`) și copiii lor redevin celule ale rândului unic —
+          de aceea n-au `role`: un `role` pe un element cu `display: contents`
+          poate cădea din arborele de accesibilitate. */}
+      <div className="flex flex-wrap items-center justify-between gap-1 sm:contents">
+        <div className="flex items-center gap-1 sm:order-1">
           <Button
-            key={v}
-            size="sm"
-            variant={v === viteza ? "default" : "ghost"}
-            className="tinta-atingere font-mono"
-            aria-pressed={v === viteza}
-            onClick={() => onVitezaChange(v)}
+            variant="ghost"
+            size="icon"
+            className="tinta-atingere"
+            aria-label="Reia de la început"
+            onClick={() => {
+              onRuleazaChange(false);
+              onTimp(0);
+            }}
           >
-            {v}×
+            <RotateCcw aria-hidden="true" />
           </Button>
-        ))}
-      </div>
+          <Button
+            size="icon"
+            className="tinta-atingere"
+            aria-label={ruleaza ? "Pauză" : "Pornește"}
+            aria-pressed={ruleaza}
+            onClick={() => onRuleazaChange(!ruleaza)}
+          >
+            {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+          </Button>
+        </div>
 
-      {onPlinEcran && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="tinta-atingere"
-          aria-label={plinEcran ? "Ieși din ecranul complet" : "Pe tot ecranul"}
-          aria-pressed={plinEcran}
-          onClick={onPlinEcran}
-        >
-          {plinEcran ? <Minimize aria-hidden="true" /> : <Maximize aria-hidden="true" />}
-        </Button>
-      )}
+        <div className="flex items-center gap-1 sm:contents">
+          <div className="flex items-center gap-1 sm:order-3" role="group" aria-label="Viteză">
+            {VITEZE.map((v) => (
+              <Button
+                key={v}
+                size="sm"
+                variant={v === viteza ? "default" : "ghost"}
+                // `px-1.5` pe telefon: „0,5×" are patru semne, deci depășește
+                // podeaua de 44px a țintei de atingere și devine el butonul
+                // care rupe rândul. Ținta rămâne 44px pe verticală și, la
+                // celelalte două viteze, și pe orizontală.
+                className="tinta-atingere px-1.5 font-mono sm:px-3"
+                aria-pressed={v === viteza}
+                onClick={() => onVitezaChange(v)}
+              >
+                {v}×
+              </Button>
+            ))}
+          </div>
+
+          {onPlinEcran && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="tinta-atingere sm:order-4"
+              aria-label={plinEcran ? "Ieși din ecranul complet" : "Pe tot ecranul"}
+              aria-pressed={plinEcran}
+              onClick={onPlinEcran}
+            >
+              {plinEcran ? <Minimize aria-hidden="true" /> : <Maximize aria-hidden="true" />}
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

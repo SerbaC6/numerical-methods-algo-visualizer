@@ -1,4 +1,4 @@
-# Progress — Vizualizator de Metode Numerice
+# Progress — numerical-methods-visualizer
 
 Documentul de lucru al proiectului. Sursa viziunii: [`Plan.md`](./Plan.md).
 Se actualizează la **fiecare** sesiune de lucru: bifezi ce ai terminat.
@@ -1339,10 +1339,46 @@ Ce **nu** e făcut încă:
   - [ ] Rezumat textual al vizualizării pentru cine nu vede graficul
   - [ ] Contrast AA verificat automat (axe / Lighthouse) în ambele teme
   - [ ] `prefers-reduced-motion` respectat, inclusiv de playback
+- [x] **Trecere de reparații pe mobil (360 px)** — patru locuri care se rupeau, toate din aceeași
+      cauză: măsura era scrisă pentru ecran lat. Regulile care ies de aici stau în `CLAUDE.md`,
+      la „Mobilul — regulile măsurate".
+  - [x] Panoul split-flap din hero: litera se leagă de lățimea **celulei** (`cqi` +
+        `container-type` pe grilă), nu de `2vw` — 7,2 px → **14,2 px** la 360 px, neschimbată pe
+        desktop (21,7 px). Panoul iese la marginile ecranului sub `sm` (`-mx-4 w-auto`)
+  - [x] Formulele KaTeX: token nou `--text-formula` (fluid, `clamp`) în loc de `1,4rem` fix —
+        27 px → **19,6 px** la 375 px, 29 px pe ecran lat, ca înainte. Derularea stă acum pe
+        `.katex-display`, cu `justify-content: safe center`, într-o regulă **în afara layerelor**.
+        `Mate` primește `overflow-wrap: anywhere`
+  - [x] Formulele late **se rup pe mai multe rânduri**: `white-space: normal` pe
+        `.katex-display > .katex` deblochează tăierea pe care KaTeX o face oricum, la relațiile de
+        nivel înalt. Pe toate cele 18 pagini: din **159** de formule mai derulează **24**, față de
+        aproape toate înainte (pe factorizări LU, 14 din 14 → **1**, și aceea cu 6 px).
+        Rămân late, fiindcă n-au unde se rupe: `dvs` (1), `fft` (4), `newton-cotes` (3),
+        `cuadraturi` (4), `ecuatii-diferentiale` (3), `eliminare-gaussiana` (2),
+        `metode-iterative` (3), `interpolare-polinomiala` (2), `derivare-numerica` (1),
+        `factorizari-lu` (1) — toate derulează corect, niciuna nu are text inaccesibil
+  - [x] Rândurile unei formule rupte primesc `row-gap` pe `.katex-html` (flex, cu
+        `align-items: baseline`). `line-height` nu poate face asta: bucățile KaTeX sunt
+        `inline-block` mai înalte decât rândul, iar un `margin` ar îngroșa și formulele de pe un
+        singur rând
+  - [x] **Cuprins doar pe telefon** pe pagina principală (`CuprinsMobil`, `sm:hidden`): cele patru
+        secțiuni cu numărul de metode, către aceleași ancore ca subsolul. Lista vine din
+        `getSectiuni()`, sursă comună cu subsolul, ca cele două să nu se depărteze
+  - [x] `AceeasiInaltime` nu mai egalizează sub `sm`: pe o coloană, legenda cea mai înaltă lăsa
+        **98 px** de rezervă goală sub cea activă, adică un gol de 122 px între legendă și
+        interfață, față de 24 px peste tot în rest. Acum e 24 px pe telefon, iar pe desktop
+        egalizarea rămâne (verificat: 28 px rezervă la 1280 px, deci taburile nu fac pagina să sară)
+  - [x] Barele de comenzi (`PlaybackClip`, `PlaybackBar`): așezare hotărâtă sub `sm` în loc de
+        `flex-wrap` — sliderul singur pe primul rând (traseu **105 px → 214 px**), comenzile
+        dedesubt. Bara clipului: 3 rânduri ragged → **2 rânduri** (154 px → 102 px). Pe `sm+`,
+        rândul unic e neschimbat (78 px)
+  - [x] Navigația „înapoi/înainte": rând la orice lățime, fiecare legătură pe jumătatea ei
+        (`flex-1 min-w-0` + `justify-end`), cu locul gol păstrat la ambele capete
+  - [x] Verificat automat, 18 pagini × 2 teme la 360 px: **zero derulare orizontală**
 - [ ] Robustețe
   - [ ] Testare pe Chrome, Firefox, Safari (inclusiv iOS)
   - [ ] Testare pe telefon real: atingeri, pinch-zoom pe grafic, rotire ecran
-  - [ ] Testare pe ecran mic (360px) și pe ecran mare (1440px+)
+  - [ ] Testare pe ecran mare (1440px+)
   - [ ] Error boundary: o eroare într-o vizualizare nu dărâmă pagina
   - [ ] Fără erori sau avertismente în consolă pe niciun ecran
 

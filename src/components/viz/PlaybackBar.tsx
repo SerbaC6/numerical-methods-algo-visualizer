@@ -66,65 +66,18 @@ export function PlaybackBar({
       role="group"
       aria-label="Derulare"
       className={cn(
-        "bg-suprafata border-bordura shadow-jos flex flex-wrap items-center gap-4 rounded-xl border p-4",
+        // `p-2` pe telefon, nu `p-3`: cei 8px câștigați din ramă intră direct în
+        // rândul de butoane, care e piesa care nu se poate strânge (vezi mai jos).
+        "bg-suprafata border-bordura shadow-jos rounded-xl border p-2 sm:p-4",
+        // Aceeași așezare ca la `PlaybackClip`, din același motiv: pe un rând,
+        // bara cere 532px (patru butoane de pas, sliderul și vitezele), deci pe
+        // telefon `flex-wrap` o rupea în rânduri nimerite. Sub `sm` se scrie
+        // explicit ce stă unde; peste `sm` revine rândul unic.
+        "flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4",
         className,
       )}
     >
-      <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="tinta-atingere"
-          aria-label="Reia de la început"
-          disabled={gol}
-          onClick={() => {
-            onRuleazaChange(false);
-            onPas(0);
-          }}
-        >
-          <RotateCcw aria-hidden="true" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="tinta-atingere"
-          aria-label="Pasul anterior"
-          disabled={gol || pas === 0}
-          onClick={() => {
-            onRuleazaChange(false);
-            onPas(Math.max(pas - 1, 0));
-          }}
-        >
-          <ChevronLeft aria-hidden="true" />
-        </Button>
-        {!faraRedare && (
-          <Button
-            size="icon"
-            className="tinta-atingere"
-            aria-label={ruleaza ? "Pauză" : "Pornește"}
-            aria-pressed={ruleaza}
-            disabled={gol || unSingurPas}
-            onClick={() => onRuleazaChange(!ruleaza)}
-          >
-            {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-          </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="tinta-atingere"
-          aria-label="Pasul următor"
-          disabled={gol || pas >= ultimul}
-          onClick={() => {
-            onRuleazaChange(false);
-            onPas(Math.min(pas + 1, ultimul));
-          }}
-        >
-          <ChevronRight aria-hidden="true" />
-        </Button>
-      </div>
-
-      <div className="flex min-w-40 flex-1 items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3 sm:order-2 sm:flex-1">
         <Slider
           aria-label="Poziția în animație"
           min={0}
@@ -137,28 +90,98 @@ export function PlaybackBar({
             onPas(v ?? 0);
           }}
         />
-        <span className="text-text-slab shrink-0 font-mono text-base" aria-live="polite">
+        <span
+          className="text-text-slab shrink-0 font-mono text-sm tabular-nums sm:text-base"
+          aria-live="polite"
+        >
           {gol ? "—" : `${pas + 1}/${totalPasi}`}
         </span>
       </div>
 
-      <div
-        className={cn("flex items-center gap-1", faraRedare && "hidden")}
-        role="group"
-        aria-label="Viteză"
-      >
-        {VITEZE.map((v) => (
+      {/* Al doilea rând pe telefon. Peste `sm`, învelișul dispare din așezare
+          (`contents`) — de aceea n-are `role`: un `role` pe `display: contents`
+          poate cădea din arborele de accesibilitate.
+
+          Distanța dintre cele două grupuri e `gap-1` pe telefon, cât cea dintre
+          butoanele dinăuntru: cu `justify-between`, ce prisosește se împarte
+          oricum între ele, deci valoarea de aici e doar podeaua de la care se
+          rupe rândul. Cei 4px scoși de aici sunt jumătate din ce lipsea. */}
+      <div className="flex flex-wrap items-center justify-between gap-1 sm:contents">
+        <div className="flex items-center gap-1 sm:order-1">
           <Button
-            key={v}
-            size="sm"
-            variant={v === viteza ? "default" : "ghost"}
-            className="tinta-atingere font-mono"
-            aria-pressed={v === viteza}
-            onClick={() => onVitezaChange(v)}
+            variant="ghost"
+            size="icon"
+            className="tinta-atingere"
+            aria-label="Reia de la început"
+            disabled={gol}
+            onClick={() => {
+              onRuleazaChange(false);
+              onPas(0);
+            }}
           >
-            {v}×
+            <RotateCcw aria-hidden="true" />
           </Button>
-        ))}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="tinta-atingere"
+            aria-label="Pasul anterior"
+            disabled={gol || pas === 0}
+            onClick={() => {
+              onRuleazaChange(false);
+              onPas(Math.max(pas - 1, 0));
+            }}
+          >
+            <ChevronLeft aria-hidden="true" />
+          </Button>
+          {!faraRedare && (
+            <Button
+              size="icon"
+              className="tinta-atingere"
+              aria-label={ruleaza ? "Pauză" : "Pornește"}
+              aria-pressed={ruleaza}
+              disabled={gol || unSingurPas}
+              onClick={() => onRuleazaChange(!ruleaza)}
+            >
+              {ruleaza ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="tinta-atingere"
+            aria-label="Pasul următor"
+            disabled={gol || pas >= ultimul}
+            onClick={() => {
+              onRuleazaChange(false);
+              onPas(Math.min(pas + 1, ultimul));
+            }}
+          >
+            <ChevronRight aria-hidden="true" />
+          </Button>
+        </div>
+
+        <div
+          className={cn("flex items-center gap-1 sm:order-3", faraRedare && "hidden")}
+          role="group"
+          aria-label="Viteză"
+        >
+          {VITEZE.map((v) => (
+            <Button
+              key={v}
+              size="sm"
+              variant={v === viteza ? "default" : "ghost"}
+              // `px-1.5` pe telefon, ca la `PlaybackClip`: „0,5×" e singurul
+              // buton mai lat decât podeaua de 44px (are patru semne), deci
+              // fiecare pixel de padding de aici lățește rândul întreg.
+              className="tinta-atingere px-1.5 font-mono sm:px-3"
+              aria-pressed={v === viteza}
+              onClick={() => onVitezaChange(v)}
+            >
+              {v}×
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );

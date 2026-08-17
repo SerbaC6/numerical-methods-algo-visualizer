@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+import { lipesteRelatiaDeTermen, permiteRupereIntreEnunturi } from "@/lib/rupere-formule";
 import { cn } from "@/lib/utils";
 
 export type FormulaBlockProps = {
@@ -46,8 +47,13 @@ export function FormulaBlock({
           import("katex/dist/katex.min.css"),
         ]);
         if (anulat) return;
-        setHtml(
-          katex.renderToString(latex, {
+
+        // Ocaziile de rupere între enunțuri se adaugă doar la formulele afișate:
+        // una inline curge în propoziție și se rupe după regulile textului.
+        const sursa = inline ? latex : permiteRupereIntreEnunturi(latex);
+
+        const randeaza = (tex: string) =>
+          katex.renderToString(tex, {
             displayMode: !inline,
             throwOnError: true,
             // `\htmlId` e chiar mecanismul cu care legăm formula de animație,
@@ -58,8 +64,28 @@ export function FormulaBlock({
             strict: (cod: string) => (cod === "htmlExtension" ? "ignore" : "warn"),
             // permitem doar marcarea părților din formulă, nu HTML arbitrar
             trust: (ctx) => ctx.command === "\\htmlId" || ctx.command === "\\htmlClass",
-          }),
-        );
+          });
+
+        // Dacă ocaziile de rupere adăugate ar strica formula, se randează cea
+        // scrisă de noi: o formulă lipsă e mult mai rău decât una care derulează.
+        // În dezvoltare se aude, ca `permiteRupereIntreEnunturi` să nu rateze
+        // tăcut un caz de LaTeX la care nu ne-am gândit.
+        let randat: string;
+        try {
+          randat = randeaza(sursa);
+        } catch (e) {
+          if (sursa === latex) throw e;
+          if (import.meta.env.DEV) {
+            console.warn("Ruperea între enunțuri a stricat formula; se randează originalul.", {
+              latex,
+              sursa,
+              e,
+            });
+          }
+          randat = randeaza(latex);
+        }
+
+        setHtml(randat);
         setEroare(null);
       } catch (e) {
         if (!anulat) setEroare(e instanceof Error ? e.message : "Formulă invalidă");
@@ -70,6 +96,44 @@ export function FormulaBlock({
       anulat = true;
     };
   }, [latex, inline]);
+
+  /**
+   * Lipirea relației de termenul ei se face pe HTML-ul deja așezat, fiindcă are
+   * nevoie de lățimi reale — vezi `src/lib/rupere-formule.ts`.
+   *
+   * Se reia la trei momente, toate necesare: după randare, când se schimbă
+   * lățimea casetei (rotirea telefonului, deschiderea unui panou) și după ce
+   * fonturile KaTeX au ajuns — până atunci măsurăm fontul de rezervă, deci alte
+   * lățimi. `ResizeObserver` ține minte lățimea de dinainte: lipirea schimbă
+   * **înălțimea** formulei, deci s-ar auto-declanșa la infinit.
+   */
+  useEffect(() => {
+    const radacina = container.current;
+    if (!radacina || html === null || inline) return;
+
+    let cadru = 0;
+    let latimeVazuta = -1;
+    const ruleaza = () => {
+      cancelAnimationFrame(cadru);
+      cadru = requestAnimationFrame(() => lipesteRelatiaDeTermen(radacina));
+    };
+
+    ruleaza();
+    void document.fonts?.ready.then(ruleaza);
+
+    const observator = new ResizeObserver(([intrare]) => {
+      const latime = intrare?.contentRect.width ?? 0;
+      if (latime === latimeVazuta) return;
+      latimeVazuta = latime;
+      ruleaza();
+    });
+    observator.observe(radacina);
+
+    return () => {
+      cancelAnimationFrame(cadru);
+      observator.disconnect();
+    };
+  }, [html, inline]);
 
   // Evidențierea se aplică peste HTML-ul deja randat, ca să nu re-compilăm
   // formula la fiecare pas al animației.

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
 
-import { SECTIUNI } from "@/algorithms/registry";
+import { getSectiuni } from "@/algorithms/registry";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
 import { Separator } from "@/components/ui/separator";
@@ -23,10 +23,11 @@ const PAGINI_SITE = [
 const CLASE_LINK =
   "tinta-atingere text-text-slab hover:text-text focus-visible:ring-ring/50 -mx-2 inline-flex items-center rounded-md px-2 text-sm focus-visible:ring-[3px] focus-visible:outline-none";
 
-/** Secțiunile cuprinsului, în ordinea lor din registru. */
-const SECTIUNI_CUPRINS = Object.entries(SECTIUNI)
-  .sort(([, a], [, b]) => a.ordine - b.ordine)
-  .map(([id, { titlu }]) => ({ id, titlu }));
+/**
+ * Secțiunile cuprinsului, în ordinea lor din registru. Aceeași sursă cu a
+ * cuprinsului de pe telefon (`CuprinsMobil`), ca cele două să nu se depărteze.
+ */
+const SECTIUNI_CUPRINS = getSectiuni();
 
 /**
  * Subsolul: sigla și numele stau în prima coloană a grilei, nu într-un bloc
@@ -50,8 +51,8 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
             <div className="flex items-center gap-2.5">
               <Logo className="shrink-0" />
               <span className="leading-tight font-bold">
-                visualiser
-                <span className="text-accent-slab">-mn</span>
+                numerical-methods
+                <span className="text-accent-slab">-visualizer</span>
               </span>
             </div>
           </div>
@@ -95,11 +96,8 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
         <Separator className="mt-10" />
 
         <div className="text-text-slab flex flex-col gap-2 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>© {AN} · visualiser-mn · construit cu React</p>
-          <p>
-            Conținutul urmează cursul predat. Site static, fără conturi, fără cookies, fără
-            urmărire.
-          </p>
+          <p>© {AN} · numerical-methods-visualizer</p>
+          <p>Conținutul urmează cursul predat.</p>
         </div>
       </Container>
     </footer>

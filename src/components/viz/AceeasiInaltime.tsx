@@ -35,6 +35,15 @@ export type AceeasiInaltimeProps = {
  * `aria-hidden` din calea cititorului de ecran, iar `inert` oprește tabularea
  * prin controalele lor.
  *
+ * **Pe telefon nu se egalizează nimic.** Acolo variantele ascunse ies de tot
+ * (`hidden`), iar blocul ia înălțimea celei care se vede. Motivul e că prețul se
+ * schimbă cu lățimea: pe ecran lat legenda are două coloane, deci între patru și
+ * șase intrări sunt câteva zeci de pixeli diferență; pe o coloană, aceleași
+ * intrări dau **98px** de rezervă goală sub legenda scurtă (măsurat pe „Puncte
+ * fixe, bisecție, Newton, secantă", la 375px). Golul acela se citește ca o
+ * greșeală de spațiere între legendă și interfață, iar saltul pe care îl
+ * previne e mai mic decât el.
+ *
  * **Ce nu e treaba ei.** Nu ține locul unui lucru care lipsește cu totul (un
  * grafic care n-are ce desena) și nu ascunde diferențe de conținut: variantele
  * rămân ce sunt: legenda unei metode spune în continuare exact ce e pe desenul
@@ -49,7 +58,10 @@ export function AceeasiInaltime({ variante, activa, className }: AceeasiInaltime
           // Toate pe aceeași celulă: `grid-area: 1 / 1`. Suprapuse, nu stivuite.
           className={cn(
             "col-start-1 row-start-1 min-w-0",
-            i === activa ? "" : "pointer-events-none invisible",
+            // Sub `sm` varianta ascunsă dispare de tot, deci nu mai ține loc;
+            // de la `sm` în sus redevine `block`, se suprapune peste celelalte
+            // în aceeași celulă și înălțimea o dă din nou cea mai înaltă.
+            i === activa ? "" : "pointer-events-none hidden sm:invisible sm:block",
           )}
           {...(i === activa ? {} : { "aria-hidden": true, inert: true })}
         >

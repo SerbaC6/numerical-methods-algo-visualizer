@@ -124,10 +124,14 @@ export function NotatieSVG({ text, marime }: { text: string; marime: number }) {
  * Nu primește `white-space: nowrap`: o expresie lungă ar ieși din coloană pe
  * telefon, iar o formulă ruptă la un spațiu se citește oricum mai bine decât una
  * care deversează.
+ *
+ * Primește însă `overflow-wrap: anywhere`, fiindcă lipsa lui `nowrap` nu era
+ * de ajuns: `−⟨v⁽ᵏ⁾,A·r⁽ᵏ⁾⟩/⟨v⁽ᵏ⁾,A·v⁽ᵏ⁾⟩` n-are niciun spațiu, deci trecea
+ * drept un singur cuvânt și lățea pagina întreagă pe telefon.
  */
 export function Mate({ children }: { children: string }) {
   return (
-    <span className="font-mono text-[1.12em]">
+    <span className="font-mono text-[1.12em] [overflow-wrap:anywhere]">
       <Notatie>{children}</Notatie>
     </span>
   );

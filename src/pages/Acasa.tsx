@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { ALGORITMI, getAlgoritmiPeSectiuni } from "@/algorithms/registry";
 import { AlgorithmCard } from "@/components/content/AlgorithmCard";
 import { Container } from "@/components/layout/Container";
+import { CuprinsMobil } from "@/components/layout/CuprinsMobil";
 
 /** Panoul aduce cu el biblioteca de animație; textul din hero nu-l așteaptă. */
 const TextFlippingBoard = lazy(() =>
@@ -79,7 +80,17 @@ export default function Acasa() {
     <>
       <Hero />
 
-      <Container className="flex flex-col gap-12 py-12">
+      {/* Pe telefon, spațiul de sub panou era adunat din două padding-uri care
+          se lovesc: `py-10` de la hero (40px) plus `py-12` de aici (48px), adică
+          88px între rama panoului și cuvântul „Cuprins". Sub `sm` rămâne doar
+          padding-ul hero-ului, plus 8px, ca panoul întins de la o margine la
+          alta să nu se lipească de titlu. Peste `sm` panoul stă în coloana lui,
+          lângă titlu, deci acolo distanța verticală nu se dublează. */}
+      <Container className="flex flex-col gap-12 pt-2 pb-12 sm:pt-12">
+        {/* Se stinge la `sm`, deci pe ecran lat nu lasă nici măcar spațiul gol
+            dintre elementele flex: un element `display: none` nu e element flex. */}
+        <CuprinsMobil />
+
         {SECTIUNI_CUPRINS.map(({ sectiune, titlu, algoritmi }) => (
           <section key={sectiune} aria-labelledby={`sectiune-${sectiune}`}>
             <h2
@@ -158,16 +169,28 @@ function PanouMesaje() {
     return () => clearInterval(id);
   }, [mesaje.length]);
 
+  // Pe telefon panoul iese din marginile `Container`-ului (`px-4`, deci `-mx-4`
+  // le anulează exact): 32px în plus pe o grilă de 16 coloane înseamnă două
+  // pixeli pe literă, iar acolo fiecare contează. Peste `sm` revine în coloană.
+  //
+  // `w-auto` nu e de decor: cu `w-full`, lățimea rămâne 100% din coloană și
+  // marginea negativă doar **mută** panoul spre stânga, fără să-l lățească.
+  // Lăsat pe `auto`, se întinde peste tot ce-i dau marginile.
+  const laMargini =
+    "-mx-4 w-auto rounded-none border-x-0 sm:mx-0 sm:w-full sm:rounded-xl sm:border-x";
+
   return (
     <Suspense
-      fallback={<div className="bg-noapte border-bordura aspect-2/1 w-full rounded-xl border" />}
+      fallback={
+        <div className={`bg-noapte border-bordura aspect-2/1 w-full border ${laMargini}`} />
+      }
     >
       <TextFlippingBoard
         text={mesaje[index] ?? ""}
         gridRows={RANDURI_PANOU}
         gridCols={COLOANE_PANOU}
         duration={0.6}
-        className="max-w-none"
+        className={`max-w-none ${laMargini}`}
       />
     </Suspense>
   );

@@ -127,9 +127,9 @@ export default function PaginaAlgoritm() {
 
   useEffect(() => {
     if (!pagina) return;
-    document.title = `${pagina.titlu} · visualiser-mn`;
+    document.title = `${pagina.titlu} · numerical-methods-visualizer`;
     return () => {
-      document.title = "visualiser-mn";
+      document.title = "numerical-methods-visualizer";
     };
   }, [pagina]);
 
@@ -236,27 +236,36 @@ export default function PaginaAlgoritm() {
 
         <nav
           aria-label="Navigație între pagini"
-          className="border-bordura mt-12 flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-between"
+          className="border-bordura mt-12 flex items-start justify-between gap-4 border-t pt-6"
         >
+          {/* Rând la orice lățime, nu coloană pe telefon: două săgeți care arată
+              în direcții opuse, dar cu textul lipit de aceeași margine, se citesc
+              ca o listă, nu ca „înapoi" și „înainte". Fiecare legătură ia
+              jumătate (`flex-1 min-w-0`) și își împinge conținutul spre marginea
+              ei — cu `justify-end`, fiindcă `text-align` n-are ce mișca într-un
+              element flex. Titlurile sunt lungi și se rup pe mai multe rânduri
+              în jumătatea lor, de aceea `items-start` și săgeți `shrink-0`. */}
           {anterior ? (
             <Link
               to={`/algoritm/${anterior.slug}`}
-              className="text-text-slab hover:text-text tinta-atingere inline-flex items-center gap-2 text-sm font-semibold"
+              className="text-text-slab hover:text-text tinta-atingere flex min-w-0 flex-1 items-start gap-2 text-sm font-semibold"
             >
-              <ArrowLeft className="size-4" aria-hidden="true" />
+              <ArrowLeft className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               {anterior.titlu}
             </Link>
           ) : (
-            <span />
+            <span className="flex-1" />
           )}
-          {urmator && (
+          {urmator ? (
             <Link
               to={`/algoritm/${urmator.slug}`}
-              className="text-text-slab hover:text-text tinta-atingere inline-flex items-center gap-2 text-sm font-semibold sm:text-right"
+              className="text-text-slab hover:text-text tinta-atingere flex min-w-0 flex-1 items-start justify-end gap-2 text-right text-sm font-semibold"
             >
               {urmator.titlu}
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <ArrowRight className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             </Link>
+          ) : (
+            <span className="flex-1" />
           )}
         </nav>
       </Container>

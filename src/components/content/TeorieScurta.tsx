@@ -32,10 +32,13 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
         {/* Mărimea se dă pe **părinte**, nu pe `.katex`: KaTeX își impune propriul
             `font-size: 1.21em` dintr-o foaie nelayerată, pe care o regulă din
             `@layer components` n-o poate depăși. Aici, cei 1,21em ai lui se
-            înmulțesc cu valoarea de mai jos și ies ~28px pe ecran lat. */}
+            înmulțesc cu `--text-formula` și ies ~29px pe ecran lat și ~21px pe
+            telefon — fixă la 1,4rem, formula ieșea din coloană pe orice ecran
+            mic. Pe telefon se strânge și spațiul lateral, ca formula să aibă
+            cu 16px mai mult loc. */}
         <FormulaBlock
           latex={bloc.latex}
-          className="rounded-none border-0 bg-transparent px-5 py-6 text-[1.4rem] sm:text-[1.5rem]"
+          className="text-formula rounded-none border-0 bg-transparent px-3 py-5 sm:px-5 sm:py-6"
         />
 
         {/* Legenda literelor. Despărțită de formulă printr-o linie, nu printr-o

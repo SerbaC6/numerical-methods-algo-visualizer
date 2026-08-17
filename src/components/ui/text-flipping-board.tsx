@@ -49,8 +49,16 @@ const ACCENT_COLORS: AccentColor[] = [
   { top: "bg-cer", bottom: "bg-estompat", text: "text-noapte" },
 ];
 
+/**
+ * Corpul literei nu se scrie aici: vine din `--corp-celula`, pusă pe grilă și
+ * calculată din lățimea **ei**, nu din a ferestrei (vezi `TextFlippingBoard`).
+ * Valoarea de dinainte era `clamp(7px, 2vw, 22px)`, iar `2vw` și lățimea
+ * panoului cresc pe curbe diferite: pe un telefon de 360px litera cădea pe
+ * podeaua de 7px într-o celulă de 18px, adică de patru ori mai mică, propor-
+ * țional, decât pe desktop.
+ */
 const CELL_TEXT_STYLE: React.CSSProperties = {
-  fontSize: "clamp(7px, 2vw, 22px)",
+  fontSize: "var(--corp-celula)",
   lineHeight: 1,
 };
 
@@ -439,7 +447,19 @@ export function TextFlippingBoard({
       <div
         aria-hidden="true"
         className="grid gap-px md:gap-[3px]"
-        style={{ gridTemplateColumns: `repeat(${gridCols}, 1fr)` }}
+        style={
+          {
+            gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+            // Containerul stă pe **grilă**, nu pe celulă: `container-type` aduce
+            // cu el `contain: layout`, iar celula are `transform-3d` și
+            // `perspective-dramatic`, care n-au de ce să fie atinse.
+            containerType: "inline-size",
+            // 0,66 e raportul măsurat pe desktop (celulă ~33px → literă 22px),
+            // deci panoul lat arată exact ca înainte. Pe telefon, celula de
+            // ~21px dă o literă de ~14px, în loc de 7.
+            "--corp-celula": `clamp(9px, calc(100cqi / ${gridCols} * 0.66), 22px)`,
+          } as React.CSSProperties
+        }
       >
         {board.map((row, r) =>
           row.map((cell, c) =>

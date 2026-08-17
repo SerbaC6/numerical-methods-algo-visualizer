@@ -454,6 +454,23 @@ export function getAlgoritmiPeSectiuni() {
 }
 
 /**
+ * Doar secțiunile cuprinsului, fără paginile din ele: numele, ancora și câte
+ * metode ține fiecare.
+ *
+ * Există ca subsolul și cuprinsul de pe telefon să nu poată ajunge niciodată să
+ * scrie liste diferite. Amândouă citeau din `SECTIUNI`, deci n-ar fi avut cum să
+ * se depărteze, dar legătura era una pe care trebuia s-o observi din două
+ * fișiere; aici e scrisă o dată.
+ */
+export function getSectiuni() {
+  return getAlgoritmiPeSectiuni().map(({ sectiune, titlu, algoritmi }) => ({
+    id: sectiune,
+    titlu,
+    numarMetode: algoritmi.length,
+  }));
+}
+
+/**
  * Vecinii pentru navigația de la finalul unei pagini, în ordinea din `Plan.md`
  * — adică strict după `numar`, nu după grupurile din cuprins.
  *

@@ -1,4 +1,4 @@
-# Vizualizator de Metode Numerice
+# numerical-methods-visualizer
 
 Site static, în limba română, în care studenții pot **vedea** și **se pot juca** cu metodele
 numerice: o pagină-cuprins cu cele 18 pagini tematice și, pentru fiecare, un clip explicativ, teoria
