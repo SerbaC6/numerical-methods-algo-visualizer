@@ -4,11 +4,7 @@ import {
   FUNCTII_INTERPOLATE,
   getFunctieInterpolata,
 } from "@/algorithms/interpolare-polinomiala/functii-interpolare";
-import {
-  esantioneaza,
-  multiplicatorLagrange,
-  polinomLagrange,
-} from "@/algorithms/interpolare-polinomiala/lagrange";
+import { esantioneaza, polinomLagrange } from "@/algorithms/interpolare-polinomiala/lagrange";
 import { schemaNeville, valoareNeville } from "@/algorithms/interpolare-polinomiala/neville";
 import {
   evalueazaSpline,
@@ -105,11 +101,11 @@ function extremele(valori: readonly number[]): [number, number] {
 /**
  * Interfața interactivă a paginii 12.
  *
- * **Un singur desen, patru întrebări.** Nodurile, funcția și cadrul rămân
+ * **Un singur desen, trei întrebări.** Nodurile, funcția și cadrul rămân
  * aceleași de la o filă la alta; se schimbă doar ce se desenează peste ele:
- * multiplicatorul unui nod, nivelurile schemei Neville, oscilația de la capete
- * sau bucățile spline-ului. Așa se vede că Lagrange și Neville dau **același**
- * polinom, iar spline-ul e altceva — nu patru pagini care nu se ating.
+ * polinomul întreg, nivelurile schemei Neville sau bucățile spline-ului. Așa se
+ * vede că Lagrange și Neville dau **același** polinom, iar spline-ul e altceva —
+ * nu trei pagini care nu se ating.
  *
  * **Nodurile se trag cu mâna** (`PlotPunctTras`), în afara filei cu funcția
  * Runge: acolo fenomenul e chiar despre noduri echidistante, iar unul mutat cu
@@ -339,7 +335,6 @@ export function InterfataInterpolare() {
                 nivel: nivelAles,
                 xEval,
                 rezultat: schema.rezultat,
-                k: kAles,
                 tipSpline,
               })}
               inaltimeMaxima={460}
@@ -660,8 +655,12 @@ function etichetaFilei(fila: Fila): string {
 
 function formulaFilei(fila: Fila, tipSpline: TipSpline): string {
   if (fila === "lagrange") {
+    // Evidențiat e **polinomul**, nu multiplicatorul: pe desen se trasează o
+    // singură linie, iar aceea e suma din stânga. Un `l_k` aprins în formulă ar
+    // fi trimis ochiul să caute pe grafic o curbă care nu mai există. Produsul
+    // rămâne scris, fiindcă el spune din ce e făcută suma.
     return (
-      "P_n(x) = \\sum_{k=0}^{n} f(x_k)\\, \\htmlId{multiplicator}{l_k(x)}, \\qquad " +
+      "\\htmlId{polinom}{P_n(x)} = \\sum_{k=0}^{n} f(x_k)\\, l_k(x), \\qquad " +
       "l_k(x) = \\prod_{\\substack{i=0 \\\\ i \\neq k}}^{n} \\frac{x - x_i}{x_k - x_i}"
     );
   }
@@ -683,7 +682,7 @@ function formulaFilei(fila: Fila, tipSpline: TipSpline): string {
 }
 
 function evidentiereaFilei(fila: Fila, nivel: number): string[] {
-  if (fila === "lagrange") return ["multiplicator"];
+  if (fila === "lagrange") return ["polinom"];
   if (fila === "neville") return nivel === 0 ? [] : ["pondere-stanga", "pondere-dreapta"];
   return ["capete"];
 }
@@ -750,13 +749,6 @@ function legendaFilei(fila: Fila, tipSpline: TipSpline): ElementLegenda[] {
         forma: "linie",
         explicatie: "Suma multiplicatorilor, fiecare ponderat cu valoarea din nodul lui.",
       },
-      {
-        rol: "interval",
-        eticheta: "multiplicatorul lₖ al nodului ales",
-        forma: "linie",
-        explicatie: "Trece prin 1 în nodul lui și prin 0 în toate celelalte.",
-      },
-      { rol: "pivot", eticheta: "nodul ales și valoarea lₖ(xₖ) = 1", forma: "punct" },
     ];
   }
 
@@ -821,7 +813,6 @@ function descrieDesenul({
   nivel,
   xEval,
   rezultat,
-  k,
   tipSpline,
 }: {
   fila: Fila;
@@ -833,7 +824,6 @@ function descrieDesenul({
   nivel: number;
   xEval: number;
   rezultat: number;
-  k: number;
   tipSpline: TipSpline;
 }): string {
   const n = noduri.length - 1;
@@ -841,8 +831,8 @@ function descrieDesenul({
 
   if (fila === "lagrange") {
     return (
-      `${comun} Se vede multiplicatorul nodului ${k}: valorează 1 în nodul lui și 0 în celelalte. ` +
-      `Polinomul de interpolare se abate de funcție cu cel mult ${zecimale(eroarePolinom, 4)}.`
+      `${comun} Se vede o singură linie, polinomul de interpolare: trece prin toate cele ` +
+      `${noduri.length} noduri și se abate de funcție cu cel mult ${zecimale(eroarePolinom, 4)}.`
     );
   }
   if (fila === "neville") {
