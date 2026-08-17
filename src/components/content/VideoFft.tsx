@@ -18,7 +18,6 @@ export function VideoFft() {
       id="htCj9exbGo0"
       titlu="The FFT Algorithm - Simple Step by Step"
       autor="Simon Xu"
-      limba="în engleză"
       miniatura={miniatura}
       descriere={
         "Clip: transformata Fourier rapidă, pas cu pas. Se pornește de la suma care dă " +
