@@ -35,11 +35,15 @@ export function Header() {
         <NavLink
           to="/"
           className="tinta-atingere -ml-3.5 flex shrink-0 items-center gap-2.5 rounded-md px-3.5"
-          aria-label="Acasă — Metode Numerice"
+          aria-label="Acasă — numerical-methods-visualizer"
         >
           <Logo className="shrink-0" />
-          <span className="hidden leading-tight font-bold sm:inline">
-            Metode <span className="text-accent-slab">Numerice</span>
+          {/* Numele are 28 de semne, adică vreo 224 px la corpul îngroșat: sub `md`
+              ar lăsa câmpului de căutare mai puțin de 230 px pe o bară de 640 px,
+              deci apare abia de la 768 px în sus. Sub atât rămâne doar sigla, care
+              e oricum drumul înapoi spre cuprins. */}
+          <span className="hidden leading-tight font-bold md:inline">
+            numerical-methods-<span className="text-accent-slab">visualizer</span>
           </span>
         </NavLink>
 

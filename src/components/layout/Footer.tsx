@@ -51,7 +51,7 @@ export function Footer({ spatiuSus = "larg" }: { spatiuSus?: "larg" | "stramt" }
             <div className="flex items-center gap-2.5">
               <Logo className="shrink-0" />
               <span className="leading-tight font-bold">
-                Metode <span className="text-accent-slab">Numerice</span>
+                numerical-methods-<span className="text-accent-slab">visualizer</span>
               </span>
             </div>
           </div>
