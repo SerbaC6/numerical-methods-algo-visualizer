@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://serbac6.github.io/numerical-methods-visualizer/sitemap.xml
