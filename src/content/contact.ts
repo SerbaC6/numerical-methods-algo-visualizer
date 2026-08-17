@@ -4,9 +4,26 @@
  * adresă, se schimbă aici, nu în trei fișiere.
  */
 
+/** Cine ține site-ul, cu ambele adrese — personală și de facultate. */
+export const PERSOANE = [
+  {
+    nume: "Robert-Sebastian Dimitrescu",
+    emailPersonal: "robertdimitrescu@gmail.com",
+    emailFacultate: "robert.dimitrescu@stud.acs.upb.ro",
+  },
+  {
+    nume: "Șerban-Ioan Ciumacencu",
+    emailPersonal: "serbaciumacencu@gmail.com",
+    emailFacultate: "serban.ciumacencu@stud.acs.upb.ro",
+  },
+] as const;
+
+/** Toate adresele, ca listă plată — pentru paginile care doar le înșiră. */
 export const ADRESE_EMAIL = [
-  { nume: "Robert Dimitrescu", email: "robertdimitrescu@gmail.com" },
-  { nume: "Șerban Ciumacencu", email: "serbaciumacencu@gmail.com" },
+  { nume: PERSOANE[0].nume, email: PERSOANE[0].emailPersonal },
+  { nume: PERSOANE[0].nume, email: PERSOANE[0].emailFacultate },
+  { nume: PERSOANE[1].nume, email: PERSOANE[1].emailPersonal },
+  { nume: PERSOANE[1].nume, email: PERSOANE[1].emailFacultate },
 ] as const;
 
 /** Unde învățăm — apare pe pagina de contact. */
