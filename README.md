@@ -49,30 +49,34 @@ se adaugă culori noi.
 - Culorile pentru stări (succes / atenție / eroare) se derivă separat: paleta e monocromă pe
   albastru și nu poate purta singură sensul de „eroare".
 
-### Culorile din desene
+### Culorile din desene și din clipuri
 
-Vizualizările nu scriu culori direct: iau **roluri** din [`src/lib/viz-roles.ts`](./src/lib/viz-roles.ts),
-de unde își ia culorile și legenda — deci legenda nu poate ajunge să contrazică desenul.
+Interfețele interactive (`Plot`, `MatrixGrid`) **și** clipurile din secțiunea „Vizual"
+(`Animatia*`) iau culorile din același loc — **roluri** din
+[`src/lib/viz-roles.ts`](./src/lib/viz-roles.ts) — deci interfața, clipul și legenda nu pot ajunge
+să se contrazică.
 
-| Rol        | Ce înseamnă                                        |
-| ---------- | -------------------------------------------------- |
-| `functie`  | curba funcției                                     |
-| `curent`   | iterația curentă                                   |
-| `anterior` | iterațiile anterioare                              |
-| `grila`    | grilă și adnotări                                  |
-| `interval` | zona evidențiată (și linia activă dintr-o matrice) |
-| `solutie`  | soluția                                            |
-| `pivot`    | pivotul                                            |
+| Culoare (luminoasă / întunecată)                                                                              | Rol        | Ce înseamnă                                                   | Apare în                                                                              |
+| ---------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| ![#06457F](https://placehold.co/16/06457F/06457F.png) / ![#A8C4EC](https://placehold.co/16/A8C4EC/A8C4EC.png)   | `functie`  | curba funcției                                                | `Plot`, pe toate paginile cu grafic, și clipurile care desenează o curbă (paginile 7, 18) |
+| ![#0474C4](https://placehold.co/16/0474C4/0474C4.png)                                                            | `curent`   | iterația curentă                                               | interfețe și clipuri deopotrivă — safirul e identic în ambele teme                        |
+| ![#5379AE](https://placehold.co/16/5379AE/5379AE.png)                                                            | `anterior` | iterațiile anterioare                                           | interfețe și clipuri deopotrivă                                                          |
+| ![#2C444C](https://placehold.co/16/2C444C/2C444C.png) / ![#A8C4EC](https://placehold.co/16/A8C4EC/A8C4EC.png)   | `grila`    | grilă și adnotări                                              | `Plot`, `MatrixGrid`                                                                      |
+| ![#BE7434](https://placehold.co/16/BE7434/BE7434.png) / ![#F97B06](https://placehold.co/16/F97B06/F97B06.png)   | `interval` | intervalul care se strânge (și linia activă dintr-o matrice)  | bisecția (pagina 6); extins, săgeata pasului `α·r⁽ᵏ⁾` din clipul paginii 7                |
+| ![#15803D](https://placehold.co/16/15803D/15803D.png) / ![#F2F5FA](https://placehold.co/16/F2F5FA/F2F5FA.png)   | `solutie`  | soluția găsită                                                 | interfețe și clipuri deopotrivă                                                          |
+| ![#C43314](https://placehold.co/16/C43314/C43314.png) / ![#FF7A5C](https://placehold.co/16/FF7A5C/FF7A5C.png)   | `pivot`    | pivotul unei eliminări                                          | paginile 1, 3, 4 (LU, eliminare gaussiană, Thomas); extins, steagul minimului local din clipul paginii 7 |
 
-Trei dintre ele nu pot fi albastre și au culoare proprie, aprobată explicit: **pivotul**
-(`#C43314` / `#FF7A5C`), **intervalul** (`#BE7434` / `#F97B06`) și **soluția** (`#15803D` /
-`#F2F5FA`). Fiecare rol are și o a doua valoare, `--viz-*-eticheta`, folosită exclusiv pentru
-textul scris pe desen: pragul WCAG e 3:1 pentru un element grafic, dar 4,5:1 pentru literă.
+`interval`, `solutie` și `pivot` sunt singurele care nu pot fi albastre — au culoare proprie,
+aprobată explicit, ca să iasă în evidență peste restul paletei, care e monocromă pe albastru.
+Fiecare rol are și o a doua valoare, `--viz-*-eticheta`, folosită exclusiv pentru textul scris pe
+desen, fie el în interfață sau în clip: pragul WCAG e 3:1 pentru un element grafic, dar 4,5:1
+pentru literă.
 
-Culorile se iau cu `culoareRol()` și `culoareEticheta()`, niciodată scrise de mână. La orice
-schimbare de culoare se rulează `scripts/verifica-contrast.py` **și** `scripts/verifica-daltonism.py`:
-prima măsoară contrastul față de fundal, a doua separarea dintre culorile care apar în **același**
-desen, la protanopie și deuteranopie.
+Culorile se iau cu `culoareRol()` și `culoareEticheta()`, niciodată scrise de mână — nici în
+componentele de interfață, nici în clipuri. La orice schimbare de culoare se rulează
+`scripts/verifica-contrast.py` **și** `scripts/verifica-daltonism.py`: prima măsoară contrastul
+față de fundal, a doua separarea dintre culorile care apar în **același** desen, la protanopie și
+deuteranopie.
 
 ### Tipografie
 
