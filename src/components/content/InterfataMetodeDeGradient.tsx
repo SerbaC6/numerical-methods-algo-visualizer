@@ -245,7 +245,8 @@ export function InterfataMetodeDeGradient() {
               valoare={valori.tol}
               onChange={seteaza("tol")}
               min={1e-14}
-              pas={1e-8}
+              stiintific
+              faraSageti
               unitate="ε"
               eroare={
                 typeof valori.tol === "number" && valori.tol <= 0

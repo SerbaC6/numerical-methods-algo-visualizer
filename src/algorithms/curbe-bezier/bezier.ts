@@ -50,11 +50,11 @@ export function bernstein(n: number, i: number, t: number): number {
 /**
  * Schema triunghiulară a algoritmului, **cu toate nivelurile păstrate**.
  *
- * `niveluri[0]` sunt punctele de control, iar `niveluri[j][i]` e `P⁽ʲ⁾ᵢ` din
+ * `niveluri[0]` sunt punctele de control, iar `niveluri[j][i]` e `Pᵢ⁽ʲ⁾` din
  * recurența §16:
  *
  * ```
- * P⁽ʲ⁾ᵢ = (1 − t)·P⁽ʲ⁻¹⁾ᵢ + t·P⁽ʲ⁻¹⁾ᵢ₊₁
+ * Pᵢ⁽ʲ⁾ = (1 − t)·Pᵢ⁽ʲ⁻¹⁾ + t·Pᵢ₊₁⁽ʲ⁻¹⁾
  * ```
  *
  * Ultimul nivel are un singur punct, care e chiar `B(t)`. Nivelurile
@@ -120,7 +120,7 @@ export function esantioneazaCurba(puncte: readonly Punct[], esantioane = 120, pa
 
 /**
  * Derivatele pe care le înlocuiesc cele două puncte de control interioare:
- * `P′₁ = 3(P₁ − P₀)` și `P′₂ = 3(P₃ − P₂)`.
+ * `P₁′ = 3(P₁ − P₀)` și `P₂′ = 3(P₃ − P₂)`.
  *
  * Asta e tot ce deosebește cele două scrieri ale aceleiași cubice: Hermite cere
  * două derivate, Bézier cere două puncte în plus — iar un punct se poate trage

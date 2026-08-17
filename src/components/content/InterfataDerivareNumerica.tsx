@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ControlPanel } from "@/components/viz/ControlPanel";
 import { Legend, type ElementLegenda } from "@/components/viz/Legend";
@@ -40,9 +39,22 @@ const FILE_FORMULE = [
   { id: "capat", eticheta: "Trei puncte, capăt" },
 ] as const;
 
-/** `h` se alege pe scară logaritmică: exponentul, nu valoarea. */
-const EXPONENT_MIN = -12;
-const EXPONENT_MAX = 0;
+/**
+ * Marginile în care se poate cere pasul.
+ *
+ * `h` interesant e între `1` și `10⁻¹²`: sub atât, scăderea `f(x₀+h) − f(x₀)`
+ * se face între două numere identice în virgulă mobilă și formula întoarce zero.
+ */
+const PAS_MINIM = 1e-12;
+const PAS_MAXIM = 1;
+/**
+ * Pasul cu care pornește pagina.
+ *
+ * Destul de mare cât nodurile să stea vizibil depărtate unul de altul: la
+ * `0,1` cele două puncte ale formulei cădeau practic unul peste altul, iar
+ * tocmai deplasarea lor e ce se urmărește aici.
+ */
+const PAS_IMPLICIT = 0.5;
 
 /**
  * Cât de repede ajunge desenul din urmă pasul cerut, în secunde.
@@ -134,13 +146,18 @@ export function InterfataDerivareNumerica() {
   const [idFunctie, setIdFunctie] = useState("parabola");
   const [idFormula, setIdFormula] = useState<string>("inainte");
   const [x0, setX0] = useState<number | "">(1);
-  const [exponent, setExponent] = useState(-1);
+  const [pas, setPas] = useState<number | "">(PAS_IMPLICIT);
 
   const functie = getFunctieDerivare(idFunctie);
   const formula = getFormula(idFormula);
-  // Cursorul dă ținta; desenul o urmărește, deci nodurile **călătoresc** spre
-  // ea în loc să apară direct acolo.
-  const h = 10 ** useUrmarire(exponent);
+  const pasCerut =
+    typeof pas === "number" && Number.isFinite(pas) && pas > 0
+      ? Math.min(PAS_MAXIM, Math.max(PAS_MINIM, pas))
+      : PAS_IMPLICIT;
+  // Câmpul dă ținta; desenul o urmărește pe scară logaritmică, deci nodurile
+  // **călătoresc** spre ea în loc să apară direct acolo — și un salt de opt
+  // ordine de mărime rămâne o mișcare, nu o tăietură.
+  const h = 10 ** useUrmarire(Math.log10(pasCerut));
   const punct = typeof x0 === "number" && Number.isFinite(x0) ? x0 : functie.x0;
 
   const exact = functie.fPrim(punct);
@@ -227,7 +244,7 @@ export function InterfataDerivareNumerica() {
               <PlotDreapta
                 prin={{ x: punct, y: functie.f(punct) }}
                 panta={aproximare}
-                rol="curent"
+                rol="interval"
               />
 
               {noduri.map((nod) => (
@@ -242,44 +259,38 @@ export function InterfataDerivareNumerica() {
               ))}
             </Plot>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="text-text-slab text-base">Pasul h</span>
-                <span className="text-text font-mono text-lg tabular-nums">{stiintific(h, 2)}</span>
-              </div>
-              <Slider
-                aria-label="Pasul h, ca ordin de mărime"
-                min={EXPONENT_MIN}
-                max={EXPONENT_MAX}
-                // Pas mărunt: la 0,1 se simțeau treptele sub deget, iar nodurile
-                // săreau din poziție în poziție în loc să alunece.
-                step={0.01}
-                value={[exponent]}
-                onValueChange={([v]) => setExponent(v ?? 0)}
-              />
-              <div className="flex flex-wrap gap-2">
-                {/* Exponenți întregi: cu -0,6 în listă, primul buton scria tot „10⁻¹",
-                    fiindcă eticheta rotunjește. */}
-                {[-1, -2, -3, -4, -8, -12].map((e) => (
+            {/* Ordinele de mărime rămân la un clic: `h` se plimbă peste
+                douăsprezece ordine, iar scrise de mână de fiecare dată ar fi
+                tocmai ce nu se face cu plăcere.
+
+                Exponentul trece prin `Notatie`, nu ca text: `⁻` și `⁴` nu
+                există în fonturile proiectului, deci „10⁻⁴" își lua semnul și
+                cifra din fontul de sistem — de aceea se vedeau mai mici decât
+                litera de lângă ele. Butonul e și el mai mare: eticheta lui e o
+                formulă, nu un cuvânt. */}
+            <div className="flex flex-wrap gap-2">
+              {[0, -1, -2, -3, -4, -8].map((e) => {
+                const tinta = 10 ** e;
+                const ales = Math.abs(Math.log10(pasCerut) - e) < 0.05;
+                return (
                   <Button
                     key={e}
-                    size="sm"
-                    variant={Math.abs(exponent - e) < 0.05 ? "default" : "outline"}
-                    className="tinta-atingere font-mono"
-                    aria-pressed={Math.abs(exponent - e) < 0.05}
-                    onClick={() => setExponent(e)}
+                    variant={ales ? "default" : "outline"}
+                    className="tinta-atingere px-3 font-mono text-lg sm:px-4"
+                    aria-pressed={ales}
+                    onClick={() => setPas(tinta)}
                   >
-                    10{exponentText(e)}
+                    <Notatie>{`h = 10${exponentText(e)}`}</Notatie>
                   </Button>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </div>
 
           <ControlPanel
             onReset={() => {
               setX0(functie.x0);
-              setExponent(-1);
+              setPas(PAS_IMPLICIT);
             }}
             incorporat
             className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
@@ -315,11 +326,22 @@ export function InterfataDerivareNumerica() {
               pas={0.1}
             />
 
+            <NumberInput
+              className="sm:col-span-2"
+              eticheta="Pasul h"
+              valoare={pas}
+              onChange={setPas}
+              min={PAS_MINIM}
+              max={PAS_MAXIM}
+              faraSageti
+            />
+
             {/* Fiecare cifră în chenarul ei: într-o listă simplă, „exact" și
                 „aproximare" — două numere cu opt zecimale — se citeau ca un
                 singur bloc, tocmai unde diferența dintre ele e subiectul. */}
             <dl className="grid gap-2 sm:col-span-2">
               {[
+                ["h folosit acum", stiintific(h, 2)],
                 ["f′(x₀) exact", zecimale(exact, 8)],
                 ["aproximare", zecimale(aproximare, 8)],
                 ["eroare", eroare === 0 ? "0 — exact" : stiintific(eroare, 2)],
@@ -337,6 +359,8 @@ export function InterfataDerivareNumerica() {
                 </div>
               ))}
             </dl>
+
+            <p className="text-text-slab text-base leading-relaxed">{functie.ceArata}</p>
           </ControlPanel>
         </div>
       </div>
@@ -353,12 +377,13 @@ const LEGENDA: ElementLegenda[] = [
     explicatie: "Ținta: ce ar trebui să dea formula.",
   },
   {
-    rol: "curent",
+    rol: "interval",
     eticheta: "dreapta cu panta calculată de formulă",
     forma: "linie",
     explicatie: "Diferența de înclinare dintre cele două e chiar eroarea.",
   },
-  { rol: "anterior", eticheta: "nodurile folosite de formulă", forma: "punct" },
+  { rol: "curent", eticheta: "punctul de lucru x₀", forma: "punct" },
+  { rol: "anterior", eticheta: "celelalte noduri ale formulei", forma: "punct" },
 ];
 
 const CIFRE_SUS: Record<string, string> = {

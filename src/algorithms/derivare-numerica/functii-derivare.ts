@@ -61,9 +61,7 @@ export const FUNCTII_DERIVARE: FunctieDerivare[] = [
     f: (x) => x * x,
     fPrim: (x) => 2 * x,
     fSecund: () => 2,
-    ceArata:
-      "Punctul de mijloc dă chiar 2x, oricât de mare ar fi h — ce rămâne pe ecran e doar " +
-      "rotunjirea mașinii. Cele două puncte greșesc cu exact h.",
+    ceArata: "Curbura e aceeași peste tot, deci eroarea nu depinde de unde se calculează.",
     x0: 1,
   },
   {

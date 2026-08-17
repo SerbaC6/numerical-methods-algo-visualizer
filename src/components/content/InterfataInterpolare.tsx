@@ -9,13 +9,8 @@ import {
   multiplicatorLagrange,
   polinomLagrange,
 } from "@/algorithms/interpolare-polinomiala/lagrange";
+import { schemaNeville, valoareNeville } from "@/algorithms/interpolare-polinomiala/neville";
 import {
-  ponderiNeville,
-  schemaNeville,
-  valoareNeville,
-} from "@/algorithms/interpolare-polinomiala/neville";
-import {
-  derivataSpline,
   evalueazaSpline,
   splineCubic,
   type TipSpline,
@@ -46,8 +41,7 @@ import { PlotCurba } from "@/components/viz/PlotCurba";
 import { PlotDreapta } from "@/components/viz/PlotDreapta";
 import { PlotPunct } from "@/components/viz/PlotPunct";
 import { PlotPunctTras } from "@/components/viz/PlotPunctTras";
-import { StepExplanation } from "@/components/viz/StepExplanation";
-import { latexNumar, zecimale } from "@/lib/numere";
+import { zecimale } from "@/lib/numere";
 import { cn } from "@/lib/utils";
 
 /* ───────────────────────── alegerile paginii ───────────────────────── */
@@ -71,10 +65,24 @@ type Fila = (typeof FILE)[number]["id"];
  */
 const NODURI_MIN = 3;
 const NODURI_MAX = 13;
-const NODURI_IMPLICIT = 6;
+const NODURI_IMPLICIT = 5;
 
 /** Câte puncte se calculează pe fiecare curbă desenată. */
 const ESANTIOANE = 400;
+
+/**
+ * Funcția cu care pornesc filele care lasă alegerea la cititor.
+ *
+ * Sinusoida, nu funcția Runge: pe ea polinomul de interpolare stă lipit de
+ * curbă, deci se vede lucrul pe care îl arată fila — multiplicatorul, nivelul
+ * schemei, bucata de spline —, nu oscilația de la capete. Oscilația are fila ei.
+ */
+const FUNCTIE_IMPLICITA = "sinusoida";
+
+/** Funcția pe care lucrează fila: cea aleasă, iar la Runge chiar funcția Runge. */
+function functiaFilei(fila: Fila, ales: string) {
+  return getFunctieInterpolata(fila === "runge" ? "runge" : ales);
+}
 
 /* ───────────────────────── cadrul de desen ───────────────────────── */
 
@@ -120,18 +128,22 @@ function extremele(valori: readonly number[]): [number, number] {
  * Matematica nu stă aici: vine din `src/algorithms/interpolare-polinomiala/`.
  */
 export function InterfataInterpolare() {
-  const [idFunctie, setIdFunctie] = useState("runge");
+  const [idFunctie, setIdFunctie] = useState(FUNCTIE_IMPLICITA);
   const [cate, setCate] = useState(NODURI_IMPLICIT);
   const [fila, setFila] = useState<Fila>("lagrange");
   const [k, setK] = useState(1);
   const [nivel, setNivel] = useState(1);
   const [tipSpline, setTipSpline] = useState<TipSpline>("natural");
 
-  const functie = getFunctieInterpolata(idFunctie);
+  const functie = functiaFilei(fila, idFunctie);
   const [a, b] = functie.interval;
 
   const [noduri, setNoduri] = useState<Nod[]>(() =>
-    noduriEchidistante(functie.f, functie.interval, NODURI_IMPLICIT),
+    noduriEchidistante(
+      getFunctieInterpolata(FUNCTIE_IMPLICITA).f,
+      getFunctieInterpolata(FUNCTIE_IMPLICITA).interval,
+      NODURI_IMPLICIT,
+    ),
   );
   const [xEval, setXEval] = useState(() => a + (b - a) * 0.62);
 
@@ -143,11 +155,30 @@ export function InterfataInterpolare() {
   const asazaPeFunctie = (cateNoduri = cate, f = functie) =>
     setNoduri(noduriEchidistante(f.f, f.interval, cateNoduri));
 
-  const schimbaFunctia = (id: string) => {
-    const noua = getFunctieInterpolata(id);
-    setIdFunctie(id);
+  const asazaPe = (noua: ReturnType<typeof getFunctieInterpolata>) => {
     asazaPeFunctie(cate, noua);
     setXEval(noua.interval[0] + (noua.interval[1] - noua.interval[0]) * 0.62);
+  };
+
+  const schimbaFunctia = (id: string) => {
+    setIdFunctie(id);
+    asazaPe(getFunctieInterpolata(id));
+  };
+
+  /**
+   * Fila cu funcția Runge își aduce funcția cu ea, iar la ieșire o lasă în urmă.
+   *
+   * Fenomenul Runge **e** o afirmație despre o funcție anume, deci acolo n-ai ce
+   * alege; iar celelalte trei file arătau, până acum, tocmai pe ea — și un
+   * polinom care oscilează cu ±1 face de nerecunoscut și multiplicatorul lui
+   * Lagrange, și nivelurile lui Neville. Nodurile se reașază la schimbare,
+   * fiindcă cele vechi stăteau pe cealaltă curbă.
+   */
+  const schimbaFila = (noua: Fila) => {
+    const vecheaFunctie = functiaFilei(fila, idFunctie);
+    const nouaFunctie = functiaFilei(noua, idFunctie);
+    setFila(noua);
+    if (nouaFunctie.id !== vecheaFunctie.id) asazaPe(nouaFunctie);
   };
 
   const schimbaNumarul = (cateNoduri: number) => {
@@ -300,7 +331,7 @@ export function InterfataInterpolare() {
         activa={FILE.findIndex((f) => f.id === fila)}
       />
 
-      <Tabs value={fila} onValueChange={(v) => setFila(v as Fila)}>
+      <Tabs value={fila} onValueChange={(v) => schimbaFila(v as Fila)}>
         <TabsList className="w-full">
           {FILE.map((f) => (
             <TabsTrigger key={f.id} value={f.id} className="flex-1">
@@ -330,7 +361,7 @@ export function InterfataInterpolare() {
                 k: kAles,
                 tipSpline,
               })}
-              inaltimeMaxima={400}
+              inaltimeMaxima={460}
             >
               {/* Funcția de la care s-au luat nodurile. Punctată: nu e ce
                   calculează metoda, ci ce ar vrea să nimerească. */}
@@ -348,17 +379,12 @@ export function InterfataInterpolare() {
                   />
                 ))}
 
-              {/* Polinomul de interpolare. Pe fila spline stă punctat, ca
-                  termen de comparație — acolo subiectul e cealaltă curbă. */}
-              {(fila === "lagrange" || fila === "runge" || fila === "spline") && (
-                <PlotCurba
-                  segmente={[curbaPolinomului]}
-                  rol="curent"
-                  // Pe fila spline e doar termen de comparație, deci subțire —
-                  // dar tot plin: punctat lângă funcția punctată, ochiul avea
-                  // două linii albastre întrerupte și nu mai știa care e care.
-                  grosime={fila === "spline" ? 2 : 3}
-                />
+              {/* Polinomul de interpolare. **Nu** și pe fila spline: acolo
+                  stătea doar ca termen de comparație, iar comparația aceea o
+                  face deja fila Runge, cu tot cu cifre. O a patra curbă peste
+                  celelalte trei nu mai spunea nimic în plus. */}
+              {(fila === "lagrange" || fila === "runge") && (
+                <PlotCurba segmente={[curbaPolinomului]} rol="curent" grosime={3} />
               )}
 
               {/* Multiplicatorul nodului ales: 1 în nodul lui, 0 în celelalte. */}
@@ -405,7 +431,7 @@ export function InterfataInterpolare() {
                     x={nod.x}
                     y={nod.y}
                     rol={fila === "lagrange" && i === kAles ? "pivot" : "anterior"}
-                    eticheta={n <= 8 ? `x${indice(i)}` : undefined}
+                    eticheta={n <= 4 ? `x${indice(i)}` : undefined}
                     onMuta={(p) => mutaNodul(i, p)}
                     limiteX={limiteleNodului(i)}
                     limiteY={[domeniuY[0], domeniuY[1]]}
@@ -429,37 +455,17 @@ export function InterfataInterpolare() {
             </Plot>
 
             <FormulaBlock
-              latex={formulaFilei({
-                fila,
-                k: kAles,
-                n,
-                nivel: nivelAles,
-                intrare: intrareExplicata,
-                noduri,
-                xEval,
-                functie: functie.latex,
-                eroarePolinom,
-                eroareSpline,
-                tipSpline,
-                spline,
-              })}
-              eticheta="Formula filei, cu numerele de acum în ea"
+              latex={formulaFilei(fila, tipSpline)}
+              eticheta="Regula filei"
               evidentiaza={evidentiereaFilei(fila, nivelAles)}
             />
 
             {fila === "neville" && (
-              <>
-                <StepExplanation
-                  explicatie={explicatiaNivelului(nivelAles, n, intrariNivel.length)}
-                  pas={nivelAles}
-                  totalPasi={n + 1}
-                />
-                <TabelNeville
-                  schema={schema}
-                  nivelAles={nivelAles}
-                  iExplicat={intrareExplicata?.i ?? 0}
-                />
-              </>
+              <TabelNeville
+                schema={schema}
+                nivelAles={nivelAles}
+                iExplicat={intrareExplicata?.i ?? 0}
+              />
             )}
           </div>
 
@@ -478,7 +484,10 @@ export function InterfataInterpolare() {
               <label className="text-base font-medium" htmlFor="alegere-functie-interpolare">
                 Funcția
               </label>
-              <Select value={idFunctie} onValueChange={schimbaFunctia}>
+              {/* Pe fila Runge lista rămâne pe ecran, dar închisă: funcția e
+                  chiar subiectul filei, iar scoasă de tot ar face panoul să se
+                  scurteze la fiecare trecere prin tab. */}
+              <Select value={functie.id} onValueChange={schimbaFunctia} disabled={fila === "runge"}>
                 <SelectTrigger
                   id="alegere-functie-interpolare"
                   className="tinta-atingere w-full font-mono text-base"
@@ -488,7 +497,7 @@ export function InterfataInterpolare() {
                 <SelectContent>
                   {FUNCTII_INTERPOLATE.map((f) => (
                     <SelectItem key={f.id} value={f.id} className="font-mono">
-                      f(x) = {f.eticheta}
+                      <Notatie>{`f(x) = ${f.eticheta}`}</Notatie>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -687,7 +696,7 @@ function TabelNeville({
                       !intrare && "text-text-slab/40",
                     )}
                   >
-                    {intrare ? zecimale(intrare.valoare, 4) : "—"}
+                    {intrare ? zecimale(faraZeroNegativ(intrare.valoare), 4) : "—"}
                   </td>
                 );
               })}
@@ -711,94 +720,50 @@ function indice(numar: number): string {
     .join("");
 }
 
+/**
+ * `sin(π·(−1))` nu dă zero, ci `−1,2·10⁻¹⁶`, iar rotunjit la patru zecimale se
+ * scrie „−0,0000" — o valoare care în tabelul schemei arată ca o greșeală.
+ */
+function faraZeroNegativ(x: number): number {
+  return Math.abs(x) < 1e-12 ? 0 : x;
+}
+
 function etichetaFilei(fila: Fila): string {
   return FILE.find((f) => f.id === fila)?.eticheta ?? "";
 }
 
-function explicatiaNivelului(nivel: number, n: number, cate: number): string {
-  if (nivel === 0) {
-    return `Nivelul 0: fiecare nod dă un polinom de grad 0, chiar valoarea din el. Sunt ${cate}.`;
-  }
-  if (nivel === n) {
-    return `Ultimul nivel: un singur polinom de grad ${n}, prin toate nodurile. E chiar polinomul Lagrange.`;
-  }
-  return (
-    `Nivelul ${nivel}: ${cate} polinoame de grad ${nivel}, fiecare prin ${nivel + 1} noduri ` +
-    `consecutive. Fiecare iese din două de pe nivelul dinainte.`
-  );
-}
-
-function formulaFilei({
-  fila,
-  k,
-  n,
-  nivel,
-  intrare,
-  noduri,
-  xEval,
-  functie,
-  eroarePolinom,
-  eroareSpline,
-  tipSpline,
-  spline,
-}: {
-  fila: Fila;
-  k: number;
-  n: number;
-  nivel: number;
-  intrare: { i: number; j: number; valoare: number } | undefined;
-  noduri: readonly Nod[];
-  xEval: number;
-  functie: string;
-  eroarePolinom: number;
-  eroareSpline: number;
-  tipSpline: TipSpline;
-  spline: ReturnType<typeof splineCubic>;
-}): string {
+function formulaFilei(fila: Fila, tipSpline: TipSpline): string {
   if (fila === "lagrange") {
     return (
-      `l_{${k}}(x) = \\prod_{\\substack{i=0 \\\\ i \\neq ${k}}}^{${n}} \\frac{x - x_i}{x_{${k}} - x_i}` +
-      `\\qquad \\htmlId{unu}{l_{${k}}(x_{${k}}) = 1} \\qquad l_{${k}}(x_i) = 0`
+      `l_k(x) = \\prod_{\\substack{i=0 \\\\ i \\neq k}}^{n} \\frac{x - x_i}{x_k - x_i}` +
+      `\\qquad \\htmlId{unu}{l_k(x_k) = 1} \\qquad l_k(x_i) = 0`
     );
   }
 
   if (fila === "neville") {
-    if (nivel === 0 || !intrare) return `P_{ii}(x) = f(x_i), \\qquad i = 0 : ${n}`;
-    const { i, j, valoare } = intrare;
-    const { spreStanga, spreDreapta } = ponderiNeville(noduri, i, j, xEval);
     return (
-      `P_{${i},${j}}(x) = ` +
-      `\\htmlId{pondere-stanga}{${latexNumar(spreStanga, 3)}} \\cdot P_{${i},${j - 1}}(x) + ` +
-      `\\htmlId{pondere-dreapta}{${latexNumar(spreDreapta, 3)}} \\cdot P_{${i + 1},${j}}(x) = ` +
-      `\\htmlId{rezultat}{${latexNumar(valoare, 4)}}`
+      "P_{ij}(x) = " +
+      "\\htmlId{pondere-stanga}{\\frac{x - x_j}{x_i - x_j}}\\, P_{i,j-1}(x) + " +
+      "\\htmlId{pondere-dreapta}{\\frac{x_i - x}{x_i - x_j}}\\, P_{i+1,j}(x)"
     );
   }
 
   if (fila === "runge") {
-    return (
-      `${functie} \\qquad ` +
-      `\\htmlId{eroare-polinom}{\\max|P_{${n}} - f| = ${latexNumar(eroarePolinom, 4)}} \\qquad ` +
-      `\\htmlId{eroare-spline}{\\max|s - f| = ${latexNumar(eroareSpline, 4)}}`
-    );
+    return "\\htmlId{eroare}{\\max_{x \\in [a,b]} |P_n(x) - f(x)|}";
   }
 
-  const ultimul = spline.c.length - 1;
-  if (tipSpline === "natural") {
-    return (
-      `s_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3 \\qquad ` +
-      `\\htmlId{capete}{c_0 = c_{${ultimul}} = 0}`
-    );
-  }
   return (
-    `s_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3 \\qquad ` +
-    `\\htmlId{capete}{s'(x_0) = ${latexNumar(derivataSpline(spline, noduri[0]?.x ?? 0), 3)}}`
+    "s_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3 \\qquad " +
+    (tipSpline === "natural"
+      ? "\\htmlId{capete}{c_0 = c_{n-1} = 0}"
+      : "\\htmlId{capete}{s'(x_0) = f'(x_0)}")
   );
 }
 
 function evidentiereaFilei(fila: Fila, nivel: number): string[] {
   if (fila === "lagrange") return ["unu"];
   if (fila === "neville") return nivel === 0 ? [] : ["pondere-stanga", "pondere-dreapta"];
-  if (fila === "runge") return ["eroare-polinom", "eroare-spline"];
+  if (fila === "runge") return ["eroare"];
   return ["capete"];
 }
 
@@ -846,7 +811,6 @@ function cifrele({
   return [
     ["bucăți", String(Math.max(0, noduri.length - 1))],
     ["max |s − f|", zecimale(eroareSpline, 4)],
-    ["max |Pₙ − f|", zecimale(eroarePolinom, 4)],
     ["s″(x₀)", zecimale(2 * (spline.c[0] ?? 0), 3)],
   ];
 }
@@ -933,11 +897,6 @@ function legendaFilei(fila: Fila, tipSpline: TipSpline): ElementLegenda[] {
           ? "Curbura se anulează la capete."
           : "Panta de la capete e chiar cea a funcției.",
     },
-    {
-      rol: "curent",
-      eticheta: "polinomul de interpolare, pentru comparație",
-      forma: "linie",
-    },
   ];
 }
 
@@ -992,7 +951,6 @@ function descrieDesenul({
   }
   return (
     `${comun} Spline-ul ${tipSpline === "natural" ? "natural" : "tensionat"} se abate de funcție ` +
-    `cu cel mult ${zecimale(eroareSpline, 4)}, iar polinomul de interpolare cu ` +
-    `${zecimale(eroarePolinom, 4)}.`
+    `cu cel mult ${zecimale(eroareSpline, 4)}.`
   );
 }

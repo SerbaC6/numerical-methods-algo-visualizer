@@ -32,6 +32,42 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
 
     metode: [
       {
+        id: "puncte-fixe",
+        titlu: "Puncte fixe",
+        esenta: (
+          <>
+            Rescrie ecuația ca <Mate>x = g(x)</Mate> și aplică <Mate>g</Mate> la nesfârșit.
+          </>
+        ),
+        blocuri: [
+          {
+            tip: "formula",
+            latex: "p_n = g(p_{n-1})",
+            sursa: "curs 6",
+            legenda: [
+              {
+                simbol: "g",
+                sens: (
+                  <>
+                    funcția de iterație, obținută rescriind ecuația ca <Mate>x = g(x)</Mate>
+                  </>
+                ),
+              },
+              { simbol: "pₙ₋₁", sens: <>valoarea de la pasul anterior</> },
+              { simbol: "pₙ", sens: <>valoarea nouă, adică g aplicată celei anterioare</> },
+            ],
+            explicatie: (
+              <>
+                Converge doar dacă <Mate>g</Mate> strânge distanțele, adică dacă{" "}
+                <Mate>{"|g′(x)| < k < 1"}</Mate> pe tot intervalul. Atunci punctul fix e unic și se
+                ajunge la el din orice punct de pornire.
+              </>
+            ),
+          },
+        ],
+      },
+
+      {
         id: "bisectie",
         titlu: "Bisecția",
         esenta: (
@@ -68,42 +104,6 @@ export const continutEcuatiiNeliniare: ContinutPagina = {
               <>
                 Singura metodă din pagină la care știi eroarea dinainte, fără să știi unde e
                 rădăcina.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "puncte-fixe",
-        titlu: "Puncte fixe",
-        esenta: (
-          <>
-            Rescrie ecuația ca <Mate>x = g(x)</Mate> și aplică <Mate>g</Mate> la nesfârșit.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex: "p_n = g(p_{n-1})",
-            sursa: "curs 6",
-            legenda: [
-              {
-                simbol: "g",
-                sens: (
-                  <>
-                    funcția de iterație, obținută rescriind ecuația ca <Mate>x = g(x)</Mate>
-                  </>
-                ),
-              },
-              { simbol: "pₙ₋₁", sens: <>valoarea de la pasul anterior</> },
-              { simbol: "pₙ", sens: <>valoarea nouă, adică g aplicată celei anterioare</> },
-            ],
-            explicatie: (
-              <>
-                Converge doar dacă <Mate>g</Mate> strânge distanțele, adică dacă{" "}
-                <Mate>{"|g′(x)| < k < 1"}</Mate> pe tot intervalul. Atunci punctul fix e unic și se
-                ajunge la el din orice punct de pornire.
               </>
             ),
           },

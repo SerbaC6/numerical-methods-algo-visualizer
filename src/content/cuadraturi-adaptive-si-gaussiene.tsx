@@ -8,8 +8,8 @@ import type { ContinutPagina } from "@/content/tipuri";
  * adaptive" și §„Cuadraturi Gaussiene": estimarea erorii din două aplicări ale
  * lui Simpson, factorul 1/15 și testul cu `15ε`; apoi gradul de valabilitate
  * `2n − 1`, condiția de ortogonalitate, polinoamele Legendre monice,
- * coeficienții din integrala Lagrange, schimbarea de interval și familiile
- * uzuale. Nimic scris din memorie.
+ * coeficienții din integrala Lagrange și schimbarea de interval. Nimic scris din
+ * memorie.
  *
  * Extrapolarea Richardson și metoda Romberg, care stau în același curs, **nu**
  * sunt pe pagină: au ieșit din listă la trecerea de la 20 la 18 pagini.
@@ -106,10 +106,8 @@ export const continutCuadraturi: ContinutPagina = {
             titlu: "Estimarea e o presupunere, nu o garanție",
             continut: (
               <>
-                Toată socoteala ține pentru că <Mate>f⁽⁴⁾</Mate> se schimbă puțin de la un capăt la
-                altul al bucății. Unde nu e așa, metoda se oprește prea devreme: pe <Mate>√x</Mate>,
-                cu derivata a patra nemărginită în zero, eroarea ajunge de câteva ori mai mare decât
-                toleranța cerută.
+                Ține doar cât timp <Mate>f⁽⁴⁾</Mate> se schimbă puțin pe bucată. Pe <Mate>√x</Mate>{" "}
+                nu se schimbă puțin, iar metoda se oprește prea devreme.
               </>
             ),
           },
@@ -206,44 +204,6 @@ export const continutCuadraturi: ContinutPagina = {
               <>
                 Tabelul de noduri se calculează o singură dată, pe <Mate>[−1, 1]</Mate>, și se mută
                 pe orice interval.
-              </>
-            ),
-          },
-        ],
-      },
-
-      {
-        id: "familii",
-        titlu: "Alte ponderi, alte familii",
-        esenta: (
-          <>
-            Schimbând funcția pondere se schimbă polinomul ortogonal, deci și nodurile — inclusiv pe
-            intervale nemărginite.
-          </>
-        ),
-        blocuri: [
-          {
-            tip: "formula",
-            latex:
-              "\\int_{-1}^{1}\\frac{f(x)}{\\sqrt{1-x^2}}\\,dx = \\frac{\\pi}{N}\\sum_{i=0}^{N-1} f\\!\\left(\\cos\\frac{(2i+1)\\pi}{2N}\\right)",
-            sursa: "curs 12, §„Formule pentru polinoamele ortogonale uzuale”, Cebâșev",
-            subtitlu: "Cebâșev",
-            legenda: [
-              { simbol: "1/√(1 − x²)", sens: <>ponderea, care crește spre capete</> },
-              { simbol: "π/N", sens: <>toate nodurile au aceeași pondere</> },
-            ],
-            explicatie: (
-              <>Singura familie cu noduri și ponderi scrise direct, fără rădăcini de căutat.</>
-            ),
-          },
-          {
-            tip: "text",
-            continut: (
-              <>
-                Cu ponderea <Mate>e⁻ˣ</Mate> pe <Mate>[0, ∞)</Mate> se ajunge la Laguerre, cu{" "}
-                <Mate>e⁻ˣ²</Mate> la Hermite, iar formula Gauss-Radau ia ca noduri zerourile lui{" "}
-                <Mate>Tₙ₊₁ − Tₙ</Mate>. Se integrează astfel și pe intervale nemărginite, unde o
-                rețea de noduri echidistante nici n-ar exista.
               </>
             ),
           },

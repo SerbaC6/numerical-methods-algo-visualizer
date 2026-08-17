@@ -376,7 +376,7 @@ function Desen() {
           puncte={nivelurileConstructiei[1] ?? []}
           rol={CULORI_NIVEL[1]!}
           opacitate={intra(T, N + 1.6, 0.5)}
-          etichete={["P⁽¹⁾₀", "P⁽¹⁾₁", "P⁽¹⁾₂"]}
+          etichete={["P₀⁽¹⁾", "P₁⁽¹⁾", "P₂⁽¹⁾"]}
           st={st}
         />
         <Cartonas
@@ -427,7 +427,7 @@ function Desen() {
           latime={540}
           opacitate={intra(T, R + 6.0, 0.5)}
           rol={ROL_PUNCT}
-          simbol="P⁽³⁾₀ = B(t)"
+          simbol="P₀⁽³⁾ = B(t)"
           text="Singurul punct rămas e pe curbă"
           st={st}
         />

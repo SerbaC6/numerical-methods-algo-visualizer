@@ -148,7 +148,7 @@ export function InterfataOrtogonalitate() {
             <svg
               ref={svg}
               viewBox={`0 0 ${LATURA} ${LATURA}`}
-              className="border-bordura bg-fundal w-full max-w-[560px] touch-none rounded-xl border"
+              className="border-bordura bg-fundal w-full max-w-[560px] touch-none rounded-xl border select-none"
               role="img"
               aria-label={descriere(idMetoda, v, reflexie, rotatie)}
               onPointerDown={(e) => {
@@ -175,7 +175,16 @@ export function InterfataOrtogonalitate() {
                     : {
                         dela: v,
                         la: [1, 0],
-                        eticheta: `${zecimale(unghiGrade(rotatie.unghi), 0)}°`,
+                        // Arcul e etichetat cu unghiul **lui v față de axă**,
+                        // măsurat în sens trigonometric: tras în sus dă plus,
+                        // tras în jos dă minus, ca la orice cerc trigonometric.
+                        //
+                        // Înainte scria aici unghiul rotației, care e chiar
+                        // opusul lui (`−atan2(y, x)`, fiindcă v se aduce **pe**
+                        // axă): vectorul tras în sus arăta „−45°", iar planul se
+                        // citea cu cadranele întoarse. Rotația nu s-a pierdut —
+                        // stă în panoul de cifre, cu semnul ei.
+                        eticheta: `${zecimale(unghiGrade(Math.atan2(v[1], v[0])), 0)}°`,
                       }
                 }
                 cerc={{ raza: reflexie.norma }}
@@ -281,6 +290,9 @@ function perechi(
     ["r = ‖v‖", zecimale(rotatie.r, 4)],
     ["cos θ", zecimale(rotatie.c, 4)],
     ["sin θ", zecimale(rotatie.s, 4)],
+    // Unghiul cu care rotește G, cu semnul lui: opusul celui scris pe arc,
+    // fiindcă rotația duce vectorul **înapoi** pe axă.
+    ["θ", `${zecimale(unghiGrade(rotatie.unghi), 0)}°`],
     ["G·v", `(${zecimale(rotatie.r, 3)}; 0)`],
   ];
 }
@@ -307,7 +319,12 @@ const LEGENDA_HH: ElementLegenda[] = [
 
 const LEGENDA_GV: ElementLegenda[] = [
   { rol: "curent", eticheta: "vectorul, tras cu mouse-ul", forma: "punct" },
-  { rol: "interval", eticheta: "unghiul rotației", forma: "linie" },
+  {
+    rol: "interval",
+    eticheta: "unghiul lui v față de axă",
+    forma: "linie",
+    explicatie: "Rotația îl duce înapoi la zero, deci θ e opusul lui.",
+  },
   { rol: "solutie", eticheta: "imaginea, căzută pe axă", forma: "linie" },
   {
     rol: "grila",

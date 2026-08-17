@@ -160,10 +160,8 @@ export const continutEcuatiiDiferentiale: ContinutPagina = {
             continut: (
               <>
                 Un pas cere un singur lucru: valoarea lui <Mate>f</Mate> în punctul în care ești
-                deja. Fără derivate de calculat, fără pași anteriori de ținut minte — de aceea
-                metoda pornește din capătul intervalului și merge singură până la celălalt. Metodele
-                următoare cumpără precizie cerând mai multe pante <em>în interiorul</em> aceluiași
-                pas.
+                deja. Metodele următoare cumpără precizie cerând mai multe pante în interiorul
+                aceluiași pas.
               </>
             ),
           },

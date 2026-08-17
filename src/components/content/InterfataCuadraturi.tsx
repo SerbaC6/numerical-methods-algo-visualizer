@@ -1,11 +1,6 @@
 import { useMemo, useState } from "react";
 
-import {
-  conturAdaptiv,
-  panouriUniformePentru,
-  ruleazaAdaptiv,
-  simpsonUniform,
-} from "@/algorithms/cuadraturi/adaptiv";
+import { conturAdaptiv, ruleazaAdaptiv } from "@/algorithms/cuadraturi/adaptiv";
 import {
   FUNCTII_CUADRATURA,
   getFunctieCuadratura,
@@ -28,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AceeasiInaltime } from "@/components/viz/AceeasiInaltime";
 import { ControlPanel } from "@/components/viz/ControlPanel";
@@ -44,7 +38,6 @@ import { PlotBandaRecursie } from "@/components/viz/PlotBandaRecursie";
 import { PlotCurba } from "@/components/viz/PlotCurba";
 import { PlotPunct } from "@/components/viz/PlotPunct";
 import { PlotVerticala } from "@/components/viz/PlotVerticala";
-import { StepExplanation } from "@/components/viz/StepExplanation";
 import { useDerulare } from "@/hooks/use-derulare";
 import { stiintific, zecimale } from "@/lib/numere";
 import { esantioneaza, sparge } from "@/lib/plot-esantionare";
@@ -56,21 +49,43 @@ const FILE: { id: Fila; eticheta: string }[] = [
   { id: "gauss", eticheta: "Cuadraturi Gaussiene" },
 ];
 
-/** Toleranțele care se pot cere adaptivului. Mai jos de atât, desenul devine o dungă. */
-const TOLERANTE = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7] as const;
+/**
+ * Toleranța implicită a adaptivului și marginile în care se poate cere.
+ *
+ * Marginea de jos nu e cosmetică: recursia își înjumătățește toleranța la
+ * fiecare tăiere, deci o toleranță cu câteva ordine sub `TOLERANTA_MINIMA` ar
+ * cere mii de panouri și ar îngheța pagina înainte să deseneze ceva.
+ */
+const TOLERANTA_IMPLICITA = 1e-5;
+const TOLERANTA_MINIMA = 1e-8;
+const TOLERANTA_MAXIMA = 1e-1;
 
 /** Graficul e piesa centrală a paginii, deci are voie să fie mare. */
 const INALTIME_GRAFIC = 560;
 
+/** Cu ce funcție pornește fiecare filă. */
+const FUNCTIE_IMPLICITA: Record<Fila, string> = {
+  // Vârful ascuțit lângă zero și coada plată: exact cazul care cere panouri de
+  // lățimi diferite.
+  adaptiv: "oscilanta",
+  // Sinusul pe [0, π]. Cu patru noduri alese, formula greșește cu 1,6e-5; cu
+  // patru echidistante, cu 4,1e-2 — de două mii de ori mai mult, și se vede pe
+  // desen, fiindcă polinomul prin nodurile echidistante taie vizibil vârful.
+  // Pe funcția adaptivului, amândouă variantele greșesc grosolan și butoanele
+  // nu mai arată nimic.
+  gauss: "sinus",
+};
+
 /**
- * Interfața paginii 17: aceeași funcție, două feluri de a alege unde se
- * evaluează.
+ * Interfața paginii 17: două feluri de a alege unde se evaluează funcția.
  *
- * **Funcția și intervalul sunt comune celor două file**, ca la pagina 16 și
- * dintr-un motiv asemănător: aici comparația e lecția. Adaptivul îndeasă
- * panouri unde funcția se mișcă; Gauss mută nodurile în interiorul aceluiași
- * interval. Dacă la schimbarea filei s-ar schimba și funcția, n-ar mai fi nimic
- * de comparat.
+ * **Fiecare filă își ține funcția ei.** Comparația care contează nu e între
+ * file, ci înăuntrul fiecăreia: la adaptiv, între o bucată tăiată și una
+ * acceptată; la Gauss, între noduri echidistante și noduri alese. Funcția care
+ * face vizibilă prima comparație — vârf ascuțit și coadă plată — o ascunde pe a
+ * doua, fiindcă acolo greșesc urât și nodurile alese, și cele echidistante.
+ * Lista de funcții e aceeași la amândouă, deci cine vrea să pună aceeași funcție
+ * pe ambele file o poate face dintr-un clic.
  *
  * **Figura desenată este aproximarea**, nu o ilustrație a ei: la adaptiv sunt
  * arcele de parabolă ale lui Simpson, panou cu panou; la Gauss e polinomul care
@@ -82,15 +97,17 @@ const INALTIME_GRAFIC = 560;
  */
 export function InterfataCuadraturi() {
   const [fila, setFila] = useState<Fila>("adaptiv");
-  const [idFunctie, setIdFunctie] = useState("oscilanta");
-  const [capete, setCapete] = useState<{ a: number | ""; b: number | "" }>(() => {
-    const [a, b] = getFunctieCuadratura("oscilanta").interval;
-    return { a: rotunjit(a), b: rotunjit(b) };
-  });
+  // Alegerile se țin pe filă: schimbarea filei readuce funcția și intervalul cu
+  // care lucra acolo, nu le calcă pe ale celeilalte.
+  const [idFunctie, setIdFunctie] = useState<Record<Fila, string>>(FUNCTIE_IMPLICITA);
+  const [capete, setCapete] = useState<Record<Fila, { a: number | ""; b: number | "" }>>(() => ({
+    adaptiv: capeteleFunctiei(FUNCTIE_IMPLICITA.adaptiv),
+    gauss: capeteleFunctiei(FUNCTIE_IMPLICITA.gauss),
+  }));
 
-  const functie = getFunctieCuadratura(idFunctie);
-  const a = numar(capete.a, functie.interval[0]);
-  const b = numar(capete.b, functie.interval[1]);
+  const functie = getFunctieCuadratura(idFunctie[fila]);
+  const a = numar(capete[fila].a, functie.interval[0]);
+  const b = numar(capete[fila].b, functie.interval[1]);
 
   const [domMin, domMax] = functie.domeniuValid;
   const motiv =
@@ -101,9 +118,8 @@ export function InterfataCuadraturi() {
         : undefined;
 
   const schimbaFunctia = (id: string) => {
-    setIdFunctie(id);
-    const [nouA, nouB] = getFunctieCuadratura(id).interval;
-    setCapete({ a: rotunjit(nouA), b: rotunjit(nouB) });
+    setIdFunctie((v) => ({ ...v, [fila]: id }));
+    setCapete((v) => ({ ...v, [fila]: capeteleFunctiei(id) }));
   };
 
   const exact = motiv ? 0 : integralaExacta(functie, a, b);
@@ -115,8 +131,7 @@ export function InterfataCuadraturi() {
     exact,
     motiv,
     resetCapete: () => {
-      const [nouA, nouB] = functie.interval;
-      setCapete({ a: rotunjit(nouA), b: rotunjit(nouB) });
+      setCapete((v) => ({ ...v, [fila]: capeteleFunctiei(idFunctie[fila]) }));
     },
     campuri: (
       <>
@@ -124,7 +139,7 @@ export function InterfataCuadraturi() {
           <label className="text-base font-medium" htmlFor="alegere-functie-cuadratura">
             Funcția
           </label>
-          <Select value={idFunctie} onValueChange={schimbaFunctia}>
+          <Select value={idFunctie[fila]} onValueChange={schimbaFunctia}>
             <SelectTrigger
               id="alegere-functie-cuadratura"
               className="tinta-atingere w-full font-mono text-base"
@@ -133,8 +148,11 @@ export function InterfataCuadraturi() {
             </SelectTrigger>
             <SelectContent>
               {FUNCTII_CUADRATURA.map((f) => (
+                // Prin `Notatie`: `e⁻³ˣ` are trei caractere care nu există în
+                // fonturile proiectului, deci scris ca text obișnuit își lua
+                // exponenții din fontul de sistem — alt corp, altă grosime.
                 <SelectItem key={f.id} value={f.id} className="font-mono">
-                  f(x) = {f.eticheta}
+                  <Notatie>{`f(x) = ${f.eticheta}`}</Notatie>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -142,14 +160,14 @@ export function InterfataCuadraturi() {
         </div>
         <NumberInput
           eticheta="a"
-          valoare={capete.a}
-          onChange={(v) => setCapete((c) => ({ ...c, a: v }))}
+          valoare={capete[fila].a}
+          onChange={(v) => setCapete((c) => ({ ...c, [fila]: { ...c[fila], a: v } }))}
           pas={0.1}
         />
         <NumberInput
           eticheta="b"
-          valoare={capete.b}
-          onChange={(v) => setCapete((c) => ({ ...c, b: v }))}
+          valoare={capete[fila].b}
+          onChange={(v) => setCapete((c) => ({ ...c, [fila]: { ...c[fila], b: v } }))}
           pas={0.1}
         />
       </>
@@ -193,8 +211,11 @@ type ProprietatiPanou = {
 /* ───────────────────────── fila adaptivă ───────────────────────── */
 
 function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: ProprietatiPanou) {
-  const [indiceToleranta, setIndiceToleranta] = useState(3);
-  const epsilon = TOLERANTE[indiceToleranta] ?? 1e-5;
+  const [toleranta, setToleranta] = useState<number | "">(TOLERANTA_IMPLICITA);
+  const epsilon =
+    typeof toleranta === "number" && Number.isFinite(toleranta) && toleranta > 0
+      ? Math.min(TOLERANTA_MAXIMA, Math.max(TOLERANTA_MINIMA, toleranta))
+      : TOLERANTA_IMPLICITA;
 
   const rezultat = useMemo(
     () => (motiv ? undefined : ruleazaAdaptiv({ f: functie.f, a, b, epsilon })),
@@ -250,19 +271,6 @@ function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: Pro
   );
 
   const eroare = rezultat ? Math.abs(rezultat.valoare - exact) : 0;
-  /** Ce l-ar costa pasul uniform ca să ajungă la aceeași eroare. */
-  const uniform = useMemo(
-    () =>
-      rezultat && eroare > 0 ? panouriUniformePentru(functie.f, a, b, exact, eroare) : undefined,
-    [rezultat, eroare, functie, a, b, exact],
-  );
-  /** Și, invers, cât greșește pasul uniform dacă i se dă bugetul adaptivului. */
-  const laFelDeScump = useMemo(() => {
-    if (!rezultat) return undefined;
-    const panouri = Math.max(1, Math.floor((rezultat.evaluari - 1) / 2));
-    return { panouri, eroare: Math.abs(simpsonUniform(functie.f, a, b, panouri).valoare - exact) };
-  }, [rezultat, functie, a, b, exact]);
-
   return (
     <>
       {/* Graficul e piesa centrală a paginii, deci ia toată lățimea ramei, iar
@@ -280,7 +288,13 @@ function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: Pro
                 raport={2}
                 inaltimeMaxima={INALTIME_GRAFIC}
               >
-                <PlotArie puncte={conturPanaAici} baza={0} rol="anterior" contur={false} />
+                <PlotArie
+                  puncte={conturPanaAici}
+                  baza={0}
+                  rol="solutie"
+                  contur={false}
+                  hasura={false}
+                />
 
                 {/* Intervalul cercetat acum, cu mijlocul lui: acolo se decide
                     dacă se mai taie o dată. */}
@@ -310,40 +324,32 @@ function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: Pro
               </Plot>
             ) : (
               <div className="text-text-slab flex min-h-[360px] items-center justify-center px-6 text-center text-lg text-pretty">
-                {motiv}
+                <Notatie>{motiv ?? ""}</Notatie>
               </div>
             )}
-
-            <div className="flex flex-col gap-3">
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="text-text-slab text-base">
-                  Toleranța
-                  <span className="ml-2 font-mono">ε</span>
-                </span>
-                <span className="text-text font-mono text-lg tabular-nums">
-                  {stiintific(epsilon, 0)}
-                </span>
-              </div>
-              <Slider
-                aria-label="Toleranța cerută"
-                min={0}
-                max={TOLERANTE.length - 1}
-                step={1}
-                value={[indiceToleranta]}
-                onValueChange={([v]) => setIndiceToleranta(v ?? 3)}
-              />
-            </div>
           </div>
 
           <ControlPanel
             onReset={() => {
               resetCapete();
-              setIndiceToleranta(3);
+              setToleranta(TOLERANTA_IMPLICITA);
             }}
             incorporat
             className="border-bordura min-w-0 border-t"
           >
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{campuri}</div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {campuri}
+              <NumberInput
+                eticheta="Toleranța"
+                valoare={toleranta}
+                onChange={setToleranta}
+                min={TOLERANTA_MINIMA}
+                max={TOLERANTA_MAXIMA}
+                stiintific
+                faraSageti
+                unitate="ε"
+              />
+            </div>
 
             <ListaCifre
               randuri={[
@@ -375,25 +381,11 @@ function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: Pro
             onVitezaChange={derulare.setViteza}
           />
 
-          <StepExplanation
-            explicatie={pasCurent.explicatie}
-            pas={derulare.pas}
-            totalPasi={pasi.length}
-            ruleaza={derulare.ruleaza}
-            titlu="Intervalul cercetat"
-          />
-
           <FormulaBlock
             latex={LATEX_TEST}
             eticheta="Testul de la pasul acesta"
             evidentiaza={pasCurent.nod.acceptat ? ["stanga"] : ["dreapta"]}
           />
-
-          {uniform && laFelDeScump && (
-            <Callout tip="retine" titlu="Cât face diferența">
-              {incheiereAdaptiv(rezultat.evaluari, eroare, uniform, laFelDeScump)}
-            </Callout>
-          )}
 
           <IterationTable
             titlu="Intervale cercetate"
@@ -441,12 +433,25 @@ function PanouAdaptiv({ functie, a, b, exact, motiv, resetCapete, campuri }: Pro
 /* ───────────────────────── fila Gaussiană ───────────────────────── */
 
 function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: ProprietatiPanou) {
-  const [n, setN] = useState(2);
+  const [noduriCerute, setNoduriCerute] = useState<number | "">(NODURI_MAXIME);
   const [alese, setAlese] = useState(true);
 
+  // Cu noduri echidistante formula are nevoie de cel puțin două: cu unul singur
+  // n-ar mai fi nimic „echidistant".
+  const nMinim = alese ? 1 : 2;
+  const n = Math.max(
+    nMinim,
+    Math.min(NODURI_MAXIME, typeof noduriCerute === "number" ? Math.round(noduriCerute) : nMinim),
+  );
+
+  // Derularea adaugă nodurile pe rând, de la formula cu un singur nod până la
+  // cea cerută: acolo se vede ce cumpără fiecare evaluare în plus.
+  const derulare = useDerulare(n - nMinim + 1);
+  const nCurent = nMinim + derulare.pas;
+
   const formula = useMemo(
-    () => (alese ? formulaGauss(n) : formulaEchidistanta(Math.max(2, n))),
-    [alese, n],
+    () => (alese ? formulaGauss(nCurent) : formulaEchidistanta(nCurent)),
+    [alese, nCurent],
   );
 
   const aplicata = useMemo(
@@ -458,12 +463,12 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
       motiv
         ? undefined
         : aplicaFormula(
-            alese ? formulaEchidistanta(Math.max(2, n)) : formulaGauss(n),
+            alese ? formulaEchidistanta(Math.max(2, nCurent)) : formulaGauss(nCurent),
             functie.f,
             a,
             b,
           ),
-    [motiv, alese, n, functie, a, b],
+    [motiv, alese, nCurent, functie, a, b],
   );
 
   const domeniuX = useMemo<readonly [number, number]>(() => {
@@ -515,20 +520,28 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
               <Plot
                 domeniuX={domeniuX}
                 domeniuY={domeniuY}
-                rezumat={`${alese ? "Cuadratură Gaussiană" : "Noduri echidistante"} cu ${n} noduri, pe f(x) = ${functie.eticheta}`}
-                descriere={descrieGauss(functie.eticheta, a, b, n, alese, aplicata.valoare, exact)}
+                rezumat={`${alese ? "Cuadratură Gaussiană" : "Noduri echidistante"} cu ${nCurent} noduri, pe f(x) = ${functie.eticheta}`}
+                descriere={descrieGauss(
+                  functie.eticheta,
+                  a,
+                  b,
+                  nCurent,
+                  alese,
+                  aplicata.valoare,
+                  exact,
+                )}
                 raport={2}
                 inaltimeMaxima={INALTIME_GRAFIC}
               >
-                <PlotArie puncte={contur} baza={0} rol="anterior" contur={false} />
+                <PlotArie puncte={contur} baza={0} rol="solutie" contur={false} hasura={false} />
 
                 {aplicata.noduri.map((nod) => (
                   <PlotVerticala
                     key={`v-${nod.x}`}
                     x={nod.x}
                     y={nod.fx}
-                    rol="curent"
-                    opacitate={0.7}
+                    rol="interval"
+                    opacitate={0.9}
                   />
                 ))}
 
@@ -547,26 +560,11 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
               </Plot>
             ) : (
               <div className="text-text-slab flex min-h-[360px] items-center justify-center px-6 text-center text-lg text-pretty">
-                {motiv}
+                <Notatie>{motiv ?? ""}</Notatie>
               </div>
             )}
 
             <div className="flex flex-col gap-3">
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="text-text-slab text-base">
-                  Noduri
-                  <span className="ml-2 font-mono">n</span>
-                </span>
-                <span className="text-text font-mono text-lg tabular-nums">{n}</span>
-              </div>
-              <Slider
-                aria-label="Numărul de noduri"
-                min={alese ? 1 : 2}
-                max={NODURI_MAXIME}
-                step={1}
-                value={[Math.max(alese ? 1 : 2, n)]}
-                onValueChange={([v]) => setN(v ?? 2)}
-              />
               <div className="flex flex-wrap gap-2">
                 <Button
                   size="sm"
@@ -593,16 +591,28 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
           <ControlPanel
             onReset={() => {
               resetCapete();
-              setN(2);
+              setNoduriCerute(NODURI_MAXIME);
               setAlese(true);
             }}
             incorporat
             className="border-bordura min-w-0 border-t"
           >
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{campuri}</div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {campuri}
+              <NumberInput
+                eticheta="Noduri"
+                valoare={noduriCerute}
+                onChange={setNoduriCerute}
+                min={nMinim}
+                max={NODURI_MAXIME}
+                pas={1}
+                unitate="n"
+              />
+            </div>
 
             <ListaCifre
               randuri={[
+                ["noduri folosite", `${nCurent} din ${n}`],
                 ["aproximare", aplicata ? zecimale(aplicata.valoare, 8) : "—"],
                 ["valoarea exactă", aplicata ? zecimale(exact, 8) : "—"],
                 ["eroare", aplicata ? (eroare < 1e-14 ? "0 — exact" : stiintific(eroare, 2)) : "—"],
@@ -620,6 +630,16 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
 
       {aplicata && cealalta && (
         <>
+          <PlaybackBar
+            pas={derulare.pas}
+            totalPasi={n - nMinim + 1}
+            ruleaza={derulare.ruleaza}
+            viteza={derulare.viteza}
+            onPas={derulare.setPas}
+            onRuleazaChange={derulare.setRuleaza}
+            onVitezaChange={derulare.setViteza}
+          />
+
           <FormulaBlock
             latex={LATEX_GAUSS}
             eticheta="Ce se calculează"
@@ -627,7 +647,7 @@ function PanouGauss({ functie, a, b, exact, motiv, resetCapete, campuri }: Propr
           />
 
           <Callout tip="retine" titlu="Aceleași evaluări, altă precizie">
-            {incheiereGauss(n, alese, eroare, eroareCealalta, grad)}
+            {incheiereGauss(nCurent, alese, eroare, eroareCealalta, grad)}
           </Callout>
 
           <IterationTable
@@ -698,6 +718,12 @@ function rotunjit(valoare: number): number {
   return Number(valoare.toFixed(4));
 }
 
+/** Intervalul implicit al unei funcții, rotunjit cât să încapă într-un câmp. */
+function capeteleFunctiei(id: string): { a: number; b: number } {
+  const [a, b] = getFunctieCuadratura(id).interval;
+  return { a: rotunjit(a), b: rotunjit(b) };
+}
+
 const CIFRE_JOS = "₀₁₂₃₄₅₆₇₈₉";
 function indice(n: number): string {
   return [...String(n)].map((c) => CIFRE_JOS[Number(c)] ?? c).join("");
@@ -713,7 +739,7 @@ const LATEX_GAUSS =
 const LEGENDA_ADAPTIV: ElementLegenda[] = [
   { rol: "functie", eticheta: "curba f(x)", explicatie: "ce ar trebui integrat" },
   {
-    rol: "anterior",
+    rol: "solutie",
     forma: "zona",
     eticheta: "aria arcelor acceptate",
     explicatie: "figura desenată este chiar aproximarea de până acum",
@@ -740,9 +766,9 @@ const LEGENDA_ADAPTIV: ElementLegenda[] = [
 const LEGENDA_GAUSS: ElementLegenda[] = [
   { rol: "functie", eticheta: "curba f(x)", explicatie: "ce ar trebui integrat" },
   {
-    rol: "anterior",
+    rol: "solutie",
     forma: "zona",
-    eticheta: "aria de sub polinomul prin noduri",
+    eticheta: "aria calculată de formulă",
     explicatie: "figura desenată este chiar suma formulei",
   },
   {
@@ -751,7 +777,7 @@ const LEGENDA_GAUSS: ElementLegenda[] = [
     explicatie: "singurele puncte în care se evaluează funcția",
   },
   {
-    rol: "curent",
+    rol: "interval",
     forma: "linie-punctata",
     eticheta: "valoarea în nod",
     explicatie: "înălțimea care intră în sumă, înmulțită cu ponderea ei",
@@ -788,23 +814,6 @@ function descrieGauss(
     `${alese ? "alese ca rădăcini ale polinomului Legendre" : "echidistante"} și cu aria de sub ` +
     `polinomul care trece prin ele. Suma dă ${zecimale(valoare, 8)}, iar valoarea exactă e ` +
     `${zecimale(exact, 8)}.`
-  );
-}
-
-function incheiereAdaptiv(
-  evaluari: number,
-  eroare: number,
-  uniform: { panouri: number; evaluari: number; gasit: boolean },
-  laFelDeScump: { panouri: number; eroare: number },
-): string {
-  const despreUniform = uniform.gasit
-    ? `Ca să ajungă la aceeași eroare cu pas uniform, Simpson are nevoie de ${uniform.panouri} panouri, ` +
-      `adică ${uniform.evaluari} evaluări.`
-    : "Cu pas uniform, Simpson nu ajunge la aceeași eroare nici cu zeci de mii de panouri.";
-  return (
-    `Adaptivul a cerut ${evaluari} evaluări ale funcției și a greșit cu ${stiintific(eroare, 2)}. ` +
-    `${despreUniform} Cu bugetul adaptivului — ${laFelDeScump.panouri} panouri uniforme — eroarea ar fi ` +
-    `${stiintific(laFelDeScump.eroare, 2)}.`
   );
 }
 

@@ -7,6 +7,7 @@ import {
   normalizeazaN,
   ruleazaCuadratura,
   type IdCuadratura,
+  type RezultatCuadratura,
 } from "@/algorithms/newton-cotes/cuadraturi";
 import {
   FUNCTII_INTEGRARE,
@@ -37,7 +38,6 @@ import { PlotArie } from "@/components/viz/PlotArie";
 import { PlotCurba } from "@/components/viz/PlotCurba";
 import { PlotPunct } from "@/components/viz/PlotPunct";
 import { PlotVerticala } from "@/components/viz/PlotVerticala";
-import { StepExplanation } from "@/components/viz/StepExplanation";
 import { useDerulare } from "@/hooks/use-derulare";
 import { stiintific, zecimale } from "@/lib/numere";
 import { esantioneaza, sparge } from "@/lib/plot-esantionare";
@@ -58,7 +58,14 @@ const FILE: { id: IdCuadratura; eticheta: string }[] = [
 /** Câte subintervale se pot cere. Peste atât, panourile devin fire de păr. */
 const N_MAXIM = 40;
 
-/** Peste atâtea subintervale, marginile și nodurile se strâng și încetează să mai spună ceva. */
+/**
+ * Peste atâtea subintervale, **bulinele** nodurilor se strâng și ascund curba.
+ *
+ * Marginile dintre panouri se desenează în continuare, oricât de multe ar fi:
+ * ele sunt chiar lucrul pe care îl schimbă cursorul, iar la 32 de subintervale
+ * ascunse odată cu bulinele desenul rămânea o pată fără nicio tăietură — adică
+ * exact opusul a ce trebuia arătat.
+ */
 const PRAG_DESEN_INCARCAT = 24;
 /** Sub atâtea subintervale, nodurile își poartă și numele („x₀", „x₁"…). */
 const PRAG_NUME_NODURI = 7;
@@ -198,6 +205,22 @@ export function InterfataNewtonCotes() {
     [rezultat, derulare.pas],
   );
 
+  /**
+   * Fâșia dintre curbă și figura desenată — chiar ce **nu** prinde formula.
+   *
+   * Se ia pe același șir de abscise pentru amândouă, ca marginile să se
+   * închidă exact: sus valorile lui `f`, jos figura. Unde figura trece peste
+   * curbă, fâșia e de partea cealaltă — și tot se vede, fiindcă acolo
+   * aproximarea a numărat în plus.
+   */
+  const nepotrivit = useMemo(() => {
+    if (!rezultat) return undefined;
+    const jos = conturDes(rezultat);
+    if (jos.length < 2) return undefined;
+    const sus = jos.map((p) => ({ x: p.x, y: functie.f(p.x) }));
+    return { sus, jos };
+  }, [rezultat, functie]);
+
   const desenIncarcat = n > PRAG_DESEN_INCARCAT;
   const cuNume = n < PRAG_NUME_NODURI;
   const cifre = 6;
@@ -226,7 +249,10 @@ export function InterfataNewtonCotes() {
       />
 
       <div className="bg-suprafata border-bordura shadow-jos overflow-hidden rounded-xl border">
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_clamp(300px,28%,400px)]">
+        {/* Graficul ia toată lățimea ramei, iar parametrii trec dedesubt: pe
+            o coloană laterală rămânea prea mic tocmai acolo unde se compară
+            aria desenată cu cea de sub curbă. */}
+        <div className="flex flex-col">
           <div className="flex min-w-0 flex-col gap-6 p-4 sm:p-5">
             {rezultat ? (
               <Plot
@@ -234,26 +260,49 @@ export function InterfataNewtonCotes() {
                 domeniuY={domeniuY}
                 rezumat={`${idMetoda === "trapez" ? "Formula trapezelor" : "Formula Simpson"} pe f(x) = ${functie.eticheta}`}
                 descriere={descrieDesenul(idMetoda, functie.eticheta, a, b, rezultat.n, rezultat)}
-                raport={1.5}
-                inaltimeMaxima={480}
+                raport={1.8}
+                inaltimeMaxima={560}
               >
                 {/* Toată figura, ca o singură arie: metoda înlocuiește curba pe
                     tot intervalul, nu desenează N figuri alăturate. */}
-                <PlotArie puncte={contur} baza={0} rol="anterior" contur={false} />
+                {/* Hașura se stinge pe desenele dese: la 32 de panouri, dungile
+                    ei diagonale acoperă exact liniile verticale care despart
+                    panourile, adică singurul lucru care mai arată tăietura. */}
+                <PlotArie
+                  puncte={contur}
+                  baza={0}
+                  rol="anterior"
+                  contur={false}
+                  hasura={!desenIncarcat}
+                />
+
+                {/* Ce rămâne pe dinafară. Se desenează peste figură, fiindcă
+                    tocmai diferența dintre ele e subiectul. */}
+                {nepotrivit && (
+                  <PlotArie
+                    puncte={nepotrivit.sus}
+                    baza={nepotrivit.jos}
+                    rol="interval"
+                    contur={false}
+                    opacitate={0.8}
+                  />
+                )}
 
                 {/* Marginile dintre panouri. Fără ele, N trapeze lipite se
                     citesc ca o singură pată, iar tocmai numărul lor e ce se
-                    schimbă de la cursor. */}
-                {!desenIncarcat &&
-                  rezultat.noduri.map((nod) => (
-                    <PlotVerticala
-                      key={`v-${nod.x}`}
-                      x={nod.x}
-                      y={nod.y}
-                      punctata
-                      opacitate={0.7}
-                    />
-                  ))}
+                    schimbă de la cursor. Rămân desenate și pe desenele dese,
+                    doar mai subțiri: la 32 de subintervale ele sunt tot ce mai
+                    arată în câte bucăți s-a tăiat intervalul. */}
+                {rezultat.noduri.map((nod) => (
+                  <PlotVerticala
+                    key={`v-${nod.x}`}
+                    x={nod.x}
+                    y={nod.y}
+                    punctata={!desenIncarcat}
+                    grosime={desenIncarcat ? 1 : 1.5}
+                    opacitate={desenIncarcat ? 0.9 : 0.7}
+                  />
+                ))}
 
                 {/* Panoul de acum, peste restul: conturul lui închide și
                     marginile, deci se vede exact bucata la care se referă
@@ -300,7 +349,7 @@ export function InterfataNewtonCotes() {
               </Plot>
             ) : (
               <div className="text-text-slab flex min-h-[360px] items-center justify-center px-6 text-center text-lg text-pretty">
-                {motiv}
+                <Notatie>{motiv ?? ""}</Notatie>
               </div>
             )}
 
@@ -330,12 +379,14 @@ export function InterfataNewtonCotes() {
                 value={[n]}
                 onValueChange={([v]) => setNCerut(v ?? 1)}
               />
+              {/* Scurtăturile se normalizează **și se strâng**: la Simpson,
+                  `N = 1` urcă la 2, deci lista scrisă de mână dădea două butoane
+                  cu „2" unul lângă altul, iar al doilea nu mai avea ce alege. */}
               <div className="flex flex-wrap gap-2">
-                {[1, 2, 4, 8, 16, 32].map((valoare) => {
-                  const tinta = normalizeazaN(idMetoda, valoare);
+                {scurtaturi(idMetoda).map((tinta) => {
                   return (
                     <Button
-                      key={valoare}
+                      key={tinta}
                       size="sm"
                       variant={n === tinta ? "default" : "outline"}
                       className="tinta-atingere font-mono"
@@ -357,46 +408,48 @@ export function InterfataNewtonCotes() {
               setNCerut(normalizeazaN(idMetoda, 4));
             }}
             incorporat
-            className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
+            className="border-bordura min-w-0 border-t"
           >
-            <div className="grid gap-2">
-              <label className="text-base font-medium" htmlFor="alegere-functie-integrare">
-                Funcția
-              </label>
-              <Select value={idFunctie} onValueChange={schimbaFunctia}>
-                <SelectTrigger
-                  id="alegere-functie-integrare"
-                  className="tinta-atingere w-full font-mono text-base"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FUNCTII_INTEGRARE.map((f) => (
-                    <SelectItem key={f.id} value={f.id} className="font-mono">
-                      f(x) = {f.eticheta}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-2">
+                <label className="text-base font-medium" htmlFor="alegere-functie-integrare">
+                  Funcția
+                </label>
+                <Select value={idFunctie} onValueChange={schimbaFunctia}>
+                  <SelectTrigger
+                    id="alegere-functie-integrare"
+                    className="tinta-atingere w-full font-mono text-base"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FUNCTII_INTEGRARE.map((f) => (
+                      <SelectItem key={f.id} value={f.id} className="font-mono">
+                        f(x) = {f.eticheta}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <NumberInput
-              eticheta="a"
-              valoare={capete.a}
-              onChange={(v) => setCapete((c) => ({ ...c, a: v }))}
-              pas={0.1}
-            />
-            <NumberInput
-              eticheta="b"
-              valoare={capete.b}
-              onChange={(v) => setCapete((c) => ({ ...c, b: v }))}
-              pas={0.1}
-            />
+              <NumberInput
+                eticheta="a"
+                valoare={capete.a}
+                onChange={(v) => setCapete((c) => ({ ...c, a: v }))}
+                pas={0.1}
+              />
+              <NumberInput
+                eticheta="b"
+                valoare={capete.b}
+                onChange={(v) => setCapete((c) => ({ ...c, b: v }))}
+                pas={0.1}
+              />
+            </div>
 
             {/* Fiecare cifră în chenarul ei: într-o listă simplă, aproximarea și
                 valoarea exactă — două numere cu șase zecimale — se citeau ca un
                 singur bloc, tocmai unde diferența dintre ele e subiectul. */}
-            <dl className="grid gap-2">
+            <dl className="grid gap-2 sm:grid-cols-3">
               {[
                 ["aproximare", rezultat ? zecimale(rezultat.aproximare, cifre) : "—"],
                 ["valoarea exactă", rezultat ? zecimale(rezultat.exact, cifre) : "—"],
@@ -407,10 +460,6 @@ export function InterfataNewtonCotes() {
                       ? "0 — exact"
                       : stiintific(rezultat.eroare, 2)
                     : "—",
-                ],
-                [
-                  "marginea erorii",
-                  rezultat?.margine === undefined ? "nemărginită" : stiintific(rezultat.margine, 2),
                 ],
               ].map(([cheie, valoare]) => (
                 <div
@@ -427,7 +476,9 @@ export function InterfataNewtonCotes() {
               ))}
             </dl>
 
-            <p className="text-text-slab text-base leading-relaxed">{functie.ceArata}</p>
+            <p className="text-text-slab max-w-prose text-base leading-relaxed">
+              {functie.ceArata}
+            </p>
           </ControlPanel>
         </div>
       </div>
@@ -444,14 +495,6 @@ export function InterfataNewtonCotes() {
             onVitezaChange={derulare.setViteza}
           />
 
-          <StepExplanation
-            explicatie={panouCurent?.explicatie}
-            pas={derulare.pas}
-            totalPasi={panouri.length}
-            ruleaza={derulare.ruleaza}
-            titlu="Panoul acesta"
-          />
-
           {/* Paralela formulă ↔ desen: partea aprinsă din formula compusă e
               chiar bucata la care contribuie panoul evidențiat pe grafic. */}
           <FormulaBlock
@@ -460,20 +503,13 @@ export function InterfataNewtonCotes() {
             evidentiaza={panouCurent?.evidentiaza}
           />
 
-          {panouCurent && (
-            <FormulaBlock
-              latex={panouCurent.latexPas}
-              eticheta="Panoul acesta, cu numerele în formulă"
-            />
-          )}
-
-          {rezultat.eroare < 1e-12 ? (
+          {/* Cifrele erorii stau în panoul de parametri, nu într-o casetă sub
+              desen: acolo se citesc lângă aproximare și lângă valoarea exactă,
+              adică lângă lucrurile din care ies. Rămâne o singură casetă, cea
+              care spune ceva ce cifrele nu spun — de ce eroarea e chiar zero. */}
+          {rezultat.eroare < 1e-12 && (
             <Callout tip="retine" titlu="Formula a nimerit exact">
               {incheiereExacta(idMetoda, functie.eticheta)}
-            </Callout>
-          ) : (
-            <Callout tip="nota" titlu="Cât a greșit formula">
-              {incheiere(rezultat.aproximare, rezultat.exact, rezultat.margine, rezultat.n)}
             </Callout>
           )}
 
@@ -528,6 +564,11 @@ export function InterfataNewtonCotes() {
 
 // ── Ajutoare ─────────────────────────────────────────────────────────────────
 
+/** Sărituri rapide pe `N`, fără valori repetate după normalizare. */
+function scurtaturi(id: IdCuadratura): number[] {
+  return [...new Set([1, 2, 4, 8, 16, 32].map((v) => normalizeazaN(id, v)))];
+}
+
 /** Câmpul gol înseamnă „încă tastez", nu zero: se folosește valoarea implicită. */
 function numar(valoare: number | "", implicit: number): number {
   return typeof valoare === "number" && Number.isFinite(valoare) ? valoare : implicit;
@@ -546,6 +587,41 @@ function rotunjit(valoare: number): number {
   return Number(valoare.toFixed(4));
 }
 
+/**
+ * Figura desenată, eșantionată des pe fiecare panou.
+ *
+ * `conturAproximarii` dă exact vârfurile figurii — două puncte pe trapez —,
+ * ceea ce ajunge ca s-o desenezi, dar nu ca s-o compari punct cu punct cu
+ * curba: fâșia dintre ele are nevoie de aceleași abscise de amândouă părțile.
+ */
+function conturDes(rezultat: RezultatCuadratura, puncteDePanou = 16): { x: number; y: number }[] {
+  const out: { x: number; y: number }[] = [];
+  for (let i = 0; i < rezultat.panouri.length; i++) {
+    const brut = conturPanou(rezultat, i, puncteDePanou);
+    const primul = brut[0];
+    const ultimul = brut[brut.length - 1];
+    if (!primul || !ultimul) continue;
+
+    // Coarda vine cu două capete; arcul, deja eșantionat, vine cu tot ce trebuie.
+    const bucata =
+      brut.length > 2
+        ? brut
+        : Array.from({ length: puncteDePanou + 1 }, (_, k) => {
+            const t = k / puncteDePanou;
+            return {
+              x: primul.x + (ultimul.x - primul.x) * t,
+              y: primul.y + (ultimul.y - primul.y) * t,
+            };
+          });
+
+    for (const p of bucata) {
+      if (out[out.length - 1]?.x === p.x) continue;
+      out.push(p);
+    }
+  }
+  return out;
+}
+
 function legendaMetodei(id: IdCuadratura): ElementLegenda[] {
   return [
     { rol: "functie", eticheta: "curba f(x)", explicatie: "ce ar trebui integrat" },
@@ -557,6 +633,12 @@ function legendaMetodei(id: IdCuadratura): ElementLegenda[] {
         id === "trapez"
           ? "figura desenată este chiar aproximarea: suma ariilor trapezelor"
           : "figura desenată este chiar aproximarea: suma ariilor de sub arce",
+    },
+    {
+      rol: "interval",
+      forma: "zona",
+      eticheta: "aria rămasă pe dinafară",
+      explicatie: "cât se depărtează figura de curbă — de acolo vine eroarea",
     },
     {
       rol: "curent",
@@ -595,24 +677,6 @@ function descrieDesenul(
     `Graficul lui ${eticheta} pe intervalul de la ${zecimale(a, 3)} la ${zecimale(b, 3)}, ` +
     `cu aria de sub curbă aproximată prin ${n} subintervale și ${nume}. ` +
     `Suma dă ${zecimale(rezultat.aproximare, 6)}, iar valoarea exactă e ${zecimale(rezultat.exact, 6)}.`
-  );
-}
-
-function incheiere(
-  aproximare: number,
-  exact: number,
-  margine: number | undefined,
-  n: number,
-): string {
-  const diferenta = aproximare - exact;
-  const directie = diferenta > 0 ? "mai mare" : "mai mică";
-  const despreMargine =
-    margine === undefined
-      ? " Marginea de eroare nu se poate calcula aici: derivata din termenul de eroare nu e mărginită pe interval."
-      : ` Termenul de eroare al formulei garantează, la N = ${n}, cel mult ${stiintific(margine, 2)}.`;
-  return (
-    `Suma panourilor dă ${zecimale(aproximare, 6)}, iar valoarea exactă e ${zecimale(exact, 6)}: ` +
-    `aproximarea e ${directie} cu ${stiintific(Math.abs(diferenta), 2)}.${despreMargine}`
   );
 }
 

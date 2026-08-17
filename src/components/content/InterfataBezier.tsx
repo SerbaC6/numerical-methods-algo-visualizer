@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import {
   casteljau,
@@ -35,11 +36,14 @@ const PUNCTE_MAX = 5;
 /**
  * Culoarea fiecărui nivel al construcției. Indicele 0 e poligonul de control.
  *
- * Ordinea nu e întâmplătoare: `anterior` e cel mai șters, fiindcă poligonul de
- * control e fundalul poveștii, iar de acolo încolo fiecare nivel e mai cald
- * decât cel dinainte — se vede că se **înaintează** spre punctul de pe curbă.
+ * Ordinea nu e întâmplătoare, dar nici cea de la început. Nivelurile **vecine**
+ * trebuie să se despartă cel mai bine, fiindcă ele se ating pe desen: de aceea
+ * se alternează cald și rece — portocaliu, safir, coral. Înainte, poligonul de
+ * control era albastru estompat și primul nivel safir, adică două albastruri
+ * lipite unul de altul, iar linia trasă cu mouse-ul nu se mai deosebea de prima
+ * linie calculată.
  */
-const CULORI_NIVEL: RolViz[] = ["anterior", "curent", "interval", "pivot"];
+const CULORI_NIVEL: RolViz[] = ["anterior", "interval", "curent", "pivot"];
 
 /** Poligoanele de pornire, câte unul pentru fiecare număr de puncte. */
 const PORNIRE: Record<number, Punct[]> = {
@@ -138,7 +142,7 @@ export function InterfataBezier() {
             <svg
               ref={svg}
               viewBox={`0 0 ${LATURA} ${LATURA}`}
-              className="border-bordura bg-fundal w-full max-w-[560px] touch-none rounded-xl border"
+              className="border-bordura bg-fundal w-full max-w-[560px] touch-none rounded-xl border select-none"
               role="img"
               aria-label={descrie(puncte, t, nivelVazut, ultimulNivel, punctCurba)}
               onPointerMove={mutaPunctul}
@@ -256,25 +260,42 @@ export function InterfataBezier() {
               })}
             </svg>
 
-            <div className="flex w-full max-w-[560px] flex-col gap-3">
-              <div className="flex items-baseline justify-between gap-4">
+            {/* Nivelurile se iau la rând, cu săgețile: sunt trei sau patru, iar
+                un cursor pe patru trepte cere ochit exact acolo unde o apăsare
+                face același lucru. */}
+            <div className="flex w-full max-w-[560px] items-center justify-between gap-3">
+              <Button
+                variant="outline"
+                size="icon"
+                className="tinta-atingere shrink-0"
+                aria-label="Un nivel înapoi"
+                disabled={nivelVazut <= 0}
+                onClick={() => setNivel(Math.max(0, nivelVazut - 1))}
+              >
+                <ChevronLeft className="size-5" />
+              </Button>
+
+              <div className="flex min-w-0 flex-col items-center text-center">
                 <span className="text-text-slab text-base">
                   Construcția, nivel {nivelVazut} din {ultimulNivel}
                 </span>
                 <span className="text-text font-mono text-lg tabular-nums">
                   {nivelVazut === ultimulNivel
-                    ? "punctul de pe curbă"
+                    ? "Punctul de pe curbă"
                     : `${niveluri[nivelVazut]?.length ?? 0} puncte`}
                 </span>
               </div>
-              <Slider
-                aria-label="Până la ce nivel al construcției se vede"
-                min={0}
-                max={ultimulNivel}
-                step={1}
-                value={[nivelVazut]}
-                onValueChange={([v]) => setNivel(v ?? 0)}
-              />
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="tinta-atingere shrink-0"
+                aria-label="Un nivel înainte"
+                disabled={nivelVazut >= ultimulNivel}
+                onClick={() => setNivel(Math.min(ultimulNivel, nivelVazut + 1))}
+              >
+                <ChevronRight className="size-5" />
+              </Button>
             </div>
           </div>
 
@@ -385,7 +406,7 @@ function legenda(niveluri: number): ElementLegenda[] {
       forma: "punct",
       explicatie: "Ce rămâne după ce s-au epuizat nivelurile.",
     },
-    { rol: "functie", eticheta: "curba, odată construcția terminată", forma: "linie" },
+    { rol: "functie", eticheta: "curba, odată ce construcția e terminată", forma: "linie" },
   ];
 }
 

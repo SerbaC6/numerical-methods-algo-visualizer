@@ -44,11 +44,11 @@ export const continutCurbeBezier: ContinutPagina = {
           {
             tip: "formula",
             latex:
-              "Q(t) = (2t^3 - 3t^2 + 1)P_1 + (-2t^3 + 3t^2)P_2 + (t^3 - 2t^2 + t)P'_1 + (t^3 - t^2)P'_2",
+              "Q(t) = (2t^3 - 3t^2 + 1)P_1 + (-2t^3 + 3t^2)P_2 + (t^3 - 2t^2 + t)P_1' + (t^3 - t^2)P_2'",
             sursa: "curs 9, §13",
             legenda: [
               { simbol: "P₁, P₂", sens: <>capetele prin care trece curba</> },
-              { simbol: "P′₁, P′₂", sens: <>derivatele cerute în cele două capete</> },
+              { simbol: "P₁′, P₂′", sens: <>derivatele cerute în cele două capete</> },
               { simbol: "t", sens: <>parametrul, de la 0 la 1</> },
             ],
             explicatie: (
@@ -61,11 +61,11 @@ export const continutCurbeBezier: ContinutPagina = {
           },
           {
             tip: "formula",
-            latex: "P'_1 = 3(P_1 - P_0), \\qquad P'_2 = 3(P_3 - P_2)",
+            latex: "P_1' = 3(P_1 - P_0), \\qquad P_2' = 3(P_3 - P_2)",
             sursa: "curs 9, §15",
             legenda: [
               { simbol: "P₀ … P₃", sens: <>cele patru puncte ale formei Bézier</> },
-              { simbol: "P′₁, P′₂", sens: <>derivatele formei Hermite, scrise cu ele</> },
+              { simbol: "P₁′, P₂′", sens: <>derivatele formei Hermite, scrise cu ele</> },
             ],
             explicatie: (
               <>
@@ -143,7 +143,7 @@ export const continutCurbeBezier: ContinutPagina = {
           },
           {
             tip: "formula",
-            latex: "B(0) = P_0, \\qquad B(1) = P_n",
+            latex: "B(0) = P_0 \\qquad B(1) = P_n",
             sursa: "curs 9, §15",
             legenda: [
               { simbol: "P₀, Pₙ", sens: <>puncte de interpolare: curba chiar trece prin ele</> },
@@ -172,12 +172,12 @@ export const continutCurbeBezier: ContinutPagina = {
           {
             tip: "formula",
             latex:
-              "P^{(0)}_i = P_i, \\qquad P^{(j)}_i = (1 - t)\\,P^{(j-1)}_i + t\\,P^{(j-1)}_{i+1}",
+              "P_i^{(0)} = P_i, \\qquad P_i^{(j)} = (1 - t)\\,P_i^{(j-1)} + t\\,P_{i+1}^{(j-1)}",
             sursa: "curs 9, §16",
             legenda: [
               { simbol: "j", sens: <>al câtelea nivel, de la 1 la n</> },
-              { simbol: "P⁽ʲ⁾ᵢ", sens: <>punctul i de pe nivelul j</> },
-              { simbol: "P⁽ⁿ⁾₀", sens: <>singurul punct rămas, adică B(t)</> },
+              { simbol: "Pᵢ⁽ʲ⁾", sens: <>punctul i de pe nivelul j</> },
+              { simbol: "P₀⁽ⁿ⁾", sens: <>singurul punct rămas, adică B(t)</> },
             ],
             explicatie: (
               <>
@@ -191,9 +191,8 @@ export const continutCurbeBezier: ContinutPagina = {
             titlu: "De ce nu se calculează suma direct",
             continut: (
               <>
-                Suma <Mate>Σ Pᵢ·Bⁿᵢ(t)</Mate> ridică numere mici la puteri mari, iar erorile cresc
-                odată cu gradul. De Casteljau e puțin mai lent, dar <strong>stabil numeric</strong>{" "}
-                — și dă pe drum tangenta și împărțirea curbei în două.
+                Suma ridică numere mici la puteri mari, iar erorile cresc odată cu gradul. De
+                Casteljau e mai lent, dar <strong>stabil numeric</strong>.
               </>
             ),
           },

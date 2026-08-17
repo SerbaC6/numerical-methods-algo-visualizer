@@ -200,8 +200,7 @@ export const continutNormeSiOrtogonalitate: ContinutPagina = {
             continut: (
               <>
                 <strong>Householder pentru matrice pline, Givens pentru matrice rare.</strong>{" "}
-                Restul — ortogonalitatea, păstrarea normei, stabilitatea numerică — e comun; nu de
-                acolo se alege.
+                Restul e comun; nu de acolo se alege.
               </>
             ),
           },

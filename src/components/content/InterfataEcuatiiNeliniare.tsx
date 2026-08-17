@@ -299,7 +299,8 @@ export function InterfataEcuatiiNeliniare() {
               valoare={tol}
               onChange={setTol}
               min={1e-12}
-              pas={1e-6}
+              stiintific
+              faraSageti
               unitate="ε"
               eroare={
                 typeof tol === "number" && tol <= 0
