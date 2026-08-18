@@ -687,9 +687,17 @@ iar filei Runge îi rămăseseră ramurile de legendă și de descriere. Zece er
 Verificat în browser, pe ambele teme, la 360px și 1280px, cu `prefers-reduced-motion`: fără erori
 în consolă și fără derulare orizontală.
 
-**Rămâne de reparat, în afara listei:** `PlotDreapta` scrie `undefined` în `x1/x2/y1/y2` la primul
-cadru (`motion.line` cu `animate` și fără valori statice), deci consola primește patru erori pe
-`derivare-numerica` și pe `ecuatii-neliniare`. E mai vechi decât lista și nu ține de ea.
+**Restanța de mai sus e închisă (18 august 2026).** `PlotDreapta` își dă acum cele patru capete
+**și** static, nu doar prin `animate`, exact ca `motion.line` din `PlotPunct` — deci atributul intră
+în marcajul scris de React, iar linia are geometrie validă din chiar randarea care o inserează.
+
+**Erorile din consolă n-au putut fi reproduse** pe Chrome, cu `motion` 13.1.0: încărcare curată pe
+`derivare-numerica` și pe `ecuatii-neliniare`, plus pași și schimbări de metodă, cu zero erori; un
+`MutationObserver` pe nodurile `<line>` adăugate și un cârlig pe `setAttribute` n-au prins nicio
+scriere de `undefined` sau `NaN`; iar cele 23 de linii din pagină au toate cele patru atribute
+numerice. Explicația cea mai probabilă e `initial={false}`, care face `motion` să randeze direct
+ținta din `animate`. Reparația s-a făcut oricum: se aliniază la tiparul folosit deja în `PlotPunct`
+și nu mai lasă primul cadru pe seama momentului în care `motion` apucă să scrie atributul.
 
 ### Refacerea derulării se face doar la întoarcere (17 august 2026)
 
