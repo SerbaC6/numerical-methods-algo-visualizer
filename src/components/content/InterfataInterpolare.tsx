@@ -72,7 +72,14 @@ const NODURI_IMPLICIT = 5;
 const ESANTIOANE = 400;
 
 /**
- * Funcția cu care pornește interfața.
+ * Funcția cu care pornește fiecare filă.
+ *
+ * Sunt trei intrări, nu una, fiindcă fiecare filă își ține de acum funcția ei.
+ * Neville și Spline pornesc pe `x⁵ − 2x³`, din motivul măsurat mai jos. Lagrange
+ * pornește însă pe funcția lui Runge: fila ei e singurul loc rămas unde se vede
+ * un polinom întins peste tot intervalul, iar de când fenomenul nu mai are filă
+ * proprie, acolo se mai poate scoate la iveală trăgând de numărul de noduri.
+ * Spline-ul n-are de ce s-o care și el — de asta a fost despărțită starea.
  *
  * `x⁵ − 2x³`, fiindcă pe ea se vede diferența dintre cele două condiții de
  * capăt ale spline-ului — singurul lucru de pe pagină care se citește doar
@@ -98,7 +105,38 @@ const ESANTIOANE = 400;
  * noduri, `(−1, 1)`, `(0, 0)` și `(1, −1)` sunt coliniare, deci amândouă
  * condițiile dau chiar dreapta `y = −x`. Nu e o scăpare de calcul, e adevărat.
  */
-const FUNCTIE_IMPLICITA = "polinom";
+const FUNCTIE_IMPLICITA: Record<Fila, string> = {
+  lagrange: "runge",
+  neville: "polinom",
+  spline: "polinom",
+};
+
+/**
+ * Tot ce ține de o filă și numai de ea.
+ *
+ * Nodurile nu se pot împărți între file odată ce funcția e a fiecăreia: sunt
+ * chiar valorile funcției alese acolo, iar `xEval` cade în intervalul ei. Altfel
+ * fila de Spline pornea cu nodurile funcției de pe Lagrange, puse pe altă curbă.
+ */
+type StareFila = {
+  idFunctie: string;
+  /** Câte noduri s-au cerut — se ține separat, ca să treacă peste schimbarea funcției. */
+  cate: number;
+  noduri: Nod[];
+  /** Punctul în care se evaluează schema Neville; nefolosit pe celelalte file. */
+  xEval: number;
+};
+
+function stareInitiala(idFunctie: string, cate = NODURI_IMPLICIT): StareFila {
+  const f = getFunctieInterpolata(idFunctie);
+  const [a, b] = f.interval;
+  return {
+    idFunctie,
+    cate,
+    noduri: noduriEchidistante(f.f, f.interval, cate),
+    xEval: a + (b - a) * 0.62,
+  };
+}
 
 /* ───────────────────────── cadrul de desen ───────────────────────── */
 
@@ -135,24 +173,28 @@ function extremele(valori: readonly number[]): [number, number] {
  * Matematica nu stă aici: vine din `src/algorithms/interpolare-polinomiala/`.
  */
 export function InterfataInterpolare() {
-  const [idFunctie, setIdFunctie] = useState(FUNCTIE_IMPLICITA);
-  const [cate, setCate] = useState(NODURI_IMPLICIT);
   const [fila, setFila] = useState<Fila>("lagrange");
   const [tipSpline, setTipSpline] = useState<TipSpline>("natural");
+  const [stari, setStari] = useState<Record<Fila, StareFila>>(() => ({
+    lagrange: stareInitiala(FUNCTIE_IMPLICITA.lagrange),
+    neville: stareInitiala(FUNCTIE_IMPLICITA.neville),
+    spline: stareInitiala(FUNCTIE_IMPLICITA.spline),
+  }));
 
+  const { idFunctie, cate, noduri, xEval } = stari[fila];
   const functie = getFunctieInterpolata(idFunctie);
   const [a, b] = functie.interval;
 
-  const [noduri, setNoduri] = useState<Nod[]>(() =>
-    noduriEchidistante(
-      getFunctieInterpolata(FUNCTIE_IMPLICITA).f,
-      getFunctieInterpolata(FUNCTIE_IMPLICITA).interval,
-      NODURI_IMPLICIT,
-    ),
-  );
-  const [xEval, setXEval] = useState(() => a + (b - a) * 0.62);
-
   const n = noduri.length - 1;
+
+  /** Schimbă doar fila deschisă; celelalte două rămân cum au fost lăsate. */
+  const modifica = (schimbare: Partial<StareFila>) =>
+    setStari((v) => ({ ...v, [fila]: { ...v[fila], ...schimbare } }));
+
+  const setNoduri = (urmatoare: (vechi: Nod[]) => Nod[]) =>
+    setStari((v) => ({ ...v, [fila]: { ...v[fila], noduri: urmatoare(v[fila].noduri) } }));
+
+  const setXEval = (x: number) => modifica({ xEval: x });
 
   // Nivelurile schemei Neville se derulează, nu se trag dintr-un cursor din
   // panoul de parametri: sunt pași ai unui algoritm, iar pașii se iau cu
@@ -160,23 +202,23 @@ export function InterfataInterpolare() {
   const derulareNivel = useDerulare(n + 1);
   const nivelAles = Math.min(derulareNivel.pas, n);
 
-  /** Nodurile se pot fi mutat de pe funcție; butonul de resetare le pune la loc. */
-  const asazaPeFunctie = (cateNoduri = cate, f = functie) =>
-    setNoduri(noduriEchidistante(f.f, f.interval, cateNoduri));
+  /**
+   * Altă funcție înseamnă alt interval și alte valori în noduri, deci fila
+   * pornește de la zero — dar păstrează câte noduri ceruse.
+   */
+  const schimbaFunctia = (id: string) => modifica(stareInitiala(id, cate));
 
-  const asazaPe = (noua: ReturnType<typeof getFunctieInterpolata>) => {
-    asazaPeFunctie(cate, noua);
-    setXEval(noua.interval[0] + (noua.interval[1] - noua.interval[0]) * 0.62);
-  };
+  const schimbaNumarul = (cateNoduri: number) =>
+    modifica({
+      cate: cateNoduri,
+      noduri: noduriEchidistante(functie.f, functie.interval, cateNoduri),
+    });
 
-  const schimbaFunctia = (id: string) => {
-    setIdFunctie(id);
-    asazaPe(getFunctieInterpolata(id));
-  };
-
-  const schimbaNumarul = (cateNoduri: number) => {
-    setCate(cateNoduri);
-    asazaPeFunctie(cateNoduri);
+  /** Trecerea pe altă filă repune derularea la zero: pașii sunt ai lui Neville. */
+  const schimbaFila = (noua: Fila) => {
+    setFila(noua);
+    derulareNivel.setPas(0);
+    derulareNivel.setRuleaza(false);
   };
 
   /* ── ce se calculează ─────────────────────────────────────────────── */
@@ -350,7 +392,7 @@ export function InterfataInterpolare() {
       {/* Schimbarea filei nu mai atinge nodurile: toate trei lucrează pe funcția
           aleasă din panou, deci nu mai există filă care să-și aducă funcția ei
           și să le reașeze pe alta. */}
-      <Tabs value={fila} onValueChange={(v) => setFila(v as Fila)}>
+      <Tabs value={fila} onValueChange={(v) => schimbaFila(v as Fila)}>
         <TabsList className="w-full">
           {FILE.map((f) => (
             <TabsTrigger key={f.id} value={f.id} className="flex-1">
@@ -457,19 +499,18 @@ export function InterfataInterpolare() {
               ))}
             </Plot>
 
-            <FormulaBlock
-              latex={formulaFilei(fila, tipSpline)}
-              eticheta="Regula filei"
-              evidentiaza={evidentiereaFilei(fila, nivelAles)}
-            />
+            <FormulaBlock latex={formulaFilei(fila, tipSpline)} eticheta="Regula filei" />
           </div>
 
           <ControlPanel
+            // Resetarea e a filei deschise: celelalte două își păstrează funcția
+            // și nodurile, altfel un buton dintr-un colț ar șterge două desene
+            // pe care nu le vede nimeni în momentul apăsării.
             onReset={() => {
-              schimbaNumarul(NODURI_IMPLICIT);
+              modifica(stareInitiala(FUNCTIE_IMPLICITA[fila]));
               setTipSpline("natural");
-              setXEval(a + (b - a) * 0.62);
               derulareNivel.setPas(0);
+              derulareNivel.setRuleaza(false);
             }}
             incorporat
             className="border-bordura min-w-0 border-t lg:border-t-0 lg:border-l"
@@ -708,12 +749,10 @@ function etichetaFilei(fila: Fila): string {
 
 function formulaFilei(fila: Fila, tipSpline: TipSpline): string {
   if (fila === "lagrange") {
-    // Evidențiat e **polinomul**, nu multiplicatorul: pe desen se trasează o
-    // singură linie, iar aceea e suma din stânga. Un `l_k` aprins în formulă ar
-    // fi trimis ochiul să caute pe grafic o curbă care nu mai există. Produsul
-    // rămâne scris, fiindcă el spune din ce e făcută suma.
+    // Produsul rămâne scris, deși pe desen nu i se trasează nicio curbă: el
+    // spune din ce e făcută suma din stânga, iar suma **e** singura linie.
     return (
-      "\\htmlId{polinom}{P_n(x)} = \\sum_{k=0}^{n} f(x_k)\\, l_k(x), \\qquad " +
+      "P_n(x) = \\sum_{k=0}^{n} f(x_k)\\, l_k(x), \\qquad " +
       "l_k(x) = \\prod_{\\substack{i=0 \\\\ i \\neq k}}^{n} \\frac{x - x_i}{x_k - x_i}"
     );
   }
@@ -721,23 +760,15 @@ function formulaFilei(fila: Fila, tipSpline: TipSpline): string {
   if (fila === "neville") {
     return (
       "P_{ij}(x) = " +
-      "\\htmlId{pondere-stanga}{\\frac{x - x_j}{x_i - x_j}}\\, P_{i,j-1}(x) + " +
-      "\\htmlId{pondere-dreapta}{\\frac{x_i - x}{x_i - x_j}}\\, P_{i+1,j}(x)"
+      "\\frac{x - x_j}{x_i - x_j}\\, P_{i,j-1}(x) + " +
+      "\\frac{x_i - x}{x_i - x_j}\\, P_{i+1,j}(x)"
     );
   }
 
   return (
     "s_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3 \\qquad " +
-    (tipSpline === "natural"
-      ? "\\htmlId{capete}{c_0 = c_{n-1} = 0}"
-      : "\\htmlId{capete}{s'(x_0) = f'(x_0)}")
+    (tipSpline === "natural" ? "c_0 = c_{n-1} = 0" : "s'(x_0) = f'(x_0)")
   );
-}
-
-function evidentiereaFilei(fila: Fila, nivel: number): string[] {
-  if (fila === "lagrange") return ["polinom"];
-  if (fila === "neville") return nivel === 0 ? [] : ["pondere-stanga", "pondere-dreapta"];
-  return ["capete"];
 }
 
 function cifrele({
