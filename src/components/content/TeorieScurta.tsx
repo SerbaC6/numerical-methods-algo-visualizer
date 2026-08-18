@@ -38,6 +38,7 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
             cu 16px mai mult loc. */}
         <FormulaBlock
           latex={bloc.latex}
+          incapeInCaseta={bloc.incapeInCaseta}
           className="text-formula rounded-none border-0 bg-transparent px-3 py-5 sm:px-5 sm:py-6"
         />
 
@@ -48,11 +49,18 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
             <p className="text-text-slab mb-3 text-sm font-semibold tracking-wide uppercase">
               Ce înseamnă literele
             </p>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2">
+            {/* Pe telefon nu e grilă: simbolul și explicația curg în același
+                paragraf, ca al doilea rând al unei explicații lungi să înceapă
+                de la marginea din stânga, nu de sub semnul egal. Coloana de
+                explicații are ~200px pe 360px, deci aproape orice sens de două
+                propoziții se rupe — iar rupt, textul indentat sub „=" arăta ca
+                o intrare nouă, cu simbolul lipsă. Peste `sm` revine grila, unde
+                lățimea ajunge și alinierea semnelor egal chiar ajută la citit. */}
+            <dl className="space-y-2 sm:grid sm:grid-cols-[auto_1fr] sm:space-y-0 sm:gap-x-3 sm:gap-y-2">
               {bloc.legenda.map((intrare) => (
                 <div
                   key={intrare.simbol}
-                  className="col-span-2 grid grid-cols-subgrid items-baseline"
+                  className="sm:col-span-2 sm:grid sm:grid-cols-subgrid sm:items-baseline"
                 >
                   {/* Pe ecran lat, aliniat la dreapta: semnele egal cad unul sub
                       altul, deși simbolurile au lățimi diferite („a" față de
@@ -61,13 +69,15 @@ function Bloc({ bloc }: { bloc: BlocTeorie }) {
                       („r = √(x² + y²)") se rupe pe două rânduri: aliniat la
                       dreapta, rândurile lui plecau din locuri diferite și nu se
                       mai vedea unde începe intrarea. */}
-                  <dt className="text-accent-slab text-left font-mono text-xl font-semibold tabular-nums sm:text-right">
+                  <dt className="text-accent-slab inline text-left font-mono text-xl font-semibold tabular-nums sm:block sm:text-right">
                     <Notatie>{intrare.simbol}</Notatie>
                     <span aria-hidden="true" className="text-text-slab ml-2 font-normal">
                       =
                     </span>
-                  </dt>
-                  <dd className="text-text-slab m-0 text-lg leading-snug">{intrare.sens}</dd>
+                  </dt>{" "}
+                  <dd className="text-text-slab m-0 inline text-lg leading-snug sm:block">
+                    {intrare.sens}
+                  </dd>
                 </div>
               ))}
             </dl>

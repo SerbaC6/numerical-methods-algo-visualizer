@@ -84,8 +84,19 @@ export function PlotDreapta(props: PlotDreaptaProps) {
           adică singurul lucru pe care dreapta îl spune — ar părea alta.
 
           Aici e chiar mișcarea centrală a paginii: tangenta se rotește vizibil
-          din punctul dinainte în cel de acum, deci se duce pe treapta lentă. */}
+          din punctul dinainte în cel de acum, deci se duce pe treapta lentă.
+
+          Cele patru capete se dau **și** static, nu doar prin `animate`, ca
+          `PlotPunct`: atributul ajunge atunci în marcajul pe care îl scrie
+          React, deci linia are geometrie validă din chiar randarea care o
+          inserează, fără să depindă de momentul în care `motion` apucă s-o
+          scrie. `initial={false}` rămâne — el spune „nu anima la montare" —,
+          dar el hotărăște de unde pornește animația, nu ce se scrie în DOM. */}
       <motion.line
+        x1={inceput.x}
+        y1={inceput.y}
+        x2={sfarsit.x}
+        y2={sfarsit.y}
         initial={false}
         animate={{ x1: inceput.x, y1: inceput.y, x2: sfarsit.x, y2: sfarsit.y }}
         transition={tranzitie("lent")}

@@ -110,14 +110,22 @@ export const continutMetodeIterative: ContinutPagina = {
               // rânduri se lipesc și liniile verticale par să taie textul.
               // Corpul e `\large`, nu `\Large`: tabelul ajunsese mai mare decât
               // formulele de sub el, iar aerul îl dă oricum `\arraystretch`.
+              // Spațiile din jurul celulelor sunt `\,`, nu `\;`: un tabel nu se
+              // poate rupe pe rânduri, deci pe telefon se micșorează cât să
+              // încapă, iar `\;` îl lățea cu 46px, adică exact cu atât cobora
+              // scrisul micșorat (11,5px în loc de 12,6px, măsurat pe 360px).
               "\\def\\arraystretch{2}\\large\n" +
               "\\begin{array}{l|c|c}\n" +
-              "\\;\\text{Metodă}\\;\\; & \\;\\; M \\;\\; & \\;\\; N \\; \\\\\\hline\n" +
-              "\\;\\text{Jacobi}\\;\\; & \\;\\; D \\;\\; & \\;\\; L + U \\; \\\\\n" +
-              "\\;\\text{Gauss-Seidel}\\;\\; & \\;\\; D - L \\;\\; & \\;\\; U \\; \\\\\n" +
-              "\\;\\text{SOR}\\;\\; & \\;\\; D - \\omega L \\;\\; & \\;\\; (1-\\omega)D + \\omega U \\;\n" +
+              "\\,\\text{Metodă}\\, & \\, M \\, & \\, N \\, \\\\\\hline\n" +
+              "\\,\\text{Jacobi}\\, & \\, D \\, & \\, L + U \\, \\\\\n" +
+              "\\,\\text{Gauss-Seidel}\\, & \\, D - L \\, & \\, U \\, \\\\\n" +
+              "\\,\\text{SOR}\\, & \\, D - \\omega L \\, & \\, (1-\\omega)D + \\omega U \\,\n" +
               "\\end{array}",
             sursa: "curs 5, §3.2",
+            // Tabelul e cea mai lată formulă din site: 401px într-o casetă de
+            // 254px pe un ecran de 360px. Se micșorează la 0,62 și încape
+            // întreg, în loc să ceară degetul pentru ultima coloană.
+            incapeInCaseta: true,
             explicatie: (
               <>
                 Tot ce urmează pe pagină e cuprins în tabelul ăsta. Restul secțiunilor spun ce

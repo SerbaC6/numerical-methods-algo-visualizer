@@ -15,6 +15,35 @@ export type SubtitrariProps = {
 };
 
 /**
+ * Corpul literei din subtitrare, măsurat pe lățimea cadrului (`cqw`), nu pe cea
+ * a ferestrei.
+ *
+ * Podeaua de `0.8rem` nu e un capriciu: sub ea propoziția nu se mai citește pe
+ * telefon. Dar tocmai ea rupe proporția — de la 674px de cadru în jos, corpul
+ * încetează să scadă odată cu desenul, iar banda de subtitrare crește de la 14 %
+ * din înălțimea cadrului la peste 23 %. De aici vine `BANDA_SUBTITRARE`.
+ */
+export const CORP_SUBTITRARE = "clamp(0.8rem, 1.9cqw, 1.5rem)";
+
+/**
+ * Cât trebuie să cedeze desenul, ca propoziția să nu ajungă peste el.
+ *
+ * Clipurile sunt desenate cu ultima linie pe la `y = 930` din cele 1080 de
+ * unități ale pânzei — adică fix banda pe care o cere subtitrarea când corpul
+ * literei încă scade proporțional (`1.9cqw`). Socoteala, cu `H = 0.5625·W`
+ * (cadrul e 16:9), `2.5f` cele două rânduri rezervate și `0.03·W` spațiul de
+ * sub ele:
+ *
+ *     (H − p)·0,8622 ≤ H − 0,03·W − 2,5·f   ⟹   p ≥ 2,9·f − 0,055·W
+ *
+ * Peste 674px de cadru iese zero, deci pe desktop nu se schimbă absolut nimic.
+ * Sub prag, cadrul își ia din înălțime cât cere podeaua corpului, iar SVG-ul —
+ * care are `preserveAspectRatio` implicit — se micșorează și se centrează.
+ * Alternativa ar fi fost să scriem cu 6px pe telefon.
+ */
+export const BANDA_SUBTITRARE = `max(0px, calc(2.9 * ${CORP_SUBTITRARE} - 5.5cqw))`;
+
+/**
  * Propoziția de sub desen, cheiată pe ceasul clipului.
  *
  * E ruda de film a lui `StepExplanation`: aceeași treabă — spune ce se întâmplă
@@ -49,7 +78,8 @@ export function Subtitrari({ items, className }: SubtitrariProps) {
         // Două rânduri rezervate de la început, iar propoziția se așază de sus
         // în jos în locul rezervat. Mai multe n-ar ajuta, ci ar strica: banda
         // crește în sus, peste ultimul rând al desenului.
-        className="text-text min-h-[2lh] text-center text-[clamp(0.8rem,1.9cqw,1.5rem)] leading-tight font-bold text-balance"
+        className="text-text min-h-[2lh] text-center leading-tight font-bold text-balance"
+        style={{ fontSize: CORP_SUBTITRARE }}
       >
         {/* `key` pe span, nu pe `p`: așa propoziția reapare la fiecare
             schimbare, iar înălțimea rezervată rămâne aceeași. Intrarea vine

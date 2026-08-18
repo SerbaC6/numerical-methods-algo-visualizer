@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigationType } from "react-router";
 
 /**
  * Cât așteptăm să apară elementul-țintă înainte să renunțăm și să mergem în
@@ -18,13 +18,26 @@ const ASTEPTARE_TINTA_MS = 2000;
 const pozitii = new Map<string, number>();
 
 /**
- * La schimbarea rutei pagina pornește de sus — **în afară de paginile pe care
- * le-ai mai deschis o dată**, unde se așază unde rămăsese. Pe paginile lungi de
- * aici capul paginii e la câteva ecrane distanță de locul din care ai plecat,
- * iar plimbarea „ies o clipă, mă întorc" e cea obișnuită: se pleacă din mijlocul
- * teoriei la cuprins sau la pagina vecină și se revine tot acolo. Nu contează
- * cum te-ai întors — cu butonul „înapoi" al browserului sau printr-un link —,
- * fiindcă poziția înseamnă același lucru în amândouă cazurile.
+ * La schimbarea rutei pagina pornește de sus — **în afară de întoarcerile cu
+ * butonul „înapoi"/„înainte" al browserului**, unde se așază unde rămăsese. Pe
+ * paginile lungi de aici capul paginii e la câteva ecrane distanță de locul din
+ * care ai plecat, iar plimbarea „ies o clipă, mă întorc" e cea obișnuită: se
+ * pleacă din mijlocul teoriei la cuprins și se revine tot acolo.
+ *
+ * **Cum te-ai întors contează**, și asta a fost lecția unui bug: apăsând
+ * săgeata „pagina următoare" ajungeai direct în subsolul paginii următoare, nu
+ * la titlul ei. Săgețile de navigație stau chiar la **fundul** paginii, deci
+ * orice pagină părăsită printr-una din ele își salvează poziția „la fund"; a
+ * doua oară când ajungeai pe ea, oricum ai fi ajuns, erai pus înapoi la fund.
+ * Măsurat pe `interpolare-polinomiala` → `curbe-bezier`: a doua trecere te lăsa
+ * la 6713 din 6966 pe telefon și la 5031 din 5031 pe desktop — adică exact la
+ * capătul de jos. Se vedea mai tare pe telefon, unde paginile sunt de două ori
+ * mai înalte, dar nu era o problemă de telefon.
+ *
+ * Deci poziția se reface **doar la `POP`** — înapoi/înainte din browser, adică
+ * gestul căruia browserul însuși îi reface derularea pe un site obișnuit. Un
+ * clic pe o legătură e `PUSH`: ai cerut altă pagină, deci o primești de la
+ * început.
  *
  * Fără `behavior: "smooth"` — `html { scroll-behavior: smooth }` din
  * `index.css` ar face un derulaj lung și inutil între pagini.
@@ -37,6 +50,7 @@ const pozitii = new Map<string, number>();
  */
 export function ScrollToTop() {
   const { pathname, hash } = useLocation();
+  const tipNavigare = useNavigationType();
 
   // Calea și poziția paginii pe care tocmai o părăsim. Amândouă în `ref`-uri,
   // fiindcă se citesc din curățarea efectului, când `pathname` de mai sus e deja
@@ -74,10 +88,11 @@ export function ScrollToTop() {
 
   useEffect(() => {
     if (!hash) {
-      // Pagina se așază unde era, dacă am mai fost pe ea. Poziția se cere cadru
-      // cu cadru, din același motiv ca la ancoră — pagina se montează `lazy()`,
-      // deci în primul cadru documentul e prea scurt ca să se poată derula.
-      const salvata = pozitii.get(pathname);
+      // Pagina se așază unde era **doar dacă te-ai întors**, nu ori de câte ori
+      // ai mai fost pe ea. Poziția se cere cadru cu cadru, din același motiv ca
+      // la ancoră — pagina se montează `lazy()`, deci în primul cadru
+      // documentul e prea scurt ca să se poată derula.
+      const salvata = tipNavigare === "POP" ? pozitii.get(pathname) : undefined;
       if (salvata) {
         const limita = performance.now() + ASTEPTARE_TINTA_MS;
         let cadru = 0;
@@ -117,7 +132,7 @@ export function ScrollToTop() {
 
     cadru = requestAnimationFrame(incearca);
     return () => cancelAnimationFrame(cadru);
-  }, [pathname, hash]);
+  }, [pathname, hash, tipNavigare]);
 
   return null;
 }

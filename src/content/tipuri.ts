@@ -52,6 +52,13 @@ export type BlocTeorie =
       legenda?: IntrareLegenda[];
       /** Ce spune formula, într-o propoziție, pentru cine o citește prima oară. */
       explicatie?: ReactNode;
+      /**
+       * Formula se micșorează cât să încapă în casetă, în loc să deruleze.
+       *
+       * Doar pentru ce n-are unde să se rupă pe rânduri — un tabel `array`, o
+       * matrice. Vezi `incapeInCaseta` din `FormulaBlock`.
+       */
+      incapeInCaseta?: boolean;
     };
 
 /** O metodă din pagină, cu bucata ei de teorie. */

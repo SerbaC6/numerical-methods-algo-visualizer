@@ -14,8 +14,6 @@ export type VideoIncorporatProps = {
   miniatura: string;
   /** Ce se vede în clip, pentru cine nu-l poate viziona. */
   descriere: string;
-  /** Limba în care se vorbește, dacă nu e româna. */
-  limba?: string;
   className?: string;
 };
 
@@ -35,9 +33,7 @@ export type VideoIncorporatProps = {
  * — cu `autoplay`, deci clipul pornește singur, fără al doilea clic, și rulează
  * în pagină: vizitatorul nu e mutat pe alt site.
  *
- * Nota de sub cadru spune ce se încarcă la redare. Nu e instrucțiune de
- * folosire (acelea nu se scriu, vezi `CLAUDE.md`), ci informația de care are
- * nevoie cineva **înainte** să apese.
+ * Sub cadru rămâne doar atribuirea — titlul clipului și cine l-a făcut.
  */
 export function VideoIncorporat({
   id,
@@ -45,7 +41,6 @@ export function VideoIncorporat({
   autor,
   miniatura,
   descriere,
-  limba,
   className,
 }: VideoIncorporatProps) {
   const [pornit, setPornit] = useState(false);
@@ -101,14 +96,6 @@ export function VideoIncorporat({
 
       <figcaption className="text-text-slab mt-3 text-sm">
         <span className="text-text font-semibold">{titlu}</span> · {autor}
-        {limba && <> · {limba}</>}
-        {!pornit && (
-          <>
-            {" "}
-            — la redare, clipul se încarcă de la YouTube; până atunci nu pleacă nicio cerere din
-            pagină.
-          </>
-        )}
       </figcaption>
 
       <p className="sr-only">{descriere}</p>

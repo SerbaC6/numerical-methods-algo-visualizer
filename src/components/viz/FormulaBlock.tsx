@@ -16,8 +16,32 @@ export type FormulaBlockProps = {
    * se aprinde și în matrice, și în formulă.
    */
   evidentiaza?: string[];
+  /**
+   * Micșorează formula cât să încapă în casetă, în loc s-o lase să deruleze.
+   *
+   * Se pune **doar** pe formulele care n-au unde să se rupă — un tabel
+   * `array`, o matrice —, fiindcă acolo ruperea pe rânduri (vezi `index.css`)
+   * nu are ce tăia, iar singurul lucru rămas înaintea derulării e corpul mai
+   * mic. Ordinea din regulile de mobil e: întâi rupere, apoi corp mai mic,
+   * abia la urmă derulare.
+   */
+  incapeInCaseta?: boolean;
   className?: string;
 };
+
+/**
+ * Sub ce mărime nu se coboară, oricât ar lipsi din lățime.
+ *
+ * Pragul e pe **corpul randat** (`.katex`), nu pe factorul de micșorare: un
+ * factor n-ar însemna nimic singur, fiindcă pornește de la `--text-formula`,
+ * care e el însuși fluid. Măsurat pe pagina metodelor iterative, la 360px:
+ * tabelul cere 459px într-o casetă de 252px, deci ajunge la 10,6px — iar
+ * rândurile lui, scrise cu `\large`, se văd la 12,7px.
+ *
+ * Ce n-ar încăpea nici așa e o formulă de rescris, nu de strâns mai departe:
+ * rămâne la 10px și derulează, ca înainte.
+ */
+const MARIME_MINIMA = 10;
 
 /**
  * Afișează o formulă cu KaTeX.
@@ -31,6 +55,7 @@ export function FormulaBlock({
   inline = false,
   eticheta,
   evidentiaza,
+  incapeInCaseta = false,
   className,
 }: FormulaBlockProps) {
   const [html, setHtml] = useState<string | null>(null);
@@ -134,6 +159,74 @@ export function FormulaBlock({
       observator.disconnect();
     };
   }, [html, inline]);
+
+  /**
+   * Micșorarea până încape, pentru formulele care n-au unde să se rupă.
+   *
+   * Mărimea se pune pe `.katex-display` (în `em`, deci se înmulțește cu
+   * `--text-formula`), nu pe `.katex`: foaia nelayerată a KaTeX îi impune
+   * acolo `font-size: 1.21em` și bate orice regulă de-a noastră — aceeași
+   * capcană descrisă în `index.css`.
+   *
+   * Se măsoară de fiecare dată **de la mărimea nemicșorată**; altfel al doilea
+   * apel ar împărți la o lățime deja strânsă și formula s-ar micșora la
+   * infinit. Un al doilea pas de ajustare e necesar fiindcă lățimea nu scade
+   * chiar liniar cu corpul (rotunjiri de glife): din prima încercare rămâneau
+   * 2px de derulare, măsurat.
+   */
+  useEffect(() => {
+    const radacina = container.current;
+    if (!radacina || html === null || inline || !incapeInCaseta) return;
+
+    let cadru = 0;
+    let latimeVazuta = -1;
+
+    const potriveste = () => {
+      const zona = radacina.querySelector<HTMLElement>(".katex-display");
+      if (!zona) return;
+
+      zona.style.fontSize = "";
+      const disponibil = zona.clientWidth;
+      const necesar = zona.scrollWidth;
+      if (disponibil === 0 || necesar <= disponibil) return;
+
+      const corp = zona.querySelector(".katex");
+      if (!corp) return;
+      const marime = parseFloat(getComputedStyle(corp).fontSize);
+      const factorMinim = Math.min(1, MARIME_MINIMA / marime);
+
+      let factor = Math.max((disponibil - 1) / necesar, factorMinim);
+      zona.style.fontSize = `${factor}em`;
+
+      for (let pas = 0; pas < 4; pas++) {
+        if (zona.scrollWidth <= zona.clientWidth || factor <= factorMinim) break;
+        factor = Math.max((factor * (zona.clientWidth - 1)) / zona.scrollWidth, factorMinim);
+        zona.style.fontSize = `${factor}em`;
+      }
+    };
+
+    const ruleaza = () => {
+      cancelAnimationFrame(cadru);
+      cadru = requestAnimationFrame(potriveste);
+    };
+
+    ruleaza();
+    // Până sosesc fonturile KaTeX măsurăm fontul de rezervă, adică alte lățimi.
+    void document.fonts?.ready.then(ruleaza);
+
+    const observator = new ResizeObserver(([intrare]) => {
+      const latime = intrare?.contentRect.width ?? 0;
+      if (latime === latimeVazuta) return;
+      latimeVazuta = latime;
+      ruleaza();
+    });
+    observator.observe(radacina);
+
+    return () => {
+      cancelAnimationFrame(cadru);
+      observator.disconnect();
+    };
+  }, [html, inline, incapeInCaseta]);
 
   // Evidențierea se aplică peste HTML-ul deja randat, ca să nu re-compilăm
   // formula la fiecare pas al animației.

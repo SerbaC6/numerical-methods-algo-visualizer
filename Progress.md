@@ -650,6 +650,77 @@ Lista rescrisă de utilizator după prima trecere. Ce s-a schimbat:
   atunci; propoziția pasului a dispărut de pe Neville; fila spline nu mai desenează și polinomul de
   comparație; nodurile pornesc de la 5 și își scriu numele doar până la 5.
 
+### A treia trecere prin `imbunatatiri.md` (17 august 2026)
+
+Lista fusese bifată aproape toată în trecerea a doua, dar `InterfataInterpolare.tsx` rămăsese
+**la jumătate de refactorizare și nu compila**: `useDerulare` și `PlaybackBar` erau folosite fără
+să fie importate, `schimbaFila`, `kAles` și `amplitudine` fuseseră șterse dar erau încă chemate,
+iar filei Runge îi rămăseseră ramurile de legendă și de descriere. Zece erori de tipuri, deci nici
+`npm run build` nu trecea. Ce s-a terminat:
+
+- **Lagrange, o singură linie.** Evidențierea din formulă s-a mutat de pe `l_k(x)` pe `P_n(x)`:
+  multiplicatorul nu se mai desenează, deci nu mai are ce aprinde pe grafic. Legenda a scăpat de
+  cele două intrări rămase fără desen.
+- **Neville, pași cu săgeți.** Bara de derulare și triunghiul stau sub desen; legenda a scăpat de
+  „verticala punctului evaluat" și de „P₀ₙ(x)", niciuna desenată.
+- **Graficul crește prin `raport`, nu prin plafon.** Plafonul ridicat de la 460 la 560 **nu mișcase
+  niciun pixel**: măsurat în browser, coloana din stânga se oprește la 707px și nu crește nici pe
+  1536px, deci înălțimea ieșea din `707 / 1,6 = 442px`, iar plafonul nu era atins la nicio lățime.
+  Cu `raport = 1,3` se ajunge la **544px**. **De reținut**: `inaltimeMaxima` e o limită, nu o
+  cerere — cine vrea un desen mai înalt schimbă `raport`.
+- **Spline-ul se vede că are două curbe.** Aici măsurătoarea a schimbat decizia. Desenarea
+  amândurora, făcută în trecerea trecută, nu ajunge: pe `sin(πx)`, la numărul implicit de noduri,
+  cele două condiții de capăt stau la **2px** una de alta, iar de la nouă noduri se suprapun exact.
+
+  | noduri   | 4   | 5   | 7   | 9   | 13  |
+  | -------- | --- | --- | --- | --- | --- |
+  | sin(πx)  | 8   | 2   | 0   | 0   | 0   |
+  | x⁵ − 2x³ | 12  | 10  | 5   | 3   | 1,5 |
+
+  Deci funcția de start a devenit `x⁵ − 2x³`. Celelalte două file nu pierd nimic: `max |Pₙ| = 1`
+  la orice număr de noduri, iar de la șase noduri polinomul reproduce funcția exact. Legenda
+  numește acum și curba punctată, iar lângă `s″(x₀)` („de ce") stă `depărtarea` („cu cât").
+
+  Cu trei noduri cele două curbe coincid **exact**: `(−1, 1)`, `(0, 0)`, `(1, −1)` sunt coliniare,
+  deci amândouă condițiile dau dreapta `y = −x`. Verificat, nu e o scăpare de calcul.
+
+Verificat în browser, pe ambele teme, la 360px și 1280px, cu `prefers-reduced-motion`: fără erori
+în consolă și fără derulare orizontală.
+
+**Restanța de mai sus e închisă (18 august 2026).** `PlotDreapta` își dă acum cele patru capete
+**și** static, nu doar prin `animate`, exact ca `motion.line` din `PlotPunct` — deci atributul intră
+în marcajul scris de React, iar linia are geometrie validă din chiar randarea care o inserează.
+
+**Erorile din consolă n-au putut fi reproduse** pe Chrome, cu `motion` 13.1.0: încărcare curată pe
+`derivare-numerica` și pe `ecuatii-neliniare`, plus pași și schimbări de metodă, cu zero erori; un
+`MutationObserver` pe nodurile `<line>` adăugate și un cârlig pe `setAttribute` n-au prins nicio
+scriere de `undefined` sau `NaN`; iar cele 23 de linii din pagină au toate cele patru atribute
+numerice. Explicația cea mai probabilă e `initial={false}`, care face `motion` să randeze direct
+ținta din `animate`. Reparația s-a făcut oricum: se aliniază la tiparul folosit deja în `PlotPunct`
+și nu mai lasă primul cadru pe seama momentului în care `motion` apucă să scrie atributul.
+
+### Refacerea derulării se face doar la întoarcere (17 august 2026)
+
+Urmarea directă a reparației de mai sus, din a doua trecere: odată ce poziția chiar se reținea, s-a
+văzut că se **refăcea prea des**. Săgeata „pagina următoare" te lăsa în subsolul paginii următoare,
+nu la titlul ei.
+
+Cauza nu era derularea, ci **unde stau săgețile**: chiar la fundul paginii. Orice pagină părăsită
+printr-o săgeată își salva poziția „la fund", iar a doua oară când ajungeai pe ea — oricum ai fi
+ajuns — erai pus înapoi acolo. Măsurat pe `interpolare-polinomiala` → `curbe-bezier`, a doua
+trecere: **6713 din 6966** pe telefon și **5031 din 5031** pe desktop.
+
+**Nu era o problemă de telefon**, deși acolo a fost văzută: pe telefon paginile sunt cam de două ori
+mai înalte și săgeata se apasă mult mai des decât butonul „înapoi" al browserului, deci se nimerea
+mai des. Pe desktop se reproduce identic.
+
+Acum poziția se reface **doar la `POP`** (`useNavigationType` din react-router) — înapoi/înainte din
+browser, adică exact gestul căruia browserul îi reface singur derularea pe un site fără router. Un
+clic pe o legătură e `PUSH`: ai cerut altă pagină, deci o primești de la început.
+
+**De reținut**: „reține poziția paginii" nu e o singură cerință, ci două — _ce_ se salvează și _când_
+se reface. Prima trecere a rezolvat-o pe prima și a presupus că a doua n-are variante.
+
 ### Pagina 13 — `curbe-bezier`, ce e gata și ce nu
 
 Ce există:
